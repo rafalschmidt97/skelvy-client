@@ -1,7 +1,7 @@
 This repository is a part of **skelvy** project. It includes client for ios and android platforms.
 Created with ionic and angular. Crafted with love to new technologies! 
 
-[![Build Status](https://travis-ci.com/rafalschmidt97/skelvy-client.svg?branch=master)](https://travis-ci.com/rafalschmidt97/skelvy-client)
+[![Build Status](https://travis-ci.com/rafalschmidt97/skelvy-client.svg?token=z2Ugw1HzqG3BK6LFW2LT&branch=master)](https://travis-ci.com/rafalschmidt97/skelvy-client)
 
 ## Contributing guidelines
 
