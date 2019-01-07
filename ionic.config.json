@@ -1,5 +1,7 @@
 {
   "name": "skelvy",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
