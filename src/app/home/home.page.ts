@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { _ } from '../common/i18n/translate';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 
@@ -9,6 +10,8 @@ import * as moment from 'moment';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  showAlertText = _('Show alert');
+  
   constructor(
     private alertController: AlertController,
     private storage: Storage,

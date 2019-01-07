@@ -4,7 +4,7 @@
 
 <ion-content>
   <div class="jumbotron p-3">
-    <h1 class="display-4">Hello, world!</h1>
+    <h1 class="display-4">{{ 'Hello World' | translate }}</h1>
     <p class="lead">
       This is a simple hero unit, a simple jumbotron-style component for calling
       extra attention to featured content or information.
@@ -15,7 +15,7 @@
       within the larger container.
     </p>
     <button (click)="presentAlert()" class="btn btn-primary btn-block">
-      Show alert
+      {{ showAlertText | translate }}
     </button>
     <ion-button expand="block" (click)="picker.open()">Show date</ion-button>
     <button routerLink="/about" class="btn btn-danger btn-block">
