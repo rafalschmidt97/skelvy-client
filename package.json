@@ -6,12 +6,13 @@
   "scripts": {
     "start": "ionic lab",
     "serve": "ionic serve",
-    "lint": "npm run lint:ts && npm run lint:scss",
+    "lint": "npm run lint:ts && npm run lint:scss && npm run lint:html",
     "lint:ts": "ng lint",
     "lint:scss": "stylelint --syntax scss '**/**.scss'",
+    "lint:html": "prettier --list-different '**/**/*.html' --parser angular",
     "format": "npm run format:ts && npm run format:scss && npm run format:html",
-    "format:ts": "prettier --write '**/**/*.ts'",
-    "format:scss": "stylelint --syntax scss '**/**.scss' --fix",
+    "format:ts": "prettier --write '**/**/*.ts' --parser typescript",
+    "format:scss": "prettier --write '**/**/*.scss' --parser scss",
     "format:html": "prettier --write '**/**/*.html' --parser angular",
     "build:ios": "ionic cordova build ios",
     "build:android": "ionic cordova build android"
@@ -58,9 +59,11 @@
     "prettier": "^1.15.3",
     "protractor": "~5.4.0",
     "stylelint": "^9.9.0",
-    "stylelint-config-standard": "^18.2.0",
+    "stylelint-config-prettier": "^4.0.0",
+    "stylelint-prettier": "^1.0.6",
     "ts-node": "~7.0.0",
     "tslint": "~5.12.0",
+    "tslint-plugin-prettier": "^2.0.1",
     "typescript": "~3.1.6"
   },
   "description": "An Ionic project"
