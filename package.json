@@ -4,7 +4,8 @@
   "author": "Rafał Schmidt",
   "homepage": "https://rafalschmidt.com/",
   "scripts": {
-    "start": "ionic serve",
+    "start": "ionic lab",
+    "serve": "ionic serve",
     "lint": "ng lint",
     "format": "prettier --write '**/**/*.ts'",
     "build:ios": "ionic cordova build ios",
