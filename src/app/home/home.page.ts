@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +8,16 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  constructor(public alertController: AlertController) {}
+  constructor(
+    private alertController: AlertController,
+    private storage: Storage,
+  ) {
+    storage.set('name', 'Rafał');
+
+    storage.get('name').then(val => {
+      console.log(val);
+    });
+  }
 
   async presentAlert() {
     const alert = await this.alertController.create({
