@@ -1,5 +1,37 @@
 <ion-header>
-  <ion-toolbar> <ion-title> Welcome </ion-title> </ion-toolbar>
+  <ion-toolbar> <ion-title>home</ion-title> </ion-toolbar>
 </ion-header>
 
-<ion-content padding> Hello world from Poland </ion-content>
+<ion-content>
+  <div class="jumbotron p-3">
+    <h1 class="display-4">Hello, world!</h1>
+    <p class="lead">
+      This is a simple hero unit, a simple jumbotron-style component for calling
+      extra attention to featured content or information.
+    </p>
+    <hr class="my-4" />
+    <p>
+      It uses utility classes for typography and spacing to space content out
+      within the larger container.
+    </p>
+    <button (click)="presentAlert()" class="btn btn-primary btn-block">
+      Show alert
+    </button>
+    <ion-button expand="block" (click)="picker.open()">Show date</ion-button>
+    <button routerLink="/about" class="btn btn-danger btn-block">
+      Move to about
+    </button>
+  </div>
+
+  <div class="big"></div>
+
+  <ion-item>
+    <ion-input required type="text" placeholder="First Name"></ion-input>
+  </ion-item>
+
+  <ion-datetime
+    style="display:none"
+    #picker
+    pickerFormat="DD MMMM YYYY"
+  ></ion-datetime>
+</ion-content>
