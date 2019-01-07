@@ -8,8 +8,10 @@
     "serve": "ionic serve",
     "lint": "npm run lint:ts && npm run lint:scss",
     "lint:ts": "ng lint",
-    "lint:scss": "stylelint  --syntax scss '**/**.scss'",
-    "format": "prettier --write '**/**/*.ts'",
+    "lint:scss": "stylelint --syntax scss '**/**.scss'",
+    "format": "npm run format:ts && npm run format:scss",
+    "format:ts": "prettier --write '**/**/*.ts'",
+    "format:scss": "stylelint --syntax scss '**/**.scss' --fix",
     "build:ios": "ionic cordova build ios",
     "build:android": "ionic cordova build android"
   },
