@@ -1,0 +1,21 @@
+@import 'bootstrap/variables';
+
+body {
+  font-size: 16px;
+  word-wrap: break-word;
+
+  // Font
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: theme-color('primary');
+  color: $white;
+}
+
+::-moz-selection {
+  background-color: theme-color('primary');
+  color: $white;
+}
