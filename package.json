@@ -4,7 +4,8 @@
   "author": "Rafał Schmidt",
   "homepage": "https://rafalschmidt.com/",
   "scripts": {
-    "start": "ionic serve",
+    "start": "ionic lab",
+    "serve": "ionic serve",
     "lint": "ng lint",
     "format": "prettier --write '**/**/*.ts'",
     "build:ios": "ionic cordova build ios",
@@ -37,6 +38,7 @@
     "@angular/compiler-cli": "~7.1.4",
     "@angular/language-service": "~7.1.4",
     "@ionic/angular-toolkit": "~1.2.0",
+    "@ionic/lab": "^1.0.16",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~10.12.0",
