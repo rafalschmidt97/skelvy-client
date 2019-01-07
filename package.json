@@ -9,9 +9,10 @@
     "lint": "npm run lint:ts && npm run lint:scss",
     "lint:ts": "ng lint",
     "lint:scss": "stylelint --syntax scss '**/**.scss'",
-    "format": "npm run format:ts && npm run format:scss",
+    "format": "npm run format:ts && npm run format:scss && npm run format:html",
     "format:ts": "prettier --write '**/**/*.ts'",
     "format:scss": "stylelint --syntax scss '**/**.scss' --fix",
+    "format:html": "prettier --write '**/**/*.html' --parser angular",
     "build:ios": "ionic cordova build ios",
     "build:android": "ionic cordova build android"
   },
