@@ -2,8 +2,16 @@
   "name": "skelvy",
   "description": "Mobile app for meetings over beer or coffee",
   "version": "0.0.1",
+  "private": true,
   "author": "Rafał Schmidt",
   "homepage": "https://rafalschmidt.com/",
+  "engines": {
+    "node": ">= 10.15.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rafalschmidt97/skelvy-client"
+  },
   "scripts": {
     "start": "ionic lab",
     "serve": "ionic serve",
@@ -18,7 +26,6 @@
     "build:ios": "ionic cordova build ios",
     "build:android": "ionic cordova build android"
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "~7.1.4",
     "@angular/core": "~7.1.4",
