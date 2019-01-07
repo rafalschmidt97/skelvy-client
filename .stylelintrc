@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "stylelint-config-standard"
+  ],
+  "rules": {
+    "unit-whitelist": ["rem", "em", "px", "s", "%", "deg", "vh"],
+    "comment-empty-line-before": "never",
+    "selector-list-comma-newline-after": "always-multi-line",
+    "number-leading-zero": "never",
+    "at-rule-no-unknown": [ true, {
+      "ignoreAtRules": ["function", "if", "else", "each", "include", "mixin"]
+    }],
+    "at-rule-empty-line-before": [ "always", {
+      "except": [
+        "blockless-after-same-name-blockless",
+        "first-nested"
+      ],
+      "ignore": ["after-comment"],
+      "ignoreAtRules": [ "else", "include" ]
+    }],
+    "block-closing-brace-newline-after": [
+      "always", {
+        "ignoreAtRules": [ "if", "else" ]
+      }
+    ]
+  }
+}
