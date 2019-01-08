@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageConstants } from './common/i18n/language.constants';
 import { Storage } from '@ionic/storage';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-root',
@@ -45,9 +45,7 @@ export class AppComponent {
       }
 
       this.translateService.use(language);
-
-      // TODO: ADD MOMENT HERE
-      // moment.locale(newLanguage);
+      moment.locale(language);
     });
   }
 }
