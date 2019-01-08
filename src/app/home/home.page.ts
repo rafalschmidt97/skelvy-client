@@ -11,7 +11,7 @@ import * as moment from 'moment';
 })
 export class HomePage {
   showAlertText = _('Show alert');
-  
+
   constructor(
     private alertController: AlertController,
     private storage: Storage,
@@ -21,9 +21,6 @@ export class HomePage {
     storage.get('name').then(val => {
       console.log(val);
     });
-
-    const birthday = moment('22.04.1997', 'DD.MM.YYYY').toDate();
-    console.log(birthday);
   }
 
   async presentAlert() {
@@ -34,5 +31,10 @@ export class HomePage {
     });
 
     await alert.present();
+  }
+
+  showMonth() {
+    const month = moment('22.04.1997', 'DD.MM.YYYY').format('MMMM');
+    console.log(month);
   }
 }
