@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,9 @@ export class HomePage {
     storage.get('name').then(val => {
       console.log(val);
     });
+
+    const birthday = moment('22.04.1997', 'DD.MM.YYYY').toDate();
+    console.log(birthday);
   }
 
   async presentAlert() {
