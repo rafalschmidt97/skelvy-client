@@ -19,6 +19,7 @@ export function createTranslateLoader(http: HttpClient) {
 }
 
 const libraries = [
+  IonicModule.forRoot(),
   TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,
@@ -32,13 +33,7 @@ const libraries = [
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    IonicModule.forRoot(),
-    AppRoutingModule,
-    ...libraries,
-  ],
+  imports: [BrowserModule, HttpClientModule, AppRoutingModule, ...libraries],
   providers: [
     StatusBar,
     SplashScreen,
