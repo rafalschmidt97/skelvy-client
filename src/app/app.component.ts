@@ -13,11 +13,11 @@ import * as moment from 'moment';
 })
 export class AppComponent {
   constructor(
-    private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private translateService: TranslateService,
-    private storage: Storage,
+    private readonly platform: Platform,
+    private readonly splashScreen: SplashScreen,
+    private readonly statusBar: StatusBar,
+    private readonly translateService: TranslateService,
+    private readonly storage: Storage,
   ) {
     this.initializeApp();
     this.setLanguage();
