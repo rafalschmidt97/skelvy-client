@@ -24,7 +24,8 @@
     "format:scss": "prettier --write '**/**/*.scss' --parser scss",
     "format:html": "prettier --write '**/**/*.html' --parser angular",
     "build:ios": "ionic cordova build ios",
-    "build:android": "ionic cordova build android"
+    "build:android": "ionic cordova build android",
+    "translate": "ngx-translate-extract --input ./src --output ./src/assets/i18n/*.json --clean --sort --format json --marker _"
   },
   "dependencies": {
     "@angular/common": "~7.1.4",
@@ -39,6 +40,8 @@
     "@ionic-native/status-bar": "5.0.0-beta.21",
     "@ionic/angular": "4.0.0-rc.0",
     "@ionic/storage": "^2.2.0",
+    "@ngx-translate/core": "^11.0.1",
+    "@ngx-translate/http-loader": "^4.0.0",
     "bootstrap": "^4.2.1",
     "cordova-sqlite-storage": "2.6.0",
     "core-js": "^2.5.4",
@@ -56,6 +59,7 @@
     "@angular/compiler": "~7.1.4",
     "@angular/compiler-cli": "~7.1.4",
     "@angular/language-service": "~7.1.4",
+    "@biesbjerg/ngx-translate-extract": "^2.3.4",
     "@ionic/angular-toolkit": "~1.2.0",
     "@ionic/lab": "^1.0.16",
     "@types/jasmine": "~2.8.8",
