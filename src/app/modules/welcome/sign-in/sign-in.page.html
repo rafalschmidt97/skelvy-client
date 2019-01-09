@@ -5,5 +5,20 @@
       This is a simple hero unit, a simple jumbotron-style component for calling
       extra attention to featured content or information.
     </p>
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="showAlert(alert)"
+    >
+      Show alert
+    </button>
   </div>
 </ion-content>
+
+<ng-template #alert>
+  <app-alert
+    [title]="'Are you sure?' | translate"
+    (confirm)="confirm()"
+    (decline)="decline()"
+  ></app-alert>
+</ng-template>
