@@ -3,10 +3,12 @@
     <div class="m-auto"><div class="logo my-2">skelvy</div></div>
     <div>
       <button class="btn btn-block btn-facebook">
-        {{ 'Continue with Facebook' | translate }}
+        <i class="fab fa-facebook-f mr-2"></i>
+        <span>{{ 'Continue with Facebook' | translate }}</span>
       </button>
       <button class="btn btn-block btn-google">
-        {{ 'Continue with Google' | translate }}
+        <i class="fab fa-google mr-2"></i>
+        <span>{{ 'Continue with Google' | translate }}</span>
       </button>
       <div class="terms text-center my-3">
         <a (click)="showIframe(iframe)">{{ 'Terms of service' | translate }}</a> and
