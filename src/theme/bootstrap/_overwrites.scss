@@ -16,6 +16,17 @@ button {
     .modal-content {
       width: 80%;
     }
+
+    &.modal-dialog-full {
+      padding: 0;
+      align-items: flex-end;
+
+      .modal-content {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        width: 100%;
+      }
+    }
   }
 
   // move modal from bottom to top instead of just fade
