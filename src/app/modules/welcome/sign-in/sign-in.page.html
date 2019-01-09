@@ -19,6 +19,13 @@
     >
       Show modal
     </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="showIframe(iframe)"
+    >
+      Show iframe
+    </button>
   </div>
 </ion-content>
 
@@ -34,4 +41,13 @@
   <app-modal [title]="'Are you sure?' | translate" (decline)="declineModal()">
     <h1>Modal example</h1>
   </app-modal>
+</ng-template>
+
+<ng-template #iframe>
+  <app-iframe
+    url="https://rafalschmidt.com/drinker_website/legal/privacy-policy/"
+    [title]="'Example website' | translate"
+    (decline)="declineIframe()"
+  >
+  </app-iframe>
 </ng-template>

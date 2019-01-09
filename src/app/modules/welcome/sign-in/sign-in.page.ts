@@ -3,6 +3,8 @@ import { Alert } from '../../../shared/alert/alert';
 import { AlertService } from '../../../shared/alert/alert.service';
 import { Modal } from '../../../shared/modal/modal';
 import { ModalService } from '../../../shared/modal/modal.service';
+import { IframeService } from '../../../shared/iframe/iframe.service';
+import { Iframe } from '../../../shared/iframe/iframe';
 
 @Component({
   selector: 'app-sign-in',
@@ -12,10 +14,12 @@ import { ModalService } from '../../../shared/modal/modal.service';
 export class SignInPage {
   alert: Alert;
   modal: Modal;
+  iframe: Iframe;
 
   constructor(
     private readonly alertService: AlertService,
     private readonly modalService: ModalService,
+    private readonly iframeService: IframeService,
   ) {}
 
   showAlert(template: TemplateRef<any>) {
@@ -24,6 +28,10 @@ export class SignInPage {
 
   showModal(template: TemplateRef<any>) {
     this.modal = this.modalService.show(template);
+  }
+
+  showIframe(template: TemplateRef<any>) {
+    this.iframe = this.iframeService.show(template);
   }
 
   confirmAlert() {
@@ -36,5 +44,9 @@ export class SignInPage {
 
   declineModal() {
     this.modal.hide();
+  }
+
+  declineIframe() {
+    this.iframe.hide();
   }
 }
