@@ -17,7 +17,8 @@ button {
       width: 80%;
     }
 
-    &.modal-dialog-full {
+    &.modal-dialog-full,
+    &.modal-dialog-iframe{
       padding: 0;
       align-items: flex-end;
 
@@ -25,6 +26,15 @@ button {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         width: 100%;
+        padding: 0;
+      }
+    }
+
+    &.modal-dialog-iframe {
+      height: 100%;
+
+      .modal-content {
+        height: 95%;
       }
     }
   }
