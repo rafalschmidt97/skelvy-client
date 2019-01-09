@@ -1,47 +1,20 @@
 <ion-content>
-  <div class="jumbotron p-3">
-    <h1 class="display-4">{{ 'Welcome to skelvy!' | translate }}</h1>
-    <p class="lead">
-      This is a simple hero unit, a simple jumbotron-style component for calling
-      extra attention to featured content or information.
-    </p>
-    <button
-      type="button"
-      class="btn btn-primary btn-block"
-      (click)="showAlert(alert)"
-    >
-      Show alert
-    </button>
-    <button
-      type="button"
-      class="btn btn-primary btn-block"
-      (click)="showModal(modal)"
-    >
-      Show modal
-    </button>
-    <button
-      type="button"
-      class="btn btn-primary btn-block"
-      (click)="showIframe(iframe)"
-    >
-      Show iframe
-    </button>
+  <div class="container d-flex flex-column h-100">
+    <div class="m-auto"><div class="logo my-2">skelvy</div></div>
+    <div>
+      <button class="btn btn-block btn-facebook">
+        {{ 'Continue with Facebook' | translate }}
+      </button>
+      <button class="btn btn-block btn-google">
+        {{ 'Continue with Google' | translate }}
+      </button>
+      <div class="terms text-center my-3">
+        <a (click)="showIframe(iframe)">{{ 'Terms of service' | translate }}</a> and
+        <a href="#">{{ 'Privacy policy' | translate }}</a>
+      </div>
+    </div>
   </div>
 </ion-content>
-
-<ng-template #alert>
-  <app-alert
-    [title]="'Are you sure?' | translate"
-    (confirm)="confirmAlert()"
-    (decline)="declineAlert()"
-  ></app-alert>
-</ng-template>
-
-<ng-template #modal>
-  <app-modal [title]="'Are you sure?' | translate" (decline)="declineModal()">
-    <h1>Modal example</h1>
-  </app-modal>
-</ng-template>
 
 <ng-template #iframe>
   <app-iframe
