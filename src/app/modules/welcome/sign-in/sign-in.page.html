@@ -12,13 +12,23 @@
       </button>
       <div class="terms text-center my-3">
         <a
-          (click)="show('https://rafalschmidt.com/drinker_website/legal/terms-of-service/', 'Terms of service')"
+          (click)="
+            show(
+              'https://rafalschmidt.com/drinker_website/legal/terms-of-service/',
+              'Terms of service'
+            )
+          "
         >
           {{ 'Terms of service' | translate }}
         </a>
         and
         <a
-          (click)="show('https://rafalschmidt.com/drinker_website/legal/privacy-policy/', 'Privacy policy')"
+          (click)="
+            show(
+              'https://rafalschmidt.com/drinker_website/legal/privacy-policy/',
+              'Privacy policy'
+            )
+          "
         >
           {{ 'Privacy policy' | translate }}
         </a>
