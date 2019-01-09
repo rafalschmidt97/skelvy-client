@@ -1,0 +1,23 @@
+@import '~src/theme/bootstrap/variables';
+@import url('https://fonts.googleapis.com/css?family=Lily+Script+One&subset=latin-ext');
+
+$facebook-color: #3c65c4;
+$google-color: #ce4232;
+
+.btn-facebook {
+  @include button-outline-variant($facebook-color);
+}
+
+.btn-google {
+  @include button-outline-variant($google-color);
+}
+
+.logo {
+  font-family: 'Lily Script One', cursive;
+  font-size: 3.3rem;
+}
+
+.terms {
+  font-size: 14px;
+  opacity: 0.8;
+}

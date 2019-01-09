@@ -4,6 +4,10 @@ button {
   outline: none !important;
 }
 
+a {
+  font-weight: $font-weight-bold;
+}
+
 .modal {
   .modal-dialog {
     margin: 0 !important;
