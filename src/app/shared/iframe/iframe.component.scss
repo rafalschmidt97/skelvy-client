@@ -1,0 +1,22 @@
+:host {
+  height: 100%;
+
+  .modal-body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+
+    .iframe {
+      overflow-y: auto;
+      height: 100%;
+      -webkit-overflow-scrolling: touch; // TODO: enabled because of bug in safari (scroll main view instead of iframe)
+
+      iframe {
+        margin: 0;
+        border: 0;
+        padding: 0;
+      }
+    }
+  }
+}

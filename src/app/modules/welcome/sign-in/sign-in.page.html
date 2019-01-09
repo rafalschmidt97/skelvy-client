@@ -12,13 +12,42 @@
     >
       Show alert
     </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="showModal(modal)"
+    >
+      Show modal
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="showIframe(iframe)"
+    >
+      Show iframe
+    </button>
   </div>
 </ion-content>
 
 <ng-template #alert>
   <app-alert
     [title]="'Are you sure?' | translate"
-    (confirm)="confirm()"
-    (decline)="decline()"
+    (confirm)="confirmAlert()"
+    (decline)="declineAlert()"
   ></app-alert>
+</ng-template>
+
+<ng-template #modal>
+  <app-modal [title]="'Are you sure?' | translate" (decline)="declineModal()">
+    <h1>Modal example</h1>
+  </app-modal>
+</ng-template>
+
+<ng-template #iframe>
+  <app-iframe
+    url="https://rafalschmidt.com/drinker_website/legal/privacy-policy/"
+    [title]="'Example website' | translate"
+    (decline)="declineIframe()"
+  >
+  </app-iframe>
 </ng-template>
