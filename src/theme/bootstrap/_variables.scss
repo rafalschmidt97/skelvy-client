@@ -65,7 +65,7 @@ $body-color: $gray-800;
 
 // Links
 
-$link-color: theme-color('primary');
+$link-color: $body-color;
 $link-decoration: none;
 $link-hover-color: darken($link-color, 15%);
 $link-hover-decoration: none;
