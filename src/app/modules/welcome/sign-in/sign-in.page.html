@@ -12,13 +12,26 @@
     >
       Show alert
     </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="showModal(modal)"
+    >
+      Show modal
+    </button>
   </div>
 </ion-content>
 
 <ng-template #alert>
   <app-alert
     [title]="'Are you sure?' | translate"
-    (confirm)="confirm()"
-    (decline)="decline()"
+    (confirm)="confirmAlert()"
+    (decline)="declineAlert()"
   ></app-alert>
+</ng-template>
+
+<ng-template #modal>
+  <app-modal [title]="'Are you sure?' | translate" (decline)="declineModal()">
+    <h1>Modal example</h1>
+  </app-modal>
 </ng-template>
