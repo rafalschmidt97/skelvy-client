@@ -11,11 +11,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { IonicStorageModule } from '@ionic/storage';
 import { i18nConfiguration } from './core/i18n/translate';
 import { CoreModule } from './core/core.module';
+import { ModalModule } from 'ngx-bootstrap';
 
 const libraries = [
   IonicModule.forRoot(),
   TranslateModule.forRoot(i18nConfiguration),
   IonicStorageModule.forRoot(),
+  ModalModule.forRoot(),
 ];
 
 @NgModule({

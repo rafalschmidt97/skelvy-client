@@ -3,3 +3,27 @@
 button {
   outline: none !important;
 }
+
+.modal {
+  .modal-dialog {
+    margin: 0 !important;
+    padding: 0.5rem;
+    display: flex;
+    min-height: 100%;
+    align-items: center;
+    justify-content: center;
+
+    .modal-content {
+      width: 80%;
+    }
+  }
+
+  // move modal from bottom to top instead of just fade
+  &.fade .modal-dialog {
+    transform: translate(0, 8px);
+  }
+
+  &.show .modal-dialog {
+    transform: translate(0, 0);
+  }
+}
