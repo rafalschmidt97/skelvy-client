@@ -1,0 +1,31 @@
+<div *ngIf="title" class="modal-header flex-column text-center">
+  <h6 *ngIf="title" class="modal-title w-100">{{ title }}</h6>
+  <p *ngIf="description" class="small text-muted mb-0 w-100">
+    {{ description }}
+  </p>
+</div>
+<div class="modal-body text-center">
+  <ng-content></ng-content>
+  <button
+    type="button"
+    [disabled]="confirmLoading"
+    class="btn btn-primary btn-block"
+    *ngIf="hasConfirm"
+    (click)="confirm.emit()"
+  >
+    <ng-container *ngIf="!confirmLoading">
+      {{ confirmText || 'Confirm' | translate }}
+    </ng-container>
+    <ng-container *ngIf="confirmLoading">
+      <i class="fas fa-circle-notch fa-lg fa-spin"></i>
+    </ng-container>
+  </button>
+  <button
+    type="button"
+    class="btn btn-light btn-block"
+    *ngIf="hasDecline && !confirmLoading"
+    (click)="decline.emit()"
+  >
+    {{ declineText || 'Cancel' | translate }}
+  </button>
+</div>
