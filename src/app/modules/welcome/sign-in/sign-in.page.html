@@ -11,8 +11,17 @@
         <span>{{ 'Continue with Google' | translate }}</span>
       </button>
       <div class="terms text-center my-3">
-        <a (click)="showIframe(iframe)">{{ 'Terms of service' | translate }}</a> and
-        <a href="#">{{ 'Privacy policy' | translate }}</a>
+        <a
+          (click)="show('https://rafalschmidt.com/drinker_website/legal/terms-of-service/', 'Terms of service')"
+        >
+          {{ 'Terms of service' | translate }}
+        </a>
+        and
+        <a
+          (click)="show('https://rafalschmidt.com/drinker_website/legal/privacy-policy/', 'Privacy policy')"
+        >
+          {{ 'Privacy policy' | translate }}
+        </a>
       </div>
     </div>
   </div>
@@ -20,9 +29,8 @@
 
 <ng-template #iframe>
   <app-iframe
-    url="https://rafalschmidt.com/drinker_website/legal/privacy-policy/"
-    [title]="'Example website' | translate"
-    (decline)="declineIframe()"
-  >
-  </app-iframe>
+    [url]="url"
+    [title]="title | translate"
+    (decline)="decline()"
+  ></app-iframe>
 </ng-template>

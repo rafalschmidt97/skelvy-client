@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { IframeService } from '../../../shared/iframe/iframe.service';
 import { Iframe } from '../../../shared/iframe/iframe';
 
@@ -9,14 +9,21 @@ import { Iframe } from '../../../shared/iframe/iframe';
 })
 export class SignInPage {
   iframe: Iframe;
+  @ViewChild('iframe') iframeTemplate: TemplateRef<any>;
+
+  url: string;
+  title: string;
 
   constructor(private readonly iframeService: IframeService) {}
-  
-  showIframe(template: TemplateRef<any>) {
-    this.iframe = this.iframeService.show(template);
+
+  show(url: string, title = '') {
+    this.url = url;
+    this.title = title;
+
+    this.iframe = this.iframeService.show(this.iframeTemplate);
   }
 
-  declineIframe() {
+  decline() {
     this.iframe.hide();
   }
 }
