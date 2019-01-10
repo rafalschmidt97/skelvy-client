@@ -66,6 +66,6 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
   /** overwrites **/
-  --ion-background-color: $body-bg;
-  --ion-text-color: $body-color;
+  --ion-background-color: #{$body-bg};
+  --ion-text-color: #{$body-color};
 }
