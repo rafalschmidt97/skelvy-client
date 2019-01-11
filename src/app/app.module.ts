@@ -12,6 +12,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { i18nConfiguration } from './core/i18n/translate';
 import { CoreModule } from './core/core.module';
 import { ModalModule } from 'ngx-bootstrap';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const libraries = [
   IonicModule.forRoot(),
@@ -25,6 +26,7 @@ const libraries = [
   entryComponents: [],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
     CoreModule,

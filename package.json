@@ -28,6 +28,8 @@
     "translate": "ngx-translate-extract --input ./src --output ./src/assets/i18n/*.json --clean --sort --format json --marker _"
   },
   "dependencies": {
+    "@angular/animations": "^7.2.0",
+    "@angular/cdk": "^7.2.1",
     "@angular/common": "~7.1.4",
     "@angular/core": "~7.1.4",
     "@angular/forms": "~7.1.4",
