@@ -7,10 +7,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TextareaComponent } from './textarea/textarea.component';
 import { DynamicHeightDirective } from './textarea/dynamic-height.directive';
 import { CalendarComponent } from './calendar/calendar.component';
-import { CalendarModule } from 'primeng/primeng';
+import { CalendarModule, SliderModule } from 'primeng/primeng';
 import { ModalModule } from '../modal/modal.module';
 import { DateComponent } from './date/date.component';
 import { IonicModule } from '@ionic/angular';
+import { RangeComponent } from './range/range.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { IonicModule } from '@ionic/angular';
     DynamicHeightDirective,
     CalendarComponent,
     DateComponent,
+    RangeComponent,
   ],
   imports: [
     CommonModule,
@@ -29,6 +31,7 @@ import { IonicModule } from '@ionic/angular';
     ModalModule,
     CalendarModule,
     IonicModule,
+    SliderModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -37,6 +40,7 @@ import { IonicModule } from '@ionic/angular';
     TextareaComponent,
     CalendarComponent,
     DateComponent,
+    RangeComponent,
   ],
 })
 export class FormModule {}

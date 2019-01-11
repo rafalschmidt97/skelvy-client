@@ -75,4 +75,53 @@ body .ui-calendar {
   }
 }
 
+body .ui-slider {
+  margin: 5px;
+  position: relative;
+  background: theme-color('light');
 
+  .ui-slider-range {
+    background: theme-color('primary');
+  }
+
+  .ui-slider-handle {
+    background-color: $white;
+    border: 1px solid gray('400');
+    width: 28px;
+    height: 28px;
+
+    &:hover {
+      background-color: $white;
+    }
+  }
+
+  &.ui-slider-horizontal {
+    height: 6px;
+
+    .ui-slider-handle {
+      top: -12px;
+      margin-left: -14px;
+    }
+  }
+
+  &.is-disabled {
+    opacity: 1;
+
+    .ui-slider-range {
+      background: gray('600') !important;
+    }
+  }
+
+  &.is-invalid {
+    border-color: theme-color('danger');
+    background: lighten($danger, 30%);
+
+    .ui-slider-handle {
+      border-color: theme-color('danger');
+    }
+
+    .ui-slider-range {
+      background: theme-color('danger') !important;
+    }
+  }
+}
