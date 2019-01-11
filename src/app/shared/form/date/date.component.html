@@ -1,0 +1,39 @@
+<div [class.form-group]="label">
+  <label *ngIf="label" [attr.for]="name"> {{ label }} </label>
+  <div
+    (click)="picker.open()"
+    [className]="
+      'form-control form-control-placeholder ' +
+      (isInvalid && (isDirty || isTouched) ? 'is-invalid ' : '') +
+      (isLoading ? 'is-disabled' : '')
+    "
+  >
+    {{ dateLabel }}
+    <ion-datetime
+      #picker
+      pickerFormat="DD MMMM YYYY"
+      [monthNames]="monthNames"
+      [monthShortNames]="monthNamesShort"
+      [dayNames]="dayNames"
+      [dayShortNames]="dayNamesShort"
+      [min]="min"
+      [max]="max"
+      [hidden]="true"
+      [(ngModel)]="datePicker"
+      (ionChange)="onChange()"
+    ></ion-datetime>
+  </div>
+
+  <div [class.is-invalid]="isInvalid && (isDirty || isTouched) && hasFeedback">
+    <ng-container *ngIf="hasFeedback">
+      <div *ngIf="isInvalid && (isDirty || isTouched)" class="invalid-feedback">
+        <ng-container *ngIf="hasErrorRequired">{{
+          'The field is required' | translate
+        }}</ng-container>
+      </div>
+      <div *ngIf="!(isInvalid && (isDirty || isTouched))" class="feedback">
+        {{ 'The field is valid' | translate }}
+      </div>
+    </ng-container>
+  </div>
+</div>
