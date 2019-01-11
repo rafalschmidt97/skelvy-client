@@ -19,3 +19,8 @@ body {
   background-color: theme-color('primary');
   color: $white;
 }
+
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+}
