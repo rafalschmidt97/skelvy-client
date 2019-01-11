@@ -19,3 +19,60 @@
     content: '\f104';
   }
 }
+
+body .ui-calendar {
+  width: 100%;
+
+  .ui-datepicker {
+    border-radius: 0;
+    border-width: 1px 0 0 0;
+
+    table {
+      table-layout: fixed;
+
+      td a {
+        font-size: inherit;
+        font-weight: $font-weight-normal;
+      }
+
+      &.ui-datepicker-calendar td.ui-datepicker-today a.ui-state-highlight {
+        background-color: gray('400');
+        color: $white;
+      }
+
+      &.ui-datepicker-calendar td.ui-datepicker-other-month a.ui-state-active {
+        background-color: theme-color('primary');
+        color: $white;
+      }
+
+      &.ui-datepicker-calendar td:not(.ui-state-disabled) a.ui-state-active {
+        background-color: theme-color('primary');
+      }
+    }
+
+    .ui-datepicker-header {
+      .ui-datepicker-next,
+      .ui-datepicker-prev {
+        top: 13px;
+
+        &::before {
+          content: none;
+        }
+
+        .pi {
+          display: block;
+        }
+      }
+
+      .ui-datepicker-prev {
+        left: 13px;
+      }
+
+      .ui-datepicker-next {
+        right: 5px;
+      }
+    }
+  }
+}
+
+
