@@ -3,22 +3,28 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { AlertComponent } from './alert/alert.component';
-import { ModalComponent } from './modal/modal.component';
-import { IframeComponent } from './iframe/iframe.component';
-import { SafeUrlPipe } from './iframe/safe-url.pipe';
+import { AlertModule } from './alert/alert.module';
+import { IframeModule } from './iframe/iframe.module';
+import { ModalModule } from './modal/modal.module';
 
 @NgModule({
-  declarations: [AlertComponent, ModalComponent, SafeUrlPipe, IframeComponent],
-  imports: [CommonModule, IonicModule, TranslateModule, RouterModule],
+  imports: [
+    CommonModule,
+    IonicModule,
+    TranslateModule,
+    RouterModule,
+    AlertModule,
+    IframeModule,
+    ModalModule,
+  ],
   exports: [
     CommonModule,
     IonicModule,
     TranslateModule,
     RouterModule,
-    AlertComponent,
-    ModalComponent,
-    IframeComponent,
+    AlertModule,
+    IframeModule,
+    ModalModule,
   ],
 })
 export class SharedModule {}
