@@ -1,3 +1,9 @@
+@import '~src/theme/bootstrap/variables';
+
 .modal-body {
   padding: 0;
+}
+
+.btn-done {
+  cursor: pointer;
 }
