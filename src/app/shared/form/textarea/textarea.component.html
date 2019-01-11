@@ -1,0 +1,38 @@
+<div [class.form-group]="label">
+  <label *ngIf="label" [attr.for]="name">{{ label }}</label>
+  <ng-container [formGroup]="form">
+    <textarea
+      *ngIf="!autosize"
+      [attr.id]="name"
+      [formControlName]="name"
+      class="form-control textarea-mh"
+      [class.is-invalid]="isInvalid && (isDirty || isTouched) && hasFeedback"
+      [attr.disabled]="isLoading ? '' : null"
+      [placeholder]="placeholder || ''"
+    ></textarea>
+
+    <textarea
+      *ngIf="autosize"
+      appDynamicHeight
+      [maxHeight]="maxHeight"
+      [minHeight]="minHeight"
+      [attr.id]="name"
+      [formControlName]="name"
+      class="form-control"
+      [class.is-invalid]="isInvalid && (isDirty || isTouched) && hasFeedback"
+      [attr.disabled]="isLoading ? '' : null"
+      [placeholder]="placeholder || ''"
+    ></textarea>
+
+    <ng-container *ngIf="hasFeedback">
+      <div *ngIf="isInvalid && (isDirty || isTouched)" class="invalid-feedback">
+        <ng-container *ngIf="hasErrorRequired">{{
+          'The field is required' | translate
+        }}</ng-container>
+      </div>
+      <div *ngIf="!(isInvalid && (isDirty || isTouched))" class="feedback">
+        {{ 'The field is valid' | translate }}
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
