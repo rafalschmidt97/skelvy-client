@@ -14,6 +14,7 @@ import { IonicModule } from '@ionic/angular';
 import { RangeComponent } from './range/range.component';
 import { SelectComponent } from './select/select.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
+import { RadioComponent } from './radio/radio.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
     RangeComponent,
     SelectComponent,
     CheckboxComponent,
+    RadioComponent,
   ],
   imports: [
     CommonModule,
@@ -47,6 +49,7 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
     RangeComponent,
     SelectComponent,
     CheckboxComponent,
+    RadioComponent,
   ],
 })
 export class FormModule {}
