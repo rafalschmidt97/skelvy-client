@@ -15,6 +15,7 @@ import { RangeComponent } from './range/range.component';
 import { SelectComponent } from './select/select.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { RadioComponent } from './radio/radio.component';
+import { SwitchComponent } from './switch/switch.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { RadioComponent } from './radio/radio.component';
     SelectComponent,
     CheckboxComponent,
     RadioComponent,
+    SwitchComponent,
   ],
   imports: [
     CommonModule,
@@ -50,6 +52,7 @@ import { RadioComponent } from './radio/radio.component';
     SelectComponent,
     CheckboxComponent,
     RadioComponent,
+    SwitchComponent,
   ],
 })
 export class FormModule {}

@@ -1,0 +1,48 @@
+@import '~src/theme/bootstrap/variables';
+
+.switch {
+  .switch-label {
+    margin: 0;
+    width: 50px;
+    height: 30px;
+    border-radius: 15px;
+    background: theme-color('light');
+    border: 1px solid gray('300');
+    transition: $transition-base;
+    position: relative;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 28px;
+      background: $white;
+      border: 1px solid gray('300');
+      border-radius: 50%;
+      transition: $transition-base;
+    }
+  }
+
+  .switch-input {
+    display: none;
+
+    &:checked ~ .switch-label {
+      background: theme-color('primary');
+      border-color: theme-color('primary');
+
+      &::after {
+        transform: translateX(20px);
+        border-color: theme-color('primary');
+      }
+    }
+
+    &:disabled ~ .switch-label {
+      background: gray('600');
+      border-color: gray('600');
+
+      &::after {
+        border-color: gray('600');
+      }
+    }
+  }
+}

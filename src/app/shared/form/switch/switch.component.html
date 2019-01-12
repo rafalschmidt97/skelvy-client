@@ -1,0 +1,12 @@
+<ng-container [formGroup]="form">
+  <div class="switch">
+    <input
+      type="checkbox"
+      [attr.id]="name"
+      [formControlName]="name"
+      class="switch-input"
+      [attr.disabled]="isLoading ? '' : null"
+    />
+    <label class="switch-label" [attr.for]="name"></label>
+  </div>
+</ng-container>
