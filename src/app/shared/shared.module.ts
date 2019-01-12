@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { AlertModule } from './alert/alert.module';
 import { IframeModule } from './iframe/iframe.module';
 import { ModalModule } from './modal/modal.module';
+import { FormModule } from './form/form.module';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { ModalModule } from './modal/modal.module';
     AlertModule,
     IframeModule,
     ModalModule,
+    FormModule,
   ],
   exports: [
     CommonModule,
@@ -25,6 +27,7 @@ import { ModalModule } from './modal/modal.module';
     AlertModule,
     IframeModule,
     ModalModule,
+    FormModule,
   ],
 })
 export class SharedModule {}

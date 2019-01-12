@@ -19,3 +19,109 @@
     content: '\f104';
   }
 }
+
+body .ui-calendar {
+  width: 100%;
+
+  .ui-datepicker {
+    border-radius: 0;
+    border-width: 1px 0 0 0;
+
+    table {
+      table-layout: fixed;
+
+      td a {
+        font-size: inherit;
+        font-weight: $font-weight-normal;
+      }
+
+      &.ui-datepicker-calendar td.ui-datepicker-today a.ui-state-highlight {
+        background-color: gray('400');
+        color: $white;
+      }
+
+      &.ui-datepicker-calendar td.ui-datepicker-other-month a.ui-state-active {
+        background-color: theme-color('primary');
+        color: $white;
+      }
+
+      &.ui-datepicker-calendar td:not(.ui-state-disabled) a.ui-state-active {
+        background-color: theme-color('primary');
+      }
+    }
+
+    .ui-datepicker-header {
+      .ui-datepicker-next,
+      .ui-datepicker-prev {
+        top: 13px;
+
+        &::before {
+          content: none;
+        }
+
+        .pi {
+          display: block;
+        }
+      }
+
+      .ui-datepicker-prev {
+        left: 13px;
+      }
+
+      .ui-datepicker-next {
+        right: 5px;
+      }
+    }
+  }
+}
+
+body .ui-slider {
+  margin: 5px;
+  position: relative;
+  background: theme-color('light');
+
+  .ui-slider-range {
+    background: theme-color('primary');
+  }
+
+  .ui-slider-handle {
+    background-color: $white;
+    border: 1px solid gray('400');
+    width: 28px;
+    height: 28px;
+
+    &:hover {
+      background-color: $white;
+    }
+  }
+
+  &.ui-slider-horizontal {
+    height: 6px;
+
+    .ui-slider-handle {
+      top: -12px;
+      margin-left: -14px;
+    }
+  }
+
+  &.is-disabled {
+    opacity: 1;
+
+    .ui-slider-range {
+      background: gray('600') !important;
+    }
+  }
+
+  &.is-invalid {
+    border-color: theme-color('danger');
+    background: lighten($danger, 30%);
+
+    .ui-slider-handle {
+      border-color: theme-color('danger');
+    }
+
+    .ui-slider-range {
+      background: theme-color('danger') !important;
+    }
+  }
+}
