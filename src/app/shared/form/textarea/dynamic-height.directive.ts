@@ -16,7 +16,7 @@ export class DynamicHeightDirective implements AfterViewInit {
   @Input() @HostBinding('style.min-height') minHeight: string;
   @Input() @HostBinding('style.max-height') maxHeight: string;
 
-  constructor(private element: ElementRef) {}
+  constructor(private readonly element: ElementRef) {}
 
   public ngAfterViewInit() {
     this.resize();
