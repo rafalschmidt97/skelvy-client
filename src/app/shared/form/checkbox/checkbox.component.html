@@ -1,0 +1,59 @@
+<div [class.form-group]="label">
+  <label *ngIf="label" [attr.for]="name + '-0'">{{ label }}</label>
+  <ng-container [formGroup]="inputForm">
+    <div>
+      <div
+        class="custom-control custom-checkbox full"
+        formArrayName="checkbox"
+        *ngFor="let checkbox of checkbox.controls; let i = index"
+      >
+        <input
+          type="checkbox"
+          [attr.id]="name + '-' + i"
+          [formControlName]="i"
+          class="custom-control-input"
+          [class.is-invalid]="
+            isInvalid && (isDirty || isTouched) && hasFeedback
+          "
+          [attr.disabled]="isLoading ? '' : null"
+        />
+        <label class="custom-control-label" [attr.for]="name + '-' + i">
+          {{ options[i].label }}
+        </label>
+      </div>
+    </div>
+  </ng-container>
+  <div [class.is-invalid]="isInvalid && hasFeedback">
+    <ng-container *ngIf="hasFeedback">
+      <div *ngIf="isInvalid" class="invalid-feedback">
+        <ng-container *ngIf="hasErrorRequired">
+          {{ 'The field is required' | translate }}
+        </ng-container>
+      </div>
+      <div *ngIf="!isInvalid" class="feedback">
+        {{ 'The field is valid' | translate }}
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<!--This is own solution if bootstrap won't work-->
+<!--<div-->
+<!--class="checkbox-group"-->
+<!--formArrayName="checkbox"-->
+<!--*ngFor="let checkbox of checkbox.controls; let i = index"-->
+<!--[class.is-checked]="checkbox.value"-->
+<!--[class.is-invalid]="isInvalid && hasFeedback"-->
+<!--[class.is-disabled]="isLoading"-->
+<!--&gt;-->
+<!--<input-->
+<!--type="checkbox"-->
+<!--[attr.id]="name + '-' + i"-->
+<!--[formControlName]="i"-->
+<!--class="checkbox-input"-->
+<!--[attr.disabled]="isLoading ? '' : null"-->
+<!--/>-->
+<!--<label class="checkbox-label" [attr.for]="name + '-' + i">-->
+<!--{{ options[i].label }}-->
+<!--</label>-->
+<!--</div>-->

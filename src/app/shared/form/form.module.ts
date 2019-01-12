@@ -13,6 +13,7 @@ import { DateComponent } from './date/date.component';
 import { IonicModule } from '@ionic/angular';
 import { RangeComponent } from './range/range.component';
 import { SelectComponent } from './select/select.component';
+import { CheckboxComponent } from './checkbox/checkbox.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { SelectComponent } from './select/select.component';
     DateComponent,
     RangeComponent,
     SelectComponent,
+    CheckboxComponent,
   ],
   imports: [
     CommonModule,
@@ -44,6 +46,7 @@ import { SelectComponent } from './select/select.component';
     DateComponent,
     RangeComponent,
     SelectComponent,
+    CheckboxComponent,
   ],
 })
 export class FormModule {}
