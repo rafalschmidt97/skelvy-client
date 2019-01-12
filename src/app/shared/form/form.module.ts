@@ -12,6 +12,7 @@ import { ModalModule } from '../modal/modal.module';
 import { DateComponent } from './date/date.component';
 import { IonicModule } from '@ionic/angular';
 import { RangeComponent } from './range/range.component';
+import { SelectComponent } from './select/select.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { RangeComponent } from './range/range.component';
     CalendarComponent,
     DateComponent,
     RangeComponent,
+    SelectComponent,
   ],
   imports: [
     CommonModule,
@@ -41,6 +43,7 @@ import { RangeComponent } from './range/range.component';
     CalendarComponent,
     DateComponent,
     RangeComponent,
+    SelectComponent,
   ],
 })
 export class FormModule {}
