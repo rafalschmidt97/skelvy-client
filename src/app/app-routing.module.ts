@@ -7,6 +7,10 @@ const routes: Routes = [
     path: 'welcome',
     loadChildren: './modules/welcome/welcome.module#WelcomeModule',
   },
+  {
+    path: 'profile',
+    loadChildren: './modules/profile/profile.module#ProfileModule',
+  },
 ];
 
 @NgModule({

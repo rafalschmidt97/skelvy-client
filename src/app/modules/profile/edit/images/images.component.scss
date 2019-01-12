@@ -1,0 +1,62 @@
+@import '~src/theme/bootstrap/variables';
+
+.invalid-feedback,
+.valid-feedback,
+.feedback {
+  margin-bottom: 0.25rem;
+}
+
+.feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  visibility: hidden;
+}
+
+.is-invalid .invalid-feedback {
+  display: block;
+}
+
+.image-container {
+  position: relative;
+
+  &.third {
+    margin-top: 30px;
+  }
+
+  .image {
+    display: block;
+    width: 100%;
+    padding-top: 100%;
+    background-size: cover;
+    background-color: theme-color('light');
+    margin-bottom: 0;
+    border-radius: $border-radius;
+  }
+
+  .remove {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+  }
+
+  .add {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -11px 0 0 -11px;
+  }
+
+  &.is-disabled {
+    .image {
+      background-color: gray('300');
+      filter: grayscale(100%);
+    }
+
+    .remove,
+    .add {
+      display: none;
+    }
+  }
+}

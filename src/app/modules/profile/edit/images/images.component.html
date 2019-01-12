@@ -1,0 +1,152 @@
+<div
+  [class.form-group]="label"
+  [class.is-invalid]="isInvalid && isDirty && hasFeedback"
+>
+  <label *ngIf="label" [attr.for]="image1Name">{{ label }}</label>
+  <ng-container [formGroup]="inputForm">
+    <div class="row">
+      <div class="col-8">
+        <div class="image-container" [class.is-disabled]="isLoading">
+          <label
+            class="image"
+            [style.background-image]="
+              inputForm.get(image1Name).value !== ''
+                ? 'url(' + inputForm.get(image1Name).value + ')'
+                : 'none'
+            "
+          >
+            <input
+              type="file"
+              accept="image/*"
+              [formControlName]="newImageName"
+              (change)="fileChangeEvent($event, cropper, image1Name)"
+              class="d-none"
+              [attr.disabled]="isLoading ? '' : null"
+            />
+            <span
+              *ngIf="inputForm.get(image1Name).value === ''"
+              class="add text-primary"
+            >
+              <i class="fas fa-lg fa-plus-circle"></i>
+            </span>
+          </label>
+          <span
+            *ngIf="inputForm.get(image1Name).value !== ''"
+            class="remove text-white"
+            (click)="remove(1)"
+          >
+            <i class="fas fa-fw fa-times-circle"></i>
+          </span>
+        </div>
+      </div>
+      <div class="col-4">
+        <div
+          class="image-container"
+          [class.is-disabled]="
+            isLoading || inputForm.get(image1Name).value === ''
+          "
+        >
+          <label
+            class="image"
+            [style.background-image]="
+              inputForm.get(image2Name).value !== ''
+                ? 'url(' + inputForm.get(image2Name).value + ')'
+                : 'none'
+            "
+          >
+            <input
+              type="file"
+              accept="image/*"
+              [formControlName]="newImageName"
+              (change)="fileChangeEvent($event, cropper, image2Name)"
+              class="d-none"
+              [attr.disabled]="
+                isLoading || inputForm.get(image1Name).value === '' ? '' : null
+              "
+            />
+            <span
+              *ngIf="inputForm.get(image2Name).value === ''"
+              class="add text-primary"
+            >
+              <i class="fas fa-lg fa-plus-circle"></i>
+            </span>
+          </label>
+          <span
+            *ngIf="inputForm.get(image2Name).value !== ''"
+            class="remove text-white"
+            (click)="remove(2)"
+          >
+            <i class="fas fa-fw fa-times-circle"></i>
+          </span>
+        </div>
+
+        <div
+          class="image-container third"
+          [class.is-disabled]="
+            isLoading || inputForm.get(image2Name).value === ''
+          "
+        >
+          <label
+            class="image"
+            [style.background-image]="
+              inputForm.get(image3Name).value !== ''
+                ? 'url(' + inputForm.get(image3Name).value + ')'
+                : 'none'
+            "
+          >
+            <input
+              type="file"
+              accept="image/*"
+              [formControlName]="newImageName"
+              (change)="fileChangeEvent($event, cropper, image3Name)"
+              class="d-none"
+              [attr.disabled]="
+                isLoading || inputForm.get(image2Name).value === '' ? '' : null
+              "
+            />
+            <span
+              *ngIf="inputForm.get(image3Name).value === ''"
+              class="add text-primary"
+            >
+              <i class="fas fa-lg fa-plus-circle"></i>
+            </span>
+          </label>
+          <span
+            *ngIf="inputForm.get(image3Name).value !== ''"
+            class="remove text-white"
+            (click)="remove(3)"
+          >
+            <i class="fas fa-fw fa-times-circle"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div [class.is-invalid]="isInvalid && isDirty && hasFeedback">
+    <ng-container *ngIf="hasFeedback">
+      <div *ngIf="isInvalid && isDirty" class="invalid-feedback">
+        <ng-container *ngIf="hasErrorRequired">{{
+          'The field is required' | translate
+        }}</ng-container>
+      </div>
+      <div *ngIf="!(isInvalid && isDirty)" class="feedback">
+        {{ 'The field is valid' | translate }}
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #cropper>
+  <app-modal (decline)="confirm()">
+    <image-cropper
+      [style.max-height]="'90vh'"
+      outputType="base64"
+      [imageChangedEvent]="imageChangedEvent"
+      [aspectRatio]="1"
+      [resizeToWidth]="512"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event)"
+    ></image-cropper>
+  </app-modal>
+</ng-template>
