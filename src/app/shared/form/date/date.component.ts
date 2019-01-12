@@ -8,8 +8,10 @@ import * as moment from 'moment';
   styleUrls: ['./date.component.scss'],
 })
 export class DateComponent extends ComplexFieldComponent implements OnInit {
-  @Input() min: number;
-  @Input() max: number;
+  @Input() min: Date;
+  @Input() max: Date;
+  minIso: string;
+  maxIso: string;
 
   datePicker: string;
   dayNames = moment.weekdays();
@@ -24,6 +26,8 @@ export class DateComponent extends ComplexFieldComponent implements OnInit {
 
   ngOnInit() {
     this.datePicker = moment(this.form.get(this.name).value).format();
+    this.minIso = moment(this.min).format();
+    this.maxIso = moment(this.max).format();
   }
 
   onChange() {
