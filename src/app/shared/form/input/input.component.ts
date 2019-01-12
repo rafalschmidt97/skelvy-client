@@ -22,9 +22,10 @@ export class InputComponent extends ComplexFieldComponent {
 
   static noWhitespaceValidation() {
     return (control: FormControl) => {
-      return !((control.value || '').trim().length === 0)
-        ? null
-        : { required: true };
+      return control.value.length > 0 &&
+        (control.value || '').trim().length === 0
+        ? { required: true }
+        : null;
     };
   }
 }
