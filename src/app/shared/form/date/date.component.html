@@ -19,6 +19,7 @@
       [min]="minIso"
       [max]="maxIso"
       [hidden]="true"
+      [disabled]="isLoading"
       [(ngModel)]="datePicker"
       (ionChange)="onChange()"
     ></ion-datetime>
