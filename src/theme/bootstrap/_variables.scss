@@ -228,6 +228,8 @@ $modal-footer-border-width: 0;
 $modal-header-padding: 1rem 1rem 0;
 $modal-backdrop-opacity: 0.35;
 $modal-dialog-margin-y-sm-up: 0;
-$modal-transition: transform 0.15s ease-in-out;
+$modal-fade-transform: none;
+$modal-show-transform: none;
+$modal-transition: none;
 
 @import '~bootstrap/scss/variables';

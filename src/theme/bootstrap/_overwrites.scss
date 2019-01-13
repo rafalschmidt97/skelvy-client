@@ -49,12 +49,13 @@ a {
     }
   }
 
-  // move modal from bottom to top instead of just fade
-  &.fade .modal-dialog {
-    transform: translate(0, 8px);
+  &.fade {
+    opacity: 1 !important;
+    transform: translate3d(0, 100%, 0);
+    transition: transform 0.25s ease-out;
   }
 
-  &.show .modal-dialog {
-    transform: translate(0, 0);
+  &.show {
+    transform: translateY(0);
   }
 }
