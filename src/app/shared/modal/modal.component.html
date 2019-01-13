@@ -1,10 +1,10 @@
-<div class="modal-body text-center">
+<div class="modal-body">
   <div class="header d-flex align-items-center py-2 px-3">
-    <h6 class="mb-0">{{ title }}</h6>
-    <span
-      class="btn-done ml-auto text-primary font-weight-bold"
-      (click)="decline.emit()"
-    >
+    <span class="title font-weight-bold">{{ title }}</span>
+    <span class="btn-cancel text-primary" (click)="decline.emit()">
+      {{ 'Cancel' | translate }}
+    </span>
+    <span class="btn-done text-primary" (click)="confirm.emit()">
       {{ 'Done' | translate }}
     </span>
   </div>

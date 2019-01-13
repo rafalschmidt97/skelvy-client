@@ -4,6 +4,49 @@
   padding: 0;
 }
 
-.btn-done {
+:host-context(.ios) {
+  .title {
+    order: 2;
+  }
+
+  .btn-done {
+    font-weight: 600;
+  }
+
+  .btn-done {
+    order: 3;
+    margin-left: auto;
+    padding-left: 0.25rem;
+  }
+
+  .btn-cancel {
+    order: 1;
+    margin-right: auto;
+    font-weight: $font-weight-normal;
+    padding-right: 0.25rem;
+  }
+}
+
+:host-context(.md) {
+  .btn-done,
+  .btn-cancel {
+    font-weight: 500;
+  }
+
+  .btn-cancel {
+    margin-left: auto;
+    padding-right: 1.75rem;
+    padding-left: 0.25rem;
+  }
+
+  .btn-done,
+  .btn-cancel {
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+}
+
+.btn-done,
+.btn-cancel {
   cursor: pointer;
 }
