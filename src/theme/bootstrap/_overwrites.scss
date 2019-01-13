@@ -1,4 +1,5 @@
 @import 'variables';
+@import '~bootstrap/scss/mixins';
 
 button {
   outline: none !important;
@@ -16,12 +17,16 @@ a {
 
 .modal {
   .modal-dialog {
-    margin: 0 !important;
+    margin: 0;
     padding: 0.5rem;
     display: flex;
     min-height: 100%;
     align-items: center;
     justify-content: center;
+
+    @include media-breakpoint-up(sm) {
+      margin: 0 auto;
+    }
 
     .modal-content {
       width: 80%;
