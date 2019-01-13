@@ -1,18 +1,5 @@
 @import 'variables';
 
-// add bar for ios (android has gray one)
-html.ios ion-app::before {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 20px;
-  background: white;
-  z-index: 1;
-}
-
 .picker-wrapper {
   border-top-left-radius: 1rem !important;
   border-top-right-radius: 1rem !important;
