@@ -81,4 +81,8 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
   confirm() {
     this.modal.hide();
   }
+
+  decline() {
+    this.modal.hide();
+  }
 }

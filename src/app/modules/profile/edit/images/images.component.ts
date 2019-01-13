@@ -102,6 +102,10 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     this.modal.hide();
   }
 
+  decline() {
+    this.modal.hide();
+  }
+
   remove(index: number) {
     this.dirty = true;
 
