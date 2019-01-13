@@ -8,6 +8,12 @@ a {
   font-weight: $font-weight-bold;
 }
 
+.modal-open {
+  ion-content {
+    --overflow: hidden;
+  }
+}
+
 .modal {
   .modal-dialog {
     margin: 0 !important;
