@@ -7,6 +7,7 @@ import { AlertModule } from './alert/alert.module';
 import { IframeModule } from './iframe/iframe.module';
 import { ModalModule } from './modal/modal.module';
 import { FormModule } from './form/form.module';
+import { AgePipe } from './pipes/age.pipe';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { FormModule } from './form/form.module';
     ModalModule,
     FormModule,
   ],
+  declarations: [AgePipe],
   exports: [
     CommonModule,
     IonicModule,
@@ -28,6 +30,7 @@ import { FormModule } from './form/form.module';
     IframeModule,
     ModalModule,
     FormModule,
+    AgePipe,
   ],
 })
 export class SharedModule {}
