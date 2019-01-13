@@ -8,6 +8,10 @@ const routes: Routes = [
     loadChildren: './modules/welcome/welcome.module#WelcomeModule',
   },
   {
+    path: 'tabs',
+    loadChildren: './modules/tabs/tabs.module#TabsModule',
+  },
+  {
     path: 'profile',
     loadChildren: './modules/profile/profile.module#ProfileModule',
   },
