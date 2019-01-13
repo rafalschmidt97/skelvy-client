@@ -29,7 +29,7 @@
 
 <ng-template #date>
   <app-modal (confirm)="confirm()" (decline)="decline()">
-    <ng-container [formGroup]="form">
+    <ng-container [formGroup]="inputForm">
       <p-calendar
         [formControlName]="name"
         [styleClass]="

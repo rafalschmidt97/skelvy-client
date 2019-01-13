@@ -12,6 +12,7 @@ import * as moment from 'moment';
 import { FormComponent } from '../form.component';
 import { Modal } from '../../modal/modal';
 import { ModalService } from '../../modal/modal.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-calendar',
@@ -22,6 +23,7 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
   @Input() range: boolean;
   @Input() min: number;
   @Input() max: number;
+  inputForm: FormGroup;
 
   locale: LocaleSettings = {
     firstDayOfWeek: moment.localeData().firstDayOfWeek(),
@@ -40,6 +42,7 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
     private readonly modalService: ModalService,
+    private readonly formBuilder: FormBuilder,
   ) {
     super(parent);
   }
@@ -58,11 +61,15 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.form.get(this.name).valueChanges.subscribe((value: Date[]) => {
+    this.inputForm = this.formBuilder.group({
+      [this.name]: [],
+    });
+
+    this.inputForm.get(this.name).valueChanges.subscribe((value: Date[]) => {
       const hasSameDates =
         value[1] && value[0].getTime() === value[1].getTime();
       if (hasSameDates) {
-        this.form.patchValue({
+        this.inputForm.patchValue({
           [this.name]: [value[0], null],
         });
       }
@@ -70,15 +77,25 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
   }
 
   open(template: TemplateRef<any>) {
+    const value = this.form.get(this.name).value;
+
+    this.inputForm.patchValue({
+      [this.name]: value,
+    });
+
     if (!this.isLoading) {
-      this.modal = this.modalService.show(template, {
-        ignoreBackdropClick: true,
-        keyboard: false,
-      });
+      this.modal = this.modalService.show(template);
     }
   }
 
   confirm() {
+    this.form.markAsDirty();
+    this.form.markAsTouched();
+
+    this.form.patchValue({
+      [this.name]: this.inputForm.get(this.name).value,
+    });
+
     this.modal.hide();
   }
 
