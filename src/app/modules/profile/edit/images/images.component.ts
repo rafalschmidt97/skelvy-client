@@ -4,6 +4,7 @@ import {
   Inject,
   OnInit,
   TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { FormComponent } from '../../../../shared/form/form.component';
 import { ModalService } from '../../../../shared/modal/modal.service';
@@ -29,6 +30,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   image1Name = 'image1';
   image2Name = 'image2';
   image3Name = 'image3';
+  @ViewChild('cropper') cropper: TemplateRef<any>;
 
   get isDirty(): boolean {
     return this.dirty;
@@ -70,15 +72,13 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     });
   }
 
-  fileChangeEvent(event: any, template: TemplateRef<any>, name: string) {
+  fileChangeEvent(event: any, name: string) {
     const filesSelected = event.srcElement.files.length !== 0;
     if (filesSelected) {
       this.imageChangedEvent = event;
       this.croppedName = name;
-      this.modal = this.modalService.show(template, {
-        ignoreBackdropClick: true,
-        keyboard: false,
-      });
+
+      this.modal = this.modalService.show(this.cropper);
     }
   }
 

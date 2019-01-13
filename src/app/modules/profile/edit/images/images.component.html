@@ -19,7 +19,7 @@
               type="file"
               accept="image/*"
               [formControlName]="newImageName"
-              (change)="fileChangeEvent($event, cropper, image1Name)"
+              (change)="fileChangeEvent($event, image1Name)"
               class="d-none"
               [attr.disabled]="isLoading ? '' : null"
             />
@@ -58,7 +58,7 @@
               type="file"
               accept="image/*"
               [formControlName]="newImageName"
-              (change)="fileChangeEvent($event, cropper, image2Name)"
+              (change)="fileChangeEvent($event, image2Name)"
               class="d-none"
               [attr.disabled]="
                 isLoading || inputForm.get(image1Name).value === '' ? '' : null
@@ -98,7 +98,7 @@
               type="file"
               accept="image/*"
               [formControlName]="newImageName"
-              (change)="fileChangeEvent($event, cropper, image3Name)"
+              (change)="fileChangeEvent($event, image3Name)"
               class="d-none"
               [attr.disabled]="
                 isLoading || inputForm.get(image2Name).value === '' ? '' : null
