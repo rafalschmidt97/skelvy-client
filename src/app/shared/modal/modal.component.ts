@@ -9,4 +9,8 @@ export class ModalComponent {
   @Input() title: string;
   @Output() decline = new EventEmitter();
   @Output() confirm = new EventEmitter();
+
+  get hasDecline() {
+    return this.decline.observers.length > 0;
+  }
 }

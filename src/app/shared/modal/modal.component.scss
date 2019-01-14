@@ -39,6 +39,14 @@
     padding-left: 0.25rem;
   }
 
+  .btn-done {
+    margin-left: auto;
+  }
+
+  .btn-cancel + .btn-done {
+    margin-left: 0;
+  }
+
   .btn-done,
   .btn-cancel {
     text-transform: uppercase;
