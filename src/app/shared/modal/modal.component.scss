@@ -50,3 +50,9 @@
 .btn-cancel {
   cursor: pointer;
 }
+
+.content {
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
