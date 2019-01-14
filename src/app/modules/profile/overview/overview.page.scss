@@ -1,0 +1,65 @@
+@import '~src/theme/bootstrap/variables';
+
+.avatar {
+  position: relative;
+  padding: 30px;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: lighten($primary, 30%);
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+  }
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: $primary;
+    top: 15px;
+    left: 15px;
+    border-radius: 50%;
+  }
+
+  .image {
+    width: 120px;
+    height: 120px;
+    background: gray('200');
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+    border-radius: 50%;
+  }
+}
+
+.tap {
+  font-size: $font-size-sm;
+}
+
+.slider {
+  padding-bottom: 2rem;
+}
+
+::ng-deep .swiper-pagination-bullets {
+  bottom: 0 !important;
+}
+
+.slide {
+  padding: 0 2rem;
+}
+
+.bg-ultra-light {
+  background: gray('100');
+}
+
+.preview {
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
