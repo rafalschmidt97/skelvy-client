@@ -18,9 +18,9 @@
 
           <h2 class="name text-center my-4">
             <div class="d-inline-block">
-              {{profile.name}}, {{profile.birthDate | age}}
+              {{ profile.name }}, {{ profile.birthDate | age }}
               <div class="tap font-weight-medium">
-                {{'Tap to see your profile' | translate}}
+                {{ 'Tap to see your profile' | translate }}
               </div>
             </div>
           </h2>
@@ -30,22 +30,22 @@
           routerLink="/profile/edit"
           class="btn btn-outline-primary btn-block"
         >
-          {{'Edit details' | translate}}
+          {{ 'Edit details' | translate }}
         </button>
       </div>
     </section>
     <section class="py-4 text-center bg-white">
       <ion-slides pager="true" class="slider">
         <ion-slide>
-          <div class="slide">{{'Profile hint 1' | translate}}</div>
+          <div class="slide">{{ 'Profile hint 1' | translate }}</div>
         </ion-slide>
 
         <ion-slide>
-          <div class="slide">{{'Profile hint 2' | translate}}</div>
+          <div class="slide">{{ 'Profile hint 2' | translate }}</div>
         </ion-slide>
 
         <ion-slide>
-          <div class="slide">{{'Profile hint 3' | translate}}</div>
+          <div class="slide">{{ 'Profile hint 3' | translate }}</div>
         </ion-slide>
       </ion-slides>
     </section>

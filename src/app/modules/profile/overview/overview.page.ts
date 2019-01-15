@@ -13,8 +13,6 @@ export class OverviewPage {
   modal: Modal;
   @ViewChild('details') details: TemplateRef<any>;
 
-  constructor(private readonly modalService: ModalService) {}
-
   profile: Profile = {
     photos: [
       'https://rafalschmidt.com/skelvy/avatar.jpg',
@@ -29,6 +27,8 @@ export class OverviewPage {
     `,
     gender: Gender.MALE,
   };
+
+  constructor(private readonly modalService: ModalService) {}
 
   open() {
     this.modal = this.modalService.show(this.details);
