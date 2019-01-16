@@ -12,6 +12,10 @@ const routes: Routes = [
         loadChildren: '../profile/overview/overview.module#OverviewPageModule',
       },
       {
+        path: 'meeting',
+        loadChildren: '../meeting/overview/overview.module#OverviewPageModule',
+      },
+      {
         path: '',
         redirectTo: 'profile',
         pathMatch: 'full',

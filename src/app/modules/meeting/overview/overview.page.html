@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ 'Meeting' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="!meeting && !request">
+    <app-unspecified
+      (addMeeting)="addMeeting()"
+      (addRequest)="addRequest()"
+    ></app-unspecified>
+  </ng-container>
+</ion-content>
