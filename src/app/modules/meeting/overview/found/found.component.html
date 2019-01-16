@@ -1,0 +1,76 @@
+<div class="d-flex h-100 flex-column">
+  <section class="drink d-flex h-100 bg-ultra-light">
+    <div class="my-auto w-100 text-center header">
+      {{ 'Choice' | translate }} = {{ meeting.drink.name | translate }}
+      <ion-icon name="heart" class="header-icon"></ion-icon>
+    </div>
+  </section>
+  <section class="info">
+    <div class="d-flex text-center border-bottom border-top">
+      <div class="w-50 py-2 border-right">
+        <div class="font-weight-bold">{{ 'Date' | translate }}</div>
+        <div>{{ meeting.date | date: 'dd.MM.yyyy' }}</div>
+      </div>
+      <div class="w-50 py-2">
+        <div class="font-weight-bold">{{ 'City' | translate }}</div>
+        <div>{{ meeting.address.city }}</div>
+      </div>
+    </div>
+  </section>
+  <section class="users">
+    <div
+      class="border-bottom py-4"
+      *ngFor="let user of meeting.users"
+      (click)="openDetails(user)"
+    >
+      <div class="container-fluid d-flex align-items-center">
+        <div
+          class="flex-shrink-0 image rounded-circle"
+          [style.background-image]="'url(' + user.profile.photos[0] + ')'"
+        ></div>
+        <div class="min-width mx-3">
+          <h3 class="mb-0 text-primary">
+            {{ user.profile.name }}, {{ user.profile.birthDate | age }}
+          </h3>
+          <p class="description small text-muted mb-0">
+            <ng-container *ngIf="user.profile.description?.length > 0">
+              {{ user.profile.description }}
+            </ng-container>
+            <ng-container
+              *ngIf="
+                !user.profile.description ||
+                user.profile.description.length === 0
+              "
+            >
+              {{ 'User did not fill his bio yet.' | translate }}
+            </ng-container>
+          </p>
+        </div>
+        <div class="text-primary ml-auto">
+          <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="more">
+    <div class="container py-3">
+      <button (click)="leaveGroup()" class="btn btn-outline-primary btn-block">
+        {{ 'Leave group' | translate }}
+      </button>
+    </div>
+  </section>
+</div>
+
+<ng-template #details>
+  <app-modal (confirm)="confirmDetails()">
+    <app-profile-details [profile]="profileForModal"></app-profile-details>
+  </app-modal>
+</ng-template>
+
+<ng-template #alert>
+  <app-alert
+    (confirm)="confirmAlert()"
+    (decline)="declineAlert()"
+    [title]="'Are you sure?' | translate"
+  ></app-alert>
+</ng-template>

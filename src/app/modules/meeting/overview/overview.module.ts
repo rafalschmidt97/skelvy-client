@@ -5,6 +5,8 @@ import { OverviewPage } from './overview.page';
 import { SharedModule } from '../../../shared/shared.module';
 import { UnspecifiedComponent } from './unspecified/unspecified.component';
 import { SearchingComponent } from './searching/searching.component';
+import { FoundComponent } from './found/found.component';
+import { ProfileDetailsComponent } from './found/profile-details/profile-details.component';
 
 const routes: Routes = [
   {
@@ -15,6 +17,12 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
-  declarations: [OverviewPage, UnspecifiedComponent, SearchingComponent],
+  declarations: [
+    OverviewPage,
+    UnspecifiedComponent,
+    SearchingComponent,
+    FoundComponent,
+    ProfileDetailsComponent,
+  ],
 })
 export class OverviewPageModule {}

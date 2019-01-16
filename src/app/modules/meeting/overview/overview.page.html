@@ -17,4 +17,7 @@
       (removeRequest)="removeRequest()"
     ></app-searching>
   </ng-container>
+  <ng-container *ngIf="meeting">
+    <app-found [meeting]="meeting" (leaveMeeting)="leaveMeeting()"></app-found>
+  </ng-container>
 </ion-content>
