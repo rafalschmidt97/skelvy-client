@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ 'Meeting' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="!meeting && !request">
+    <app-unspecified
+      (addMeeting)="addMeeting()"
+      (addRequest)="addRequest()"
+    ></app-unspecified>
+  </ng-container>
+  <ng-container *ngIf="request">
+    <app-searching
+      [request]="request"
+      (removeRequest)="removeRequest()"
+    ></app-searching>
+  </ng-container>
+  <ng-container *ngIf="meeting">
+    <app-found [meeting]="meeting" (leaveMeeting)="leaveMeeting()"></app-found>
+  </ng-container>
+</ion-content>

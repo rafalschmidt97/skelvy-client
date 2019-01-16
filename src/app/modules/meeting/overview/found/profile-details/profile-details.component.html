@@ -1,0 +1,20 @@
+<div class="slider">
+  <ion-slides pager="true">
+    <ion-slide *ngFor="let photo of profile.photos">
+      <div class="slide" [style.background-image]="'url(' + photo + ')'"></div>
+    </ion-slide>
+  </ion-slides>
+</div>
+<div class="content container pb-3">
+  <h2>{{ profile.name }}, {{ profile.birthDate | age }}</h2>
+  <h5>{{ 'About me' | translate }}</h5>
+  <p class="mb-0" *ngIf="profile.description?.length > 0">
+    {{ profile.description }}
+  </p>
+  <p
+    class="mb-0 text-muted"
+    *ngIf="!profile.description || profile.description.length === 0"
+  >
+    {{ 'User did not fill his bio yet.' | translate }}
+  </p>
+</div>
