@@ -7,7 +7,7 @@
 <ion-content>
   <div class="d-flex flex-column h-100">
     <section class="container d-flex h-100 bg-ultra-light preview">
-      <div class="m-auto">
+      <div class="m-auto text-center">
         <div (click)="open()">
           <div class="avatar">
             <div
@@ -16,7 +16,7 @@
             ></div>
           </div>
 
-          <h2 class="name text-center my-4">
+          <h2 class="name my-4">
             <div class="d-inline-block">
               {{ profile.name }}, {{ profile.birthDate | age }}
               <div class="tap font-weight-medium">
@@ -26,10 +26,7 @@
           </h2>
         </div>
 
-        <button
-          routerLink="/profile/edit"
-          class="btn btn-outline-primary btn-block"
-        >
+        <button routerLink="/profile/edit" class="btn btn-outline-primary px-4">
           {{ 'Edit details' | translate }}
         </button>
       </div>
