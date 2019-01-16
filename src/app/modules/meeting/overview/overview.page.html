@@ -11,4 +11,10 @@
       (addRequest)="addRequest()"
     ></app-unspecified>
   </ng-container>
+  <ng-container *ngIf="request">
+    <app-searching
+      [request]="request"
+      (removeRequest)="removeRequest()"
+    ></app-searching>
+  </ng-container>
 </ion-content>

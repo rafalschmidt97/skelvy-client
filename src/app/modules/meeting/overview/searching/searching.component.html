@@ -1,0 +1,51 @@
+<div class="d-flex h-100 flex-column">
+  <section class="drink d-flex h-100 bg-ultra-light">
+    <div class="my-auto w-100 text-center header container">
+      {{ 'All you need to do now is just wait' | translate }}
+      <ion-icon name="heart" class="header-icon"></ion-icon>
+    </div>
+  </section>
+  <section class="info">
+    <div class="text-center border-bottom border-top">
+      <div class="py-2 border-bottom">
+        <div class="font-weight-bold">{{ 'Date' | translate }}</div>
+        <div>
+          {{ request.minimumDate | date: 'dd.MM.yyyy' }} -
+          {{ request.maximumDate | date: 'dd.MM.yyyy' }}
+        </div>
+      </div>
+      <div class="py-2 border-bottom">
+        <div class="font-weight-bold">{{ 'City' | translate }}</div>
+        <div>{{ request.address.city }}</div>
+      </div>
+      <div class="py-2 border-bottom">
+        <div class="font-weight-bold">{{ 'Drinks' | translate }}</div>
+        <div>
+          <ng-container *ngFor="let drink of request.drinks; let i = index">
+            <span class="d-inline-block">{{ drink.name | translate }}</span>
+            <span *ngIf="i !== request.drinks.length - 1">, </span>
+          </ng-container>
+        </div>
+      </div>
+      <div class="py-2">
+        <div class="font-weight-bold">{{ 'Age range' | translate }}</div>
+        <div>{{ request.minimumAge }} - {{ request.maximumAge }}</div>
+      </div>
+    </div>
+  </section>
+  <section class="more">
+    <div class="container py-3">
+      <button (click)="stop()" class="btn btn-outline-primary btn-block">
+        {{ 'Stop searching' | translate }}
+      </button>
+    </div>
+  </section>
+</div>
+
+<ng-template #alert>
+  <app-alert
+    (confirm)="confirmAlert()"
+    (decline)="declineAlert()"
+    [title]="'Are you sure?' | translate"
+  ></app-alert>
+</ng-template>

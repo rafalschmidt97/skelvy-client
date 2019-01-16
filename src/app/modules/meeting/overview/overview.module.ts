@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { OverviewPage } from './overview.page';
 import { SharedModule } from '../../../shared/shared.module';
 import { UnspecifiedComponent } from './unspecified/unspecified.component';
+import { SearchingComponent } from './searching/searching.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
-  declarations: [OverviewPage, UnspecifiedComponent],
+  declarations: [OverviewPage, UnspecifiedComponent, SearchingComponent],
 })
 export class OverviewPageModule {}
