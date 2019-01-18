@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Add meeting' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [disabled]="isLoading || form.invalid" (click)="onSubmit()">
+        {{ 'Done' | translate }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container py-3">
+    <app-form [form]="form" (onSubmit)="onSubmit()" [isLoading]="isLoading">
+      <app-calendar
+        name="date"
+        [min]="today"
+        [label]="'Date' | translate"
+      ></app-calendar>
+      <app-input
+        name="address"
+        [label]="'Address' | translate"
+        [placeholder]="'Type your city...' | translate"
+      ></app-input>
+      <app-range
+        name="age"
+        [min]="18"
+        [max]="55"
+        [range]="true"
+        [label]="'Age range' | translate"
+        maxLabelToRound="55+"
+        [maxValueToRound]="55"
+      ></app-range>
+      <app-checkbox
+        name="drinks"
+        [label]="'Drinks' | translate"
+        [options]="drinks"
+      ></app-checkbox>
+    </app-form>
+  </div>
+</ion-content>

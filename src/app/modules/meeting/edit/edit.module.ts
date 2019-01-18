@@ -3,8 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { EditPage } from './edit.page';
 import { SharedModule } from '../../../shared/shared.module';
-import { ImagesComponent } from './images/images.component';
-import { ImageCropperModule } from 'ngx-image-cropper';
 
 const routes: Routes = [
   {
@@ -14,7 +12,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), SharedModule, ImageCropperModule],
-  declarations: [EditPage, ImagesComponent],
+  imports: [RouterModule.forChild(routes), SharedModule],
+  declarations: [EditPage],
 })
-export class EditProfilePageModule {}
+export class EditMeetingPageModule {}
