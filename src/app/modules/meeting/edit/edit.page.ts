@@ -54,10 +54,14 @@ export class EditPage implements Form, OnSubmit, OnInit {
   constructor(private readonly formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
       date: [[this.today, this.tomorrow], Validators.required],
-      address: ['', Validators.required],
+      address: [null, Validators.required],
       age: [[18, 25], RangeComponent.minimumRangeValidator(4)],
       drinks: [[this.drinks[0].value], Validators.required],
     });
+  }
+
+  ngOnInit() {
+    // TODO: fill address based on our location
   }
 
   onSubmit() {
@@ -69,9 +73,5 @@ export class EditPage implements Form, OnSubmit, OnInit {
         this.isLoading = false;
       }, 2000);
     }
-  }
-
-  ngOnInit() {
-    // TODO: fill address based on our location
   }
 }

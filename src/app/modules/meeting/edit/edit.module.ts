@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { EditPage } from './edit.page';
 import { SharedModule } from '../../../shared/shared.module';
+import { AddressComponent } from './address/address.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
-  declarations: [EditPage],
+  declarations: [EditPage, AddressComponent],
 })
 export class EditMeetingPageModule {}

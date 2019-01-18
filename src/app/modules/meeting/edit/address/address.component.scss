@@ -1,0 +1,46 @@
+@import '~src/theme/bootstrap/variables';
+
+.invalid-feedback,
+.valid-feedback,
+.feedback {
+  margin-bottom: 0.25rem;
+}
+
+.is-invalid .invalid-feedback {
+  display: block;
+}
+
+.feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  visibility: hidden;
+}
+
+.form-control-placeholder {
+  &.is-invalid {
+    border-color: theme-color('danger');
+  }
+
+  &.is-disabled {
+    background-color: theme-color('light');
+  }
+}
+
+.search {
+  height: calc(100vh - 80px);
+}
+
+.description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.min-width {
+  min-width: 0;
+}
+
+.result {
+  margin-top: -1px;
+}
