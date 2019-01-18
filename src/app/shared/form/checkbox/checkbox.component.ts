@@ -24,12 +24,6 @@ export class CheckboxComponent extends ComplexFieldComponent implements OnInit {
     return this.inputForm.get('checkbox') as FormArray;
   }
 
-  static minimumSelectedValidation(min = 1) {
-    return (control: FormControl) => {
-      return control.value.length >= min ? null : { required: true };
-    };
-  }
-
   ngOnInit() {
     this.inputForm = this.formBuilder.group({
       checkbox: new FormArray(this.options.map(() => new FormControl(false))),
