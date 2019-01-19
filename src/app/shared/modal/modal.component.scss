@@ -30,7 +30,7 @@
 :host-context(.md) {
   .btn-done,
   .btn-cancel {
-    font-weight: 500;
+    font-weight: $font-weight-medium;
   }
 
   .btn-cancel {

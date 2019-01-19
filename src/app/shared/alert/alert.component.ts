@@ -12,6 +12,12 @@ export class AlertComponent {
   @Input() confirmText: string;
   @Input() confirmLoading = false;
   @Input() declineText: string;
-  @Input() hasConfirm = true;
-  @Input() hasDecline = true;
+
+  get hasConfirm() {
+    return this.confirm.observers.length > 0;
+  }
+
+  get hasDecline() {
+    return this.decline.observers.length > 0;
+  }
 }

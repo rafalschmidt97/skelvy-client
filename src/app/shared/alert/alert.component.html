@@ -1,8 +1,8 @@
 <div *ngIf="title" class="modal-header flex-column text-center">
-  <h6 *ngIf="title" class="modal-title w-100">{{ title }}</h6>
-  <p *ngIf="description" class="small text-muted mb-0 w-100">
+  <span *ngIf="title" class="font-weight-medium w-100">{{ title }}</span>
+  <span *ngIf="description" class="small text-muted w-100">
     {{ description }}
-  </p>
+  </span>
 </div>
 <div class="modal-body text-center">
   <ng-content></ng-content>

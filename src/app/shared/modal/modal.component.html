@@ -1,6 +1,6 @@
 <div class="modal-body">
   <div class="header d-flex align-items-center py-2 px-3">
-    <span class="title font-weight-bold">{{ title }}</span>
+    <span class="title font-weight-medium">{{ title }}</span>
     <span
       *ngIf="hasDecline"
       class="btn-cancel text-primary"
@@ -8,7 +8,11 @@
     >
       {{ 'Cancel' | translate }}
     </span>
-    <span class="btn-done text-primary" (click)="confirm.emit()">
+    <span
+      *ngIf="hasConfirm"
+      class="btn-done text-primary"
+      (click)="confirm.emit()"
+    >
       {{ 'Done' | translate }}
     </span>
   </div>
