@@ -1,18 +1,22 @@
 import { Component } from '@angular/core';
 import { Meeting, MeetingRequest } from '../meeting';
-import { Gender } from '../../profile/profile';
-import * as moment from 'moment';
+import { MeetingStoreService } from '../meeting-store.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.page.html',
 })
 export class OverviewPage {
-  meeting: Meeting;
+  meeting$: Observable<Meeting>;
   request: MeetingRequest;
 
+  constructor(private readonly store: MeetingStoreService) {
+    this.meeting$ = store.data;
+  }
+
   leaveMeeting() {
-    this.meeting = null;
+    this.store.set(null);
   }
 
   removeRequest() {
@@ -20,77 +24,12 @@ export class OverviewPage {
   }
 
   addMeeting() {
-    this.fillMeeting();
+    this.store.fill();
   }
 
   addRequest() {
-    this.meeting = null;
+    this.store.set(null);
     this.fillRequest();
-  }
-
-  private fillMeeting() {
-    this.meeting = {
-      id: 1,
-      users: [
-        {
-          id: 1,
-          profile: {
-            photos: [
-              'https://rafalschmidt.com/skelvy/avatar.jpg',
-              'https://rafalschmidt.com/skelvy/avatar2.jpg',
-              'https://rafalschmidt.com/skelvy/avatar3.jpg',
-            ],
-            name: 'Rafał',
-            birthDate: moment('22.04.1997', 'DD.MM.YYYY').toDate(),
-            description: `
-            I am ambitious, open-minded and willing learn new things developer from Jastrzębie-Zdrój.
-            Student of Opole University of Technology. Software Engineer at YourCompany
-          `,
-            gender: Gender.MALE,
-          },
-        },
-        {
-          id: 1,
-          profile: {
-            photos: [
-              'https://rafalschmidt.com/skelvy/avatar2.jpg',
-              'https://rafalschmidt.com/skelvy/avatar.jpg',
-              'https://rafalschmidt.com/skelvy/avatar3.jpg',
-            ],
-            name: 'Damian',
-            birthDate: moment('22.04.1996', 'DD.MM.YYYY').toDate(),
-            description: `Student of Wrocław University of Science and Technology`,
-            gender: Gender.MALE,
-          },
-        },
-        {
-          id: 3,
-          profile: {
-            photos: [
-              'https://rafalschmidt.com/skelvy/avatar3.jpg',
-              'https://rafalschmidt.com/skelvy/avatar2.jpg',
-              'https://rafalschmidt.com/skelvy/avatar.jpg',
-            ],
-            name: 'Krzysztof',
-            birthDate: moment('22.04.1995', 'DD.MM.YYYY').toDate(),
-            description: null,
-            gender: Gender.MALE,
-          },
-        },
-      ],
-      drink: {
-        id: 1,
-        name: 'Beer',
-      },
-      date: new Date(),
-      address: {
-        latitude: 1,
-        longitude: 1,
-        city: 'Jastrzębie-Zdrój',
-        state: 'Silesian',
-        country: 'Poland',
-      },
-    };
   }
 
   private fillRequest() {

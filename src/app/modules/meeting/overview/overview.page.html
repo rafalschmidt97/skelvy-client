@@ -5,19 +5,19 @@
 </ion-header>
 
 <ion-content>
-  <ng-container *ngIf="!meeting && !request">
+  <ng-container *ngIf="(meeting$ | async) as meeting; else unspecified">
+    <app-found [meeting]="meeting" (leaveMeeting)="leaveMeeting()"></app-found>
+  </ng-container>
+  <ng-template #unspecified>
     <app-unspecified
       (addMeeting)="addMeeting()"
       (addRequest)="addRequest()"
     ></app-unspecified>
-  </ng-container>
+  </ng-template>
   <ng-container *ngIf="request">
     <app-searching
       [request]="request"
       (removeRequest)="removeRequest()"
     ></app-searching>
-  </ng-container>
-  <ng-container *ngIf="meeting">
-    <app-found [meeting]="meeting" (leaveMeeting)="leaveMeeting()"></app-found>
   </ng-container>
 </ion-content>
