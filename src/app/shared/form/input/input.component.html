@@ -13,15 +13,15 @@
 
     <ng-container *ngIf="hasFeedback">
       <div *ngIf="isInvalid && isTouched" class="invalid-feedback">
-        <ng-container *ngIf="hasErrorRequired">{{
-          'The field is required' | translate
-        }}</ng-container>
-        <ng-container *ngIf="hasErrorEmail">{{
-          'Enter a valid email address' | translate
-        }}</ng-container>
-        <ng-container *ngIf="hasErrorEqual">{{
-          'Fields must be the same' | translate
-        }}</ng-container>
+        <ng-container *ngIf="hasErrorRequired">
+          {{ 'The field is required' | translate }}
+        </ng-container>
+        <ng-container *ngIf="hasErrorEmail">
+          {{ 'Enter a valid email address' | translate }}
+        </ng-container>
+        <ng-container *ngIf="hasErrorEqual">
+          {{ 'Fields must be the same' | translate }}
+        </ng-container>
       </div>
       <div *ngIf="!(isInvalid && isTouched)" class="feedback">
         {{ 'The field is valid' | translate }}

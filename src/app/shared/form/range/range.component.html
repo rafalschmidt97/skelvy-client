@@ -23,12 +23,12 @@
   <div class="mt-3" [class.is-invalid]="isInvalid && hasFeedback">
     <ng-container *ngIf="hasFeedback">
       <div *ngIf="isInvalid" class="invalid-feedback">
-        <ng-container *ngIf="hasErrorRequired">{{
-          'The field is required' | translate
-        }}</ng-container>
-        <ng-container *ngIf="hasErrorTight">{{
-          'Set the wider range' | translate
-        }}</ng-container>
+        <ng-container *ngIf="hasErrorRequired">
+          {{ 'The field is required' | translate }}
+        </ng-container>
+        <ng-container *ngIf="hasErrorTight">
+          {{ 'Set the wider range' | translate }}
+        </ng-container>
       </div>
       <div *ngIf="!isInvalid" class="feedback">
         {{ 'The field is valid' | translate }}

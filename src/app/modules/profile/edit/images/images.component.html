@@ -126,9 +126,9 @@
   <div [class.is-invalid]="isInvalid && isDirty && hasFeedback">
     <ng-container *ngIf="hasFeedback">
       <div *ngIf="isInvalid && isDirty" class="invalid-feedback">
-        <ng-container *ngIf="hasErrorRequired">{{
-          'The field is required' | translate
-        }}</ng-container>
+        <ng-container *ngIf="hasErrorRequired">
+          {{ 'The field is required' | translate }}
+        </ng-container>
       </div>
       <div *ngIf="!(isInvalid && isDirty)" class="feedback">
         {{ 'The field is valid' | translate }}

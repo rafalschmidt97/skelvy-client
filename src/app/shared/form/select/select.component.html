@@ -8,19 +8,19 @@
       [class.is-invalid]="isInvalid && (isDirty || isTouched) && hasFeedback"
       [attr.disabled]="isLoading ? '' : null"
     >
-      <option value="" disabled selected>{{
-        placeholder || 'Select' | translate
-      }}</option>
-      <option *ngFor="let option of options" [value]="option.value">{{
-        option.label
-      }}</option>
+      <option value="" disabled selected>
+        {{ placeholder || 'Select' | translate }}
+      </option>
+      <option *ngFor="let option of options" [value]="option.value">
+        {{ option.label }}
+      </option>
     </select>
 
     <ng-container *ngIf="hasFeedback">
       <div *ngIf="isInvalid && (isDirty || isTouched)" class="invalid-feedback">
-        <ng-container *ngIf="hasErrorRequired">{{
-          'The field is required' | translate
-        }}</ng-container>
+        <ng-container *ngIf="hasErrorRequired">
+          {{ 'The field is required' | translate }}
+        </ng-container>
       </div>
       <div *ngIf="!(isInvalid && (isDirty || isTouched))" class="feedback">
         {{ 'The field is valid' | translate }}
