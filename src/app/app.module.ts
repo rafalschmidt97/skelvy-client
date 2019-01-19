@@ -13,6 +13,7 @@ import { i18nConfiguration } from './core/i18n/translate';
 import { CoreModule } from './core/core.module';
 import { ModalModule } from 'ngx-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 const libraries = [
   IonicModule.forRoot(),
@@ -35,6 +36,7 @@ const libraries = [
   providers: [
     StatusBar,
     SplashScreen,
+    Keyboard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],

@@ -35,6 +35,7 @@
           (keyup)="search$.next($event.target.value)"
           class="form-control"
           [placeholder]="placeholder"
+          appAutofocus
         />
       </div>
       <div *ngIf="results">

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { EditPage } from './edit.page';
 import { SharedModule } from '../../../shared/shared.module';
 import { AddressComponent } from './address/address.component';
+import { AutofocusDirective } from './address/autofocus.directive';
 
 const routes: Routes = [
   {
@@ -14,6 +15,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
-  declarations: [EditPage, AddressComponent],
+  declarations: [EditPage, AddressComponent, AutofocusDirective],
 })
 export class EditMeetingPageModule {}
