@@ -5,7 +5,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/tabs/meeting', pathMatch: 'full' },
   {
     path: 'edit',
-    loadChildren: './edit/edit.module#EditMeetingPageModule',
+    loadChildren: './edit/edit-meeting.module#EditMeetingPageModule',
   },
 ];
 

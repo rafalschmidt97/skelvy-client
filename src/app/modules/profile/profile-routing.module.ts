@@ -5,7 +5,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/tabs/profile', pathMatch: 'full' },
   {
     path: 'edit',
-    loadChildren: './edit/edit.module#EditProfilePageModule',
+    loadChildren: './edit/edit-profile.module#EditProfilePageModule',
   },
 ];
 
