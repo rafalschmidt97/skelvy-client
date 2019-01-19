@@ -37,7 +37,7 @@ export class AddressComponent extends ComplexFieldComponent {
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
     private readonly modalService: ModalService,
-    private http: HttpClient,
+    private readonly http: HttpClient,
   ) {
     super(parent);
 
