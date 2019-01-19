@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar> <ion-title>{{ 'Chat' | translate }}</ion-title> </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="d-flex flex-column h-100">
+    <ng-container *ngIf="messages.length > 0">
+      <app-messages [messages]="messages"></app-messages>
+    </ng-container>
+    <ng-container *ngIf="!(messages.length > 0)">
+      <app-empty></app-empty>
+    </ng-container>
+    <app-message-form (sendMessage)="sendMessage($event)"></app-message-form>
+  </div>
+</ion-content>
