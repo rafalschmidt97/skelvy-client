@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Meeting, MeetingRequest } from '../meeting';
 import { Gender } from '../../profile/profile';
 import * as moment from 'moment';

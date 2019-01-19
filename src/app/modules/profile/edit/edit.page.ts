@@ -5,7 +5,6 @@ import { Select } from '../../../shared/form/select/select';
 import { _ } from '../../../core/i18n/translate';
 import { InputComponent } from '../../../shared/form/input/input.component';
 import * as moment from 'moment';
-import { ImagesComponent } from './images/images.component';
 
 @Component({
   selector: 'app-edit',
