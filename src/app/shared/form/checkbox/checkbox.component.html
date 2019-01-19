@@ -36,24 +36,3 @@
     </ng-container>
   </div>
 </div>
-
-<!--This is own solution if bootstrap won't work-->
-<!--<div-->
-<!--class="checkbox-group"-->
-<!--formArrayName="checkbox"-->
-<!--*ngFor="let checkbox of checkbox.controls; let i = index"-->
-<!--[class.is-checked]="checkbox.value"-->
-<!--[class.is-invalid]="isInvalid && hasFeedback"-->
-<!--[class.is-disabled]="isLoading"-->
-<!--&gt;-->
-<!--<input-->
-<!--type="checkbox"-->
-<!--[attr.id]="name + '-' + i"-->
-<!--[formControlName]="i"-->
-<!--class="checkbox-input"-->
-<!--[attr.disabled]="isLoading ? '' : null"-->
-<!--/>-->
-<!--<label class="checkbox-label" [attr.for]="name + '-' + i">-->
-<!--{{ options[i].label }}-->
-<!--</label>-->
-<!--</div>-->

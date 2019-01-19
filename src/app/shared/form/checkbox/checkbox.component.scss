@@ -17,34 +17,6 @@
   visibility: hidden;
 }
 
-// This is native solution if bootstrap won't work
-.form-check.full {
-  padding-left: 0;
-
-  &:not(:last-of-type) {
-    margin-bottom: 10px;
-  }
-
-  .form-check-input {
-    left: 35px;
-    top: 8px;
-    width: 20px;
-    height: 20px;
-
-    & ~ .form-check-label {
-      border: 1px solid gray('400');
-      padding: 10px 20px 10px 50px;
-      width: 100%;
-      border-radius: $input-border-radius;
-    }
-
-    &:invalid ~ .form-check-label,
-    &.is-invalid ~ .form-check-label {
-      border-color: theme-color('danger');
-    }
-  }
-}
-
 .custom-control.full {
   padding-left: 0;
 
@@ -84,67 +56,5 @@
       background-color: gray('600');
       border-color: gray('600');
     }
-  }
-}
-
-// This is own solution if bootstrap won't work
-.checkbox-group {
-  position: relative;
-
-  .checkbox-input {
-    display: none;
-  }
-
-  .checkbox-label {
-    border: 1px solid gray('400');
-    padding: 10px 20px 10px 50px;
-    width: 100%;
-    border-radius: $input-border-radius;
-
-    &::before {
-      left: 12px;
-      top: 11px;
-      width: 22px;
-      height: 22px;
-      position: absolute;
-      display: block;
-      pointer-events: none;
-      content: '';
-      background-color: $white;
-      border: gray('600') solid 1px;
-      transition: $transition-base;
-      border-radius: 4px;
-    }
-
-    &::after {
-      left: 15px;
-      top: 14px;
-      position: absolute;
-      display: block;
-      width: 1rem;
-      height: 1rem;
-      content: '';
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: 50% 50%;
-    }
-  }
-
-  &.is-checked .checkbox-label::before {
-    background-color: theme-color('primary');
-    border-color: theme-color('primary');
-    color: $white;
-  }
-
-  &.is-checked .checkbox-label::after {
-    background-image: $custom-checkbox-indicator-icon-checked;
-  }
-
-  &.is-invalid .checkbox-label {
-    border-color: theme-color('danger');
-  }
-
-  &.is-disabled .checkbox-label {
-    background-color: gray('200');
   }
 }
