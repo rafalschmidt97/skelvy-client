@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 
 @NgModule({
-  declarations: [],
   imports: [CommonModule],
 })
 export class CoreModule {
