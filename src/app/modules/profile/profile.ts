@@ -1,3 +1,8 @@
+export interface User {
+  id: number;
+  profile: Profile;
+}
+
 export interface Profile {
   name: string;
   birthDate: Date;

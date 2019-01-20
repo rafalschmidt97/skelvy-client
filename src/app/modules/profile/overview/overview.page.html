@@ -5,7 +5,10 @@
 </ion-header>
 
 <ion-content>
-  <div class="d-flex flex-column h-100">
+  <div
+    *ngIf="(user$ | async).profile as profile"
+    class="d-flex flex-column h-100"
+  >
     <section class="container d-flex h-100 bg-ultra-light preview">
       <div class="m-auto text-center">
         <div (click)="open()">
@@ -49,6 +52,9 @@
 
 <ng-template #details>
   <app-modal (confirm)="confirm()">
-    <app-details [profile]="profile"></app-details>
+    <app-details
+      *ngIf="(user$ | async).profile as profile"
+      [profile]="profile"
+    ></app-details>
   </app-modal>
 </ng-template>
