@@ -1,1 +1,22 @@
-<p>form works!</p>
+<app-form
+  [form]="form"
+  (onSubmit)="onSubmit()"
+  [isLoading]="isLoading"
+  class="form-message"
+>
+  <app-textarea
+    name="message"
+    [autosize]="true"
+    maxHeight="110px"
+    minHeight="40px"
+    [placeholder]="'Type a message...' | translate"
+    [hasFeedback]="false"
+    class="input-message"
+  ></app-textarea>
+  <button [disabled]="isLoading" class="btn-send">
+    <ion-icon
+      name="arrow-dropup-circle"
+      class="text-primary d-block"
+    ></ion-icon>
+  </button>
+</app-form>

@@ -2,7 +2,8 @@ import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { Modal } from '../../../../shared/modal/modal';
 import { ModalService } from '../../../../shared/modal/modal.service';
 import { Message } from '../../chat';
-import { MeetingUser } from '../../../meeting/meeting';
+import { Meeting, MeetingUser } from '../../../meeting/meeting';
+import { User } from '../../../profile/profile';
 
 @Component({
   selector: 'app-messages',
@@ -12,14 +13,27 @@ import { MeetingUser } from '../../../meeting/meeting';
 export class MessagesComponent {
   @ViewChild('actions') actions: TemplateRef<any>;
   @Input() messages: Message[];
+  @Input() meeting: Meeting;
+  @Input() user: User;
   modal: Modal;
   modalUser: MeetingUser;
 
   constructor(private readonly modalService: ModalService) {}
 
-  open(userId: number) {
-    // this.modalUser = store.meeting.users.find(user => user.id = userId);
-    this.modal = this.modalService.show(this.actions);
+  getUser(userId: number): MeetingUser {
+    return this.meeting.users.find(user => user.id === userId);
+  }
+
+  isMine(userId: number): boolean {
+    return this.user.id === userId;
+  }
+
+  showDetails(user: MeetingUser) {
+    // dont show yourself
+    if (user.id !== this.user.id) {
+      this.modalUser = user;
+      this.modal = this.modalService.show(this.actions);
+    }
   }
 
   confirm() {

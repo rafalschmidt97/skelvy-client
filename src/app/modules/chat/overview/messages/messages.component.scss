@@ -1,0 +1,15 @@
+@import '~src/theme/bootstrap/variables';
+
+:host {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  overflow-y: auto;
+}
+
+.image-alert {
+  background-size: cover;
+  background-color: theme-color('light');
+  width: 64px;
+  height: 64px;
+}

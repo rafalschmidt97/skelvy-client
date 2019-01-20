@@ -1,5 +1,34 @@
-<p>messages works!</p>
+<div class="p-2 w-100">
+  <app-message
+    *ngFor="let message of messages; let i = index"
+    [message]="message"
+    [user]="getUser(message.userId)"
+    [isMine]="isMine(message.userId)"
+    [isNotLast]="
+      i !== messages.length - 1
+        ? messages[i].userId === messages[i + 1].userId
+        : false
+    "
+    [isNotFirst]="
+      i !== 0 ? messages[i].userId === messages[i - 1].userId : false
+    "
+    (showDetails)="showDetails($event)"
+  ></app-message>
+</div>
 
 <ng-template #actions>
-  <app-modal (confirm)="confirm()"> <h1>Hello</h1> </app-modal>
+  <app-modal (confirm)="confirm()">
+    <div class="px-2 pb-2 text-center">
+      <div
+        class="image-alert rounded-circle d-inline-block"
+        [style.background-image]="'url(' + modalUser.profile.photos[0] + ')'"
+      ></div>
+      <h6 class="mt-1 mb-3">
+        {{ modalUser.profile.name }}, {{ modalUser.profile.birthDate | age }}
+      </h6>
+      <button type="button" class="btn btn-primary btn-block">
+        {{ 'View profile' | translate }}
+      </button>
+    </div>
+  </app-modal>
 </ng-template>

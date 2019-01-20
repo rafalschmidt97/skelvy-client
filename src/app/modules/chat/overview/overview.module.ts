@@ -6,6 +6,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { EmptyComponent } from './empty/empty.component';
 import { MessagesComponent } from './messages/messages.component';
 import { MessageFormComponent } from './message-form/message-form.component';
+import { MessageComponent } from './messages/message/message.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
     EmptyComponent,
     MessagesComponent,
     MessageFormComponent,
+    MessageComponent,
   ],
 })
 export class OverviewPageModule {}
