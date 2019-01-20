@@ -20,7 +20,7 @@
   <section class="users">
     <div
       class="border-bottom py-4"
-      *ngFor="let user of meeting.users"
+      *ngFor="let user of filteredMeetingUsers"
       (click)="openDetails(user)"
     >
       <div class="container-fluid d-flex align-items-center">

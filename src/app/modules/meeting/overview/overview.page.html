@@ -6,7 +6,11 @@
 
 <ion-content>
   <ng-container *ngIf="(meeting$ | async) as meeting; else unspecified">
-    <app-found [meeting]="meeting" (leaveMeeting)="leaveMeeting()"></app-found>
+    <app-found
+      [meeting]="meeting"
+      [user]="user$ | async"
+      (leaveMeeting)="leaveMeeting()"
+    ></app-found>
   </ng-container>
   <ng-template #unspecified>
     <app-unspecified

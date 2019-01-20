@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Meeting, MeetingUser } from '../../meeting';
 import { ModalService } from '../../../../shared/modal/modal.service';
-import { Profile } from '../../../profile/profile';
+import { Profile, User } from '../../../profile/profile';
 import { Modal } from '../../../../shared/modal/modal';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
@@ -20,6 +20,7 @@ import { AlertService } from '../../../../shared/alert/alert.service';
 })
 export class FoundComponent {
   @Input() meeting: Meeting;
+  @Input() user: User;
   @Output() leaveMeeting = new EventEmitter();
   @ViewChild('details') detailsTemplate: TemplateRef<any>;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
@@ -31,6 +32,10 @@ export class FoundComponent {
     private readonly modalService: ModalService,
     private readonly alertService: AlertService,
   ) {}
+
+  get filteredMeetingUsers(): MeetingUser[] {
+    return this.meeting.users.filter(user => user.id !== this.user.id);
+  }
 
   openDetails(user: MeetingUser) {
     this.profileForModal = user.profile;

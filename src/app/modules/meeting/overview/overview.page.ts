@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Meeting, MeetingRequest } from '../meeting';
 import { MeetingStoreService } from '../meeting-store.service';
 import { Observable } from 'rxjs';
+import { UserStoreService } from '../../profile/user-store.service';
+import { User } from '../../profile/profile';
 
 @Component({
   selector: 'app-overview',
@@ -9,14 +11,19 @@ import { Observable } from 'rxjs';
 })
 export class OverviewPage {
   meeting$: Observable<Meeting>;
+  user$: Observable<User>;
   request: MeetingRequest;
 
-  constructor(private readonly store: MeetingStoreService) {
-    this.meeting$ = store.data;
+  constructor(
+    private readonly meeting: MeetingStoreService,
+    private readonly user: UserStoreService,
+  ) {
+    this.meeting$ = meeting.data;
+    this.user$ = user.data;
   }
 
   leaveMeeting() {
-    this.store.set(null);
+    this.meeting.set(null);
   }
 
   removeRequest() {
@@ -24,11 +31,11 @@ export class OverviewPage {
   }
 
   addMeeting() {
-    this.store.fill();
+    this.meeting.fill();
   }
 
   addRequest() {
-    this.store.set(null);
+    this.meeting.set(null);
     this.fillRequest();
   }
 
