@@ -7,6 +7,7 @@ import { EmptyComponent } from './empty/empty.component';
 import { MessagesComponent } from './messages/messages.component';
 import { MessageFormComponent } from './message-form/message-form.component';
 import { MessageComponent } from './messages/message/message.component';
+import { AutoScrollDirective } from './auto-scroll.directive';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
     MessagesComponent,
     MessageFormComponent,
     MessageComponent,
+    AutoScrollDirective,
   ],
 })
 export class OverviewPageModule {}
