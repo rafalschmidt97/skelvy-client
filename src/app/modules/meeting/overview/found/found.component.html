@@ -23,7 +23,7 @@
       *ngFor="let user of filteredMeetingUsers"
       (click)="openDetails(user)"
     >
-      <div class="container-fluid d-flex align-items-center">
+      <div class="container d-flex align-items-center">
         <div
           class="flex-shrink-0 image rounded-circle"
           [style.background-image]="'url(' + user.profile.photos[0] + ')'"
