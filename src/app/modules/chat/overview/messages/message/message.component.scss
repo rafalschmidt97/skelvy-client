@@ -1,0 +1,39 @@
+@import '~src/theme/bootstrap/variables';
+
+.image {
+  background-size: cover;
+  background-color: theme-color('light');
+  width: 34px;
+  height: 34px;
+}
+
+.name {
+  font-size: 12px;
+  padding-left: 10px;
+  color: gray('500');
+  margin-bottom: 1px;
+}
+
+.message-container {
+  margin-bottom: 4px;
+}
+
+.message-continuation {
+  margin-left: 41px;
+}
+
+.message {
+  max-width: 80%;
+
+  .text {
+    background-color: gray('100');
+    border-radius: 1rem;
+    padding: 5px 12px;
+    display: inline-block;
+    white-space: pre-wrap;
+
+    .date {
+      font-size: 12px;
+    }
+  }
+}

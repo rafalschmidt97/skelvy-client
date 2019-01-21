@@ -1,0 +1,27 @@
+@import '~src/theme/bootstrap/variables';
+
+.form-message {
+  ::ng-deep form {
+    border-top: 1px solid $border-color;
+    display: flex;
+  }
+}
+
+.input-message {
+  width: 100%;
+
+  ::ng-deep textarea {
+    border-color: white;
+    box-shadow: none;
+    padding: 0.375rem;
+  }
+}
+
+.btn-send {
+  font-size: 31px;
+  padding: 0 0.375rem 0 0;
+  background: $white;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+}
