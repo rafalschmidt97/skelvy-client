@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Legal' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content bg-ultra-light py-3">
+    <button
+      type="button"
+      (click)="
+        show(
+          'https://rafalschmidt.com/drinker_website/legal/privacy-policy/',
+          'Privacy policy'
+        )
+      "
+      class="btn btn-settings"
+    >
+      {{ 'Privacy policy' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </button>
+    <button
+      type="button"
+      (click)="
+        show(
+          'https://rafalschmidt.com/drinker_website/legal/terms-of-service/',
+          'Terms of service'
+        )
+      "
+      class="btn btn-settings"
+    >
+      {{ 'Terms of service' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </button>
+    <button
+      type="button"
+      (click)="
+        show(
+          'https://rafalschmidt.com/drinker_website/legal/cookie-policy/',
+          'Cookie policy'
+        )
+      "
+      class="btn btn-settings"
+    >
+      {{ 'Cookie policy' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </button>
+    <button
+      type="button"
+      (click)="
+        show(
+          'https://rafalschmidt.com/drinker_website/legal/safety-tips/',
+          'Safety tips'
+        )
+      "
+      class="btn btn-settings"
+    >
+      {{ 'Safety tips' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </button>
+    <button
+      type="button"
+      (click)="
+        show(
+          'https://rafalschmidt.com/drinker_website/legal/community-guidelines/',
+          'Community guidelines'
+        )
+      "
+      class="btn btn-settings"
+    >
+      {{ 'Community guidelines' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </button>
+  </div>
+</ion-content>
+
+<ng-template #iframe>
+  <app-iframe
+    [url]="url"
+    [title]="title | translate"
+    (decline)="decline()"
+  ></app-iframe>
+</ng-template>
