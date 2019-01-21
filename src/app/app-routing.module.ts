@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'meeting',
     loadChildren: './modules/meeting/meeting.module#MeetingModule',
   },
+  {
+    path: 'chat',
+    loadChildren: './modules/chat/chat.module#ChatModule',
+  },
 ];
 
 @NgModule({
