@@ -4,6 +4,7 @@ import { ModalService } from '../../../../shared/modal/modal.service';
 import { Message } from '../../chat';
 import { Meeting, MeetingUser } from '../../../meeting/meeting';
 import { User } from '../../../profile/profile';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-messages',
@@ -18,7 +19,10 @@ export class MessagesComponent {
   modal: Modal;
   modalUser: MeetingUser;
 
-  constructor(private readonly modalService: ModalService) {}
+  constructor(
+    private readonly modalService: ModalService,
+    private readonly router: Router,
+  ) {}
 
   getUser(userId: number): MeetingUser {
     return this.meeting.users.find(user => user.id === userId);
@@ -38,5 +42,10 @@ export class MessagesComponent {
 
   confirm() {
     this.modal.hide();
+  }
+
+  moveToDetails(userId: number) {
+    this.modal.hide();
+    this.router.navigate(['/tabs/meeting', { userId: userId }]);
   }
 }

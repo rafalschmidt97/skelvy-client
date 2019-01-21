@@ -26,7 +26,11 @@
       <h6 class="mt-1 mb-3">
         {{ modalUser.profile.name }}, {{ modalUser.profile.birthDate | age }}
       </h6>
-      <button type="button" class="btn btn-primary btn-block">
+      <button
+        (click)="moveToDetails(modalUser.id)"
+        type="button"
+        class="btn btn-primary btn-block"
+      >
         {{ 'View profile' | translate }}
       </button>
     </div>
