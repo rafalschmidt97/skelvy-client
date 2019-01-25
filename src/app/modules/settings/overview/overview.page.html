@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ 'Settings' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content bg-ultra-light py-3">
+    <section class="container mb-3">
+      <div
+        routerLink="/settings/community"
+        class="support border text-center p-3 bg-white d-block"
+      >
+        <h3 class="text-primary mb-0">{{ 'Support us' | translate }}</h3>
+        <p class="mb-0">{{ 'Make app better today!' | translate }}</p>
+      </div>
+    </section>
+    <a routerLink="/settings/notifications" class="btn btn-settings">
+      {{ 'Notifications' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </a>
+    <a routerLink="/settings/language" class="btn btn-settings">
+      {{ 'Language' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </a>
+    <a routerLink="/settings/community" class="btn btn-settings">
+      {{ 'Community' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </a>
+    <a routerLink="/settings/legal" class="btn btn-settings">
+      {{ 'Legal' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </a>
+    <button
+      type="button"
+      (click)="open(logout)"
+      class="btn btn-settings justify-content-center mt-3"
+    >
+      {{ 'Log out' | translate }}
+    </button>
+    <section class="about d-flex justify-content-center py-3">
+      <div class="text-center">
+        <div class="logo text-primary">skelvy</div>
+        0.0.1
+      </div>
+    </section>
+    <button
+      type="button"
+      (click)="open(delete)"
+      class="btn btn-settings justify-content-center"
+    >
+      {{ 'Delete account' | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="sendReport()"
+      class="btn btn-settings justify-content-center"
+    >
+      {{ 'Report a bug' | translate }}
+    </button>
+  </div>
+</ion-content>
+
+<ng-template #logout>
+  <app-alert
+    (confirm)="confirmLogout()"
+    (decline)="decline()"
+    [title]="'Are you sure you want to log out of your account?' | translate"
+  ></app-alert>
+</ng-template>
+
+<ng-template #delete>
+  <app-alert
+    (confirm)="confirmDelete()"
+    (decline)="decline()"
+    [title]="'Are you sure you want delete your account?' | translate"
+  ></app-alert>
+</ng-template>

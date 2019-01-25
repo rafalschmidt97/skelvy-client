@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'chat',
     loadChildren: './modules/chat/chat.module#ChatModule',
   },
+  {
+    path: 'settings',
+    loadChildren: './modules/settings/settings.module#SettingsModule',
+  },
 ];
 
 @NgModule({

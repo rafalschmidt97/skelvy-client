@@ -1,0 +1,45 @@
+@import '~src/theme/bootstrap/variables';
+
+.bg-ultra-light {
+  background: gray('100');
+}
+
+.content {
+  min-height: 100%;
+
+  .support {
+    border-radius: $border-radius;
+  }
+
+  .btn-settings {
+    font-weight: 400;
+    text-align: left;
+    border-radius: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: $white;
+    color: $body-color;
+    padding: 14px 17px;
+    border-bottom: 1px solid theme-color('light');
+    border-top: 1px solid theme-color('light');
+    margin-top: -1px;
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    .icon {
+      color: gray('500');
+    }
+  }
+
+  .logo {
+    font-family: 'Lily Script One', cursive;
+    font-size: $h3-font-size;
+  }
+}
+
+.label {
+  padding: 3px 1rem;
+}

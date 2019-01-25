@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="'Back' | translate"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Community' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content bg-ultra-light py-3">
+    <button
+      type="button"
+      (click)="
+        show(
+          'https://rafalschmidt.com/drinker_website/community/support-us/',
+          'Support us'
+        )
+      "
+      class="btn btn-settings"
+    >
+      {{ 'Support us' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </button>
+    <button
+      type="button"
+      (click)="
+        show(
+          'https://rafalschmidt.com/drinker_website/community/help/',
+          'Help'
+        )
+      "
+      class="btn btn-settings"
+    >
+      {{ 'Help' | translate }}
+      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+    </button>
+    <button
+      type="button"
+      (click)="sendFeedback()"
+      class="btn btn-settings justify-content-center mt-3"
+    >
+      {{ 'Send feedback' | translate }}
+    </button>
+  </div>
+</ion-content>
+
+<ng-template #iframe>
+  <app-iframe
+    [url]="url"
+    [title]="title | translate"
+    (decline)="decline()"
+  ></app-iframe>
+</ng-template>

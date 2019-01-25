@@ -20,6 +20,10 @@ const routes: Routes = [
         loadChildren: '../chat/overview/overview.module#OverviewPageModule',
       },
       {
+        path: 'more',
+        loadChildren: '../settings/overview/overview.module#OverviewPageModule',
+      },
+      {
         path: '',
         redirectTo: 'profile',
         pathMatch: 'full',
