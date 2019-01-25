@@ -12,6 +12,11 @@ const routes: Routes = [
     path: 'language',
     loadChildren: './language/language.module#LanguagePageModule',
   },
+  {
+    path: 'notifications',
+    loadChildren:
+      './notifications/notifications.module#NotificationsPageModule',
+  },
 ];
 
 @NgModule({
