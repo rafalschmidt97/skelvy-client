@@ -11,6 +11,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+* {
+  outline: none !important;
+}
+
 ::selection {
   background-color: theme-color('primary');
   color: $white;
