@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="'Back' | translate"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Language' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content bg-ultra-light py-3">
+    <app-form [form]="form" [isLoading]="isLoading">
+      <app-radio name="language" [options]="languages"></app-radio>
+    </app-form>
+  </div>
+</ion-content>

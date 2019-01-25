@@ -8,6 +8,10 @@ const routes: Routes = [
     path: 'community',
     loadChildren: './community/community.module#CommunityPageModule',
   },
+  {
+    path: 'language',
+    loadChildren: './language/language.module#LanguagePageModule',
+  },
 ];
 
 @NgModule({
