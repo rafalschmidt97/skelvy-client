@@ -1,23 +1,21 @@
-<div class="d-flex h-100 flex-column">
-  <section class="d-flex h-100 bg-ultra-light wrapper">
-    <div class="m-auto w-100 text-center content container">
-      <ion-icon
-        (click)="addMeeting.emit()"
-        name="contacts"
-        class="big-icon text-primary"
-      ></ion-icon>
-      <div (click)="addRequest.emit()" class="header">
-        {{ "Why don't you just meet them?" | translate }}
-      </div>
-      <p class="mt-3 mb-4">
-        {{
-          "It's time to specify your meeting preferences. There is just one step to change your evening!"
-            | translate
-        }}
-      </p>
-      <button routerLink="/meeting/edit" class="btn btn-outline-primary px-4">
-        {{ 'Add meeting preferences' | translate }}
-      </button>
+<section class="d-flex minh-100 bg-ultra-light py-3">
+  <div class="m-auto text-center content container">
+    <ion-icon
+      (click)="addMeeting.emit()"
+      name="contacts"
+      class="big-icon text-primary"
+    ></ion-icon>
+    <div (click)="addRequest.emit()" class="header">
+      {{ "Why don't you just meet them?" | translate }}
     </div>
-  </section>
-</div>
+    <p class="mt-3 mb-4">
+      {{
+        "It's time to specify your meeting preferences. There is just one step to change your evening!"
+          | translate
+      }}
+    </p>
+    <button routerLink="/meeting/edit" class="btn btn-outline-primary px-4">
+      {{ 'Add meeting preferences' | translate }}
+    </button>
+  </div>
+</section>

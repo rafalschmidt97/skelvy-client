@@ -7,12 +7,12 @@
 <ion-content>
   <div
     *ngIf="(user$ | async).profile as profile"
-    class="d-flex flex-column h-100"
+    class="d-flex flex-column minh-100"
   >
-    <section class="container d-flex h-100 bg-ultra-light preview">
+    <section class="container d-flex flex-grow-1 py-3 bg-ultra-light preview">
       <div class="m-auto text-center">
         <div (click)="open()">
-          <div class="avatar">
+          <div class="avatar d-inline-block">
             <div
               class="image"
               [style.background-image]="'url(' + profile.photos[0] + ')'"
