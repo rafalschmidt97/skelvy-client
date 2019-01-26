@@ -8,13 +8,10 @@
 }
 
 .input-message {
-  width: 100%;
-
-  ::ng-deep textarea {
-    border-color: white;
-    box-shadow: none;
-    padding: 0.375rem;
-  }
+  border-color: white;
+  box-shadow: none;
+  padding: 0.375rem;
+  resize: none;
 }
 
 .btn-send {

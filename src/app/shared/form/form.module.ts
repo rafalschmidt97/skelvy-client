@@ -46,6 +46,7 @@ import { SwitchComponent } from './switch/switch.component';
     FormComponent,
     InputComponent,
     TextareaComponent,
+    DynamicHeightDirective,
     CalendarComponent,
     DateComponent,
     RangeComponent,

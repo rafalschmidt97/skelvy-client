@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Message } from '../../chat';
 import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -14,6 +20,7 @@ export class MessageFormComponent implements Form, OnSubmit {
   isLoading = false;
 
   @Output() sendMessage = new EventEmitter<Message>();
+  @ViewChild('messageInput') messageInput: ElementRef;
 
   constructor(private readonly formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
@@ -25,6 +32,8 @@ export class MessageFormComponent implements Form, OnSubmit {
   }
 
   onSubmit() {
+    this.messageInput.nativeElement.focus();
+
     if (this.form.valid) {
       this.isLoading = true;
 

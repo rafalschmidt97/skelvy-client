@@ -4,15 +4,19 @@
   [isLoading]="isLoading"
   class="form-message"
 >
-  <app-textarea
-    name="message"
-    [autosize]="true"
-    maxHeight="110px"
-    minHeight="40px"
-    [placeholder]="'Type a message...' | translate"
-    [hasFeedback]="false"
-    class="input-message"
-  ></app-textarea>
+  <ng-container [formGroup]="form">
+    <textarea
+      #messageInput
+      appDynamicHeight
+      maxHeight="110px"
+      minHeight="40px"
+      formControlName="message"
+      class="form-control input-message"
+      [attr.disabled]="isLoading ? '' : null"
+      [placeholder]="'Type a message...' | translate"
+    ></textarea>
+  </ng-container>
+
   <button [disabled]="isLoading" class="btn-send">
     <ion-icon
       name="arrow-dropup-circle"
