@@ -19,11 +19,11 @@ export class LanguagePage implements Form, OnInit {
   languages: Radio[] = [
     {
       value: 'pl',
-      label: _('Polski'),
+      label: 'Polski',
     },
     {
       value: 'en',
-      label: _('English'),
+      label: 'English',
     },
   ];
 
