@@ -1,19 +1,22 @@
 <ion-content [scrollY]="false">
   <div class="container d-flex flex-column h-100">
     <div class="m-auto">
-      <div class="logo my-2" routerLink="/tabs">skelvy</div>
+      <div class="logo" routerLink="/tabs">
+        <img class="img-fluid" src="assets/brand/logo.svg" alt="logo" />
+      </div>
     </div>
     <div>
-      <button class="btn btn-block btn-facebook">
+      <button class="btn btn-block btn-primary">
         <i class="fab fa-facebook-f mr-2"></i>
         <span>{{ 'Continue with Facebook' | translate }}</span>
       </button>
-      <button class="btn btn-block btn-google">
+      <button class="btn btn-block btn-outline-primary">
         <i class="fab fa-google mr-2"></i>
         <span>{{ 'Continue with Google' | translate }}</span>
       </button>
       <div class="terms text-center my-3">
         <a
+          class="text-primary"
           (click)="
             show(
               'https://rafalschmidt.com/drinker_website/legal/terms-of-service/',
@@ -25,6 +28,7 @@
         </a>
         and
         <a
+          class="text-primary"
           (click)="
             show(
               'https://rafalschmidt.com/drinker_website/legal/privacy-policy/',
