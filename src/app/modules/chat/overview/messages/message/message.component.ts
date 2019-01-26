@@ -13,10 +13,15 @@ export class MessageComponent {
   @Input() isMine: boolean;
   @Input() isNotLast: boolean;
   @Input() isNotFirst: boolean;
+  @Input() dateToShow: Date;
   @Output() showDetails = new EventEmitter<MeetingUser>();
-  showDate = false;
+  @Output() showDate = new EventEmitter<Date>();
 
   toggleDate() {
-    this.showDate = !this.showDate;
+    this.showDate.emit(this.message.date);
+  }
+
+  get isDateShown(): boolean {
+    return this.message.date === this.dateToShow;
   }
 }

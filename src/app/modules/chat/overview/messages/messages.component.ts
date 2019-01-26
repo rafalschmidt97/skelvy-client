@@ -18,6 +18,7 @@ export class MessagesComponent {
   @Input() user: User;
   modal: Modal;
   modalUser: MeetingUser;
+  dateToShow: Date;
 
   constructor(
     private readonly modalService: ModalService,
@@ -47,5 +48,13 @@ export class MessagesComponent {
   moveToDetails(userId: number) {
     this.modal.hide();
     this.router.navigate(['/tabs/meeting', { userId: userId }]);
+  }
+
+  showDate(date: Date) {
+    if (this.dateToShow === date) {
+      this.dateToShow = null; // toggle if same date passed
+    } else {
+      this.dateToShow = date;
+    }
   }
 }

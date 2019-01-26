@@ -12,7 +12,9 @@
     [isNotFirst]="
       i !== 0 ? messages[i].userId === messages[i - 1].userId : false
     "
+    [dateToShow]="dateToShow"
     (showDetails)="showDetails($event)"
+    (showDate)="showDate($event)"
   ></app-message>
 </div>
 

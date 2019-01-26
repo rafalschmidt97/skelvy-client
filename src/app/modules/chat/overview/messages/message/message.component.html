@@ -23,7 +23,7 @@
       >
         <div>{{ message.text }}</div>
         <div
-          *ngIf="showDate"
+          *ngIf="isDateShown"
           class="date"
           [innerHTML]="message.date | date: 'HH:mm'"
         ></div>
