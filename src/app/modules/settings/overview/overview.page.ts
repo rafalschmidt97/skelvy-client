@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { Alert } from '../../../shared/alert/alert';
 import { AlertService } from '../../../shared/alert/alert.service';
 import { NavController } from '@ionic/angular';
