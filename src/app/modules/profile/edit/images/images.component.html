@@ -140,6 +140,7 @@
 <ng-template #cropper>
   <app-modal (confirm)="confirm()" (decline)="decline()">
     <image-cropper
+      class="p-0"
       [style.max-height]="'90vh'"
       outputType="base64"
       [imageChangedEvent]="imageChangedEvent"
