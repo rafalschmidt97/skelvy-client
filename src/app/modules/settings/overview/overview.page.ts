@@ -1,8 +1,9 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Alert } from '../../../shared/alert/alert';
 import { AlertService } from '../../../shared/alert/alert.service';
 import { NavController } from '@ionic/angular';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-overview',
@@ -11,12 +12,15 @@ import { EmailComposer } from '@ionic-native/email-composer/ngx';
 })
 export class OverviewPage {
   alert: Alert;
+  version: string;
 
   constructor(
     private readonly alertService: AlertService,
     private readonly routerNavigation: NavController,
     private readonly emailComposer: EmailComposer,
-  ) {}
+  ) {
+    this.version = environment.version;
+  }
 
   open(template: TemplateRef<any>) {
     this.alert = this.alertService.show(template);
