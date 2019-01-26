@@ -7,13 +7,15 @@
 <ion-content>
   <div class="content minh-100 bg-ultra-light py-3">
     <section class="container mb-3">
-      <div
+      <a
         routerLink="/settings/community"
-        class="support border text-center p-3 bg-white d-block"
+        class="text-primary support border text-center p-3 bg-white d-block"
       >
-        <h3 class="text-primary mb-0">{{ 'Support us' | translate }}</h3>
-        <p class="mb-0">{{ 'Make app better today!' | translate }}</p>
-      </div>
+        <h3 class="mb-0">{{ 'Support us' | translate }}</h3>
+        <p class="mb-0 font-weight-normal">
+          {{ 'Make app better today!' | translate }}
+        </p>
+      </a>
     </section>
     <a routerLink="/settings/notifications" class="btn btn-settings">
       {{ 'Notifications' | translate }}

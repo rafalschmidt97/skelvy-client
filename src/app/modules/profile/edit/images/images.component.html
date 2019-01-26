@@ -32,7 +32,7 @@
           </label>
           <span
             *ngIf="inputForm.get(image1Name).value !== ''"
-            class="remove text-white"
+            class="remove text-white pointer"
             (click)="remove(1)"
           >
             <i class="fas fa-fw fa-times-circle"></i>
@@ -73,7 +73,7 @@
           </label>
           <span
             *ngIf="inputForm.get(image2Name).value !== ''"
-            class="remove text-white"
+            class="remove text-white pointer"
             (click)="remove(2)"
           >
             <i class="fas fa-fw fa-times-circle"></i>
@@ -113,7 +113,7 @@
           </label>
           <span
             *ngIf="inputForm.get(image3Name).value !== ''"
-            class="remove text-white"
+            class="remove text-white pointer"
             (click)="remove(3)"
           >
             <i class="fas fa-fw fa-times-circle"></i>

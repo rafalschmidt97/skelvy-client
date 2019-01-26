@@ -1,7 +1,7 @@
 <div class="message-container d-flex" [class.mb-3]="!isMine && !isNotLast">
   <div
     *ngIf="!isMine && !isNotLast"
-    class="image rounded-circle mr-2 mt-auto flex-shrink-0"
+    class="image rounded-circle mr-2 mt-auto flex-shrink-0 pointer"
     (click)="showDetails.emit(user)"
     [style.background-image]="'url(' + user.profile.photos[0] + ')'"
   ></div>
@@ -17,7 +17,7 @@
     >
       <div
         (click)="toggleDate()"
-        class="text"
+        class="text pointer"
         [class.bg-primary]="isMine"
         [class.text-white]="isMine"
       >
