@@ -11,9 +11,10 @@
   padding: 0;
 
   .iframe {
-    overflow-y: auto;
     height: calc(100vh - 80px);
-    -webkit-overflow-scrolling: touch; // TODO: enabled because of bug in safari (scroll main view instead of iframe)
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
 
     iframe {
       margin: 0;
