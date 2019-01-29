@@ -42,7 +42,6 @@
     "@fortawesome/fontawesome-free": "^5.6.3",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/email-composer": "^5.0.0",
-    "@ionic-native/keyboard": "^5.0.0",
     "@ionic-native/splash-screen": "^5.0.0",
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^4.0.0",
@@ -54,7 +53,6 @@
     "cordova-ios": "4.5.5",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-email-composer": "^0.9.2",
-    "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-ionic-webview": "^2.3.2",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
@@ -107,7 +105,6 @@
   "cordova": {
     "plugins": {
       "cordova-sqlite-storage": {},
-      "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-email-composer": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-statusbar": {},
