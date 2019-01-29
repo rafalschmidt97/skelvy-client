@@ -32,13 +32,9 @@ export class CommunityPage {
   }
 
   sendFeedback() {
-    this.emailComposer.hasPermission().then(hasPermission => {
-      if (hasPermission) {
-        this.emailComposer.open({
-          to: 'rafalschmidt97@gmail.com',
-          subject: '[skelvy] Feedback',
-        });
-      }
+    this.emailComposer.open({
+      to: 'rafalschmidt97@gmail.com',
+      subject: '[skelvy] Feedback',
     });
   }
 }

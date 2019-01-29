@@ -43,13 +43,9 @@ export class OverviewPage {
   }
 
   sendReport() {
-    this.emailComposer.hasPermission().then(hasPermission => {
-      if (hasPermission) {
-        this.emailComposer.open({
-          to: 'rafalschmidt97@gmail.com',
-          subject: '[skelvy] Report a bug',
-        });
-      }
+    this.emailComposer.open({
+      to: 'rafalschmidt97@gmail.com',
+      subject: '[skelvy] Report a bug',
     });
   }
 }
