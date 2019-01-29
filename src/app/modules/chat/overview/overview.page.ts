@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Meeting } from '../../meeting/meeting';
 import { UserStoreService } from '../../profile/user-store.service';
 import { User } from '../../profile/profile';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-overview',
@@ -18,6 +19,7 @@ export class OverviewPage implements OnInit {
   constructor(
     private readonly meetingStore: MeetingStoreService,
     private readonly userStore: UserStoreService,
+    private readonly routerNavigation: NavController,
   ) {
     this.meeting$ = meetingStore.data;
     this.user$ = userStore.data;
@@ -60,5 +62,11 @@ export class OverviewPage implements OnInit {
 
   clearMessages() {
     this.messages = [];
+  }
+
+  navigateBack() {
+    this.routerNavigation.back({
+      animated: false,
+    });
   }
 }

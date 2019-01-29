@@ -1,11 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title (click)="clearMessages()">{{ 'Chat' | translate }}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button routerLink="/tabs/meeting">
+    <ion-buttons slot="start">
+      <ion-button (click)="navigateBack()">
+        <ion-icon name="arrow-back"></ion-icon>
         {{ 'Back' | translate }}
       </ion-button>
     </ion-buttons>
+    <ion-title (click)="clearMessages()">{{ 'Chat' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 

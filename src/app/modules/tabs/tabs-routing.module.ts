@@ -16,10 +16,6 @@ const routes: Routes = [
         loadChildren: '../meeting/overview/overview.module#OverviewPageModule',
       },
       {
-        path: 'chat',
-        loadChildren: '../chat/overview/overview.module#OverviewPageModule',
-      },
-      {
         path: 'more',
         loadChildren: '../settings/overview/overview.module#OverviewPageModule',
       },

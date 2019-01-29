@@ -2,7 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/tabs/chat', pathMatch: 'full' },
+  {
+    path: '',
+    loadChildren: './overview/overview.module#OverviewPageModule',
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({

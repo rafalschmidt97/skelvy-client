@@ -1,5 +1,5 @@
 <ion-tabs>
-  <ion-tab-bar slot="bottom" [class.hide]="hiddenNavigation">
+  <ion-tab-bar slot="bottom">
     <ion-tab-button tab="profile">
       <ion-icon name="person"></ion-icon>
       <ion-label>{{ 'Profile' | translate }}</ion-label>
@@ -8,7 +8,11 @@
       <ion-icon name="cafe"></ion-icon>
       <ion-label>{{ 'Meeting' | translate }}</ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="chat" *ngIf="(meeting$ | async)">
+    <ion-tab-button
+      routerLink="/chat"
+      routerDirection="root"
+      *ngIf="(meeting$ | async)"
+    >
       <ion-icon name="chatbubbles"></ion-icon>
       <ion-label>{{ 'Chat' | translate }}</ion-label>
     </ion-tab-button>
