@@ -4,3 +4,16 @@
   border-top-left-radius: 1rem !important;
   border-top-right-radius: 1rem !important;
 }
+
+.safe-area-y {
+  padding-top: var(--ion-safe-area-top) !important;
+  padding-bottom: var(--ion-safe-area-bottom) !important;
+}
+
+.safe-area-t {
+  padding-top: var(--ion-safe-area-top) !important;
+}
+
+.safe-area-b {
+  padding-bottom: var(--ion-safe-area-bottom) !important;
+}

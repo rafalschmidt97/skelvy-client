@@ -28,7 +28,7 @@
 }
 
 .search {
-  height: calc(100vh - 80px);
+  height: calc(100vh - 80px - var(--ion-safe-area-bottom));
 }
 
 .description {

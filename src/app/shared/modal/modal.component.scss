@@ -60,7 +60,7 @@
 }
 
 .content {
-  max-height: calc(100vh - 80px);
+  max-height: calc(100vh - 80px - var(--ion-safe-area-bottom));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
