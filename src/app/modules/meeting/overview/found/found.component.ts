@@ -43,7 +43,7 @@ export class FoundComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.params.pipe(debounceTime(100)).subscribe(params => {
+    this.route.queryParams.pipe(debounceTime(100)).subscribe(params => {
       const userId = Number(params.userId);
       const meetingUser = this.meeting.users.find(user => user.id === userId);
       if (meetingUser) {

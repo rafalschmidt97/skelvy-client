@@ -47,7 +47,9 @@ export class MessagesComponent {
 
   moveToDetails(userId: number) {
     this.modal.hide();
-    this.routerNavigation.navigateRoot(['/tabs/meeting', { userId: userId }]);
+    this.routerNavigation.navigateRoot(['/tabs/meeting'], {
+      queryParams: { userId: userId },
+    });
   }
 
   showDate(date: Date) {
