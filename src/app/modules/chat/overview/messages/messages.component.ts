@@ -4,7 +4,7 @@ import { ModalService } from '../../../../shared/modal/modal.service';
 import { Message } from '../../chat';
 import { Meeting, MeetingUser } from '../../../meeting/meeting';
 import { User } from '../../../profile/profile';
-import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-messages',
@@ -22,7 +22,7 @@ export class MessagesComponent {
 
   constructor(
     private readonly modalService: ModalService,
-    private readonly router: Router,
+    private readonly routerNavigation: NavController,
   ) {}
 
   getUser(userId: number): MeetingUser {
@@ -47,7 +47,7 @@ export class MessagesComponent {
 
   moveToDetails(userId: number) {
     this.modal.hide();
-    this.router.navigate(['/tabs/meeting', { userId: userId }]);
+    this.routerNavigation.navigateRoot(['/tabs/meeting', { userId: userId }]);
   }
 
   showDate(date: Date) {
