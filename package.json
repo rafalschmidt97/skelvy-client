@@ -23,10 +23,10 @@
     "format:ts": "prettier --write 'src/**/*.ts' --parser typescript",
     "format:scss": "prettier --write 'src/**/*.scss' --parser scss",
     "format:html": "prettier --write 'src/**/*.html' --parser angular",
-    "ios:prepare": "ionic cordova prepare ios",
     "ios": "ionic cordova run ios -l  -- --buildFlag=\"-UseModernBuildSystem=0\"",
     "ios:emulate": "ionic cordova emulate ios -l --target=\"iPhone-X\"  -- --buildFlag=\"-UseModernBuildSystem=0\"",
-    "build:ios": "ionic cordova build ios --prod",
+    "ios:prepare": "ionic cordova prepare ios",
+    "ios:build": "ionic cordova build ios --prod",
     "translate": "ngx-translate-extract --input ./src --output ./src/assets/i18n/*.json --clean --sort --format json --marker _"
   },
   "dependencies": {
