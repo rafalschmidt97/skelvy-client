@@ -27,8 +27,11 @@
   }
 }
 
-.search {
-  height: calc(100vh - 80px - var(--ion-safe-area-bottom));
+.content {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  height: calc(100vh - 80px - 67px - var(--ion-safe-area-bottom));
 }
 
 .description {

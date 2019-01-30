@@ -29,27 +29,49 @@
 
 <ng-template #date>
   <app-modal (confirm)="confirm()">
-    <div class="search">
-      <div class="container pb-4 pt-1">
-        <input
-          (keyup)="search$.next($event.target.value)"
-          class="form-control"
-          [placeholder]="placeholder"
-          appAutofocus
-        />
-      </div>
-      <div *ngIf="results">
-        <div
-          *ngFor="let result of (results | slice: 0:15)"
-          (click)="select(result)"
-          class="result border-top border-bottom py-2 px-3 d-flex align-items-center pointer"
-        >
-          <div class="min-width description">{{ result.name }}</div>
-          <div class="text-primary ml-auto">
-            <ion-icon name="arrow-forward" class="d-block"></ion-icon>
-          </div>
+    <div class="container pb-4 pt-1 border-bottom">
+      <input
+        (keyup)="search$.next($event.target.value)"
+        class="form-control"
+        [placeholder]="placeholder"
+        appAutofocus
+      />
+    </div>
+    <div class="content">
+      <ng-container *ngIf="resultLoading">
+        <div class="text-center py-3">
+          <ion-spinner></ion-spinner>
         </div>
-      </div>
+      </ng-container>
+      <ng-container *ngIf="!resultLoading">
+        <ng-container *ngIf="!resultSearched">
+          <div class="container text-center py-3 text-muted">
+            {{
+              'Remember to use the language in which you would like to talk with people. For example type Warszawa instead of Warsaw if you prefer polish instead of english language.'
+                | translate
+            }}
+          </div>
+        </ng-container>
+        <ng-container *ngIf="resultSearched">
+          <ng-container *ngIf="results?.length > 0">
+            <div
+              *ngFor="let result of (results | slice: 0:15)"
+              (click)="select(result)"
+              class="result border-top border-bottom py-2 px-3 d-flex align-items-center pointer"
+            >
+              <div class="min-width description">{{ result.name }}</div>
+              <div class="text-primary ml-auto">
+                <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!results || !(results.length > 0)">
+            <div class="container text-center py-3">
+              {{ 'Nothing found. Try again!' | translate }}
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
     </div>
   </app-modal>
 </ng-template>

@@ -30,7 +30,9 @@ export class AddressComponent extends ComplexFieldComponent {
   @Input() max: number;
   modal: Modal;
   search$ = new Subject<string>();
-  results: Object;
+  results: [];
+  resultLoading = false;
+  resultSearched = false;
   baseUrl = 'https://api.cdnjs.com/libraries';
   queryUrl = '?search=';
 
@@ -47,16 +49,20 @@ export class AddressComponent extends ComplexFieldComponent {
         distinctUntilChanged(),
         switchMap((term: any) => {
           if (term.trim().length > 0) {
+            this.resultLoading = true;
+
             return this.http
               .get(this.baseUrl + this.queryUrl + term)
               .pipe(map((results: Result) => results.results));
           } else {
-            return of(null);
+            return of(this.results);
           }
         }),
       )
       .subscribe(results => {
+        this.resultSearched = true;
         this.results = results;
+        this.resultLoading = false;
       });
   }
 
