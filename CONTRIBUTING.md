@@ -145,10 +145,10 @@ $ npm start
 $ npm run lint
 
 # build for ios
-$ npm run build:ios
+$ npm run ios:build
 
 #build for android
-$ npm run build:android
+$ npm run android:build
 ```
 
 ## <a name="rules"></a> Coding Rules
