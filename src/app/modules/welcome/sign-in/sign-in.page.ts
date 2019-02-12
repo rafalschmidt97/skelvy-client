@@ -26,13 +26,6 @@ export class SignInPage implements OnInit {
   ngOnInit() {
     this.storage.get('facebook_token').then(token => {
       console.log(token);
-
-      const profileUrl =
-        'https://graph.facebook.com/me?fields=id,birthday,email,first_name,gender,picture.width(512).height(512){url}&access_token=';
-
-      this.http.get(profileUrl + token).subscribe(profile => {
-        console.log(profile);
-      });
     });
   }
 
@@ -52,7 +45,15 @@ export class SignInPage implements OnInit {
       .login(['public_profile', 'email', 'user_birthday', 'user_gender'])
       .then((res: FacebookLoginResponse) => {
         if (res.status === 'connected') {
-          this.storage.set('facebook_token', res.authResponse.accessToken);
+          const token = res.authResponse.accessToken;
+          this.storage.set('facebook_token', token);
+
+          const profileUrl =
+            'https://graph.facebook.com/me?fields=id,birthday,email,first_name,gender,picture.width(512).height(512){url}&access_token=';
+
+          this.http.get(profileUrl + token).subscribe(profile => {
+            console.log(profile);
+          });
         } else {
           console.log('Error logging into Facebook', res.status);
         }
