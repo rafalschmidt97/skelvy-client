@@ -10,10 +10,13 @@
         <i class="fab fa-facebook-f mr-2"></i>
         <span>{{ 'Continue with Facebook' | translate }}</span>
       </button>
-      <!--<button class="btn btn-block btn-outline-primary">-->
-      <!--<i class="fab fa-google mr-2"></i>-->
-      <!--<span>{{ 'Continue with Google' | translate }}</span>-->
-      <!--</button>-->
+      <button
+        (click)="signInWithGoogle()"
+        class="btn btn-block btn-outline-primary"
+      >
+        <i class="fab fa-google mr-2"></i>
+        <span>{{ 'Continue with Google' | translate }}</span>
+      </button>
       <div class="terms text-center my-3">
         <a
           class="text-primary"
