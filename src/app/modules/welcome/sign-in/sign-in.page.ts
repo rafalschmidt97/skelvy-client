@@ -49,7 +49,7 @@ export class SignInPage implements OnInit {
           this.storage.set('facebook_token', token);
 
           const profileUrl =
-            'https://graph.facebook.com/me?fields=id,birthday,email,first_name,gender,picture.width(512).height(512){url}&access_token=';
+            'https://graph.facebook.com/me?fields=birthday,email,first_name,gender,picture.width(512).height(512){url}&access_token=';
 
           this.http.get(profileUrl + token).subscribe(profile => {
             console.log(profile);
