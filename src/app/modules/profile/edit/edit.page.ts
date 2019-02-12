@@ -16,11 +16,11 @@ export class EditPage implements Form, OnSubmit {
   genders: Select[] = [
     {
       label: _('Male'),
-      value: 'M',
+      value: 'male',
     },
     {
       label: _('Female'),
-      value: 'F',
+      value: 'female',
     },
   ];
   adultDate = moment()
