@@ -15,6 +15,7 @@ import { ModalModule } from 'ngx-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { Facebook } from '@ionic-native/facebook/ngx';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 const libraries = [
   IonicModule.forRoot(),
@@ -39,6 +40,7 @@ const libraries = [
     SplashScreen,
     EmailComposer,
     Facebook,
+    GooglePlus,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],

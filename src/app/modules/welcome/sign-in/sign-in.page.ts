@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { IframeService } from '../../../shared/iframe/iframe.service';
 import { Iframe } from '../../../shared/iframe/iframe';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Storage } from '@ionic/storage';
 import { HttpClient } from '@angular/common/http';
 
@@ -19,13 +20,18 @@ export class SignInPage implements OnInit {
   constructor(
     private readonly iframeService: IframeService,
     private readonly facebook: Facebook,
+    private readonly google: GooglePlus,
     private readonly storage: Storage,
     private readonly http: HttpClient,
   ) {}
 
   ngOnInit() {
     this.storage.get('facebook_token').then(token => {
-      console.log(token);
+      console.log('facebook', token);
+    });
+
+    this.storage.get('google_token').then(token => {
+      console.log('google', token);
     });
   }
 
@@ -59,5 +65,22 @@ export class SignInPage implements OnInit {
         }
       })
       .catch(e => console.log('Error logging into Facebook', e));
+  }
+
+  signInWithGoogle() {
+    this.google
+      .login({})
+      .then(res => {
+        const token = res.accessToken;
+        this.storage.set('google_token', token);
+
+        const profileUrl =
+          'https://www.googleapis.com/plus/v1/people/me?fields=birthday,name/givenName,emails/value,gender,image/url&access_token=';
+
+        this.http.get(profileUrl + token).subscribe(profile => {
+          console.log('profileUrl', profile);
+        });
+      })
+      .catch(e => console.log('Error logging into Google', e));
   }
 }
