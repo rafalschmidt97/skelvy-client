@@ -15,19 +15,22 @@
           <div class="avatar d-inline-block">
             <div
               class="image"
-              [style.background-image]="'url(' + profile.photos[0] + ')'"
+              [style.background-image]="'url(' + profile.photos[0].url + ')'"
             ></div>
           </div>
 
           <h2 class="name my-4">
             <div class="d-inline-block">
-              {{ profile.name }}, {{ profile.birthDate | age }}
+              {{ profile.name }}, {{ profile.birthday | age }}
               <div class="tap">{{ 'Tap to see your profile' | translate }}</div>
             </div>
           </h2>
         </div>
 
-        <button routerLink="/profile/edit" class="btn btn-outline-primary px-4">
+        <button
+          routerLink="/app/profile/edit"
+          class="btn btn-outline-primary px-4"
+        >
           {{ 'Edit details' | translate }}
         </button>
       </div>

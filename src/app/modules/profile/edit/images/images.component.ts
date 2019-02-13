@@ -13,6 +13,8 @@ import { Modal } from '../../../../shared/modal/modal';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { base64StringToBlob } from 'blob-util';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ProfilePhoto } from '../../user';
+import { get } from 'lodash';
 
 @Component({
   selector: 'app-images',
@@ -49,21 +51,21 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
     this.inputForm = this.formBuilder.group({
       image: '',
-      image1: photos[0],
-      image2: photos[1] || '',
-      image3: photos[2] || '',
+      image1: get(photos, '[0].url'),
+      image2: get(photos, '[1].url', ''),
+      image3: get(photos, '[2].url', ''),
     });
 
     this.inputForm.valueChanges.subscribe(items => {
-      const newValue = [];
+      const newValue: ProfilePhoto[] = [];
       if (items.image1 !== '') {
-        newValue.push(items.image1);
+        newValue.push({ url: items.image1 });
       }
       if (items.image2 !== '') {
-        newValue.push(items.image2);
+        newValue.push({ url: items.image2 });
       }
       if (items.image3 !== '') {
-        newValue.push(items.image3);
+        newValue.push({ url: items.image3 });
       }
 
       this.form.patchValue({

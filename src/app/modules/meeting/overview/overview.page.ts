@@ -3,7 +3,7 @@ import { Meeting, MeetingRequest } from '../meeting';
 import { MeetingStoreService } from '../meeting-store.service';
 import { Observable } from 'rxjs';
 import { UserStoreService } from '../../profile/user-store.service';
-import { User } from '../../profile/profile';
+import { User } from '../../profile/user';
 
 @Component({
   selector: 'app-overview',
@@ -16,10 +16,10 @@ export class OverviewPage {
 
   constructor(
     private readonly meeting: MeetingStoreService,
-    private readonly user: UserStoreService,
+    private readonly userStore: UserStoreService,
   ) {
     this.meeting$ = meeting.data;
-    this.user$ = user.data;
+    this.user$ = userStore.data;
   }
 
   leaveMeeting() {

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Meeting, MeetingUser } from '../../meeting';
 import { ModalService } from '../../../../shared/modal/modal.service';
-import { Profile, User } from '../../../profile/profile';
+import { Profile, User } from '../../../profile/user';
 import { Modal } from '../../../../shared/modal/modal';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Meeting } from './meeting';
-import { Gender } from '../profile/profile';
+import { Gender } from '../profile/user';
 import * as moment from 'moment';
 import { StoreService } from '../../shared/store.service';
 
@@ -21,12 +21,18 @@ export class MeetingStoreService extends StoreService<Meeting> {
           id: 1,
           profile: {
             photos: [
-              'https://rafalschmidt.com/skelvy/avatar.jpg',
-              'https://rafalschmidt.com/skelvy/avatar2.jpg',
-              'https://rafalschmidt.com/skelvy/avatar3.jpg',
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar2.jpg',
+              },
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar.jpg',
+              },
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar3.jpg',
+              },
             ],
             name: 'Rafał',
-            birthDate: moment('22.04.1997', 'DD.MM.YYYY').toDate(),
+            birthday: moment('22.04.1997', 'DD.MM.YYYY').toDate(),
             description: `
               I am ambitious, open-minded and willing learn new things developer from Jastrzębie-Zdrój.
               Student of Opole University of Technology. Software Engineer at YourCompany
@@ -38,12 +44,18 @@ export class MeetingStoreService extends StoreService<Meeting> {
           id: 2,
           profile: {
             photos: [
-              'https://rafalschmidt.com/skelvy/avatar2.jpg',
-              'https://rafalschmidt.com/skelvy/avatar3.jpg',
-              'https://rafalschmidt.com/skelvy/avatar.jpg',
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar.jpg',
+              },
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar2.jpg',
+              },
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar3.jpg',
+              },
             ],
             name: 'Damian',
-            birthDate: moment('22.04.1996', 'DD.MM.YYYY').toDate(),
+            birthday: moment('22.04.1996', 'DD.MM.YYYY').toDate(),
             description: `Student of Wrocław University of Science and Technology`,
             gender: Gender.MALE,
           },
@@ -52,12 +64,18 @@ export class MeetingStoreService extends StoreService<Meeting> {
           id: 3,
           profile: {
             photos: [
-              'https://rafalschmidt.com/skelvy/avatar3.jpg',
-              'https://rafalschmidt.com/skelvy/avatar.jpg',
-              'https://rafalschmidt.com/skelvy/avatar2.jpg',
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar3.jpg',
+              },
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar2.jpg',
+              },
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar.jpg',
+              },
             ],
             name: 'Krzysztof',
-            birthDate: moment('22.04.1995', 'DD.MM.YYYY').toDate(),
+            birthday: moment('22.04.1995', 'DD.MM.YYYY').toDate(),
             description: null,
             gender: Gender.MALE,
           },
@@ -66,12 +84,18 @@ export class MeetingStoreService extends StoreService<Meeting> {
           id: 4,
           profile: {
             photos: [
-              'https://rafalschmidt.com/skelvy/avatar.jpg',
-              'https://rafalschmidt.com/skelvy/avatar2.jpg',
-              'https://rafalschmidt.com/skelvy/avatar3.jpg',
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar.jpg',
+              },
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar2.jpg',
+              },
+              {
+                url: 'https://rafalschmidt.com/skelvy/avatar3.jpg',
+              },
             ],
             name: 'Patryk',
-            birthDate: moment('22.04.1994', 'DD.MM.YYYY').toDate(),
+            birthday: moment('22.04.1994', 'DD.MM.YYYY').toDate(),
             description: 'I love Java language. This is my favourite language!',
             gender: Gender.MALE,
           },

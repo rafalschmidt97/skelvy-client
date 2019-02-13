@@ -3,7 +3,7 @@ import { Modal } from '../../../../shared/modal/modal';
 import { ModalService } from '../../../../shared/modal/modal.service';
 import { Message } from '../../chat';
 import { Meeting, MeetingUser } from '../../../meeting/meeting';
-import { User } from '../../../profile/profile';
+import { User } from '../../../profile/user';
 import { NavController } from '@ionic/angular';
 
 @Component({
@@ -47,7 +47,7 @@ export class MessagesComponent {
 
   moveToDetails(userId: number) {
     this.modal.hide();
-    this.routerNavigation.navigateRoot(['/tabs/meeting'], {
+    this.routerNavigation.navigateRoot(['/app/tabs/meeting'], {
       queryParams: { userId: userId },
     });
   }

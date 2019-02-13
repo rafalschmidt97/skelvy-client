@@ -3,7 +3,7 @@
     *ngIf="!isMine && !isNotLast"
     class="image rounded-circle mr-2 mt-auto flex-shrink-0 pointer"
     (click)="showDetails.emit(user)"
-    [style.background-image]="'url(' + user.profile.photos[0] + ')'"
+    [style.background-image]="'url(' + user.profile.photos[0].url + ')'"
   ></div>
   <div class="flex-fill" [class.message-continuation]="!isMine && isNotLast">
     <div *ngIf="!isMine && !isNotFirst" class="name">
