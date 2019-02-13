@@ -4,6 +4,9 @@ import { AlertService } from '../../../shared/alert/alert.service';
 import { NavController } from '@ionic/angular';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { environment } from '../../../../environments/environment';
+import { Facebook } from '@ionic-native/facebook/ngx';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-overview',
@@ -18,6 +21,9 @@ export class OverviewPage {
     private readonly alertService: AlertService,
     private readonly routerNavigation: NavController,
     private readonly emailComposer: EmailComposer,
+    private readonly authService: AuthService,
+    private readonly facebook: Facebook,
+    private readonly google: GooglePlus,
   ) {
     this.version = environment.version;
   }
@@ -27,7 +33,10 @@ export class OverviewPage {
   }
 
   confirmLogout() {
-    // TODO: auth logout
+    this.authService.logout();
+    this.facebook.logout();
+    this.google.logout();
+
     this.alert.hide();
     this.routerNavigation.navigateBack(['/welcome/sign-in']);
     // this.router.navigate(['/welcome/sign-in']);
