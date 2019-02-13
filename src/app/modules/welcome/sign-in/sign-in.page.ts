@@ -1,38 +1,44 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { IframeService } from '../../../shared/iframe/iframe.service';
 import { Iframe } from '../../../shared/iframe/iframe';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Storage } from '@ionic/storage';
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../../core/auth/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NavController } from '@ionic/angular';
+import { from, Observable } from 'rxjs';
+import { SessionService } from '../../../core/auth/session.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.page.html',
   styleUrls: ['./sign-in.page.scss'],
 })
-export class SignInPage implements OnInit {
+export class SignInPage {
   iframe: Iframe;
   @ViewChild('iframe') iframeTemplate: TemplateRef<any>;
   url: string;
   title: string;
+  loggedIn: Observable<boolean>;
 
   constructor(
     private readonly iframeService: IframeService,
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
     private readonly storage: Storage,
-    private readonly http: HttpClient,
-  ) {}
-
-  ngOnInit() {
-    this.storage.get('facebook_token').then(token => {
-      console.log('facebook', token);
-    });
-
-    this.storage.get('google_token').then(token => {
-      console.log('google', token);
-    });
+    private readonly authService: AuthService,
+    private readonly sessionService: SessionService,
+    private readonly routerNavigation: NavController,
+  ) {
+    this.loggedIn = from(this.sessionService.isAuthenticated()).pipe(
+      tap(authenticated => {
+        if (authenticated) {
+          this.routerNavigation.navigateRoot(['/app']);
+        }
+      }),
+    );
   }
 
   show(url: string, title = '') {
@@ -52,14 +58,19 @@ export class SignInPage implements OnInit {
       .then((res: FacebookLoginResponse) => {
         if (res.status === 'connected') {
           const token = res.authResponse.accessToken;
-          this.storage.set('facebook_token', token);
 
-          const profileUrl =
-            'https://graph.facebook.com/me?fields=birthday,email,first_name,gender,picture.width(512).height(512){url}&access_token=';
-
-          this.http.get(profileUrl + token).subscribe(profile => {
-            console.log(profile);
-          });
+          this.authService.signInWithFacebook(token).subscribe(
+            () => {
+              this.routerNavigation.navigateForward(['/app']);
+            },
+            (err: HttpErrorResponse) => {
+              if (err.status === 401) {
+                console.log('The email and password you entered did not match');
+              } else {
+                console.log('Something went wrong');
+              }
+            },
+          );
         } else {
           console.log('Error logging into Facebook', res.status);
         }
@@ -72,14 +83,19 @@ export class SignInPage implements OnInit {
       .login({})
       .then(res => {
         const token = res.accessToken;
-        this.storage.set('google_token', token);
 
-        const profileUrl =
-          'https://www.googleapis.com/plus/v1/people/me?fields=birthday,name/givenName,emails/value,gender,image/url&access_token=';
-
-        this.http.get(profileUrl + token).subscribe(profile => {
-          console.log('profileUrl', profile);
-        });
+        this.authService.signInWithGoogle(token).subscribe(
+          () => {
+            this.routerNavigation.navigateForward(['/app']);
+          },
+          (err: HttpErrorResponse) => {
+            if (err.status === 401) {
+              console.log('The email and password you entered did not match');
+            } else {
+              console.log('Something went wrong');
+            }
+          },
+        );
       })
       .catch(e => console.log('Error logging into Google', e));
   }

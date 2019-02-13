@@ -5,13 +5,17 @@ export interface User {
 
 export interface Profile {
   name: string;
-  birthDate: Date;
+  birthday: Date;
   gender: Gender;
-  photos: string[];
+  photos: ProfilePhoto[];
   description: string;
 }
 
+export interface ProfilePhoto {
+  url: string;
+}
+
 export enum Gender {
-  MALE = 'M',
-  FEMALE = 'F',
+  MALE = 'male',
+  FEMALE = 'female',
 }
