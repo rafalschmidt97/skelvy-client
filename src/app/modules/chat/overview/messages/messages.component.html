@@ -23,10 +23,12 @@
     <div class="px-2 pb-2 text-center">
       <div
         class="image-alert rounded-circle d-inline-block"
-        [style.background-image]="'url(' + modalUser.profile.photos[0] + ')'"
+        [style.background-image]="
+          'url(' + modalUser.profile.photos[0].url + ')'
+        "
       ></div>
       <h6 class="mt-1 mb-3">
-        {{ modalUser.profile.name }}, {{ modalUser.profile.birthDate | age }}
+        {{ modalUser.profile.name }}, {{ modalUser.profile.birthday | age }}
       </h6>
       <button
         (click)="moveToDetails(modalUser.id)"

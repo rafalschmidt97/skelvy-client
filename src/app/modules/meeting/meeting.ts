@@ -1,4 +1,4 @@
-import { Profile } from '../profile/profile';
+import { Profile } from '../profile/user';
 
 export interface Meeting {
   id: number;

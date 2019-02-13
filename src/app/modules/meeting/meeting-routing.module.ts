@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/tabs/meeting', pathMatch: 'full' },
+  { path: '', redirectTo: '/app/tabs/meeting', pathMatch: 'full' },
   {
     path: 'edit',
     loadChildren: './edit/edit-meeting.module#EditMeetingPageModule',

@@ -4,7 +4,7 @@ import { MeetingStoreService } from '../../meeting/meeting-store.service';
 import { Observable } from 'rxjs';
 import { Meeting } from '../../meeting/meeting';
 import { UserStoreService } from '../../profile/user-store.service';
-import { User } from '../../profile/profile';
+import { User } from '../../profile/user';
 import { NavController } from '@ionic/angular';
 
 @Component({
