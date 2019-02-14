@@ -8,6 +8,8 @@ import { Facebook } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserService } from '../../profile/user.service';
+import { ToastService } from '../../../core/toast/toast.service';
+import { _ } from '../../../core/i18n/translate';
 
 @Component({
   selector: 'app-overview',
@@ -26,6 +28,7 @@ export class OverviewPage {
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
     private readonly userService: UserService,
+    private readonly toastService: ToastService,
   ) {
     this.version = environment.version;
   }
@@ -35,25 +38,18 @@ export class OverviewPage {
   }
 
   confirmLogout() {
-    this.authService.logout();
-    this.facebook.logout();
-    this.google.logout();
-
-    this.alert.hide();
-    this.routerNavigation.navigateBack(['/welcome/sign-in']);
-    // this.router.navigate(['/welcome/sign-in']);
+    this.logout(_('Successfully logged out'));
   }
 
   confirmDelete() {
     // TODO: loading
     this.userService.deleteUser().subscribe(
       () => {
-        console.log('Account successfully deleted');
-        this.confirmLogout();
+        this.logout(_('Account successfully deleted'));
       },
       () => {
-        console.log('Something went wrong');
         this.alert.hide();
+        this.toastService.createError(_('Something went wrong'));
       },
     );
   }
@@ -66,6 +62,23 @@ export class OverviewPage {
     this.emailComposer.open({
       to: 'rafalschmidt97@gmail.com',
       subject: '[skelvy] Report a bug',
+    });
+  }
+
+  private async logout(message: string) {
+    await this.facebook.logout();
+    await this.google.logout();
+    this.authService.logout().then(() => {
+      this.alert.hide();
+      this.routerNavigation.navigateBack(['/welcome/sign-in']).then(() => {
+        setTimeout(() => {
+          this.toastService.createInformation(
+            message,
+            ToastService.TOAST_DURATION,
+            'top',
+          );
+        }, 500);
+      });
     });
   }
 }

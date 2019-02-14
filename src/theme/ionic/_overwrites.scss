@@ -17,3 +17,8 @@
 .safe-area-b {
   padding-bottom: var(--ion-safe-area-bottom) !important;
 }
+
+html.md {
+  --ion-default-font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue',
+    'Roboto', sans-serif;
+}

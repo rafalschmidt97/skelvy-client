@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { UserService } from '../user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
+import { ToastService } from '../../../core/toast/toast.service';
 
 @Component({
   selector: 'app-edit',
@@ -41,6 +42,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
     private readonly userStore: UserStoreService,
     private readonly userService: UserService,
     private readonly routerNavigation: NavController,
+    private readonly toastService: ToastService,
   ) {
     this.form = this.formBuilder.group({
       photos: [[], Validators.required],
@@ -78,7 +80,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
         },
         () => {
           this.isLoading = false;
-          console.log('Something went wrong');
+          this.toastService.createError(_('Something went wrong'));
         },
       );
     }

@@ -22,9 +22,9 @@ export class AuthService {
     return this.http
       .post<any>(environment.apiUrl + 'auth/facebook', { authToken })
       .pipe(
-        tap(res => {
+        tap(async res => {
           if (res && res.token) {
-            this.sessionService.createSession(res.token);
+            await this.sessionService.createSession(res.token);
           }
         }),
       );
@@ -34,16 +34,16 @@ export class AuthService {
     return this.http
       .post<any>(environment.apiUrl + 'auth/google', { authToken })
       .pipe(
-        tap(res => {
+        tap(async res => {
           if (res && res.token) {
-            this.sessionService.createSession(res.token);
+            await this.sessionService.createSession(res.token);
           }
         }),
       );
   }
 
-  logout() {
-    this.sessionService.removeSession();
+  async logout() {
+    await this.sessionService.removeSession();
     this.userStore.set(null);
     this.meetingStore.set(null);
   }
