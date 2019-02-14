@@ -15,6 +15,7 @@ import { base64StringToBlob } from 'blob-util';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { ProfilePhoto } from '../../user';
 import { get } from 'lodash';
+import { UploadService } from '../../../../core/upload/upload.service';
 
 @Component({
   selector: 'app-images',
@@ -42,6 +43,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
     private readonly modalService: ModalService,
     private readonly formBuilder: FormBuilder,
+    private readonly uploadService: UploadService,
   ) {
     super(parent);
   }
@@ -90,6 +92,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
   confirm() {
     this.dirty = true;
+    // TODO: block ui or/and show loading
 
     const data = new FormData();
     const blob = base64StringToBlob(
@@ -98,10 +101,28 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     );
     data.append('file', blob, 'file.png');
 
-    // TODO: send to upload endpoint and attach value to form.get(name)
+    this.uploadService.upload(data).subscribe(
+      photo => {
+        this.inputForm.patchValue({
+          [this.croppedName]: photo.url,
+          [this.newImageName]: '',
+        });
 
-    console.log('To update:', this.croppedName, blob);
-    this.modal.hide();
+        // TODO: unblock or/and hide loading
+        this.modal.hide();
+      },
+      () => {
+        // TODO: show error
+
+        this.inputForm.patchValue({
+          [this.croppedName]: '',
+          [this.newImageName]: '',
+        });
+
+        // TODO: unblock or/and hide loading
+        this.modal.hide();
+      },
+    );
   }
 
   decline() {
