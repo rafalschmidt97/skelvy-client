@@ -7,7 +7,7 @@ import { _ } from '../i18n/translate';
   providedIn: 'root',
 })
 export class ToastService {
-  static readonly TOAST_POSITION = 'bottom';
+  static readonly TOAST_POSITION = 'top';
   static readonly TOAST_DURATION = 4000;
 
   constructor(
