@@ -17,6 +17,8 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { SessionService } from './session.service';
 import { NavController } from '@ionic/angular';
+import { ToastService } from '../toast/toast.service';
+import { _ } from '../i18n/translate';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -25,6 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly routerNavigation: NavController,
+    private readonly toastService: ToastService,
   ) {}
 
   intercept(
@@ -40,12 +43,10 @@ export class AuthInterceptor implements HttpInterceptor {
               error.status === 401 &&
               this.router.url !== '/welcome/sign-in'
             ) {
-              this.authService.logout();
-              this.routerNavigation
-                .navigateBack(['/welcome/sign-in'])
-                .then(() => {
-                  // TODO: show error message that session expired
-                });
+              this.authService.logout().then(() => {
+                this.routerNavigation.navigateBack(['/welcome/sign-in']);
+                this.toastService.createError(_('Session expired'));
+              });
             }
 
             return throwError(error);
