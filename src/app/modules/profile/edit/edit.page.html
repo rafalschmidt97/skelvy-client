@@ -19,7 +19,7 @@
 <ion-content>
   <div class="container py-3">
     <app-form [form]="form" (onSubmit)="onSubmit()" [isLoading]="isLoading">
-      <app-images name="images" [label]="'Photos' | translate"></app-images>
+      <app-images name="photos" [label]="'Photos' | translate"></app-images>
       <app-input name="name" [label]="'First name' | translate"></app-input>
       <app-date
         name="birthday"
