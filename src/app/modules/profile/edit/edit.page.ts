@@ -8,6 +8,9 @@ import * as moment from 'moment';
 import { UserStoreService } from '../user-store.service';
 import { Gender, Profile, User } from '../user';
 import { Observable } from 'rxjs';
+import { UserService } from '../user.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-edit',
@@ -32,21 +35,29 @@ export class EditPage implements Form, OnSubmit, OnInit {
   deathDate = moment()
     .add(-100, 'years')
     .toDate();
-  user$: Observable<User>;
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly userStore: UserStoreService,
+    private readonly userService: UserService,
+    private readonly routerNavigation: NavController,
   ) {
     this.form = this.formBuilder.group({
-      images: [[], Validators.required],
+      photos: [[], Validators.required],
       name: [
         '',
-        [Validators.required, InputComponent.noWhitespaceValidation()],
+        [
+          Validators.required,
+          InputComponent.noWhitespaceValidation(),
+          Validators.maxLength(50),
+        ],
       ],
       birthday: [moment().toDate(), Validators.required],
       gender: ['', Validators.required],
-      description: ['', InputComponent.noWhitespaceValidation()],
+      description: [
+        '',
+        [InputComponent.noWhitespaceValidation(), Validators.maxLength(500)],
+      ],
     });
   }
 
@@ -59,11 +70,17 @@ export class EditPage implements Form, OnSubmit, OnInit {
   onSubmit() {
     if (this.form.valid) {
       this.isLoading = true;
-      console.log(this.form.value);
+      const profile: Profile = this.form.value;
 
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 2000);
+      this.userService.updateProfile(profile).subscribe(
+        () => {
+          this.routerNavigation.back();
+        },
+        () => {
+          this.isLoading = false;
+          console.log('Something went wrong');
+        },
+      );
     }
   }
 
@@ -71,7 +88,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
     const { photos, name, birthday, gender, description } = profile;
 
     this.form.patchValue({
-      images: photos,
+      photos: photos,
       name: name,
       birthday: moment(birthday).toDate(),
       gender: gender,
