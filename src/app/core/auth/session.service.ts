@@ -18,11 +18,11 @@ export class SessionService {
     return this.storage.get(SessionService.SESSION_STORAGE_KEY);
   }
 
-  createSession(token: string) {
-    this.storage.set(SessionService.SESSION_STORAGE_KEY, token);
+  async createSession(token: string) {
+    await this.storage.set(SessionService.SESSION_STORAGE_KEY, token);
   }
 
-  removeSession() {
-    this.storage.remove(SessionService.SESSION_STORAGE_KEY);
+  async removeSession() {
+    await this.storage.remove(SessionService.SESSION_STORAGE_KEY);
   }
 }

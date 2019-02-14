@@ -16,6 +16,8 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { ProfilePhoto } from '../../user';
 import { get } from 'lodash';
 import { UploadService } from '../../../../core/upload/upload.service';
+import { ToastService } from '../../../../core/toast/toast.service';
+import { _ } from '../../../../core/i18n/translate';
 
 @Component({
   selector: 'app-images',
@@ -44,6 +46,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     private readonly modalService: ModalService,
     private readonly formBuilder: FormBuilder,
     private readonly uploadService: UploadService,
+    private readonly toastService: ToastService,
   ) {
     super(parent);
   }
@@ -92,7 +95,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
   confirm() {
     this.dirty = true;
-    // TODO: block ui or/and show loading
+    // TODO: loading
 
     const data = new FormData();
     const blob = base64StringToBlob(
@@ -108,18 +111,16 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
           [this.newImageName]: '',
         });
 
-        // TODO: unblock or/and hide loading
         this.modal.hide();
       },
       () => {
-        // TODO: show error
+        this.toastService.createError(_('Something went wrong'));
 
         this.inputForm.patchValue({
           [this.croppedName]: '',
           [this.newImageName]: '',
         });
 
-        // TODO: unblock or/and hide loading
         this.modal.hide();
       },
     );
