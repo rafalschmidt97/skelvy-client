@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { AuthService } from '../../../core/auth/auth.service';
+import { UserService } from '../../profile/user.service';
 
 @Component({
   selector: 'app-overview',
@@ -24,6 +25,7 @@ export class OverviewPage {
     private readonly authService: AuthService,
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
+    private readonly userService: UserService,
   ) {
     this.version = environment.version;
   }
@@ -43,8 +45,17 @@ export class OverviewPage {
   }
 
   confirmDelete() {
-    // TODO: block ui, delete account
-    this.confirmLogout();
+    // TODO: loading
+    this.userService.deleteUser().subscribe(
+      () => {
+        console.log('Account successfully deleted');
+        this.confirmLogout();
+      },
+      () => {
+        console.log('Something went wrong');
+        this.alert.hide();
+      },
+    );
   }
 
   decline() {

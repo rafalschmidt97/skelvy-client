@@ -22,4 +22,8 @@ export class UserService {
       }),
     );
   }
+
+  deleteUser(): Observable<void> {
+    return this.http.delete<void>(environment.apiUrl + 'users/self');
+  }
 }
