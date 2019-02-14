@@ -9,6 +9,7 @@ import { NavController } from '@ionic/angular';
 import { SessionService } from '../../../core/auth/session.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
+import { LoadingService } from '../../../core/loading/loading.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -31,6 +32,7 @@ export class SignInPage implements OnInit {
     private readonly sessionService: SessionService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
+    private readonly loadingService: LoadingService,
   ) {}
 
   ngOnInit() {
@@ -56,20 +58,22 @@ export class SignInPage implements OnInit {
     this.iframe.hide();
   }
 
-  signInWithFacebook() {
+  async signInWithFacebook() {
     this.facebook
       .login(['public_profile', 'email', 'user_birthday', 'user_gender'])
-      .then((res: FacebookLoginResponse) => {
+      .then(async (res: FacebookLoginResponse) => {
         if (res.status === 'connected') {
           const token = res.authResponse.accessToken;
 
-          // TODO: loading
+          const loading = await this.loadingService.show();
           this.authService.signInWithFacebook(token).subscribe(
-            () => {
+            async () => {
               this.routerNavigation.navigateForward(['/app']);
+              await loading.dismiss();
             },
-            () => {
+            async () => {
               this.toastService.createError(_('Something went wrong'));
+              await loading.dismiss();
             },
           );
         } else {
@@ -79,16 +83,18 @@ export class SignInPage implements OnInit {
   }
 
   signInWithGoogle() {
-    this.google.login({}).then(res => {
+    this.google.login({}).then(async res => {
       const token = res.accessToken;
 
-      // TODO: loading
+      const loading = await this.loadingService.show();
       this.authService.signInWithGoogle(token).subscribe(
-        () => {
+        async () => {
           this.routerNavigation.navigateForward(['/app']);
+          await loading.dismiss();
         },
-        () => {
+        async () => {
           this.toastService.createError(_('Something went wrong'));
+          await loading.dismiss();
         },
       );
     });

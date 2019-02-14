@@ -1,0 +1,42 @@
+@import 'bootstrap/variables';
+
+@keyframes move-gradient {
+  0% {
+    background-position: -500px 0;
+  }
+
+  100% {
+    background-position: 500px 0;
+  }
+}
+
+.loading {
+  .load {
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: move-gradient;
+    animation-timing-function: linear;
+    border-radius: $input-border-radius;
+    background: #f3f3f8 !important;
+    background: linear-gradient(
+      to right,
+      $gray-100 8%,
+      $gray-200 18%,
+      $gray-100 33%
+    ) !important;
+    background-size: 1000px 1000px !important;
+    color: transparent !important;
+  }
+}
+
+.locked::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
