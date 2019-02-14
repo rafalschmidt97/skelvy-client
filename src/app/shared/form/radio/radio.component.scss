@@ -25,7 +25,7 @@
   }
 
   .custom-control-input {
-    display: none; // TODO: It solve problem with -webkit-overflow-scrolling on safari
+    display: none; // It solve problem with -webkit-overflow-scrolling on safari
 
     & ~ .custom-control-label {
       border: 1px solid gray('400');
