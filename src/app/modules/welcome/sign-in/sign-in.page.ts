@@ -57,6 +57,7 @@ export class SignInPage {
         if (res.status === 'connected') {
           const token = res.authResponse.accessToken;
 
+          // TODO: loading
           this.authService.signInWithFacebook(token).subscribe(
             () => {
               this.routerNavigation.navigateForward(['/app']);
@@ -82,6 +83,7 @@ export class SignInPage {
       .then(res => {
         const token = res.accessToken;
 
+        // TODO: loading
         this.authService.signInWithGoogle(token).subscribe(
           () => {
             this.routerNavigation.navigateForward(['/app']);
