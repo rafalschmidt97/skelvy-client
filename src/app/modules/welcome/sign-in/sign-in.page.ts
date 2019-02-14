@@ -7,9 +7,7 @@ import { Storage } from '@ionic/storage';
 import { AuthService } from '../../../core/auth/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
-import { from, Observable } from 'rxjs';
 import { SessionService } from '../../../core/auth/session.service';
-import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sign-in',
@@ -21,7 +19,7 @@ export class SignInPage {
   @ViewChild('iframe') iframeTemplate: TemplateRef<any>;
   url: string;
   title: string;
-  loggedIn: Observable<boolean>;
+  loggedInChecked = false;
 
   constructor(
     private readonly iframeService: IframeService,
@@ -32,13 +30,13 @@ export class SignInPage {
     private readonly sessionService: SessionService,
     private readonly routerNavigation: NavController,
   ) {
-    this.loggedIn = from(this.sessionService.isAuthenticated()).pipe(
-      tap(authenticated => {
-        if (authenticated) {
-          this.routerNavigation.navigateRoot(['/app']);
-        }
-      }),
-    );
+    this.sessionService.isAuthenticated().then(authenticated => {
+      if (authenticated) {
+        this.routerNavigation.navigateRoot(['/app']);
+      } else {
+        this.loggedInChecked = true;
+      }
+    });
   }
 
   show(url: string, title = '') {
