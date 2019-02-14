@@ -11,7 +11,7 @@
 <div class="content container pb-3">
   <h2>{{ profile.name }}, {{ profile.birthday | age }}</h2>
   <h5>{{ 'About me' | translate }}</h5>
-  <p class="mb-0" *ngIf="profile.description?.length > 0">
+  <p class="mb-0 description" *ngIf="profile.description?.length > 0">
     {{ profile.description }}
   </p>
   <p
