@@ -2,7 +2,7 @@
   <div class="header d-flex align-items-center py-2 px-3">
     <span class="title font-weight-medium">{{ title }}</span>
     <span
-      *ngIf="hasDecline"
+      *ngIf="hasDecline && !confirmLoading"
       class="btn-cancel text-primary"
       (click)="decline.emit()"
     >
@@ -11,7 +11,8 @@
     <span
       *ngIf="hasConfirm"
       class="btn-done text-primary"
-      (click)="confirm.emit()"
+      [class.disabled]="confirmLoading"
+      (click)="confirmEmit()"
     >
       {{ 'Done' | translate }}
     </span>

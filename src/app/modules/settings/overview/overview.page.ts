@@ -10,6 +10,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { UserService } from '../../profile/user.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
+import { LoadingService } from '../../../core/loading/loading.service';
 
 @Component({
   selector: 'app-overview',
@@ -19,6 +20,7 @@ import { _ } from '../../../core/i18n/translate';
 export class OverviewPage {
   alert: Alert;
   version: string;
+  loadingDelete = false;
 
   constructor(
     private readonly alertService: AlertService,
@@ -29,6 +31,7 @@ export class OverviewPage {
     private readonly google: GooglePlus,
     private readonly userService: UserService,
     private readonly toastService: ToastService,
+    private readonly loadingService: LoadingService,
   ) {
     this.version = environment.version;
   }
@@ -37,19 +40,23 @@ export class OverviewPage {
     this.alert = this.alertService.show(template);
   }
 
-  confirmLogout() {
-    this.logout(_('Successfully logged out'));
+  async confirmLogout() {
+    await this.logout(_('Successfully logged out'));
   }
 
-  confirmDelete() {
-    // TODO: loading
+  async confirmDelete() {
+    this.loadingDelete = true;
+    this.loadingService.lock();
     this.userService.deleteUser().subscribe(
-      () => {
-        this.logout(_('Account successfully deleted'));
+      async () => {
+        await this.logout(_('Account successfully deleted'));
+        this.loadingService.unlock();
       },
-      () => {
+      async () => {
         this.alert.hide();
         this.toastService.createError(_('Something went wrong'));
+        this.loadingDelete = false;
+        this.loadingService.unlock();
       },
     );
   }
@@ -72,12 +79,8 @@ export class OverviewPage {
       this.alert.hide();
       this.routerNavigation.navigateBack(['/welcome/sign-in']).then(() => {
         setTimeout(() => {
-          this.toastService.createInformation(
-            message,
-            ToastService.TOAST_DURATION,
-            'top',
-          );
-        }, 500);
+          this.toastService.createInformation(message);
+        }, 1000);
       });
     });
   }

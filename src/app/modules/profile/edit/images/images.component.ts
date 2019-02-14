@@ -18,6 +18,7 @@ import { get } from 'lodash';
 import { UploadService } from '../../../../core/upload/upload.service';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
+import { LoadingService } from '../../../../core/loading/loading.service';
 
 @Component({
   selector: 'app-images',
@@ -36,6 +37,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   image2Name = 'image2';
   image3Name = 'image3';
   @ViewChild('cropper') cropper: TemplateRef<any>;
+  loadingUpload = false;
 
   get isDirty(): boolean {
     return this.dirty;
@@ -47,6 +49,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly uploadService: UploadService,
     private readonly toastService: ToastService,
+    private readonly loadingService: LoadingService,
   ) {
     super(parent);
   }
@@ -95,7 +98,8 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
   confirm() {
     this.dirty = true;
-    // TODO: loading
+    this.loadingUpload = true;
+    this.loadingService.lock();
 
     const data = new FormData();
     const blob = base64StringToBlob(
@@ -112,6 +116,8 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
         });
 
         this.modal.hide();
+        this.loadingUpload = false;
+        this.loadingService.unlock();
       },
       () => {
         this.toastService.createError(_('Something went wrong'));
@@ -122,6 +128,8 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
         });
 
         this.modal.hide();
+        this.loadingUpload = false;
+        this.loadingService.unlock();
       },
     );
   }
