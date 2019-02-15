@@ -34,7 +34,7 @@ export class MessageFormComponent implements Form, OnSubmit {
   onSubmit() {
     this.messageInput.nativeElement.focus();
 
-    if (this.form.valid) {
+    if (this.form.valid && !this.isLoading) {
       this.isLoading = true;
 
       this.sendMessage.emit({

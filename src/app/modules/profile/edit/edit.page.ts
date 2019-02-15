@@ -70,7 +70,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid) {
+    if (this.form.valid && !this.isLoading) {
       this.isLoading = true;
       const profile: Profile = this.form.value;
       profile.name = profile.name.trim();

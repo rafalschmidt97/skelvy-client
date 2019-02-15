@@ -19,7 +19,7 @@ export class NotificationsPage implements Form, OnSubmit {
   }
 
   onSubmit() {
-    if (this.form.valid) {
+    if (this.form.valid && !this.isLoading) {
       this.isLoading = true;
       console.log(this.form.value);
 
