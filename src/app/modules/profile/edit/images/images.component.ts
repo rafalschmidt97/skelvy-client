@@ -12,7 +12,7 @@ import { ComplexFieldComponent } from '../../../../shared/form/complex-field.com
 import { Modal } from '../../../../shared/modal/modal';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { base64StringToBlob } from 'blob-util';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { ProfilePhoto } from '../../user';
 import { get } from 'lodash';
 import { UploadService } from '../../../../core/upload/upload.service';
@@ -29,7 +29,6 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   modal: Modal;
   inputForm: FormGroup;
   imageChangedEvent = '';
-  croppedImage: string;
   croppedName: string;
   dirty = false;
   newImageName = 'image';
@@ -37,6 +36,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   image2Name = 'image2';
   image3Name = 'image3';
   @ViewChild('cropper') cropper: TemplateRef<any>;
+  @ViewChild('cropperComponentContent') imageCropper: ImageCropperComponent;
   loadingUpload = false;
 
   get isDirty(): boolean {
@@ -92,18 +92,15 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     }
   }
 
-  imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.base64;
-  }
-
   confirm() {
-    this.dirty = true;
     this.loadingUpload = true;
     this.loadingService.lock();
+    this.dirty = true;
 
+    const crop = this.imageCropper.crop() as ImageCroppedEvent;
     const data = new FormData();
     const blob = base64StringToBlob(
-      this.croppedImage.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
+      crop.base64.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
       'image/png',
     );
     data.append('file', blob, 'file.png');
