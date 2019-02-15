@@ -20,6 +20,14 @@ export class InputComponent extends ComplexFieldComponent {
     return this.form.get(this.name).hasError('equal');
   }
 
+  get hasErrorMinLength(): boolean {
+    return this.form.get(this.name).hasError('minlength');
+  }
+
+  get hasErrorMaxLength(): boolean {
+    return this.form.get(this.name).hasError('maxlength');
+  }
+
   static noWhitespaceValidation() {
     return (control: FormControl) => {
       return control.value.length > 0 &&

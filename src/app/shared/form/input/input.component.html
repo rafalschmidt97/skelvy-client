@@ -22,6 +22,12 @@
         <ng-container *ngIf="hasErrorEqual">
           {{ 'Fields must be the same' | translate }}
         </ng-container>
+        <ng-container *ngIf="hasErrorMinLength">
+          {{ 'The text is too short' | translate }}
+        </ng-container>
+        <ng-container *ngIf="hasErrorMaxLength">
+          {{ 'The text is too long' | translate }}
+        </ng-container>
       </div>
       <div *ngIf="!(isInvalid && isTouched)" class="feedback">
         {{ 'The field is valid' | translate }}

@@ -11,4 +11,12 @@ export class TextareaComponent extends ComplexFieldComponent {
   @Input() autosize: boolean;
   @Input() maxHeight = '400px';
   @Input() minHeight = '100px';
+
+  get hasErrorMinLength(): boolean {
+    return this.form.get(this.name).hasError('minlength');
+  }
+
+  get hasErrorMaxLength(): boolean {
+    return this.form.get(this.name).hasError('maxlength');
+  }
 }
