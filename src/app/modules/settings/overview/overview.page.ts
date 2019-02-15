@@ -40,23 +40,37 @@ export class OverviewPage {
     this.alert = this.alertService.show(template);
   }
 
-  async confirmLogout() {
-    await this.logout(_('Successfully logged out'));
+  confirmLogout() {
+    this.logout().then(() => {
+      this.alert.hide();
+      this.routerNavigation.navigateBack(['/welcome/sign-in']);
+      setTimeout(() => {
+        this.toastService.createInformation(_('Successfully logged out'));
+      }, 1000);
+    });
   }
 
-  async confirmDelete() {
+  confirmDelete() {
     this.loadingDelete = true;
     this.loadingService.lock();
     this.userService.deleteUser().subscribe(
-      async () => {
-        await this.logout(_('Account successfully deleted'));
-        this.loadingService.unlock();
+      () => {
+        this.logout().then(() => {
+          this.alert.hide();
+          this.loadingService.unlock();
+          this.routerNavigation.navigateBack(['/welcome/sign-in']);
+          setTimeout(() => {
+            this.toastService.createInformation(
+              _('Account successfully deleted'),
+            );
+          }, 1000);
+        });
       },
-      async () => {
+      () => {
         this.alert.hide();
+        this.loadingService.unlock();
         this.toastService.createError(_('Something went wrong'));
         this.loadingDelete = false;
-        this.loadingService.unlock();
       },
     );
   }
@@ -72,16 +86,9 @@ export class OverviewPage {
     });
   }
 
-  private async logout(message: string) {
+  private async logout() {
+    await this.authService.logout();
     await this.facebook.logout();
     await this.google.logout();
-    this.authService.logout().then(() => {
-      this.alert.hide();
-      this.routerNavigation.navigateBack(['/welcome/sign-in']).then(() => {
-        setTimeout(() => {
-          this.toastService.createInformation(message);
-        }, 1000);
-      });
-    });
   }
 }

@@ -1,12 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { IframeService } from '../../../shared/iframe/iframe.service';
 import { Iframe } from '../../../shared/iframe/iframe';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
-import { Storage } from '@ionic/storage';
 import { AuthService } from '../../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
-import { SessionService } from '../../../core/auth/session.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
@@ -16,36 +14,21 @@ import { LoadingService } from '../../../core/loading/loading.service';
   templateUrl: './sign-in.page.html',
   styleUrls: ['./sign-in.page.scss'],
 })
-export class SignInPage implements OnInit {
+export class SignInPage {
   iframe: Iframe;
   @ViewChild('iframe') iframeTemplate: TemplateRef<any>;
   url: string;
   title: string;
-  loggedInChecked = false;
 
   constructor(
     private readonly iframeService: IframeService,
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
-    private readonly storage: Storage,
     private readonly authService: AuthService,
-    private readonly sessionService: SessionService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
   ) {}
-
-  ngOnInit() {
-    this.sessionService.isAuthenticated().then(authenticated => {
-      if (authenticated) {
-        this.routerNavigation.navigateForward(['/app']).catch(() => {
-          this.loggedInChecked = true;
-        });
-      } else {
-        this.loggedInChecked = true;
-      }
-    });
-  }
 
   show(url: string, title = '') {
     this.url = url;
