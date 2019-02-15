@@ -73,6 +73,8 @@ export class EditPage implements Form, OnSubmit, OnInit {
     if (this.form.valid) {
       this.isLoading = true;
       const profile: Profile = this.form.value;
+      profile.name = profile.name.trim();
+      profile.description = profile.description.trim();
 
       this.userService.updateProfile(profile).subscribe(
         () => {
