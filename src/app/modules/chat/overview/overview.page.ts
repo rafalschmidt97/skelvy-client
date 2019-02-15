@@ -21,8 +21,8 @@ export class OverviewPage implements OnInit {
     private readonly userStore: UserStoreService,
     private readonly routerNavigation: NavController,
   ) {
-    this.meeting$ = meetingStore.data;
-    this.user$ = userStore.data;
+    this.meeting$ = meetingStore.data$;
+    this.user$ = userStore.data$;
   }
 
   ngOnInit() {

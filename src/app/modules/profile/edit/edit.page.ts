@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Form, OnSubmit } from '../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Select } from '../../../shared/form/select/select';
@@ -6,10 +6,8 @@ import { _ } from '../../../core/i18n/translate';
 import { InputComponent } from '../../../shared/form/input/input.component';
 import * as moment from 'moment';
 import { UserStoreService } from '../user-store.service';
-import { Gender, Profile, User } from '../user';
-import { Observable } from 'rxjs';
+import { Gender, Profile } from '../user';
 import { UserService } from '../user.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 
@@ -17,7 +15,7 @@ import { ToastService } from '../../../core/toast/toast.service';
   selector: 'app-edit',
   templateUrl: './edit.page.html',
 })
-export class EditPage implements Form, OnSubmit, OnInit {
+export class EditPage implements Form, OnSubmit {
   form: FormGroup;
   isLoading = false;
   genders: Select[] = [
@@ -44,28 +42,30 @@ export class EditPage implements Form, OnSubmit, OnInit {
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
   ) {
+    const {
+      photos,
+      name,
+      birthday,
+      gender,
+      description,
+    } = this.userStore.data.profile;
+
     this.form = this.formBuilder.group({
-      photos: [[], Validators.required],
+      photos: [photos, Validators.required],
       name: [
-        '',
+        name,
         [
           Validators.required,
           InputComponent.noWhitespaceValidation(),
           Validators.maxLength(50),
         ],
       ],
-      birthday: [moment().toDate(), Validators.required],
-      gender: ['', Validators.required],
+      birthday: [moment(birthday).toDate(), Validators.required],
+      gender: [gender, Validators.required],
       description: [
-        '',
+        description || '',
         [InputComponent.noWhitespaceValidation(), Validators.maxLength(500)],
       ],
-    });
-  }
-
-  ngOnInit() {
-    this.userStore.data.subscribe(user => {
-      this.fillForm(user.profile);
     });
   }
 
@@ -86,17 +86,5 @@ export class EditPage implements Form, OnSubmit, OnInit {
         },
       );
     }
-  }
-
-  private fillForm(profile: Profile) {
-    const { photos, name, birthday, gender, description } = profile;
-
-    this.form.patchValue({
-      photos: photos,
-      name: name,
-      birthday: moment(birthday).toDate(),
-      gender: gender,
-      description: description || '',
-    });
   }
 }

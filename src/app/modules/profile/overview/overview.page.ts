@@ -19,7 +19,7 @@ export class OverviewPage {
     private readonly userStore: UserStoreService,
     private readonly modalService: ModalService,
   ) {
-    this.user$ = userStore.data;
+    this.user$ = userStore.data$;
   }
 
   open() {

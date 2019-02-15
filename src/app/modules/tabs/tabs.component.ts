@@ -10,7 +10,7 @@ import { MeetingStoreService } from '../meeting/meeting-store.service';
 export class TabsComponent {
   meeting$: Observable<Meeting>;
 
-  constructor(private readonly store: MeetingStoreService) {
-    this.meeting$ = store.data;
+  constructor(private readonly meetingStore: MeetingStoreService) {
+    this.meeting$ = meetingStore.data$;
   }
 }

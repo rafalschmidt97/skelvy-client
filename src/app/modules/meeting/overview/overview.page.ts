@@ -15,15 +15,15 @@ export class OverviewPage {
   request: MeetingRequest;
 
   constructor(
-    private readonly meeting: MeetingStoreService,
+    private readonly meetingStore: MeetingStoreService,
     private readonly userStore: UserStoreService,
   ) {
-    this.meeting$ = meeting.data;
-    this.user$ = userStore.data;
+    this.meeting$ = meetingStore.data$;
+    this.user$ = userStore.data$;
   }
 
   leaveMeeting() {
-    this.meeting.set(null);
+    this.meetingStore.set(null);
   }
 
   removeRequest() {
@@ -31,11 +31,11 @@ export class OverviewPage {
   }
 
   addMeeting() {
-    this.meeting.fill();
+    this.meetingStore.fill();
   }
 
   addRequest() {
-    this.meeting.set(null);
+    this.meetingStore.set(null);
     this.fillRequest();
   }
 
