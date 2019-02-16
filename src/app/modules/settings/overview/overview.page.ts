@@ -43,7 +43,7 @@ export class OverviewPage {
   confirmLogout() {
     this.logout().then(() => {
       this.alert.hide();
-      this.routerNavigation.navigateBack(['/welcome/sign-in']);
+      this.routerNavigation.navigateBack(['/home']);
       setTimeout(() => {
         this.toastService.createInformation(_('Successfully logged out'));
       }, 1000);
@@ -58,7 +58,7 @@ export class OverviewPage {
         this.logout().then(() => {
           this.alert.hide();
           this.loadingService.unlock();
-          this.routerNavigation.navigateBack(['/welcome/sign-in']);
+          this.routerNavigation.navigateBack(['/home']);
           setTimeout(() => {
             this.toastService.createInformation(
               _('Account successfully deleted'),

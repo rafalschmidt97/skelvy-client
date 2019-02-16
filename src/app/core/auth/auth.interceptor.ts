@@ -41,10 +41,10 @@ export class AuthInterceptor implements HttpInterceptor {
             if (
               error instanceof HttpErrorResponse &&
               error.status === 401 &&
-              this.router.url !== '/welcome/sign-in'
+              this.router.url !== '/home/sign-in'
             ) {
               this.authService.logout().then(() => {
-                this.routerNavigation.navigateBack(['/welcome/sign-in']);
+                this.routerNavigation.navigateBack(['/home/sign-in']);
                 this.toastService.createError(_('Session expired'));
               });
             }

@@ -4,10 +4,10 @@ import { AuthGuard } from './core/auth/auth.guard';
 import { UserResolver } from './modules/profile/user.resolver';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
-    path: 'welcome',
-    loadChildren: './modules/welcome/welcome.module#WelcomeModule',
+    path: 'home',
+    loadChildren: './modules/home/home.module#HomeModule',
   },
   {
     path: 'app',
