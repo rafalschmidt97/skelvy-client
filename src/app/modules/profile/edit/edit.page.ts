@@ -62,10 +62,7 @@ export class EditPage implements Form, OnSubmit {
       ],
       birthday: [moment(birthday).toDate(), Validators.required],
       gender: [gender, Validators.required],
-      description: [
-        description || '',
-        [InputComponent.noWhitespaceValidation(), Validators.maxLength(500)],
-      ],
+      description: [description || '', Validators.maxLength(500)],
     });
   }
 
