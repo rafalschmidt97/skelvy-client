@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Form, OnSubmit } from '../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { _ } from '../../../core/i18n/translate';
@@ -10,7 +10,7 @@ import { RangeComponent } from '../../../shared/form/range/range.component';
   selector: 'app-edit',
   templateUrl: './edit.page.html',
 })
-export class EditPage implements Form, OnSubmit, OnInit {
+export class EditPage implements Form, OnSubmit {
   form: FormGroup;
   isLoading = false;
   drinks: Checkbox[] = [
@@ -58,10 +58,6 @@ export class EditPage implements Form, OnSubmit, OnInit {
       age: [[18, 25], RangeComponent.minimumRangeValidator(4)],
       drinks: [[this.drinks[0].value], Validators.required],
     });
-  }
-
-  ngOnInit() {
-    // TODO: fill address based on our location (get lat long)
   }
 
   onSubmit() {

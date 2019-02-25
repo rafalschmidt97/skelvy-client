@@ -7,7 +7,7 @@
     [className]="
       'form-control form-control-placeholder ' +
       (isInvalid && (isDirty || isTouched) ? 'is-invalid ' : '') +
-      (isLoading ? 'is-disabled' : '')
+      (isLoading || loadingLocation ? 'is-disabled' : '')
     "
   >
     {{ dateLabel }}

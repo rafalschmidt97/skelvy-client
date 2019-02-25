@@ -17,8 +17,8 @@ export class MapsService {
   }
 
   reverse(
-    latitude: string,
-    longitude: string,
+    latitude: number,
+    longitude: number,
     language: string,
   ): Observable<MapsResponse[]> {
     return this.http.get<MapsResponse[]>(
