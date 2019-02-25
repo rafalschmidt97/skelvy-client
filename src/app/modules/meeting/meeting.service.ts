@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { MeetingStoreService } from './meeting-store.service';
-import { MeetingModel, MeetingRequest } from './meeting';
+import { MeetingDrink, MeetingModel, MeetingRequest } from './meeting';
 
 @Injectable({
   providedIn: 'root',
@@ -51,5 +51,9 @@ export class MeetingService {
           this.meetingStore.set(null);
         }),
       );
+  }
+
+  getDrinks(): Observable<MeetingDrink[]> {
+    return this.http.get<MeetingDrink[]>(environment.apiUrl + 'drinks');
   }
 }

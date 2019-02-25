@@ -5,15 +5,22 @@
 </ion-header>
 
 <ion-content>
-  <ng-container *ngIf="(meeting$ | async) as meeting; else notFound">
-    <app-found [meeting]="meeting" [user]="user$ | async"></app-found>
-  </ng-container>
-  <ng-template #notFound>
-    <ng-container *ngIf="request; else unspecified">
-      <app-searching [request]="request"></app-searching>
+  <ng-container *ngIf="!isLoading; else loading">
+    <ng-container *ngIf="(meeting$ | async) as model; else notFound">
+      <ng-container *ngIf="model.meeting; else searching">
+        <app-found [meeting]="model.meeting" [user]="user$ | async"></app-found>
+      </ng-container>
+      <ng-template #searching>
+        <app-searching [request]="model.request"></app-searching>
+      </ng-template>
     </ng-container>
-    <ng-template #unspecified>
+    <ng-template #notFound>
       <app-unspecified></app-unspecified>
     </ng-template>
+  </ng-container>
+  <ng-template #loading>
+    <div class="d-flex h-100">
+      <ion-spinner class="m-auto"></ion-spinner>
+    </div>
   </ng-template>
 </ion-content>

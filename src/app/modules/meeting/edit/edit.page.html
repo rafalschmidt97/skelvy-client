@@ -39,10 +39,16 @@
         [maxValueToRound]="55"
       ></app-range>
       <app-checkbox
+        *ngIf="drinks; else loading"
         name="drinks"
         [label]="'Drinks' | translate"
         [options]="drinks"
       ></app-checkbox>
+      <ng-template #loading>
+        <div class="text-center py-3">
+          <ion-spinner></ion-spinner>
+        </div>
+      </ng-template>
     </app-form>
   </div>
 </ion-content>

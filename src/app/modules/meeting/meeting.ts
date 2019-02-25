@@ -21,7 +21,7 @@ export interface Meeting {
 }
 
 export interface MeetingRequest {
-  id: number;
+  id?: number;
   minDate: Date;
   maxDate: Date;
   minAge: number;
@@ -38,5 +38,5 @@ export interface MeetingUser {
 
 export interface MeetingDrink {
   id: number;
-  name: string;
+  name?: string;
 }
