@@ -10,13 +10,12 @@ import { Modal } from '../../../../shared/modal/modal';
 import { FormComponent } from '../../../../shared/form/form.component';
 import { ModalService } from '../../../../shared/modal/modal.service';
 import { of, Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  switchMap,
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { MapsService } from '../../../../core/maps/maps.service';
+import { TranslateService } from '@ngx-translate/core';
+import { MapsResponse, MapsResponseType } from '../../../../core/maps/maps';
+import { _ } from '../../../../core/i18n/translate';
+import { ToastService } from '../../../../core/toast/toast.service';
 
 @Component({
   selector: 'app-address',
@@ -30,45 +29,48 @@ export class AddressComponent extends ComplexFieldComponent {
   @Input() max: number;
   modal: Modal;
   search$ = new Subject<string>();
-  results: [];
+  results: MapsResponse[];
   resultLoading = false;
   resultSearched = false;
-  baseUrl = 'https://api.cdnjs.com/libraries';
-  queryUrl = '?search=';
 
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
     private readonly modalService: ModalService,
-    private readonly http: HttpClient,
+    private readonly mapsService: MapsService,
+    private readonly translateService: TranslateService,
+    private readonly toastService: ToastService,
   ) {
     super(parent);
 
     this.search$
       .pipe(
-        debounceTime(400),
+        debounceTime(1000),
         distinctUntilChanged(),
-        switchMap((term: any) => {
-          if (term.trim().length > 0) {
+        switchMap((text: string) => {
+          if (text.trim().length > 0) {
             this.resultLoading = true;
 
-            return this.http
-              .get(this.baseUrl + this.queryUrl + term)
-              .pipe(map((results: Result) => results.results));
+            return this.mapsService.search(text, translateService.currentLang);
           } else {
             return of(this.results);
           }
         }),
       )
-      .subscribe(results => {
-        this.resultSearched = true;
-        this.results = results;
-        this.resultLoading = false;
-      });
+      .subscribe(
+        results => {
+          this.resultSearched = true;
+          this.results = results;
+          this.resultLoading = false;
+        },
+        () => {
+          this.toastService.createError(_('Something went wrong'));
+        },
+      );
   }
 
   get dateLabel(): string {
-    const value = this.form.get(this.name).value;
-    return value ? value.name : this.placeholder;
+    const value: MapsResponse = this.form.get(this.name).value;
+    return value ? `${value.city}, ${value.country}` : this.placeholder;
   }
 
   open(template: TemplateRef<any>) {
@@ -91,9 +93,12 @@ export class AddressComponent extends ComplexFieldComponent {
   confirm() {
     this.modal.hide();
   }
-}
 
-interface Result {
-  results: [];
-  total: number;
+  filterCities(response: MapsResponse[]): MapsResponse[] {
+    return response.filter(x => x.type === MapsResponseType.LOCALITY);
+  }
+
+  filterVillages(response: MapsResponse[]): MapsResponse[] {
+    return response.filter(x => x.type !== MapsResponseType.LOCALITY);
+  }
 }
