@@ -61,7 +61,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
   }
 
   ngOnInit() {
-    // TODO: fill address based on our location
+    // TODO: fill address based on our location (get lat long)
   }
 
   onSubmit() {

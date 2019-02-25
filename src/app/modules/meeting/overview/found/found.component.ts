@@ -1,9 +1,7 @@
 import {
   Component,
-  EventEmitter,
   Input,
   OnInit,
-  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -24,7 +22,6 @@ import { debounceTime } from 'rxjs/operators';
 export class FoundComponent implements OnInit {
   @Input() meeting: Meeting;
   @Input() user: User;
-  @Output() leaveMeeting = new EventEmitter();
   @ViewChild('details') detailsTemplate: TemplateRef<any>;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
   profileForModal: Profile;
@@ -43,6 +40,8 @@ export class FoundComponent implements OnInit {
   }
 
   ngOnInit() {
+    // TODO: lat long to address
+
     this.route.queryParams.pipe(debounceTime(100)).subscribe(params => {
       const userId = Number(params.userId);
       const meetingUser = this.meeting.users.find(user => user.id === userId);
@@ -67,7 +66,7 @@ export class FoundComponent implements OnInit {
 
   confirmAlert() {
     this.alert.hide();
-    this.leaveMeeting.emit();
+    // TODO: use service to leave meeting
   }
 
   declineAlert() {

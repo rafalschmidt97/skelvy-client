@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Meeting } from '../meeting/meeting';
+import { MeetingModel } from '../meeting/meeting';
 import { MeetingStoreService } from '../meeting/meeting-store.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { MeetingStoreService } from '../meeting/meeting-store.service';
   templateUrl: './tabs.component.html',
 })
 export class TabsComponent {
-  meeting$: Observable<Meeting>;
+  meeting$: Observable<MeetingModel>;
 
   constructor(private readonly meetingStore: MeetingStoreService) {
     this.meeting$ = meetingStore.data$;

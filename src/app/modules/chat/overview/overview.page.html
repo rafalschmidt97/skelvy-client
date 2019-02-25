@@ -12,11 +12,11 @@
 
 <ion-content [scrollY]="false">
   <div class="d-flex flex-column h-100 safe-area-b">
-    <ng-container *ngIf="(meeting$ | async) as meeting">
+    <ng-container *ngIf="(meeting$ | async) as model">
       <ng-container *ngIf="messages.length > 0">
         <app-messages
           [messages]="messages"
-          [meeting]="meeting"
+          [meeting]="model.meeting"
           [user]="user$ | async"
         ></app-messages>
       </ng-container>

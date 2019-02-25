@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MeetingRequest } from '../../meeting';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
@@ -17,7 +10,6 @@ import { AlertService } from '../../../../shared/alert/alert.service';
 })
 export class SearchingComponent {
   @Input() request: MeetingRequest;
-  @Output() removeRequest = new EventEmitter();
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
   alert: Alert;
 
@@ -28,8 +20,8 @@ export class SearchingComponent {
   }
 
   confirmAlert() {
+    // TODO: use service to remove request
     this.alert.hide();
-    this.removeRequest.emit();
   }
 
   declineAlert() {

@@ -10,13 +10,13 @@
       <div class="py-2 border-bottom">
         <div class="font-weight-bold">{{ 'Date' | translate }}</div>
         <div>
-          {{ request.minimumDate | date: 'dd.MM.yyyy' }} -
-          {{ request.maximumDate | date: 'dd.MM.yyyy' }}
+          {{ request.minDate | date: 'dd.MM.yyyy' }} -
+          {{ request.maxDate | date: 'dd.MM.yyyy' }}
         </div>
       </div>
       <div class="py-2 border-bottom">
         <div class="font-weight-bold">{{ 'City' | translate }}</div>
-        <div>{{ request.address.city }}</div>
+        <div>ASK MAPS SERVICE</div>
       </div>
       <div class="py-2 border-bottom">
         <div class="font-weight-bold">{{ 'Drinks' | translate }}</div>
@@ -29,7 +29,7 @@
       </div>
       <div class="py-2">
         <div class="font-weight-bold">{{ 'Age range' | translate }}</div>
-        <div>{{ request.minimumAge }} - {{ request.maximumAge }}</div>
+        <div>{{ request.minAge }} - {{ request.maxAge }}</div>
       </div>
     </div>
   </section>

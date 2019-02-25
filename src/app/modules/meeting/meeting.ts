@@ -1,21 +1,34 @@
 import { Profile } from '../profile/user';
 
+export interface MeetingModel {
+  status: MeetingStatus;
+  meeting: Meeting;
+  request: MeetingRequest;
+}
+
+export enum MeetingStatus {
+  FOUND = 'found',
+  SEARCHING = 'searching',
+}
+
 export interface Meeting {
   id: number;
-  users: MeetingUser[];
-  drink: MeetingDrink;
   date: Date;
-  address: MeetingAddress;
+  latitude: number;
+  longitude: number;
+  drink: MeetingDrink;
+  users: MeetingUser[];
 }
 
 export interface MeetingRequest {
   id: number;
-  minimumDate: Date;
-  maximumDate: Date;
-  address: MeetingAddress;
+  minDate: Date;
+  maxDate: Date;
+  minAge: number;
+  maxAge: number;
+  latitude: number;
+  longitude: number;
   drinks: MeetingDrink[];
-  minimumAge: number;
-  maximumAge: number;
 }
 
 export interface MeetingUser {
@@ -28,10 +41,19 @@ export interface MeetingDrink {
   name: string;
 }
 
-export interface MeetingAddress {
+export interface Location {
   latitude: number;
   longitude: number;
-  city: string;
-  state: string;
   country: string;
+  state: string;
+  district: string;
+  city: string;
+  type: LocationType;
+}
+
+export enum LocationType {
+  LOCALITY = 'Locality',
+  ADMINISTRATIVE_AREA_LEVEL_1 = 'AdministrativeAreaLevel1',
+  ADMINISTRATIVE_AREA_LEVEL_2 = 'AdministrativeAreaLevel2',
+  ADMINISTRATIVE_AREA_LEVEL_3 = 'AdministrativeAreaLevel3',
 }
