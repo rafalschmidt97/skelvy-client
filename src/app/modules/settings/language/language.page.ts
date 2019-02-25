@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Form } from '../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { _ } from '../../../core/i18n/translate';
 import { Radio } from '../../../shared/form/radio/radio';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';

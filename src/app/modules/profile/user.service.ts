@@ -17,7 +17,7 @@ export class UserService {
 
   getUser(): Observable<User> {
     return this.http.get<User>(environment.apiUrl + 'users/self').pipe(
-      tap((user: User) => {
+      tap(user => {
         this.userStore.set(user);
       }),
     );
