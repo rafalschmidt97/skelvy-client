@@ -7,7 +7,7 @@
     [className]="
       'form-control form-control-placeholder ' +
       (isInvalid && (isDirty || isTouched) ? 'is-invalid ' : '') +
-      (isLoading ? 'is-disabled' : '')
+      (isLoading || loadingLocation ? 'is-disabled' : '')
     "
   >
     {{ dateLabel }}
@@ -47,23 +47,23 @@
         <ng-container *ngIf="!resultSearched">
           <div class="container text-center py-3 text-muted">
             {{
-              'Remember to use the language in which you would like to talk with people. For example type Warszawa instead of Warsaw if you prefer polish instead of english language.'
+              'Type your city like "Warsaw". If this will be not enough try to add a state or country.'
                 | translate
             }}
           </div>
         </ng-container>
         <ng-container *ngIf="resultSearched">
           <ng-container *ngIf="results?.length > 0">
-            <div
-              *ngFor="let result of (results | slice: 0:15)"
-              (click)="select(result)"
-              class="result border-top border-bottom py-2 px-3 d-flex align-items-center pointer"
-            >
-              <div class="min-width description">{{ result.name }}</div>
-              <div class="text-primary ml-auto">
-                <ion-icon name="arrow-forward" class="d-block"></ion-icon>
-              </div>
-            </div>
+            <app-address-item
+              *ngFor="let result of filterCities(results)"
+              [result]="result"
+              (select)="select($event)"
+            ></app-address-item>
+            <app-address-item
+              *ngFor="let result of filterVillages(results)"
+              [result]="result"
+              (select)="select($event)"
+            ></app-address-item>
           </ng-container>
           <ng-container *ngIf="!results || !(results.length > 0)">
             <div class="container text-center py-3">

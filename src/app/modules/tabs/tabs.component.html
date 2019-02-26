@@ -11,7 +11,7 @@
     <ion-tab-button
       routerLink="/app/chat"
       routerDirection="root"
-      *ngIf="(meeting$ | async)"
+      *ngIf="(meeting$ | async)?.meeting"
     >
       <ion-icon name="chatbubbles"></ion-icon>
       <ion-label>{{ 'Chat' | translate }}</ion-label>

@@ -11,46 +11,26 @@
         <div class="font-weight-bold">{{ 'Date' | translate }}</div>
         <div>{{ meeting.date | date: 'dd.MM.yyyy' }}</div>
       </div>
-      <div class="w-50 py-2">
+      <div *ngIf="!loadingLocation; else loading" class="py-2 w-50">
         <div class="font-weight-bold">{{ 'City' | translate }}</div>
-        <div>{{ meeting.address.city }}</div>
+        <div>{{ location.city }}</div>
       </div>
+      <ng-template #loading>
+        <div class="py-2 w-50 city-min-height d-flex">
+          <ion-spinner class="m-auto"></ion-spinner>
+        </div>
+      </ng-template>
     </div>
   </section>
   <section class="users">
-    <div
-      class="border-bottom py-4 pointer"
+    <app-profile
       *ngFor="let user of filteredMeetingUsers"
-      (click)="openDetails(user)"
-    >
-      <div class="container d-flex align-items-center">
-        <div
-          class="flex-shrink-0 image rounded-circle"
-          [style.background-image]="'url(' + user.profile.photos[0].url + ')'"
-        ></div>
-        <div class="min-width mx-3">
-          <h3 class="mb-0 text-primary">
-            {{ user.profile.name }}, {{ user.profile.birthday | age }}
-          </h3>
-          <p class="description small text-muted mb-0">
-            <ng-container *ngIf="user.profile.description?.length > 0">
-              {{ user.profile.description }}
-            </ng-container>
-            <ng-container
-              *ngIf="
-                !user.profile.description ||
-                user.profile.description.length === 0
-              "
-            >
-              {{ 'User did not fill his bio yet.' | translate }}
-            </ng-container>
-          </p>
-        </div>
-        <div class="text-primary ml-auto">
-          <ion-icon name="arrow-forward" class="d-block"></ion-icon>
-        </div>
-      </div>
-    </div>
+      [user]="user"
+      (openDetails)="openDetails($event)"
+    ></app-profile>
+    <app-profile-loading
+      *ngFor="let user of missingMeetingUsers"
+    ></app-profile-loading>
   </section>
   <section class="more">
     <div class="container py-3">
@@ -70,6 +50,7 @@
 <ng-template #alert>
   <app-alert
     (confirm)="confirmAlert()"
+    [confirmLoading]="loadingLeave"
     (decline)="declineAlert()"
     [title]="'Are you sure?' | translate"
   ></app-alert>

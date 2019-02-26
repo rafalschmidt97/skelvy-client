@@ -7,6 +7,8 @@ import { UnspecifiedComponent } from './unspecified/unspecified.component';
 import { SearchingComponent } from './searching/searching.component';
 import { FoundComponent } from './found/found.component';
 import { ProfileDetailsComponent } from './found/profile-details/profile-details.component';
+import { ProfileComponent } from './found/profile/profile.component';
+import { ProfileLoadingComponent } from './found/profile-loading/profile-loading.component';
 
 const routes: Routes = [
   {
@@ -23,6 +25,8 @@ const routes: Routes = [
     SearchingComponent,
     FoundComponent,
     ProfileDetailsComponent,
+    ProfileComponent,
+    ProfileLoadingComponent,
   ],
 })
 export class OverviewPageModule {}

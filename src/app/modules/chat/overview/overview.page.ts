@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Message } from '../chat';
 import { MeetingStoreService } from '../../meeting/meeting-store.service';
 import { Observable } from 'rxjs';
-import { Meeting } from '../../meeting/meeting';
+import { Meeting, MeetingModel } from '../../meeting/meeting';
 import { UserStoreService } from '../../profile/user-store.service';
 import { User } from '../../profile/user';
 import { NavController } from '@ionic/angular';
@@ -13,7 +13,7 @@ import { NavController } from '@ionic/angular';
 })
 export class OverviewPage implements OnInit {
   messages: Message[] = [];
-  meeting$: Observable<Meeting>;
+  meeting$: Observable<MeetingModel>;
   user$: Observable<User>;
 
   constructor(

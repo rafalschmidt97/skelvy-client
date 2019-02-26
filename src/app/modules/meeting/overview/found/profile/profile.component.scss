@@ -1,24 +1,5 @@
 @import '~src/theme/bootstrap/variables';
 
-:host {
-  height: 100%;
-}
-
-.bg-ultra-light {
-  background: gray('100');
-}
-
-.header {
-  font-size: 2.2rem;
-  font-weight: 200;
-  max-width: 330px;
-
-  .header-icon {
-    color: theme-color('danger');
-    margin-bottom: -7px;
-  }
-}
-
 .image {
   background-size: cover;
   background-color: theme-color('light');
@@ -34,8 +15,4 @@
 
 .min-width {
   min-width: 0;
-}
-
-.city-min-height {
-  min-height: 65px;
 }
