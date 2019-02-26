@@ -11,10 +11,15 @@
         <div class="font-weight-bold">{{ 'Date' | translate }}</div>
         <div>{{ meeting.date | date: 'dd.MM.yyyy' }}</div>
       </div>
-      <div class="w-50 py-2">
+      <div *ngIf="!loadingLocation; else loading" class="py-2 w-50">
         <div class="font-weight-bold">{{ 'City' | translate }}</div>
-        <div>ASK MAPS SERVICE</div>
+        <div>{{ location.city }}</div>
       </div>
+      <ng-template #loading>
+        <div class="py-2 w-50 city-min-height d-flex">
+          <ion-spinner class="m-auto"></ion-spinner>
+        </div>
+      </ng-template>
     </div>
   </section>
   <section class="users">

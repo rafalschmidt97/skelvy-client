@@ -13,6 +13,11 @@ import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
+import { MapsService } from '../../../../core/maps/maps.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastService } from '../../../../core/toast/toast.service';
+import { MapsResponse } from '../../../../core/maps/maps';
+import { _ } from '../../../../core/i18n/translate';
 
 @Component({
   selector: 'app-found',
@@ -27,12 +32,17 @@ export class FoundComponent implements OnInit {
   profileForModal: Profile;
   modal: Modal;
   alert: Alert;
+  loadingLocation = true;
+  location: MapsResponse;
 
   constructor(
     private readonly modalService: ModalService,
     private readonly alertService: AlertService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly mapsService: MapsService,
+    private readonly translateService: TranslateService,
+    private readonly toastService: ToastService,
   ) {}
 
   get filteredMeetingUsers(): MeetingUser[] {
@@ -40,7 +50,25 @@ export class FoundComponent implements OnInit {
   }
 
   ngOnInit() {
-    // TODO: lat long to address
+    this.mapsService
+      .reverse(
+        this.meeting.latitude,
+        this.meeting.longitude,
+        this.translateService.currentLang,
+      )
+      .subscribe(
+        results => {
+          if (results.length > 0) {
+            this.location = results[0];
+          }
+
+          this.loadingLocation = false;
+        },
+        () => {
+          this.loadingLocation = false;
+          this.toastService.createError(_('Something went wrong'));
+        },
+      );
 
     this.route.queryParams.pipe(debounceTime(100)).subscribe(params => {
       const userId = Number(params.userId);
