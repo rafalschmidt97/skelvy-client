@@ -49,6 +49,18 @@ export class FoundComponent implements OnInit {
     return this.meeting.users.filter(user => user.id !== this.user.id);
   }
 
+  get missingMeetingUsers(): any[] {
+    const amount = this.meeting.users.length;
+    const missingAmount = 4 - amount; // 4 is max size of group
+    const data = [];
+
+    for (let i = 0; i < missingAmount; i++) {
+      data.push(i);
+    }
+
+    return data;
+  }
+
   ngOnInit() {
     this.mapsService
       .reverse(
