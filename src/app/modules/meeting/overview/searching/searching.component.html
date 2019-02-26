@@ -50,6 +50,7 @@
 <ng-template #alert>
   <app-alert
     (confirm)="confirmAlert()"
+    [confirmLoading]="loadingDelete"
     (decline)="declineAlert()"
     [title]="'Are you sure?' | translate"
   ></app-alert>

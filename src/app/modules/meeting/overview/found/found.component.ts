@@ -18,6 +18,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { MapsResponse } from '../../../../core/maps/maps';
 import { _ } from '../../../../core/i18n/translate';
+import { LoadingService } from '../../../../core/loading/loading.service';
+import { MeetingService } from '../../meeting.service';
 
 @Component({
   selector: 'app-found',
@@ -34,6 +36,7 @@ export class FoundComponent implements OnInit {
   alert: Alert;
   loadingLocation = true;
   location: MapsResponse;
+  loadingLeave = false;
 
   constructor(
     private readonly modalService: ModalService,
@@ -43,6 +46,8 @@ export class FoundComponent implements OnInit {
     private readonly mapsService: MapsService,
     private readonly translateService: TranslateService,
     private readonly toastService: ToastService,
+    private readonly loadingService: LoadingService,
+    private readonly meetingService: MeetingService,
   ) {}
 
   get filteredMeetingUsers(): MeetingUser[] {
@@ -105,8 +110,21 @@ export class FoundComponent implements OnInit {
   }
 
   confirmAlert() {
-    this.alert.hide();
-    // TODO: use service to leave meeting
+    this.loadingLeave = true;
+    this.loadingService.lock();
+    this.meetingService.leaveMeeting().subscribe(
+      () => {
+        this.alert.hide();
+        this.loadingService.unlock();
+        this.loadingLeave = false;
+      },
+      () => {
+        this.alert.hide();
+        this.loadingService.unlock();
+        this.loadingLeave = false;
+        this.toastService.createError(_('Something went wrong'));
+      },
+    );
   }
 
   declineAlert() {

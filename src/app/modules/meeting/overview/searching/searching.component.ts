@@ -13,6 +13,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
 import { MapsResponse } from '../../../../core/maps/maps';
+import { LoadingService } from '../../../../core/loading/loading.service';
+import { MeetingService } from '../../meeting.service';
 
 @Component({
   selector: 'app-searching',
@@ -25,12 +27,15 @@ export class SearchingComponent implements OnInit {
   alert: Alert;
   loadingLocation = true;
   location: MapsResponse;
+  loadingDelete = false;
 
   constructor(
     private readonly alertService: AlertService,
     private readonly mapsService: MapsService,
     private readonly translateService: TranslateService,
     private readonly toastService: ToastService,
+    private readonly loadingService: LoadingService,
+    private readonly meetingService: MeetingService,
   ) {}
 
   ngOnInit() {
@@ -60,8 +65,21 @@ export class SearchingComponent implements OnInit {
   }
 
   confirmAlert() {
-    // TODO: use service to remove request
-    this.alert.hide();
+    this.loadingDelete = true;
+    this.loadingService.lock();
+    this.meetingService.deleteMeetingRequest().subscribe(
+      () => {
+        this.alert.hide();
+        this.loadingService.unlock();
+        this.loadingDelete = false;
+      },
+      () => {
+        this.alert.hide();
+        this.loadingService.unlock();
+        this.loadingDelete = false;
+        this.toastService.createError(_('Something went wrong'));
+      },
+    );
   }
 
   declineAlert() {
