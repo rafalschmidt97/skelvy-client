@@ -80,7 +80,11 @@ export class EditPage implements Form, OnSubmit {
 
       this.userService.updateProfile(profile).subscribe(
         () => {
-          this.routerNavigation.back();
+          if (window.history.length > 1) {
+            this.routerNavigation.back();
+          } else {
+            this.routerNavigation.navigateBack(['/app/tabs/profile']);
+          }
         },
         () => {
           this.isLoading = false;

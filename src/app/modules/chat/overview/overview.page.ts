@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Message } from '../chat';
 import { MeetingStoreService } from '../../meeting/meeting-store.service';
 import { Observable } from 'rxjs';
-import { Meeting, MeetingModel } from '../../meeting/meeting';
+import { MeetingModel } from '../../meeting/meeting';
 import { UserStoreService } from '../../profile/user-store.service';
 import { User } from '../../profile/user';
 import { NavController } from '@ionic/angular';
@@ -65,8 +65,14 @@ export class OverviewPage implements OnInit {
   }
 
   navigateBack() {
-    this.routerNavigation.back({
-      animated: false,
-    });
+    if (window.history.length > 1) {
+      this.routerNavigation.back({
+        animated: false,
+      });
+    } else {
+      this.routerNavigation.navigateBack(['/app/tabs/meeting'], {
+        animated: false,
+      });
+    }
   }
 }

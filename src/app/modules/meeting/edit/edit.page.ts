@@ -84,7 +84,11 @@ export class EditPage implements Form, OnSubmit, OnInit {
 
       this.meetingService.createMeetingRequest(request).subscribe(
         () => {
-          this.routerNavigation.back();
+          if (window.history.length > 1) {
+            this.routerNavigation.back();
+          } else {
+            this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+          }
         },
         () => {
           this.isLoading = false;
