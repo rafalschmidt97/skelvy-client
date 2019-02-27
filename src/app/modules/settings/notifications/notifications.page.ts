@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Form, OnSubmit } from '../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-notifications',
@@ -11,7 +12,10 @@ export class NotificationsPage implements Form, OnSubmit {
   form: FormGroup;
   isLoading = false;
 
-  constructor(private readonly formBuilder: FormBuilder) {
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly routerNavigation: NavController,
+  ) {
     this.form = this.formBuilder.group({
       meetings: [true, Validators.required],
       messages: [true, Validators.required],
@@ -24,7 +28,11 @@ export class NotificationsPage implements Form, OnSubmit {
       console.log(this.form.value);
 
       setTimeout(() => {
-        this.isLoading = false;
+        if (window.history.length > 1) {
+          this.routerNavigation.back();
+        } else {
+          this.routerNavigation.navigateBack(['/app/tabs/settings']);
+        }
       }, 2000);
     }
   }
