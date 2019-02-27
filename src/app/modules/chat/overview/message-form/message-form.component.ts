@@ -9,6 +9,7 @@ import { Message } from '../../chat';
 import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/form/input/input.component';
+import { UserStoreService } from '../../../profile/user-store.service';
 
 @Component({
   selector: 'app-message-form',
@@ -22,7 +23,10 @@ export class MessageFormComponent implements Form, OnSubmit {
   @Output() sendMessage = new EventEmitter<Message>();
   @ViewChild('messageInput') messageInput: ElementRef;
 
-  constructor(private readonly formBuilder: FormBuilder) {
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly userStore: UserStoreService,
+  ) {
     this.form = this.formBuilder.group({
       message: [
         '',
@@ -40,7 +44,7 @@ export class MessageFormComponent implements Form, OnSubmit {
       this.sendMessage.emit({
         date: new Date(),
         text: this.form.get('message').value.trim(),
-        userId: 1,
+        userId: this.userStore.data.id,
       });
 
       this.form.patchValue({
