@@ -15,31 +15,28 @@ a {
 .modal {
   .modal-dialog {
     margin: 0;
-    padding: 0.5rem;
+    height: 100%;
     display: flex;
-    min-height: 100%;
-    align-items: center;
     justify-content: center;
+    align-items: flex-end;
+    padding: var(--ion-safe-area-top) var(--ion-safe-area-right)
+      var(--ion-safe-area-bottom) var(--ion-safe-area-left);
 
     @include media-breakpoint-up(sm) {
       margin: 0 auto;
     }
 
     .modal-content {
-      width: 80%;
       border: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      max-height: 100%;
     }
 
     &.modal-dialog-full,
     &.modal-dialog-iframe {
-      padding: 0;
-      align-items: flex-end;
-
       .modal-content {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        width: 100%;
-        padding: 0;
+        height: 100%;
       }
     }
   }

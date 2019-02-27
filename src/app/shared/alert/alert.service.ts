@@ -16,12 +16,4 @@ export class AlertService {
       class: get(options, 'class', ''),
     });
   }
-
-  confirmation(template: TemplateRef<any>, isSmall = true): Alert {
-    return this.show(template, {
-      ignoreBackdropClick: true,
-      keyboard: false,
-      class: isSmall ? 'modal-dialog-sm' : '',
-    });
-  }
 }

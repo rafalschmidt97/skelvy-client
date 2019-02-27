@@ -143,14 +143,16 @@
     (decline)="decline()"
     [confirmLoading]="loadingUpload"
   >
-    <ng-container *ngTemplateOutlet="cropperComponent"> </ng-container>
+    <div class="p-3 d-flex h-100 bg-dark">
+      <ng-container *ngTemplateOutlet="cropperComponent"> </ng-container>
+    </div>
   </app-modal>
 </ng-template>
 
 <ng-template #cropperComponent>
   <image-cropper
     #cropperComponentContent
-    class="p-0"
+    class="p-0 m-auto"
     [style.max-height]="'90vh'"
     outputType="base64"
     [imageChangedEvent]="imageChangedEvent"

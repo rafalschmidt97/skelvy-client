@@ -1,31 +1,31 @@
-<div *ngIf="title" class="modal-header flex-column text-center">
-  <span *ngIf="title" class="font-weight-medium w-100">{{ title }}</span>
-  <span *ngIf="description" class="small text-muted w-100">
-    {{ description }}
-  </span>
-</div>
-<div class="modal-body text-center">
-  <ng-content></ng-content>
-  <button
-    type="button"
-    [disabled]="confirmLoading"
-    class="btn btn-primary btn-block"
-    *ngIf="hasConfirm"
-    (click)="confirm.emit()"
-  >
-    <ng-container *ngIf="!confirmLoading">
-      {{ confirmText || 'Confirm' | translate }}
-    </ng-container>
-    <ng-container *ngIf="confirmLoading">
-      <ion-spinner class="align-middle"></ion-spinner>
-    </ng-container>
-  </button>
-  <button
-    type="button"
-    class="btn btn-light btn-block"
-    *ngIf="hasDecline && !confirmLoading"
-    (click)="decline.emit()"
-  >
-    {{ declineText || 'Cancel' | translate }}
-  </button>
+<div class="modal-body safe-area-b">
+  <div class="header text-center pt-4 px-4">
+    <div class="font-weight-medium">{{ title }}</div>
+    <div *ngIf="description">{{ description }}</div>
+  </div>
+  <div class="content p-4">
+    <ng-content></ng-content>
+    <button
+      type="button"
+      [disabled]="confirmLoading"
+      class="btn btn-primary btn-block"
+      *ngIf="hasConfirm"
+      (click)="confirm.emit()"
+    >
+      <ng-container *ngIf="!confirmLoading">
+        {{ confirmText || 'Confirm' | translate }}
+      </ng-container>
+      <ng-container *ngIf="confirmLoading">
+        <ion-spinner class="align-middle"></ion-spinner>
+      </ng-container>
+    </button>
+    <button
+      type="button"
+      class="btn btn-light btn-block"
+      *ngIf="hasDecline && !confirmLoading"
+      (click)="decline.emit()"
+    >
+      {{ declineText || 'Cancel' | translate }}
+    </button>
+  </div>
 </div>

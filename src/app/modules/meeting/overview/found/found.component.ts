@@ -98,7 +98,7 @@ export class FoundComponent implements OnInit {
 
   openDetails(user: MeetingUser) {
     this.profileForModal = user.profile;
-    this.modal = this.modalService.show(this.detailsTemplate);
+    this.modal = this.modalService.show(this.detailsTemplate, true);
   }
 
   leaveGroup() {

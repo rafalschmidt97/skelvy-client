@@ -88,7 +88,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
       this.imageChangedEvent = event;
       this.croppedName = name;
 
-      this.modal = this.modalService.show(this.cropper);
+      this.modal = this.modalService.show(this.cropper, true);
     }
   }
 

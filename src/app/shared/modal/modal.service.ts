@@ -9,11 +9,17 @@ import { Modal } from './modal';
 export class ModalService {
   constructor(private readonly modalService: BsModalService) {}
 
-  show(template: TemplateRef<any>, options?: ModalOptions): Modal {
+  show(
+    template: TemplateRef<any>,
+    isFull = false,
+    options?: ModalOptions,
+  ): Modal {
     return this.modalService.show(template, {
       ignoreBackdropClick: get(options, 'ignoreBackdropClick', false),
       keyboard: get(options, 'keyboard', true),
-      class: get(options, 'class', 'modal-dialog-full'),
+      class: isFull
+        ? get(options, 'class', 'modal-dialog-full')
+        : get(options, 'class', ''),
     });
   }
 }

@@ -23,7 +23,7 @@ export class OverviewPage {
   }
 
   open() {
-    this.modal = this.modalService.show(this.details);
+    this.modal = this.modalService.show(this.details, true);
   }
 
   confirm() {

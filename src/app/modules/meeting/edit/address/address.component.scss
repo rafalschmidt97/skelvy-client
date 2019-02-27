@@ -31,7 +31,7 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  height: calc(100vh - 80px - 67px - var(--ion-safe-area-bottom));
+  height: 100%;
 }
 
 .description {

@@ -110,7 +110,7 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
 
   open(template: TemplateRef<any>) {
     if (!this.isLoading && !this.loadingLocation) {
-      this.modal = this.modalService.show(template);
+      this.modal = this.modalService.show(template, true);
     }
   }
 
