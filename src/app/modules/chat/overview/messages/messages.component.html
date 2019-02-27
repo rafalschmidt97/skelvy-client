@@ -3,15 +3,13 @@
     *ngFor="let message of messages; let i = index"
     [message]="message"
     [user]="getUser(message.userId)"
-    [isMine]="isMine(message.userId)"
-    [isNotLast]="
-      i !== messages.length - 1
-        ? messages[i].userId === messages[i + 1].userId
-        : false
+    [isMine]="user.id === message.userId"
+    [isLast]="
+      i === messages.length - 1
+        ? true
+        : messages[i].userId !== messages[i + 1].userId
     "
-    [isNotFirst]="
-      i !== 0 ? messages[i].userId === messages[i - 1].userId : false
-    "
+    [isFirst]="i === 0 ? true : messages[i].userId !== messages[i - 1].userId"
     [dateToShow]="dateToShow"
     (showDetails)="showDetails($event)"
     (showDate)="showDate($event)"

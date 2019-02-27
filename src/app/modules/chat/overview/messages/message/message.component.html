@@ -1,12 +1,13 @@
-<div class="message-container d-flex" [class.mb-3]="!isMine && !isNotLast">
+<div class="message-container d-flex" [class.mb-3]="!isMine && isLast">
   <div
-    *ngIf="!isMine && !isNotLast"
-    class="image rounded-circle mr-2 mt-auto flex-shrink-0 pointer"
+    *ngIf="!isMine && isLast"
+    class="image rounded-circle flex-shrink-0 pointer"
     (click)="showDetails.emit(user)"
+    [class.image-first-last]="!isMine && isLast && isFirst"
     [style.background-image]="'url(' + user.profile.photos[0].url + ')'"
   ></div>
-  <div class="flex-fill" [class.message-continuation]="!isMine && isNotLast">
-    <div *ngIf="!isMine && !isNotFirst" class="name">
+  <div class="flex-fill" [class.message-continuation]="!isMine && !isLast">
+    <div *ngIf="!isMine && isFirst" class="name">
       {{ user.profile.name }}
     </div>
     <div

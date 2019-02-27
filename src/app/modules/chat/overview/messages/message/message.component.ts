@@ -11,8 +11,8 @@ export class MessageComponent {
   @Input() user: MeetingUser;
   @Input() message: Message;
   @Input() isMine: boolean;
-  @Input() isNotLast: boolean;
-  @Input() isNotFirst: boolean;
+  @Input() isLast: boolean;
+  @Input() isFirst: boolean;
   @Input() dateToShow: Date;
   @Output() showDetails = new EventEmitter<MeetingUser>();
   @Output() showDate = new EventEmitter<Date>();

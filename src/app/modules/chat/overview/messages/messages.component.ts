@@ -29,10 +29,6 @@ export class MessagesComponent {
     return this.meeting.users.find(user => user.id === userId);
   }
 
-  isMine(userId: number): boolean {
-    return this.user.id === userId;
-  }
-
   showDetails(user: MeetingUser) {
     // dont show yourself
     if (user.id !== this.user.id) {
