@@ -1,9 +1,9 @@
 <div [class.form-group]="label">
-  <label (click)="open(date)" *ngIf="label" [attr.for]="name">
+  <label (click)="open(address)" *ngIf="label" [attr.for]="name">
     {{ label }}
   </label>
   <div
-    (click)="open(date)"
+    (click)="open(address)"
     [className]="
       'form-control form-control-placeholder ' +
       (isInvalid && (isDirty || isTouched) ? 'is-invalid ' : '') +
@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<ng-template #date>
+<ng-template #address>
   <app-modal (confirm)="confirm()">
     <div class="container pb-4 pt-1 border-bottom">
       <input
