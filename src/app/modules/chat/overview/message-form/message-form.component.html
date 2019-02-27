@@ -17,7 +17,7 @@
     ></textarea>
   </ng-container>
 
-  <button [disabled]="isLoading" class="btn-send">
+  <button (click)="onSubmit()" [disabled]="isLoading" class="btn-send">
     <ion-icon
       name="arrow-dropup-circle"
       class="text-primary d-block"
