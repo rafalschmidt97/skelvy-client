@@ -9,7 +9,10 @@
     </ion-buttons>
     <ion-title>{{ 'Add meeting' | translate }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button [disabled]="isLoading || form.invalid" (click)="onSubmit()">
+      <ion-button
+        [disabled]="isLoading || form.invalid || loadingDrinks"
+        (click)="onSubmit()"
+      >
         {{ 'Done' | translate }}
       </ion-button>
     </ion-buttons>

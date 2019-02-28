@@ -22,7 +22,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
   tomorrow = moment()
     .add(1, 'days')
     .toDate();
-  private drinksToTranslate = [
+  private readonly drinksToTranslate = [
     _('tea'),
     _('chocolate'),
     _('coffee'),
@@ -31,6 +31,8 @@ export class EditPage implements Form, OnSubmit, OnInit {
     _('vodka'),
     _('whiskey'),
   ];
+  loadingDrinks = true;
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly meetingService: MeetingService,
@@ -58,16 +60,18 @@ export class EditPage implements Form, OnSubmit, OnInit {
         this.form.patchValue({
           drinks: [this.drinks[0].value],
         });
+
+        this.loadingDrinks = false;
       },
       () => {
-        this.isLoading = false;
+        this.loadingDrinks = false;
         this.toastService.createError(_('Something went wrong'));
       },
     );
   }
 
   onSubmit() {
-    if (this.form.valid && !this.isLoading) {
+    if (this.form.valid && !this.isLoading && !this.loadingDrinks) {
       this.isLoading = true;
       const form = this.form.value;
       const request: MeetingRequest = {
