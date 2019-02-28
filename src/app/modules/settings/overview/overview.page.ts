@@ -20,7 +20,7 @@ import { LoadingService } from '../../../core/loading/loading.service';
 export class OverviewPage {
   alert: Alert;
   version: string;
-  loadingDelete = false;
+  loadingRemove = false;
 
   constructor(
     private readonly alertService: AlertService,
@@ -50,10 +50,10 @@ export class OverviewPage {
     });
   }
 
-  confirmDelete() {
-    this.loadingDelete = true;
+  confirmRemove() {
+    this.loadingRemove = true;
     this.loadingService.lock();
-    this.userService.deleteUser().subscribe(
+    this.userService.removeUser().subscribe(
       () => {
         this.logout().then(() => {
           this.alert.hide();
@@ -70,7 +70,7 @@ export class OverviewPage {
         this.alert.hide();
         this.loadingService.unlock();
         this.toastService.createError(_('Something went wrong'));
-        this.loadingDelete = false;
+        this.loadingRemove = false;
       },
     );
   }

@@ -27,7 +27,7 @@ export class SearchingComponent implements OnInit {
   alert: Alert;
   loadingLocation = true;
   location: MapsResponse;
-  loadingDelete = false;
+  loadingRemove = false;
 
   constructor(
     private readonly alertService: AlertService,
@@ -65,18 +65,18 @@ export class SearchingComponent implements OnInit {
   }
 
   confirmAlert() {
-    this.loadingDelete = true;
+    this.loadingRemove = true;
     this.loadingService.lock();
-    this.meetingService.deleteMeetingRequest().subscribe(
+    this.meetingService.removeMeetingRequest().subscribe(
       () => {
         this.alert.hide();
         this.loadingService.unlock();
-        this.loadingDelete = false;
+        this.loadingRemove = false;
       },
       () => {
         this.alert.hide();
         this.loadingService.unlock();
-        this.loadingDelete = false;
+        this.loadingRemove = false;
         this.toastService.createError(_('Something went wrong'));
       },
     );

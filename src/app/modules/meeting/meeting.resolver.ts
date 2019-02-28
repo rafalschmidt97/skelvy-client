@@ -22,7 +22,7 @@ export class MeetingResolver implements Resolve<MeetingModel> {
   ) {}
 
   resolve(): Observable<MeetingModel> {
-    return this.meetingService.getMeeting().pipe(
+    return this.meetingService.findMeeting().pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status !== 404) {
           this.authService.logout().then(() => {

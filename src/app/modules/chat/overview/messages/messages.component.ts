@@ -25,7 +25,7 @@ export class MessagesComponent {
     private readonly routerNavigation: NavController,
   ) {}
 
-  getUser(userId: number): MeetingUser {
+  findUser(userId: number): MeetingUser {
     return this.meeting.users.find(user => user.id === userId);
   }
 

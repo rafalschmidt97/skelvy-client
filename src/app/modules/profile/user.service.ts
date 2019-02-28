@@ -15,7 +15,7 @@ export class UserService {
     private readonly userStore: UserStoreService,
   ) {}
 
-  getUser(): Observable<User> {
+  findUser(): Observable<User> {
     return this.http.get<User>(environment.apiUrl + 'users/self').pipe(
       tap(user => {
         this.userStore.set(user);
@@ -23,7 +23,7 @@ export class UserService {
     );
   }
 
-  deleteUser(): Observable<void> {
+  removeUser(): Observable<void> {
     return this.http.delete<void>(environment.apiUrl + 'users/self');
   }
 
@@ -32,7 +32,7 @@ export class UserService {
       .put<void>(environment.apiUrl + 'users/self/profile', profile)
       .pipe(
         tap(() => {
-          this.getUser().subscribe();
+          this.findUser().subscribe();
         }),
       );
   }

@@ -70,9 +70,9 @@
 
 <ng-template #delete>
   <app-alert
-    (confirm)="confirmDelete()"
+    (confirm)="confirmRemove()"
     (decline)="decline()"
-    [confirmLoading]="loadingDelete"
+    [confirmLoading]="loadingRemove"
     [title]="'Are you sure you want delete your account?' | translate"
   ></app-alert>
 </ng-template>

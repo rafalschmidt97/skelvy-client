@@ -21,7 +21,7 @@ export class UserResolver implements Resolve<User> {
   ) {}
 
   resolve(): Observable<User> {
-    return this.userService.getUser().pipe(
+    return this.userService.findUser().pipe(
       catchError(error => {
         this.authService.logout().then(() => {
           this.routerNavigation.navigateBack(['/home']);

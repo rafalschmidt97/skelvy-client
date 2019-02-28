@@ -2,7 +2,7 @@
   <app-message
     *ngFor="let message of messages; let i = index"
     [message]="message"
-    [user]="getUser(message.userId)"
+    [user]="findUser(message.userId)"
     [isMine]="user.id === message.userId"
     [isLast]="
       i === messages.length - 1

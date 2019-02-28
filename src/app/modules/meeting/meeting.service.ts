@@ -15,7 +15,7 @@ export class MeetingService {
     private readonly meetingStore: MeetingStoreService,
   ) {}
 
-  getMeeting(): Observable<MeetingModel> {
+  findMeeting(): Observable<MeetingModel> {
     return this.http
       .get<MeetingModel>(environment.apiUrl + 'meetings/self')
       .pipe(
@@ -38,12 +38,12 @@ export class MeetingService {
       .post<void>(environment.apiUrl + 'meetings/requests/self', request)
       .pipe(
         tap(() => {
-          this.getMeeting().subscribe();
+          this.findMeeting().subscribe();
         }),
       );
   }
 
-  deleteMeetingRequest(): Observable<void> {
+  removeMeetingRequest(): Observable<void> {
     return this.http
       .delete<void>(environment.apiUrl + 'meetings/requests/self')
       .pipe(
@@ -53,7 +53,7 @@ export class MeetingService {
       );
   }
 
-  getDrinks(): Observable<MeetingDrink[]> {
+  findDrinks(): Observable<MeetingDrink[]> {
     return this.http.get<MeetingDrink[]>(environment.apiUrl + 'drinks');
   }
 }

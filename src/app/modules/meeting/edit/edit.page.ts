@@ -48,7 +48,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
   }
 
   ngOnInit() {
-    this.meetingService.getDrinks().subscribe(
+    this.meetingService.findDrinks().subscribe(
       (drinks: MeetingDrink[]) => {
         this.drinks = drinks.map(drink => {
           return {
