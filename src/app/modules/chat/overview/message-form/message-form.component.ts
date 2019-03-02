@@ -43,7 +43,7 @@ export class MessageFormComponent implements Form, OnSubmit {
 
       this.sendMessage.emit({
         date: new Date(),
-        text: this.form.get('message').value.trim(),
+        message: this.form.get('message').value.trim(),
         userId: this.userStore.data.id,
       });
 
