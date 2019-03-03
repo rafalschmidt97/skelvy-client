@@ -19,35 +19,73 @@ export class ToastService {
     message: string,
     color: string = 'primary',
     duration: number = ToastService.TOAST_DURATION,
+    showCloseButton: boolean = true,
+    translateMessage: boolean = true,
     position: any = ToastService.TOAST_POSITION,
   ) {
-    const translatedMessage = await this.translateService
-      .get(message)
-      .toPromise();
-    const translatedDone = await this.translateService
-      .get(_('Done'))
-      .toPromise();
+    let toast;
 
-    const toast = await this.toastController.create({
-      message: translatedMessage,
-      showCloseButton: true,
-      color: color,
-      duration: duration,
-      closeButtonText: translatedDone,
-      position: position,
-    });
+    if (translateMessage) {
+      message = await this.translateService.get(message).toPromise();
+    }
+
+    if (showCloseButton) {
+      const translatedDone = await this.translateService
+        .get(_('Done'))
+        .toPromise();
+
+      toast = await this.toastController.create({
+        message: message,
+        showCloseButton: true,
+        color: color,
+        duration: duration,
+        closeButtonText: translatedDone,
+        position: position,
+      });
+    } else {
+      toast = await this.toastController.create({
+        message: message,
+        showCloseButton: false,
+        color: color,
+        duration: duration,
+        position: position,
+      });
+    }
+
     toast.present();
   }
 
-  async createError(message: string, duration?: number, position?: string) {
-    await this.create(message, 'danger', duration, position);
+  async createError(
+    message: string,
+    duration?: number,
+    showCloseButton?: boolean,
+    translateMessage?: boolean,
+    position?: string,
+  ) {
+    await this.create(
+      message,
+      'danger',
+      duration,
+      showCloseButton,
+      translateMessage,
+      position,
+    );
   }
 
   async createInformation(
     message: string,
     duration?: number,
+    showCloseButton?: boolean,
+    translateMessage?: boolean,
     position?: string,
   ) {
-    await this.create(message, 'light', duration, position);
+    await this.create(
+      message,
+      'light',
+      duration,
+      showCloseButton,
+      translateMessage,
+      position,
+    );
   }
 }
