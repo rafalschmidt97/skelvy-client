@@ -7,14 +7,10 @@
     <ion-tab-button tab="meeting">
       <ion-icon name="cafe"></ion-icon>
       <ion-label>{{ 'Meeting' | translate }}</ion-label>
-    </ion-tab-button>
-    <ion-tab-button
-      routerLink="/app/chat"
-      routerDirection="root"
-      *ngIf="(meeting$ | async)?.meeting"
-    >
-      <ion-icon name="chatbubbles"></ion-icon>
-      <ion-label>{{ 'Chat' | translate }}</ion-label>
+      <ion-badge
+        *ngIf="messagesDifference > 0"
+        [innerHTML]="messagesDifference"
+      ></ion-badge>
     </ion-tab-button>
     <ion-tab-button tab="more">
       <ion-icon name="more"></ion-icon>

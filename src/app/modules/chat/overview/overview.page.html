@@ -1,29 +1,32 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="navigateBack()">
-        <ion-icon name="arrow-back"></ion-icon>
-        {{ 'Back' | translate }}
-      </ion-button>
+      <ion-back-button
+        defaultHref="/app/tabs/meeting"
+        [text]="'Back' | translate"
+      ></ion-back-button>
     </ion-buttons>
-    <ion-title (click)="clearMessages()">{{ 'Chat' | translate }}</ion-title>
+    <ion-title>{{ 'Chat' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [scrollY]="false">
   <div class="d-flex flex-column h-100 safe-area-b">
-    <ng-container *ngIf="(meeting$ | async) as model">
-      <ng-container *ngIf="messages.length > 0">
+    <ng-container *ngIf="(meeting$ | async) as meetingModel">
+      <ng-container *ngIf="(chat$ | async) as chatModel">
         <app-messages
-          [messages]="messages"
-          [meeting]="model.meeting"
+          *ngIf="chatModel.messages?.length > 0; else empty"
+          [messages]="chatModel.messages"
+          [meeting]="meetingModel.meeting"
           [user]="user$ | async"
         ></app-messages>
+        <ng-template #empty>
+          <app-empty></app-empty>
+        </ng-template>
+        <app-message-form
+          (sendMessage)="sendMessage($event)"
+        ></app-message-form>
       </ng-container>
-      <ng-container *ngIf="!(messages.length > 0)">
-        <app-empty></app-empty>
-      </ng-container>
-      <app-message-form (sendMessage)="sendMessage($event)"></app-message-form>
     </ng-container>
   </div>
 </ion-content>

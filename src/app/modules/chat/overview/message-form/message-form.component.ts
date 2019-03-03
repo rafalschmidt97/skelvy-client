@@ -5,7 +5,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Message } from '../../chat';
+import { ChatMessage } from '../../chat';
 import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/form/input/input.component';
@@ -20,7 +20,7 @@ export class MessageFormComponent implements Form, OnSubmit {
   form: FormGroup;
   isLoading = false;
 
-  @Output() sendMessage = new EventEmitter<Message>();
+  @Output() sendMessage = new EventEmitter<ChatMessage>();
   @ViewChild('messageInput') messageInput: ElementRef;
 
   constructor(
@@ -30,7 +30,11 @@ export class MessageFormComponent implements Form, OnSubmit {
     this.form = this.formBuilder.group({
       message: [
         '',
-        [Validators.required, InputComponent.noWhitespaceValidation()],
+        [
+          Validators.required,
+          InputComponent.noWhitespaceValidation(),
+          Validators.maxLength(500),
+        ],
       ],
     });
   }
@@ -53,5 +57,13 @@ export class MessageFormComponent implements Form, OnSubmit {
 
       this.isLoading = false;
     }
+  }
+
+  get hasErrorMaxLength(): boolean {
+    return this.form.get('message').hasError('maxlength');
+  }
+
+  get hasErrorRequired(): boolean {
+    return this.form.get('message').hasError('required');
   }
 }

@@ -2,7 +2,6 @@
   <div
     *ngIf="!isMine && isLast"
     class="image rounded-circle flex-shrink-0 pointer"
-    (click)="showDetails.emit(user)"
     [class.image-first-last]="!isMine && isLast && isFirst"
     [style.background-image]="'url(' + user.profile.photos[0].url + ')'"
   ></div>

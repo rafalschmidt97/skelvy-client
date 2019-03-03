@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MeetingUser } from '../../../../meeting/meeting';
-import { Message } from '../../../chat';
+import { ChatMessage } from '../../../chat';
 
 @Component({
   selector: 'app-message',
@@ -9,12 +9,11 @@ import { Message } from '../../../chat';
 })
 export class MessageComponent {
   @Input() user: MeetingUser;
-  @Input() message: Message;
+  @Input() message: ChatMessage;
   @Input() isMine: boolean;
   @Input() isLast: boolean;
   @Input() isFirst: boolean;
   @Input() dateToShow: Date;
-  @Output() showDetails = new EventEmitter<MeetingUser>();
   @Output() showDate = new EventEmitter<Date>();
 
   toggleDate() {

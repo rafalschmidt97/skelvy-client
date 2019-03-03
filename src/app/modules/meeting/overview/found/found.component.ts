@@ -20,6 +20,8 @@ import { MapsResponse } from '../../../../core/maps/maps';
 import { _ } from '../../../../core/i18n/translate';
 import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
+import { ChatStoreService } from '../../../chat/chat-store.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-found',
@@ -37,17 +39,18 @@ export class FoundComponent implements OnInit {
   loadingLocation = true;
   location: MapsResponse;
   loadingLeave = false;
+  messagesDifference = 0;
 
   constructor(
     private readonly modalService: ModalService,
     private readonly alertService: AlertService,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
     private readonly mapsService: MapsService,
     private readonly translateService: TranslateService,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
+    private readonly chatStore: ChatStoreService,
+    private readonly routerNavigation: NavController,
   ) {}
 
   get filteredMeetingUsers(): MeetingUser[] {
@@ -87,11 +90,9 @@ export class FoundComponent implements OnInit {
         },
       );
 
-    this.route.queryParams.pipe(debounceTime(100)).subscribe(params => {
-      const userId = Number(params.userId);
-      const meetingUser = this.meeting.users.find(user => user.id === userId);
-      if (meetingUser) {
-        this.openDetails(meetingUser);
+    this.chatStore.data$.subscribe(chat => {
+      if (chat && chat.messages) {
+        this.messagesDifference = chat.messages.length - chat.messagesSeen;
       }
     });
   }
@@ -129,5 +130,13 @@ export class FoundComponent implements OnInit {
 
   declineAlert() {
     this.alert.hide();
+  }
+
+  showMessages() {
+    this.routerNavigation.navigateForward(['/app/chat']).then(() => {
+      setTimeout(() => {
+        this.chatStore.setSeen(this.chatStore.data.messages.length);
+      }, 1000);
+    });
   }
 }

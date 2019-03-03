@@ -1,10 +1,7 @@
 import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
-import { Modal } from '../../../../shared/modal/modal';
-import { ModalService } from '../../../../shared/modal/modal.service';
-import { Message } from '../../chat';
+import { ChatMessage } from '../../chat';
 import { Meeting, MeetingUser } from '../../../meeting/meeting';
 import { User } from '../../../profile/user';
-import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-messages',
@@ -13,39 +10,13 @@ import { NavController } from '@ionic/angular';
 })
 export class MessagesComponent {
   @ViewChild('actions') actions: TemplateRef<any>;
-  @Input() messages: Message[];
+  @Input() messages: ChatMessage[];
   @Input() meeting: Meeting;
   @Input() user: User;
-  modal: Modal;
-  modalUser: MeetingUser;
   dateToShow: Date;
-
-  constructor(
-    private readonly modalService: ModalService,
-    private readonly routerNavigation: NavController,
-  ) {}
 
   findUser(userId: number): MeetingUser {
     return this.meeting.users.find(user => user.id === userId);
-  }
-
-  showDetails(user: MeetingUser) {
-    // dont show yourself
-    if (user.id !== this.user.id) {
-      this.modalUser = user;
-      this.modal = this.modalService.show(this.actions);
-    }
-  }
-
-  confirm() {
-    this.modal.hide();
-  }
-
-  moveToDetails(userId: number) {
-    this.modal.hide();
-    this.routerNavigation.navigateRoot(['/app/tabs/meeting'], {
-      queryParams: { userId: userId },
-    });
   }
 
   showDate(date: Date) {
