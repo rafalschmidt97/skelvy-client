@@ -22,3 +22,13 @@ html.md {
   --ion-default-font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue',
     'Roboto', sans-serif;
 }
+
+html.ios {
+  ion-header ion-toolbar:last-child {
+    --border-width: 0 0 1px !important;
+  }
+
+  ion-tab-bar {
+    border-top: 1px solid #{$border-color} !important;
+  }
+}
