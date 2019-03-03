@@ -5,6 +5,14 @@
     border-top: 1px solid $border-color;
     border-bottom: 1px solid $border-color;
     display: flex;
+
+    :host-context(.ios) & {
+      min-height: 51px;
+    }
+
+    :host-context(.md) & {
+      min-height: 57px;
+    }
   }
 }
 
