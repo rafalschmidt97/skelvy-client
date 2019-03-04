@@ -11,8 +11,6 @@ import { Profile, User } from '../../../profile/user';
 import { Modal } from '../../../../shared/modal/modal';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime } from 'rxjs/operators';
 import { MapsService } from '../../../../core/maps/maps.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/toast/toast.service';
@@ -39,7 +37,7 @@ export class FoundComponent implements OnInit {
   loadingLocation = true;
   location: MapsResponse;
   loadingLeave = false;
-  messagesDifference = 0;
+  messagesToRead = 0;
 
   constructor(
     private readonly modalService: ModalService,
@@ -92,7 +90,7 @@ export class FoundComponent implements OnInit {
 
     this.chatStore.data$.subscribe(chat => {
       if (chat && chat.messages) {
-        this.messagesDifference = chat.messages.length - chat.messagesSeen;
+        this.messagesToRead = chat.messagesToRead;
       }
     });
   }
@@ -135,7 +133,7 @@ export class FoundComponent implements OnInit {
   showMessages() {
     this.routerNavigation.navigateForward(['/app/chat']).then(() => {
       setTimeout(() => {
-        this.chatStore.setSeen(this.chatStore.data.messages.length);
+        this.chatStore.setToRead(0);
       }, 1000);
     });
   }

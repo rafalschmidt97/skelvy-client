@@ -5,6 +5,6 @@ export interface ChatMessage {
 }
 
 export interface ChatModel {
-  messagesSeen: number;
+  messagesToRead: number;
   messages: ChatMessage[];
 }

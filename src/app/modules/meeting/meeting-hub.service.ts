@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { tap } from 'rxjs/operators';
-import { MeetingStoreService } from './meeting-store.service';
-import { MeetingDrink, MeetingModel, MeetingRequest } from './meeting';
-import { ChatService } from '../chat/chat.service';
 import { ChatMessage } from '../chat/chat';
 import { _ } from '../../core/i18n/translate';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
@@ -13,6 +7,8 @@ import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
 import { Router } from '@angular/router';
 import { ChatStoreService } from '../chat/chat-store.service';
+import * as moment from 'moment';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +21,7 @@ export class MeetingHubService {
     private readonly toastService: ToastService,
     private readonly router: Router,
     private readonly chatStore: ChatStoreService,
+    private readonly storage: Storage,
   ) {
     this.hub = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'meeting', {
@@ -38,20 +35,39 @@ export class MeetingHubService {
 
   connect() {
     this.hub.on('ReceiveMessage', (message: ChatMessage) => {
-      if (
-        this.router.url === '/app/tabs/meeting' ||
-        this.router.url === '/app/chat'
-      ) {
-        const messagesToSet = [...this.chatStore.data.messages, message];
-        this.chatStore.set({
-          messagesSeen: messagesToSet.length,
-          messages: messagesToSet,
-        });
+      this.chatStore.addMessage(message);
+
+      if (this.router.url !== '/app/chat') {
+        this.chatStore.addToRead(1);
       } else {
-        this.chatStore.addMessage(message);
+        this.storage.set('lastMessageDate', message.date);
       }
 
       // TODO: show native notification
+    });
+
+    this.hub.on('ReceiveMessages', (messages: ChatMessage[]) => {
+      const mergedMessages = messages.concat(this.chatStore.data.messages);
+      mergedMessages.sort((a, b) => {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      });
+      this.chatStore.setMessages(mergedMessages);
+
+      if (this.router.url !== '/app/chat') {
+        this.storage.get('lastMessageDate').then((date: Date) => {
+          const notRedMessages = mergedMessages.filter(message => {
+            return new Date(message.date) > new Date(date);
+          });
+          this.chatStore.setToRead(notRedMessages.length);
+        });
+      } else {
+        if (mergedMessages.length > 0) {
+          this.storage.set(
+            'lastMessageDate',
+            mergedMessages[mergedMessages.length - 1].date,
+          );
+        }
+      }
     });
 
     this.hub.onclose(() => {
@@ -61,14 +77,28 @@ export class MeetingHubService {
     this.hub
       .start()
       .then(() => {
-        // TODO: get latest messages and according to them set what user seen
         this.chatStore.set({
-          messagesSeen: 0,
+          messagesToRead: 0,
           messages: [],
         });
+
+        this.getLatestMessages();
       })
       .catch(() => {
         this.toastService.createError(_('Something went wrong'));
+      });
+  }
+
+  private getLatestMessages() {
+    this.hub
+      .invoke('LoadMessages', {
+        fromDate: moment()
+          .add(-7, 'days')
+          .toDate(),
+        toDate: new Date(),
+      })
+      .catch(() => {
+        this.toastService.createError(_('Error while loading messages'));
       });
   }
 }

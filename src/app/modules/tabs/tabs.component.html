@@ -8,8 +8,8 @@
       <ion-icon name="cafe"></ion-icon>
       <ion-label>{{ 'Meeting' | translate }}</ion-label>
       <ion-badge
-        *ngIf="messagesDifference > 0"
-        [innerHTML]="messagesDifference"
+        *ngIf="messagesToRead > 0"
+        [innerHTML]="messagesToRead"
       ></ion-badge>
     </ion-tab-button>
     <ion-tab-button tab="more">

@@ -10,7 +10,7 @@ import { ChatStoreService } from '../chat/chat-store.service';
 })
 export class TabsComponent implements OnInit {
   meeting$: Observable<MeetingModel>;
-  messagesDifference = 0;
+  messagesToRead = 0;
 
   constructor(
     private readonly meetingStore: MeetingStoreService,
@@ -22,7 +22,7 @@ export class TabsComponent implements OnInit {
   ngOnInit() {
     this.chatStore.data$.subscribe(chat => {
       if (chat && chat.messages) {
-        this.messagesDifference = chat.messages.length - chat.messagesSeen;
+        this.messagesToRead = chat.messagesToRead;
       }
     });
   }

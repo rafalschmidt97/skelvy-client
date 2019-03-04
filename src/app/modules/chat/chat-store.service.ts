@@ -13,10 +13,24 @@ export class ChatStoreService extends StoreService<ChatModel> {
     });
   }
 
-  setSeen(amount: number) {
+  setMessages(messages: ChatMessage[]) {
     this.subject.next({
       ...this.subject.getValue(),
-      messagesSeen: amount,
+      messages: messages,
+    });
+  }
+
+  addToRead(amount: number) {
+    this.subject.next({
+      ...this.subject.getValue(),
+      messagesToRead: this.subject.getValue().messagesToRead + amount,
+    });
+  }
+
+  setToRead(amount: number) {
+    this.subject.next({
+      ...this.subject.getValue(),
+      messagesToRead: amount,
     });
   }
 }

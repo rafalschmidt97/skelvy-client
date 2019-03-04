@@ -17,4 +17,12 @@ export class ChatService {
       this.toastService.createError(_('Error while sending message'));
     });
   }
+
+  loadMessages(fromDate: Date, toDate: Date) {
+    this.meetingHub.hub
+      .invoke('LoadMessages', { fromDate, toDate })
+      .catch(() => {
+        this.toastService.createError(_('Error while loading messages'));
+      });
+  }
 }
