@@ -72,6 +72,23 @@ export class ToastService {
     );
   }
 
+  async createWarning(
+    message: string,
+    duration?: number,
+    showCloseButton?: boolean,
+    translateMessage?: boolean,
+    position?: string,
+  ) {
+    await this.create(
+      message,
+      'warning',
+      duration,
+      showCloseButton,
+      translateMessage,
+      position,
+    );
+  }
+
   async createInformation(
     message: string,
     duration?: number,
