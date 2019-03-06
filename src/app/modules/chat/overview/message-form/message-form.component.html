@@ -11,7 +11,7 @@
       maxHeight="110px"
       minHeight="40px"
       formControlName="message"
-      class="form-control input-message"
+      class="form-control input-message my-auto"
       [attr.disabled]="isLoading ? '' : null"
       [placeholder]="'Type a message...' | translate"
     ></textarea>
@@ -21,6 +21,8 @@
     <ion-icon
       name="arrow-dropup-circle"
       class="text-primary d-block"
+      [class.text-muted]="hasErrorRequired"
+      [class.text-danger]="hasErrorMaxLength"
     ></ion-icon>
   </button>
 </app-form>

@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { MeetingStoreService } from './meeting-store.service';
 import { MeetingDrink, MeetingModel, MeetingRequest } from './meeting';
+import { MeetingHubService } from './meeting-hub.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ import { MeetingDrink, MeetingModel, MeetingRequest } from './meeting';
 export class MeetingService {
   constructor(
     private readonly http: HttpClient,
+    private readonly meetingHub: MeetingHubService,
     private readonly meetingStore: MeetingStoreService,
   ) {}
 
@@ -38,7 +40,13 @@ export class MeetingService {
       .post<void>(environment.apiUrl + 'meetings/requests/self', request)
       .pipe(
         tap(() => {
-          this.findMeeting().subscribe();
+          this.findMeeting()
+            .pipe(
+              tap(() => {
+                this.meetingHub.connect();
+              }),
+            )
+            .subscribe();
         }),
       );
   }

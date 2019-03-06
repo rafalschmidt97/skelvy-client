@@ -34,7 +34,15 @@
     ></app-profile-loading>
   </section>
   <section class="more">
-    <div class="container py-3">
+    <div class="container py-2">
+      <button (click)="showMessages()" class="btn btn-primary btn-block">
+        {{ 'Group chat' | translate }}
+        <span *ngIf="messagesToRead > 0">({{ messagesToRead }})</span>
+        <ion-icon
+          name="chatbubbles"
+          class="ml-1 chat-icon align-middle"
+        ></ion-icon>
+      </button>
       <button (click)="leaveGroup()" class="btn btn-outline-primary btn-block">
         {{ 'Leave group' | translate }}
       </button>

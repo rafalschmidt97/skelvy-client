@@ -1,5 +1,9 @@
 @import '~src/theme/bootstrap/variables';
 
+.person {
+  padding: 23px 0;
+}
+
 .image {
   background-size: cover;
   background-color: theme-color('light');

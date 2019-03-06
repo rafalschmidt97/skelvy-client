@@ -1,4 +1,7 @@
 <div class="content p-2 w-100" appAutoScroll>
+  <div (click)="loadMessages.emit()" class="load text-center">
+    {{ 'Load more messages' | translate }}
+  </div>
   <app-message
     *ngFor="let message of messages; let i = index"
     [message]="message"
@@ -11,30 +14,6 @@
     "
     [isFirst]="i === 0 ? true : messages[i].userId !== messages[i - 1].userId"
     [dateToShow]="dateToShow"
-    (showDetails)="showDetails($event)"
     (showDate)="showDate($event)"
   ></app-message>
 </div>
-
-<ng-template #actions>
-  <app-modal (confirm)="confirm()">
-    <div class="px-4 pb-4 text-center">
-      <div
-        class="image-alert rounded-circle d-inline-block"
-        [style.background-image]="
-          'url(' + modalUser.profile.photos[0].url + ')'
-        "
-      ></div>
-      <h6 class="mt-1 mb-3">
-        {{ modalUser.profile.name }}, {{ modalUser.profile.birthday | age }}
-      </h6>
-      <button
-        (click)="moveToDetails(modalUser.id)"
-        type="button"
-        class="btn btn-primary btn-block"
-      >
-        {{ 'View profile' | translate }}
-      </button>
-    </div>
-  </app-modal>
-</ng-template>
