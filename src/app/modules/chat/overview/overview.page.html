@@ -19,6 +19,7 @@
           [messages]="chatModel.messages"
           [meeting]="meetingModel.meeting"
           [user]="user$ | async"
+          (loadMessages)="loadOlderMessages($event)"
         ></app-messages>
         <ng-template #empty>
           <app-empty></app-empty>

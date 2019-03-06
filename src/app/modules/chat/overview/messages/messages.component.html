@@ -1,4 +1,7 @@
 <div class="content p-2 w-100" appAutoScroll>
+  <div (click)="loadMessages.emit()" class="load text-center">
+    {{ 'Load more messages' | translate }}
+  </div>
   <app-message
     *ngFor="let message of messages; let i = index"
     [message]="message"

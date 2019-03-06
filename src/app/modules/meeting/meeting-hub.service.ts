@@ -93,7 +93,7 @@ export class MeetingHubService {
     this.hub
       .invoke('LoadMessages', {
         fromDate: moment()
-          .add(-7, 'days')
+          .add(-1, 'days')
           .toDate(),
         toDate: new Date(),
       })

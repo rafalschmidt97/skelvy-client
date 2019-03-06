@@ -1,4 +1,11 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ChatMessage } from '../../chat';
 import { Meeting, MeetingUser } from '../../../meeting/meeting';
 import { User } from '../../../profile/user';
@@ -13,6 +20,7 @@ export class MessagesComponent {
   @Input() messages: ChatMessage[];
   @Input() meeting: Meeting;
   @Input() user: User;
+  @Output() loadMessages = new EventEmitter();
   dateToShow: Date;
 
   findUser(userId: number): MeetingUser {
