@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { MeetingStoreService } from './meeting-store.service';
-import { MeetingDrink, MeetingModel, MeetingRequest } from './meeting';
+import { MeetingDrink, MeetingModel } from './meeting';
 import { MeetingHubService } from './meeting-hub.service';
 
 @Injectable({
@@ -35,7 +35,7 @@ export class MeetingService {
     );
   }
 
-  createMeetingRequest(request: MeetingRequest): Observable<void> {
+  createMeetingRequest(request): Observable<void> {
     return this.http
       .post<void>(environment.apiUrl + 'meetings/requests/self', request)
       .pipe(

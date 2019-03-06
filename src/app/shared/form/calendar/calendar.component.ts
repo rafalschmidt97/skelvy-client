@@ -49,7 +49,7 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
 
   get dateLabel(): string {
     const start = this.form.get(this.name).value[0];
-    const end = this.form.get(this.name).value[1] || null;
+    const end = this.form.get(this.name).value[1];
 
     if (end) {
       return `${moment(start).format('DD.MM.YYYY')} - ${moment(end).format(
@@ -65,10 +65,8 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
       [this.name]: [],
     });
 
-    this.inputForm.get(this.name).valueChanges.subscribe((value: Date[]) => {
-      const hasSameDates =
-        value[1] && value[0].getTime() === value[1].getTime();
-      if (hasSameDates) {
+    this.inputForm.get(this.name).valueChanges.subscribe(value => {
+      if (value[1] && value[0] === value[1]) {
         this.inputForm.patchValue({
           [this.name]: [value[0], null],
         });
@@ -91,10 +89,17 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
   confirm() {
     this.form.markAsDirty();
     this.form.markAsTouched();
+    const value = this.inputForm.get(this.name).value;
 
-    this.form.patchValue({
-      [this.name]: this.inputForm.get(this.name).value,
-    });
+    if (value[1]) {
+      this.form.patchValue({
+        [this.name]: [moment(value[0]).format(), moment(value[1]).format()],
+      });
+    } else {
+      this.form.patchValue({
+        [this.name]: [moment(value[0]).format()],
+      });
+    }
 
     this.modal.hide();
   }

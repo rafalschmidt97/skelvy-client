@@ -12,7 +12,7 @@ export class ChatService {
     private readonly toastService: ToastService,
   ) {}
 
-  sendMessage(message: string) {
+  sendMessage(message) {
     this.meetingHub.hub.invoke('SendMessage', message).catch(() => {
       this.toastService.createError(_('Error while sending message'));
     });

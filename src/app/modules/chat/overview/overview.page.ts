@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ChatMessage, ChatModel } from '../chat';
+import { ChatModel } from '../chat';
 import { MeetingStoreService } from '../../meeting/meeting-store.service';
 import { Observable } from 'rxjs';
 import { MeetingModel } from '../../meeting/meeting';
@@ -29,12 +29,14 @@ export class OverviewPage {
     this.chat$ = chatStore.data$;
   }
 
-  sendMessage(message: ChatMessage) {
-    this.chatService.sendMessage(message.message);
+  sendMessage(message) {
+    this.chatService.sendMessage(message);
   }
 
   loadOlderMessages() {
-    const oldestMessageDate = this.chatStore.data.messages[0].date;
+    const oldestMessageDate = moment(this.chatStore.data.messages[0].date)
+      .add(-1, 'milliseconds')
+      .toDate();
     const weekFromOldest = moment(oldestMessageDate)
       .add(-1, 'days')
       .toDate();

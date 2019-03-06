@@ -5,11 +5,9 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { ChatMessage } from '../../chat';
 import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/form/input/input.component';
-import { UserStoreService } from '../../../profile/user-store.service';
 
 @Component({
   selector: 'app-message-form',
@@ -20,13 +18,10 @@ export class MessageFormComponent implements Form, OnSubmit {
   form: FormGroup;
   isLoading = false;
 
-  @Output() sendMessage = new EventEmitter<ChatMessage>();
+  @Output() sendMessage = new EventEmitter();
   @ViewChild('messageInput') messageInput: ElementRef;
 
-  constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly userStore: UserStoreService,
-  ) {
+  constructor(private readonly formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
       message: [
         '',
@@ -48,7 +43,6 @@ export class MessageFormComponent implements Form, OnSubmit {
       this.sendMessage.emit({
         date: new Date(),
         message: this.form.get('message').value.trim(),
-        userId: this.userStore.data.id,
       });
 
       this.form.patchValue({
