@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { MeetingStoreService } from './meeting-store.service';
 import { MeetingDrink, MeetingModel } from './meeting';
 import { MeetingHubService } from './meeting-hub.service';
+import { ChatStoreService } from '../chat/chat-store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class MeetingService {
     private readonly http: HttpClient,
     private readonly meetingHub: MeetingHubService,
     private readonly meetingStore: MeetingStoreService,
+    private readonly chatStore: ChatStoreService,
   ) {}
 
   findMeeting(): Observable<MeetingModel> {
@@ -31,6 +33,8 @@ export class MeetingService {
     return this.http.delete<void>(environment.apiUrl + 'meetings/self').pipe(
       tap(() => {
         this.meetingStore.set(null);
+        this.chatStore.set(null);
+        this.meetingHub.disconnect();
       }),
     );
   }
@@ -57,6 +61,7 @@ export class MeetingService {
       .pipe(
         tap(() => {
           this.meetingStore.set(null);
+          this.meetingHub.disconnect();
         }),
       );
   }

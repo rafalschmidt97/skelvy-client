@@ -2,25 +2,33 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ChatMessage } from '../chat/chat';
 import { _ } from '../../core/i18n/translate';
-import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  HubConnectionState,
+  LogLevel,
+} from '@aspnet/signalr';
 import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
 import { Router } from '@angular/router';
 import { ChatStoreService } from '../chat/chat-store.service';
 import * as moment from 'moment';
 import { Storage } from '@ionic/storage';
+import { MeetingStoreService } from './meeting-store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeetingHubService {
   public readonly hub: HubConnection;
+  private initialized: boolean;
 
   constructor(
     private readonly sessionService: SessionService,
     private readonly toastService: ToastService,
     private readonly router: Router,
     private readonly chatStore: ChatStoreService,
+    private readonly meetingStore: MeetingStoreService,
     private readonly storage: Storage,
   ) {
     this.hub = new HubConnectionBuilder()
@@ -34,6 +42,37 @@ export class MeetingHubService {
   }
 
   connect() {
+    if (!this.initialized) {
+      this.onReceiveMessage();
+      this.onReceiveMessages();
+      this.onClose();
+
+      this.connectToHub();
+
+      this.initialized = true;
+    } else {
+      if (this.hub.state === HubConnectionState.Disconnected) {
+        this.connectToHub();
+      } else {
+        this.hub
+          .stop()
+          .then(() => {
+            this.connectToHub();
+          })
+          .catch(() => {
+            this.toastService.createError(_('Something went wrong'));
+          });
+      }
+    }
+  }
+
+  disconnect() {
+    this.hub.stop().catch(() => {
+      this.toastService.createError(_('Something went wrong'));
+    });
+  }
+
+  private onReceiveMessage() {
     this.hub.on('ReceiveMessage', (message: ChatMessage) => {
       this.chatStore.addMessage(message);
 
@@ -45,7 +84,9 @@ export class MeetingHubService {
 
       // TODO: show native notification
     });
+  }
 
+  private onReceiveMessages() {
     this.hub.on('ReceiveMessages', (messages: ChatMessage[]) => {
       const mergedMessages = messages.concat(this.chatStore.data.messages);
       mergedMessages.sort((a, b) => {
@@ -69,27 +110,31 @@ export class MeetingHubService {
         }
       }
     });
+  }
 
+  private onClose() {
     this.hub.onclose(() => {
-      this.toastService.createWarning(_('Connection lost'));
+      if (this.meetingStore.data !== null) {
+        this.toastService.createError(_('Connection lost'));
+      }
     });
+  }
 
+  private connectToHub() {
     this.hub
       .start()
       .then(() => {
-        this.chatStore.set({
-          messagesToRead: 0,
-          messages: [],
-        });
-
-        this.getLatestMessages();
+        if (this.meetingStore.data.meeting) {
+          this.initializeChatStore();
+          this.getLatestMessages();
+        }
       })
       .catch(() => {
         this.toastService.createError(_('Something went wrong'));
       });
   }
 
-  private getLatestMessages() {
+  public getLatestMessages() {
     this.hub
       .invoke('LoadMessages', {
         fromDate: moment()
@@ -100,5 +145,12 @@ export class MeetingHubService {
       .catch(() => {
         this.toastService.createError(_('Error while loading messages'));
       });
+  }
+
+  private initializeChatStore() {
+    this.chatStore.set({
+      messagesToRead: 0,
+      messages: [],
+    });
   }
 }
