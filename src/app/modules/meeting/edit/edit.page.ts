@@ -9,6 +9,7 @@ import { MeetingService } from '../meeting.service';
 import { MeetingDrink, MeetingRequest } from '../meeting';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
+import { MeetingHubService } from '../meeting-hub.service';
 
 @Component({
   selector: 'app-edit',
@@ -36,6 +37,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly meetingService: MeetingService,
+    private readonly meetingHub: MeetingHubService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
   ) {
@@ -88,11 +90,19 @@ export class EditPage implements Form, OnSubmit, OnInit {
 
       this.meetingService.createMeetingRequest(request).subscribe(
         () => {
-          if (window.history.length > 1) {
-            this.routerNavigation.back();
-          } else {
-            this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-          }
+          this.meetingService.findMeeting().subscribe(
+            () => {
+              this.meetingHub.connect();
+              if (window.history.length > 1) {
+                this.routerNavigation.back();
+              } else {
+                this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+              }
+            },
+            () => {
+              this.toastService.createError(_('Something went wrong'));
+            },
+          );
         },
         () => {
           this.isLoading = false;

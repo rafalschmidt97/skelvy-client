@@ -5,8 +5,8 @@ import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { MeetingStoreService } from './meeting-store.service';
 import { MeetingDrink, MeetingModel } from './meeting';
-import { MeetingHubService } from './meeting-hub.service';
 import { ChatStoreService } from '../chat/chat-store.service';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +14,9 @@ import { ChatStoreService } from '../chat/chat-store.service';
 export class MeetingService {
   constructor(
     private readonly http: HttpClient,
-    private readonly meetingHub: MeetingHubService,
     private readonly meetingStore: MeetingStoreService,
     private readonly chatStore: ChatStoreService,
+    private readonly storage: Storage,
   ) {}
 
   findMeeting(): Observable<MeetingModel> {
@@ -34,25 +34,16 @@ export class MeetingService {
       tap(() => {
         this.meetingStore.set(null);
         this.chatStore.set(null);
-        this.meetingHub.disconnect();
+        this.storage.remove('lastMessageDate');
       }),
     );
   }
 
   createMeetingRequest(request): Observable<void> {
-    return this.http
-      .post<void>(environment.apiUrl + 'meetings/requests/self', request)
-      .pipe(
-        tap(() => {
-          this.findMeeting()
-            .pipe(
-              tap(() => {
-                this.meetingHub.connect();
-              }),
-            )
-            .subscribe();
-        }),
-      );
+    return this.http.post<void>(
+      environment.apiUrl + 'meetings/requests/self',
+      request,
+    );
   }
 
   removeMeetingRequest(): Observable<void> {
@@ -61,7 +52,6 @@ export class MeetingService {
       .pipe(
         tap(() => {
           this.meetingStore.set(null);
-          this.meetingHub.disconnect();
         }),
       );
   }

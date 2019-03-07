@@ -15,6 +15,7 @@ import { ChatStoreService } from '../chat/chat-store.service';
 import * as moment from 'moment';
 import { Storage } from '@ionic/storage';
 import { MeetingStoreService } from './meeting-store.service';
+import { MeetingService } from './meeting.service';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,7 @@ export class MeetingHubService {
     private readonly router: Router,
     private readonly chatStore: ChatStoreService,
     private readonly meetingStore: MeetingStoreService,
+    private readonly meetingService: MeetingService,
     private readonly storage: Storage,
   ) {
     this.hub = new HubConnectionBuilder()
@@ -45,6 +47,8 @@ export class MeetingHubService {
     if (!this.initialized) {
       this.onReceiveMessage();
       this.onReceiveMessages();
+      this.onUserAddedToMeeting();
+      this.onMeetingFound();
       this.onClose();
 
       this.connectToHub();
@@ -109,6 +113,28 @@ export class MeetingHubService {
           );
         }
       }
+    });
+  }
+
+  private onUserAddedToMeeting() {
+    this.hub.on('UserAddedToMeeting', () => {
+      this.meetingService.findMeeting().subscribe(
+        () => {},
+        () => {
+          this.toastService.createError(_('Something went wrong'));
+        },
+      );
+    });
+  }
+
+  private onMeetingFound() {
+    this.hub.on('MeetingFound', () => {
+      this.meetingService.findMeeting().subscribe(
+        () => {},
+        () => {
+          this.toastService.createError(_('Something went wrong'));
+        },
+      );
     });
   }
 

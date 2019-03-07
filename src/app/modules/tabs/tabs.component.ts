@@ -23,6 +23,8 @@ export class TabsComponent implements OnInit {
     this.chatStore.data$.subscribe(chat => {
       if (chat && chat.messages) {
         this.messagesToRead = chat.messagesToRead;
+      } else {
+        this.messagesToRead = 0;
       }
     });
   }

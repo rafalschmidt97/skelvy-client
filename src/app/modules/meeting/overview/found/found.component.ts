@@ -20,6 +20,8 @@ import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
 import { ChatStoreService } from '../../../chat/chat-store.service';
 import { NavController } from '@ionic/angular';
+import { MeetingHubService } from '../../meeting-hub.service';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-found',
@@ -47,8 +49,10 @@ export class FoundComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
+    private readonly meetingHub: MeetingHubService,
     private readonly chatStore: ChatStoreService,
     private readonly routerNavigation: NavController,
+    private readonly storage: Storage,
   ) {}
 
   get filteredMeetingUsers(): MeetingUser[] {
@@ -91,6 +95,8 @@ export class FoundComponent implements OnInit {
     this.chatStore.data$.subscribe(chat => {
       if (chat && chat.messages) {
         this.messagesToRead = chat.messagesToRead;
+      } else {
+        this.messagesToRead = 0;
       }
     });
   }
@@ -113,6 +119,7 @@ export class FoundComponent implements OnInit {
     this.loadingService.lock();
     this.meetingService.leaveMeeting().subscribe(
       () => {
+        this.meetingHub.disconnect();
         this.alert.hide();
         this.loadingService.unlock();
         this.loadingLeave = false;
@@ -134,6 +141,13 @@ export class FoundComponent implements OnInit {
     this.routerNavigation.navigateForward(['/app/chat']).then(() => {
       setTimeout(() => {
         this.chatStore.setToRead(0);
+        const messages = this.chatStore.data.messages;
+        if (messages.length > 0) {
+          this.storage.set(
+            'lastMessageDate',
+            messages[messages.length - 1].date,
+          );
+        }
       }, 1000);
     });
   }
