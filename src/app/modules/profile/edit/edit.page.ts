@@ -89,7 +89,9 @@ export class EditPage implements Form, OnSubmit {
         },
         () => {
           this.isLoading = false;
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while updating the profile'),
+          );
         },
       );
     }

@@ -44,6 +44,8 @@ export class OverviewPage {
   }
 
   confirmLogout() {
+    this.meetingHub.disconnect();
+
     this.logout().then(() => {
       this.alert.hide();
       this.routerNavigation.navigateBack(['/home']);
@@ -56,6 +58,9 @@ export class OverviewPage {
   confirmRemove() {
     this.loadingRemove = true;
     this.loadingService.lock();
+
+    this.meetingHub.disconnect();
+
     this.userService.removeUser().subscribe(
       () => {
         this.logout().then(() => {
@@ -64,7 +69,7 @@ export class OverviewPage {
           this.routerNavigation.navigateBack(['/home']);
           setTimeout(() => {
             this.toastService.createInformation(
-              _('Account successfully deleted'),
+              _('The account has been successfully deleted'),
             );
           }, 1000);
         });
@@ -72,7 +77,9 @@ export class OverviewPage {
       () => {
         this.alert.hide();
         this.loadingService.unlock();
-        this.toastService.createError(_('Something went wrong'));
+        this.toastService.createError(
+          _('A problem occurred while deleting the account'),
+        );
         this.loadingRemove = false;
       },
     );
@@ -90,10 +97,6 @@ export class OverviewPage {
   }
 
   private async logout() {
-    if (this.meetingHub.hub.state === HubConnectionState.Connected) {
-      this.meetingHub.disconnect();
-    }
-
     await this.authService.logout();
     await this.facebook.logout();
     await this.google.logout();

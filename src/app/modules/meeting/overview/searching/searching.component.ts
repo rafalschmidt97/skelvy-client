@@ -15,6 +15,7 @@ import { _ } from '../../../../core/i18n/translate';
 import { MapsResponse } from '../../../../core/maps/maps';
 import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
+import { MeetingHubService } from '../../meeting-hub.service';
 
 @Component({
   selector: 'app-searching',
@@ -36,6 +37,7 @@ export class SearchingComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
+    private readonly meetingHub: MeetingHubService,
   ) {}
 
   ngOnInit() {
@@ -55,7 +57,9 @@ export class SearchingComponent implements OnInit {
         },
         () => {
           this.loadingLocation = false;
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while searching the location'),
+          );
         },
       );
   }
@@ -67,6 +71,7 @@ export class SearchingComponent implements OnInit {
   confirmAlert() {
     this.loadingRemove = true;
     this.loadingService.lock();
+    this.meetingHub.disconnect();
     this.meetingService.removeMeetingRequest().subscribe(
       () => {
         this.alert.hide();
@@ -77,7 +82,9 @@ export class SearchingComponent implements OnInit {
         this.alert.hide();
         this.loadingService.unlock();
         this.loadingRemove = false;
-        this.toastService.createError(_('Something went wrong'));
+        this.toastService.createError(
+          _('A problem occurred while removing the request'),
+        );
       },
     );
   }

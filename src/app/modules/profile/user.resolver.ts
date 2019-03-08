@@ -25,7 +25,9 @@ export class UserResolver implements Resolve<User> {
       catchError(error => {
         this.authService.logout().then(() => {
           this.routerNavigation.navigateBack(['/home']);
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while finding the user'),
+          );
         });
 
         return throwError(error);

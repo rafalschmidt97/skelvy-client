@@ -67,7 +67,9 @@ export class EditPage implements Form, OnSubmit, OnInit {
       },
       () => {
         this.loadingDrinks = false;
-        this.toastService.createError(_('Something went wrong'));
+        this.toastService.createError(
+          _('A problem occurred while finding drinks'),
+        );
       },
     );
   }
@@ -100,13 +102,17 @@ export class EditPage implements Form, OnSubmit, OnInit {
               }
             },
             () => {
-              this.toastService.createError(_('Something went wrong'));
+              this.toastService.createError(
+                _('A problem occurred while finding the meeting'),
+              );
             },
           );
         },
         () => {
           this.isLoading = false;
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while creating the request'),
+          );
         },
       );
     }

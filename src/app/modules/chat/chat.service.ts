@@ -15,7 +15,9 @@ export class ChatService {
 
   sendMessage(message) {
     this.meetingHub.hub.invoke('SendMessage', message).catch(() => {
-      this.toastService.createError(_('Error while sending message'));
+      this.toastService.createError(
+        _('A problem occurred while sending the message'),
+      );
     });
   }
 
@@ -26,7 +28,9 @@ export class ChatService {
         toDate: moment(toDate).format(),
       })
       .catch(() => {
-        this.toastService.createError(_('Error while loading messages'));
+        this.toastService.createError(
+          _('A problem occurred while loading messages'),
+        );
       });
   }
 }

@@ -23,6 +23,7 @@ import { MeetingService } from './meeting.service';
 export class MeetingHubService {
   public readonly hub: HubConnection;
   private initialized: boolean;
+  private disconnecting: boolean;
 
   constructor(
     private readonly sessionService: SessionService,
@@ -65,16 +66,23 @@ export class MeetingHubService {
             this.connectToHub();
           })
           .catch(() => {
-            this.toastService.createError(_('Something went wrong'));
+            this.toastService.createError(
+              _('A problem occurred while connecting to the server'),
+            );
           });
       }
     }
   }
 
   disconnect() {
-    this.hub.stop().catch(() => {
-      this.toastService.createError(_('Something went wrong'));
-    });
+    if (this.hub.state === HubConnectionState.Connected) {
+      this.disconnecting = true;
+      this.hub.stop().catch(() => {
+        this.toastService.createError(
+          _('A problem occurred while disconnecting from the server'),
+        );
+      });
+    }
   }
 
   private onReceiveMessage() {
@@ -121,10 +129,14 @@ export class MeetingHubService {
     this.hub.on('UserAddedToMeeting', () => {
       this.meetingService.findMeeting().subscribe(
         () => {
-          this.toastService.createInformation(_('New user added to group'));
+          this.toastService.createInformation(
+            _('The new user has been added to the group'),
+          );
         },
         () => {
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while finding the meeting'),
+          );
         },
       );
     });
@@ -134,13 +146,17 @@ export class MeetingHubService {
     this.hub.on('MeetingFound', () => {
       this.meetingService.findMeeting().subscribe(
         () => {
-          this.toastService.createInformation(_('Meeting found'));
+          this.toastService.createInformation(
+            _('The new meeting has been found'),
+          );
           this.addToGroup();
           this.initializeChatStore();
           this.getLatestMessages();
         },
         () => {
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while finding the meeting'),
+          );
         },
       );
     });
@@ -152,7 +168,9 @@ export class MeetingHubService {
       this.meetingService.findMeeting().subscribe(
         model => {
           if (model.meeting) {
-            this.toastService.createInformation(_('User left the group'));
+            this.toastService.createInformation(
+              _('The user has left the group'),
+            );
           } else {
             this.toastService.createInformation(_('All users left the group'));
             this.removeFromGroup(oldMeetingId);
@@ -160,7 +178,9 @@ export class MeetingHubService {
           }
         },
         () => {
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while finding the meeting'),
+          );
         },
       );
     });
@@ -168,9 +188,11 @@ export class MeetingHubService {
 
   private onClose() {
     this.hub.onclose(() => {
-      if (this.meetingStore.data !== null) {
-        this.toastService.createError(_('Connection lost'));
+      if (this.meetingStore.data !== null && !this.disconnecting) {
+        this.toastService.createWarning(_('The connection has been lost'));
       }
+
+      this.disconnecting = false;
     });
   }
 
@@ -184,7 +206,9 @@ export class MeetingHubService {
         }
       })
       .catch(() => {
-        this.toastService.createError(_('Something went wrong'));
+        this.toastService.createError(
+          _('A problem occurred while connecting to the sever'),
+        );
       });
   }
 
@@ -197,19 +221,25 @@ export class MeetingHubService {
         toDate: moment().format(),
       })
       .catch(() => {
-        this.toastService.createError(_('Error while loading messages'));
+        this.toastService.createError(
+          _('A problem occurred while loading messages'),
+        );
       });
   }
 
   private removeFromGroup(meetingId: number) {
     this.hub.invoke('RemoveFromGroup', meetingId).catch(() => {
-      this.toastService.createError(_('Something went wrong'));
+      this.toastService.createError(
+        _('A problem occurred while removing from the group'),
+      );
     });
   }
 
   private addToGroup() {
     this.hub.invoke('AddToGroup').catch(() => {
-      this.toastService.createError(_('Something went wrong'));
+      this.toastService.createError(
+        _('A problem occurred while adding to the group'),
+      );
     });
   }
 

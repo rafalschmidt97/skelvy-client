@@ -40,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
             ) {
               this.authService.logout().then(() => {
                 this.routerNavigation.navigateBack(['/home/sign-in']);
-                this.toastService.createError(_('Session expired'));
+                this.toastService.createError(_('The session has expired'));
               });
             }
 

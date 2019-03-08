@@ -88,7 +88,9 @@ export class FoundComponent implements OnInit {
         },
         () => {
           this.loadingLocation = false;
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while searching the location'),
+          );
         },
       );
 
@@ -117,9 +119,9 @@ export class FoundComponent implements OnInit {
   confirmAlert() {
     this.loadingLeave = true;
     this.loadingService.lock();
+    this.meetingHub.disconnect();
     this.meetingService.leaveMeeting().subscribe(
       () => {
-        this.meetingHub.disconnect();
         this.alert.hide();
         this.loadingService.unlock();
         this.loadingLeave = false;
@@ -128,7 +130,9 @@ export class FoundComponent implements OnInit {
         this.alert.hide();
         this.loadingService.unlock();
         this.loadingLeave = false;
-        this.toastService.createError(_('Something went wrong'));
+        this.toastService.createError(
+          _('A problem occurred while leaving the meeting'),
+        );
       },
     );
   }

@@ -117,7 +117,9 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
         this.loadingService.unlock();
       },
       () => {
-        this.toastService.createError(_('Something went wrong'));
+        this.toastService.createError(
+          _('A problem occurred while uploading the photo'),
+        );
 
         this.inputForm.patchValue({
           [this.croppedName]: '',

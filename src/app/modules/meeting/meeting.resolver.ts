@@ -32,7 +32,9 @@ export class MeetingResolver implements Resolve<MeetingModel> {
         if (error.status !== 404) {
           this.authService.logout().then(() => {
             this.routerNavigation.navigateBack(['/home']);
-            this.toastService.createError(_('Something went wrong'));
+            this.toastService.createError(
+              _('A problem occurred while finding the meeting'),
+            );
           });
 
           return throwError(error);

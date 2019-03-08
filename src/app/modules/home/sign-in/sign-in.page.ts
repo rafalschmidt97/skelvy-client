@@ -55,12 +55,16 @@ export class SignInPage {
               await loading.dismiss();
             },
             async () => {
-              this.toastService.createError(_('Something went wrong'));
+              this.toastService.createError(
+                _('A problem occurred while signing in'),
+              );
               await loading.dismiss();
             },
           );
         } else {
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while signing in'),
+          );
         }
       });
   }
@@ -76,7 +80,9 @@ export class SignInPage {
           await loading.dismiss();
         },
         async () => {
-          this.toastService.createError(_('Something went wrong'));
+          this.toastService.createError(
+            _('A problem occurred while signing in'),
+          );
           await loading.dismiss();
         },
       );
