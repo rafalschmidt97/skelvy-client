@@ -193,8 +193,8 @@ export class MeetingHubService {
       .invoke('LoadMessages', {
         fromDate: moment()
           .add(-1, 'days')
-          .toDate(),
-        toDate: new Date(),
+          .format(),
+        toDate: moment().format(),
       })
       .catch(() => {
         this.toastService.createError(_('Error while loading messages'));
