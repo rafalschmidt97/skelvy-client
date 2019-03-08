@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { MeetingStoreService } from '../../modules/meeting/meeting-store.service';
+import { Storage } from '@ionic/storage';
+import { ChatStoreService } from '../../modules/chat/chat-store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,8 @@ export class AuthService {
     private readonly sessionService: SessionService,
     private readonly userStore: UserStoreService,
     private readonly meetingStore: MeetingStoreService,
+    private readonly chatStore: ChatStoreService,
+    private readonly storage: Storage,
   ) {}
 
   signInWithFacebook(authToken: string): Observable<any> {
@@ -46,5 +50,7 @@ export class AuthService {
     await this.sessionService.removeSession();
     this.userStore.set(null);
     this.meetingStore.set(null);
+    this.chatStore.set(null);
+    await this.storage.remove('lastMessageDate');
   }
 }

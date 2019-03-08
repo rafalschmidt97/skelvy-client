@@ -48,6 +48,7 @@ export class MeetingHubService {
       this.onReceiveMessage();
       this.onReceiveMessages();
       this.onUserAddedToMeeting();
+      this.onUserLeftMeeting();
       this.onMeetingFound();
       this.onClose();
 
@@ -119,7 +120,9 @@ export class MeetingHubService {
   private onUserAddedToMeeting() {
     this.hub.on('UserAddedToMeeting', () => {
       this.meetingService.findMeeting().subscribe(
-        () => {},
+        () => {
+          this.toastService.createInformation(_('New user added to group'));
+        },
         () => {
           this.toastService.createError(_('Something went wrong'));
         },
@@ -130,7 +133,32 @@ export class MeetingHubService {
   private onMeetingFound() {
     this.hub.on('MeetingFound', () => {
       this.meetingService.findMeeting().subscribe(
-        () => {},
+        () => {
+          this.toastService.createInformation(_('Meeting found'));
+          this.addToGroup();
+          this.initializeChatStore();
+          this.getLatestMessages();
+        },
+        () => {
+          this.toastService.createError(_('Something went wrong'));
+        },
+      );
+    });
+  }
+
+  private onUserLeftMeeting() {
+    this.hub.on('UserLeftMeeting', () => {
+      const oldMeetingId = this.meetingStore.data.meeting.id;
+      this.meetingService.findMeeting().subscribe(
+        model => {
+          if (model.meeting) {
+            this.toastService.createInformation(_('User left the group'));
+          } else {
+            this.toastService.createInformation(_('All users left the group'));
+            this.removeFromGroup(oldMeetingId);
+            this.clearChatStore();
+          }
+        },
         () => {
           this.toastService.createError(_('Something went wrong'));
         },
@@ -173,10 +201,26 @@ export class MeetingHubService {
       });
   }
 
+  private removeFromGroup(meetingId: number) {
+    this.hub.invoke('RemoveFromGroup', meetingId).catch(() => {
+      this.toastService.createError(_('Something went wrong'));
+    });
+  }
+
+  private addToGroup() {
+    this.hub.invoke('AddToGroup').catch(() => {
+      this.toastService.createError(_('Something went wrong'));
+    });
+  }
+
   private initializeChatStore() {
     this.chatStore.set({
       messagesToRead: 0,
       messages: [],
     });
+  }
+
+  private clearChatStore() {
+    this.chatStore.set(null);
   }
 }

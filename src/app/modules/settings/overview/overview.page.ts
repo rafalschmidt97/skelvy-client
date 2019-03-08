@@ -11,6 +11,8 @@ import { UserService } from '../../profile/user.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
+import { MeetingHubService } from '../../meeting/meeting-hub.service';
+import { HubConnectionState } from '@aspnet/signalr';
 
 @Component({
   selector: 'app-overview',
@@ -32,6 +34,7 @@ export class OverviewPage {
     private readonly userService: UserService,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
+    private readonly meetingHub: MeetingHubService,
   ) {
     this.version = environment.version;
   }
@@ -87,6 +90,10 @@ export class OverviewPage {
   }
 
   private async logout() {
+    if (this.meetingHub.hub.state === HubConnectionState.Connected) {
+      this.meetingHub.disconnect();
+    }
+
     await this.authService.logout();
     await this.facebook.logout();
     await this.google.logout();
