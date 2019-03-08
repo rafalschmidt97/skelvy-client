@@ -12,7 +12,6 @@ import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { MeetingHubService } from '../../meeting/meeting-hub.service';
-import { HubConnectionState } from '@aspnet/signalr';
 
 @Component({
   selector: 'app-overview',
@@ -90,10 +89,19 @@ export class OverviewPage {
   }
 
   sendReport() {
-    this.emailComposer.open({
-      to: 'rafalschmidt97@gmail.com',
-      subject: '[skelvy] Report a bug',
-    });
+    this.emailComposer
+      .open({
+        to: 'rafalschmidt97@gmail.com',
+        subject: '[skelvy] Report a bug',
+      })
+      .then(() => {
+        this.toastService.createInformation(
+          _(
+            `If you have any further questions, don't hesitate to contact using our website.`,
+          ),
+          0,
+        );
+      });
   }
 
   private async logout() {

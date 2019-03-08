@@ -2,6 +2,8 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Iframe } from '../../../shared/iframe/iframe';
 import { IframeService } from '../../../shared/iframe/iframe.service';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
+import { _ } from '../../../core/i18n/translate';
+import { ToastService } from '../../../core/toast/toast.service';
 
 @Component({
   selector: 'app-community',
@@ -18,6 +20,7 @@ export class CommunityPage {
   constructor(
     private readonly iframeService: IframeService,
     private readonly emailComposer: EmailComposer,
+    private readonly toastService: ToastService,
   ) {}
 
   show(url: string, title = '') {
@@ -32,9 +35,18 @@ export class CommunityPage {
   }
 
   sendFeedback() {
-    this.emailComposer.open({
-      to: 'rafalschmidt97@gmail.com',
-      subject: '[skelvy] Feedback',
-    });
+    this.emailComposer
+      .open({
+        to: 'rafalschmidt97@gmail.com',
+        subject: '[skelvy] Feedback',
+      })
+      .then(() => {
+        this.toastService.createInformation(
+          _(
+            `If you have any further questions, don't hesitate to contact using our website.`,
+          ),
+          0,
+        );
+      });
   }
 }
