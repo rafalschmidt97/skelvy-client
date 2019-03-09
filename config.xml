@@ -105,5 +105,5 @@
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.414295915918-n1hl2gko8qhsr0gnn43vaj4n7imj1jta" />
     </plugin>
     <plugin name="cordova-plugin-geolocation" spec="4.0.1" />
-    <engine name="ios" spec="~4.5.5" />
+    <engine name="ios" spec="4.5.5" />
 </widget>
