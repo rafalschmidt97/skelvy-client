@@ -19,8 +19,8 @@ a {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    padding: var(--ion-safe-area-top) var(--ion-safe-area-right)
-      var(--ion-safe-area-bottom) var(--ion-safe-area-left);
+    padding: var(--ion-safe-area-top) var(--ion-safe-area-right) 0
+      var(--ion-safe-area-left);
 
     @include media-breakpoint-up(sm) {
       margin: 0 auto;
