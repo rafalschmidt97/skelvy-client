@@ -79,7 +79,11 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
 
   ngOnInit() {
     this.geolocation
-      .getCurrentPosition()
+      .getCurrentPosition({
+        timeout: 30000,
+        maximumAge: 0,
+        enableHighAccuracy: true,
+      })
       .then(res => {
         this.mapsService
           .reverse(

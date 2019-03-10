@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "414295915918",
+    "firebase_url": "https://drinker-218306.firebaseio.com",
+    "project_id": "drinker-218306",
+    "storage_bucket": "drinker-218306.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414295915918:android:84e3fdc2aa6b8b3e",
+        "android_client_info": {
+          "package_name": "com.rafalschmidt.skelvy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414295915918-358d5opk0l6onqib445tf1rk0ltk50uf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rafalschmidt.skelvy",
+            "certificate_hash": "c8f6885d27906e0866d901cc3ea24be15c1f793d"
+          }
+        },
+        {
+          "client_id": "414295915918-kqvvittl1aiajtug0cmb2p263c055oh3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFqTsv8pGbsUyYYn-pV3eesGtffoteVrk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414295915918-kqvvittl1aiajtug0cmb2p263c055oh3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "414295915918-n1hl2gko8qhsr0gnn43vaj4n7imj1jta.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rafalschmidt.skelvy"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
