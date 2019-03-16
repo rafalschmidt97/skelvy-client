@@ -28,6 +28,12 @@
             <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
         </custom-config-file>
         <preference name="loadUrlTimeoutValue" value="1000000" />
+        <resource-file src="google-services.json" target="app/google-services.json" />
+        <resource-file src="resources/android/notification_icon/drawable-mdpi/notification_icon.png" target="app/src/main/res/drawable-mdpi/notification_icon.png" />
+        <resource-file src="resources/android/notification_icon/drawable-hdpi/notification_icon.png" target="app/src/main/res/drawable-hdpi/notification_icon.png" />
+        <resource-file src="resources/android/notification_icon/drawable-xhdpi/notification_icon.png" target="app/src/main/res/drawable-xhdpi/notification_icon.png" />
+        <resource-file src="resources/android/notification_icon/drawable-xxhdpi/notification_icon.png" target="app/src/main/res/drawable-xxhdpi/notification_icon.png" />
+        <resource-file src="resources/android/notification_icon/drawable-xxxhdpi/notification_icon.png" target="app/src/main/res/drawable-xxxhdpi/notification_icon.png" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
         <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
@@ -50,6 +56,7 @@
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+        <resource-file src="GoogleService-Info.plist" />
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
             <string>To suggest address based on location.</string>
         </edit-config>
@@ -111,6 +118,9 @@
         <variable name="PLAY_SERVICES_VERSION" value="12.0.0" />
     </plugin>
     <plugin name="cordova-plugin-geolocation" spec="4.0.1" />
+    <plugin name="phonegap-plugin-push" spec="2.2.3">
+        <variable name="FCM_VERSION" value="12.0.0" />
+    </plugin>
     <engine name="ios" spec="4.5.5" />
     <engine name="android" spec="8.0.0" />
 </widget>

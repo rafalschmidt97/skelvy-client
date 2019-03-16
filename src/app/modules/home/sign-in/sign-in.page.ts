@@ -8,6 +8,7 @@ import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
+import { Push } from '@ionic-native/push/ngx';
 
 @Component({
   selector: 'app-sign-in',
@@ -28,6 +29,7 @@ export class SignInPage {
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
+    private readonly push: Push,
   ) {}
 
   show(url: string, title = '') {
@@ -42,6 +44,8 @@ export class SignInPage {
   }
 
   async signInWithFacebook() {
+    this.registerDevice();
+
     this.facebook
       .login(['public_profile', 'email', 'user_birthday', 'user_gender'])
       .then(async (res: FacebookLoginResponse) => {
@@ -87,5 +91,34 @@ export class SignInPage {
         },
       );
     });
+  }
+
+  private registerDevice() {
+    this.push.hasPermission();
+
+    this.push.createChannel({
+      id: 'push',
+      description: 'Push Channel',
+      importance: 3,
+    });
+
+    const pushListener = this.push.init({
+      android: {},
+      ios: {
+        alert: true,
+        badge: true,
+        sound: true,
+      },
+    });
+
+    pushListener
+      .on('registration')
+      .subscribe((registration: any) =>
+        console.log(registration.registrationId),
+      );
+
+    pushListener
+      .on('error')
+      .subscribe(error => console.error('Error with Push plugin', error));
   }
 }

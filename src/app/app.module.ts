@@ -17,6 +17,7 @@ import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Push } from '@ionic-native/push/ngx';
 
 const libraries = [
   IonicModule.forRoot(),
@@ -43,6 +44,7 @@ const libraries = [
     Facebook,
     GooglePlus,
     Geolocation,
+    Push,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],
