@@ -9,6 +9,7 @@ import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { Push } from '@ionic-native/push/ngx';
+import { UserService } from '../../profile/user.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -30,6 +31,7 @@ export class SignInPage {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly push: Push,
+    private readonly userService: UserService,
   ) {}
 
   show(url: string, title = '') {
@@ -44,8 +46,6 @@ export class SignInPage {
   }
 
   async signInWithFacebook() {
-    this.registerDevice();
-
     this.facebook
       .login(['public_profile', 'email', 'user_birthday', 'user_gender'])
       .then(async (res: FacebookLoginResponse) => {
@@ -57,6 +57,7 @@ export class SignInPage {
             async () => {
               this.routerNavigation.navigateForward(['/app']);
               await loading.dismiss();
+              this.registerDevice();
             },
             async () => {
               this.toastService.createError(
@@ -82,6 +83,7 @@ export class SignInPage {
         async () => {
           this.routerNavigation.navigateForward(['/app']);
           await loading.dismiss();
+          this.registerDevice();
         },
         async () => {
           this.toastService.createError(
@@ -103,22 +105,36 @@ export class SignInPage {
     });
 
     const pushListener = this.push.init({
-      android: {},
+      android: {
+        topics: ['all'],
+      },
       ios: {
         alert: true,
         badge: true,
         sound: true,
+        topics: ['all'],
       },
     });
 
-    pushListener
-      .on('registration')
-      .subscribe((registration: any) =>
-        console.log(registration.registrationId),
+    pushListener.on('registration').subscribe((registration: any) => {
+      console.log(registration.registrationId);
+      this.userService.assignDevice(registration.registrationId).subscribe(
+        () => {
+          // TODO: save topic subscription to storage for check on notifications
+          // TODO: save registration id for check on notifications
+        },
+        () => {
+          this.toastService.createError(
+            _('A problem occurred while assigning the device'),
+          );
+        },
       );
+    });
 
-    pushListener
-      .on('error')
-      .subscribe(error => console.error('Error with Push plugin', error));
+    pushListener.on('error').subscribe(() => {
+      this.toastService.createError(
+        _('A problem occurred while registering the device'),
+      );
+    });
   }
 }

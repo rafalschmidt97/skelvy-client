@@ -36,4 +36,10 @@ export class UserService {
         }),
       );
   }
+
+  assignDevice(registrationId): Observable<void> {
+    return this.http.post<void>(environment.apiUrl + 'users/self/devices', {
+      registrationId,
+    });
+  }
 }
