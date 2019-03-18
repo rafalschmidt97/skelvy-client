@@ -1,36 +1,17 @@
 import { Injectable } from '@angular/core';
-import { _ } from '../../core/i18n/translate';
-import { MeetingHubService } from '../meeting/meeting-hub.service';
-import { ToastService } from '../../core/toast/toast.service';
-import * as moment from 'moment';
+import { MeetingSocketService } from '../meeting/meeting-socket.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
-  constructor(
-    private readonly meetingHub: MeetingHubService,
-    private readonly toastService: ToastService,
-  ) {}
+  constructor(private readonly meetingSocket: MeetingSocketService) {}
 
   sendMessage(message) {
-    this.meetingHub.hub.invoke('SendMessage', message).catch(() => {
-      this.toastService.createError(
-        _('A problem occurred while sending the message'),
-      );
-    });
+    this.meetingSocket.sendMessage(message);
   }
 
   loadMessages(fromDate: Date, toDate: Date) {
-    this.meetingHub.hub
-      .invoke('LoadMessages', {
-        fromDate: moment(fromDate).format(),
-        toDate: moment(toDate).format(),
-      })
-      .catch(() => {
-        this.toastService.createError(
-          _('A problem occurred while loading messages'),
-        );
-      });
+    this.meetingSocket.loadMessages(fromDate, toDate);
   }
 }

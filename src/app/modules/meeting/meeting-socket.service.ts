@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { ChatMessage } from '../chat/chat';
 import { _ } from '../../core/i18n/translate';
-import {
-  HubConnection,
-  HubConnectionBuilder,
-  HubConnectionState,
-  LogLevel,
-} from '@aspnet/signalr';
 import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
 import { Router } from '@angular/router';
@@ -16,14 +9,13 @@ import * as moment from 'moment';
 import { Storage } from '@ionic/storage';
 import { MeetingStoreService } from './meeting-store.service';
 import { MeetingService } from './meeting.service';
+import { HubConnection } from '@aspnet/signalr';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MeetingHubService {
-  public readonly hub: HubConnection;
-  private initialized: boolean;
-  private disconnecting: boolean;
+export class MeetingSocketService {
+  private userSocket: HubConnection;
 
   constructor(
     private readonly sessionService: SessionService,
@@ -33,60 +25,50 @@ export class MeetingHubService {
     private readonly meetingStore: MeetingStoreService,
     private readonly meetingService: MeetingService,
     private readonly storage: Storage,
-  ) {
-    this.hub = new HubConnectionBuilder()
-      .withUrl(environment.apiUrl + 'meeting', {
-        accessTokenFactory: () => {
-          return this.sessionService.getSession();
-        },
-        logger: LogLevel.Error,
-      })
-      .build();
+  ) {}
+
+  set socket(socket: HubConnection) {
+    this.userSocket = socket;
   }
 
-  connect() {
-    if (!this.initialized) {
-      this.onReceiveMessage();
-      this.onReceiveMessages();
-      this.onUserAddedToMeeting();
-      this.onUserLeftMeeting();
-      this.onMeetingFound();
-      this.onClose();
+  onMeetingActions() {
+    this.onReceiveMessage();
+    this.onReceiveMessages();
+    this.onUserAddedToMeeting();
+    this.onUserLeftMeeting();
+    this.onMeetingFound();
+  }
 
-      this.connectToHub();
-
-      this.initialized = true;
-    } else {
-      if (this.hub.state === HubConnectionState.Disconnected) {
-        this.connectToHub();
-      } else {
-        this.hub
-          .stop()
-          .then(() => {
-            this.connectToHub();
-          })
-          .catch(() => {
-            this.toastService.createError(
-              _('A problem occurred while connecting to the server'),
-            );
-          });
-      }
+  initialize() {
+    if (this.meetingStore.data && this.meetingStore.data.meeting) {
+      this.initializeChatStore();
+      this.getLatestMessages();
     }
   }
 
-  disconnect() {
-    if (this.hub.state === HubConnectionState.Connected) {
-      this.disconnecting = true;
-      this.hub.stop().catch(() => {
+  sendMessage(message: any) {
+    this.userSocket.invoke('SendMessage', message).catch(() => {
+      this.toastService.createError(
+        _('A problem occurred while sending the message'),
+      );
+    });
+  }
+
+  loadMessages(fromDate: Date, toDate: Date) {
+    this.userSocket
+      .invoke('LoadMessages', {
+        fromDate: moment(fromDate).format(),
+        toDate: moment(toDate).format(),
+      })
+      .catch(() => {
         this.toastService.createError(
-          _('A problem occurred while disconnecting from the server'),
+          _('A problem occurred while loading messages'),
         );
       });
-    }
   }
 
   private onReceiveMessage() {
-    this.hub.on('ReceiveMessage', (message: ChatMessage) => {
+    this.userSocket.on('ReceiveMessage', (message: ChatMessage) => {
       this.chatStore.addMessage(message);
 
       if (this.router.url !== '/app/chat') {
@@ -94,13 +76,11 @@ export class MeetingHubService {
       } else {
         this.storage.set('lastMessageDate', message.date);
       }
-
-      // TODO: show native notification
     });
   }
 
   private onReceiveMessages() {
-    this.hub.on('ReceiveMessages', (messages: ChatMessage[]) => {
+    this.userSocket.on('ReceiveMessages', (messages: ChatMessage[]) => {
       const mergedMessages = messages.concat(this.chatStore.data.messages);
       mergedMessages.sort((a, b) => {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -126,7 +106,7 @@ export class MeetingHubService {
   }
 
   private onUserAddedToMeeting() {
-    this.hub.on('UserAddedToMeeting', () => {
+    this.userSocket.on('UserAddedToMeeting', () => {
       this.meetingService.findMeeting().subscribe(
         () => {
           this.toastService.createInformation(
@@ -143,7 +123,7 @@ export class MeetingHubService {
   }
 
   private onMeetingFound() {
-    this.hub.on('MeetingFound', () => {
+    this.userSocket.on('MeetingFound', () => {
       this.meetingService.findMeeting().subscribe(
         () => {
           this.toastService.createInformation(
@@ -163,7 +143,7 @@ export class MeetingHubService {
   }
 
   private onUserLeftMeeting() {
-    this.hub.on('UserLeftMeeting', () => {
+    this.userSocket.on('UserLeftMeeting', () => {
       const oldMeetingId = this.meetingStore.data.meeting.id;
       this.meetingService.findMeeting().subscribe(
         model => {
@@ -186,34 +166,8 @@ export class MeetingHubService {
     });
   }
 
-  private onClose() {
-    this.hub.onclose(() => {
-      if (this.meetingStore.data !== null && !this.disconnecting) {
-        this.toastService.createWarning(_('The connection has been lost'));
-      }
-
-      this.disconnecting = false;
-    });
-  }
-
-  private connectToHub() {
-    this.hub
-      .start()
-      .then(() => {
-        if (this.meetingStore.data.meeting) {
-          this.initializeChatStore();
-          this.getLatestMessages();
-        }
-      })
-      .catch(() => {
-        this.toastService.createError(
-          _('A problem occurred while connecting to the sever'),
-        );
-      });
-  }
-
   public getLatestMessages() {
-    this.hub
+    this.userSocket
       .invoke('LoadMessages', {
         fromDate: moment()
           .add(-1, 'days')
@@ -227,23 +181,23 @@ export class MeetingHubService {
       });
   }
 
-  private removeFromGroup(meetingId: number) {
-    this.hub.invoke('RemoveFromGroup', meetingId).catch(() => {
-      this.toastService.createError(
-        _('A problem occurred while removing from the group'),
-      );
-    });
-  }
-
-  private addToGroup() {
-    this.hub.invoke('AddToGroup').catch(() => {
+  public addToGroup() {
+    this.userSocket.invoke('AddToMeeting').catch(() => {
       this.toastService.createError(
         _('A problem occurred while adding to the group'),
       );
     });
   }
 
-  private initializeChatStore() {
+  public removeFromGroup(meetingId: number) {
+    this.userSocket.invoke('RemoveFromMeeting', meetingId).catch(() => {
+      this.toastService.createError(
+        _('A problem occurred while removing from the group'),
+      );
+    });
+  }
+
+  public initializeChatStore() {
     this.chatStore.set({
       messagesToRead: 0,
       messages: [],
