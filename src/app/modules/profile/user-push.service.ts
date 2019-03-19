@@ -1,18 +1,8 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { _ } from '../../core/i18n/translate';
-import {
-  HubConnection,
-  HubConnectionBuilder,
-  HubConnectionState,
-  LogLevel,
-} from '@aspnet/signalr';
-import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
-import { MeetingSocketService } from '../meeting/meeting-socket.service';
-import { Push, PushObject } from '@ionic-native/push/ngx';
+import { Push } from '@ionic-native/push/ngx';
 import { UserService } from './user.service';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

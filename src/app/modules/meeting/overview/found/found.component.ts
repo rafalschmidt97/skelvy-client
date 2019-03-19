@@ -21,8 +21,6 @@ import { MeetingService } from '../../meeting.service';
 import { ChatStoreService } from '../../../chat/chat-store.service';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { MeetingSocketService } from '../../meeting-socket.service';
-import { MeetingStoreService } from '../../meeting-store.service';
 
 @Component({
   selector: 'app-found',
@@ -50,8 +48,6 @@ export class FoundComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
-    private readonly meetingStore: MeetingStoreService,
-    private readonly meetingSocket: MeetingSocketService,
     private readonly chatStore: ChatStoreService,
     private readonly routerNavigation: NavController,
     private readonly storage: Storage,
@@ -122,8 +118,6 @@ export class FoundComponent implements OnInit {
   confirmAlert() {
     this.loadingLeave = true;
     this.loadingService.lock();
-    const oldMeetingId = this.meetingStore.data.meeting.id;
-    this.meetingSocket.removeFromGroup(oldMeetingId);
     this.meetingService.leaveMeeting().subscribe(
       () => {
         this.alert.hide();
@@ -135,7 +129,6 @@ export class FoundComponent implements OnInit {
         this.toastService.createError(
           _('A problem occurred while leaving the meeting'),
         );
-        this.meetingSocket.addToGroup();
       },
     );
   }
