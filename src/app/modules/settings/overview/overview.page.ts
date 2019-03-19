@@ -12,6 +12,8 @@ import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { UserSocketService } from '../../profile/user-socket.service';
+import { UserPushService } from '../../profile/user-push.service';
+import { UserStoreService } from '../../profile/user-store.service';
 
 @Component({
   selector: 'app-overview',
@@ -34,6 +36,8 @@ export class OverviewPage {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly userSocket: UserSocketService,
+    private readonly userStore: UserStoreService,
+    private readonly userPush: UserPushService,
   ) {
     this.version = environment.version;
   }
@@ -44,6 +48,7 @@ export class OverviewPage {
 
   confirmLogout() {
     this.userSocket.disconnect();
+    this.removePushTopics();
 
     this.logout().then(() => {
       this.alert.hide();
@@ -61,6 +66,8 @@ export class OverviewPage {
 
     this.userService.removeUser().subscribe(
       () => {
+        this.removePushTopics();
+
         this.logout().then(() => {
           this.alert.hide();
           this.loadingService.unlock();
@@ -108,5 +115,10 @@ export class OverviewPage {
     await this.authService.logout();
     await this.facebook.logout();
     await this.google.logout();
+  }
+
+  private removePushTopics() {
+    const userId = this.userStore.data.id;
+    this.userPush.removeUserTopic(userId);
   }
 }

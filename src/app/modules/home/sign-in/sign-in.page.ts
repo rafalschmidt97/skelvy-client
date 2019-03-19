@@ -10,6 +10,7 @@ import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { Push } from '@ionic-native/push/ngx';
 import { UserService } from '../../profile/user.service';
+import { UserPushService } from '../../profile/user-push.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -30,8 +31,7 @@ export class SignInPage {
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
-    private readonly push: Push,
-    private readonly userService: UserService,
+    private readonly userPush: UserPushService,
   ) {}
 
   show(url: string, title = '') {
@@ -57,7 +57,7 @@ export class SignInPage {
             async () => {
               this.routerNavigation.navigateForward(['/app']);
               await loading.dismiss();
-              this.registerDevice();
+              this.userPush.initialize();
             },
             async () => {
               this.toastService.createError(
@@ -83,7 +83,7 @@ export class SignInPage {
         async () => {
           this.routerNavigation.navigateForward(['/app']);
           await loading.dismiss();
-          this.registerDevice();
+          this.userPush.initialize();
         },
         async () => {
           this.toastService.createError(
@@ -91,49 +91,6 @@ export class SignInPage {
           );
           await loading.dismiss();
         },
-      );
-    });
-  }
-
-  private registerDevice() {
-    this.push.hasPermission();
-
-    this.push.createChannel({
-      id: 'push',
-      description: 'Push Channel',
-      importance: 3,
-    });
-
-    const pushListener = this.push.init({
-      android: {
-        topics: ['all'],
-      },
-      ios: {
-        alert: true,
-        badge: true,
-        sound: true,
-        topics: ['all'],
-      },
-    });
-
-    pushListener.on('registration').subscribe((registration: any) => {
-      console.log(registration.registrationId);
-      this.userService.assignDevice(registration.registrationId).subscribe(
-        () => {
-          // TODO: save topic subscription to storage for check on notifications
-          // TODO: save registration id for check on notifications
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while assigning the device'),
-          );
-        },
-      );
-    });
-
-    pushListener.on('error').subscribe(() => {
-      this.toastService.createError(
-        _('A problem occurred while registering the device'),
       );
     });
   }
