@@ -95,8 +95,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
           this.meetingService.findMeeting().subscribe(
             model => {
               if (model.meeting) {
-                this.meetingSocket.initializeChatStore();
-                this.meetingSocket.getLatestMessages();
+                this.meetingSocket.initialize();
               }
 
               if (window.history.length > 1) {

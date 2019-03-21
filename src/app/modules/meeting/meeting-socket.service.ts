@@ -90,25 +90,6 @@ export class MeetingSocketService {
     );
   }
 
-  getLatestMessages() {
-    this.loadMessages(
-      moment()
-        .add(-1, 'days')
-        .toDate()
-        .toUTCString(),
-      moment()
-        .toDate()
-        .toUTCString(),
-    );
-  }
-
-  initializeChatStore() {
-    this.chatStore.set({
-      messagesToRead: 0,
-      messages: [],
-    });
-  }
-
   private onUserSentMeetingChatMessage() {
     this.userSocket.on('UserSentMeetingChatMessage', (message: ChatMessage) => {
       this.chatStore.addMessage(message);
@@ -165,7 +146,7 @@ export class MeetingSocketService {
             this.toastService.createInformation(_('A user has left the group'));
           } else {
             this.toastService.createInformation(_('All users left the group'));
-            this.clearMeetingWithChat();
+            this.clearChat();
           }
         },
         () => {
@@ -180,19 +161,42 @@ export class MeetingSocketService {
   private onMeetingRequestExpired() {
     this.userSocket.on('MeetingRequestExpired', () => {
       this.toastService.createInformation(_('A meeting request has expired'));
-      this.clearMeetingWithChat();
+      this.clearMeeting();
     });
   }
 
   private onMeetingExpired() {
     this.userSocket.on('MeetingExpired', () => {
       this.toastService.createInformation(_('A meeting has expired'));
-      this.clearMeetingWithChat();
+      this.clearMeeting();
+      this.clearChat();
     });
   }
 
-  private clearMeetingWithChat() {
+  private getLatestMessages() {
+    this.loadMessages(
+      moment()
+        .add(-1, 'days')
+        .toDate()
+        .toUTCString(),
+      moment()
+        .toDate()
+        .toUTCString(),
+    );
+  }
+
+  private initializeChatStore() {
+    this.chatStore.set({
+      messagesToRead: 0,
+      messages: [],
+    });
+  }
+
+  private clearMeeting() {
     this.meetingStore.set(null);
+  }
+
+  private clearChat() {
     this.chatStore.set(null);
     this.storage.remove('lastMessageDate');
   }
