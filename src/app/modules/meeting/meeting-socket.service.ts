@@ -11,6 +11,7 @@ import { MeetingStoreService } from './meeting-store.service';
 import { MeetingService } from './meeting.service';
 import { HubConnection } from '@aspnet/signalr';
 import { ChatService } from '../chat/chat.service';
+import { NavController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class MeetingSocketService {
     private readonly sessionService: SessionService,
     private readonly toastService: ToastService,
     private readonly router: Router,
+    private readonly routerNavigation: NavController,
     private readonly chatStore: ChatStoreService,
     private readonly meetingStore: MeetingStoreService,
     private readonly meetingService: MeetingService,
@@ -146,7 +148,15 @@ export class MeetingSocketService {
             this.toastService.createInformation(_('A user has left the group'));
           } else {
             this.toastService.createInformation(_('All users left the group'));
-            this.clearChat();
+
+            if (this.router.url !== '/app/chat') {
+              this.clearChat();
+            } else {
+              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+              setTimeout(() => {
+                this.clearChat();
+              }, 1000);
+            }
           }
         },
         () => {
@@ -168,8 +178,17 @@ export class MeetingSocketService {
   private onMeetingExpired() {
     this.userSocket.on('MeetingExpired', () => {
       this.toastService.createInformation(_('A meeting has expired'));
-      this.clearMeeting();
-      this.clearChat();
+
+      if (this.router.url !== '/app/chat') {
+        this.clearMeeting();
+        this.clearChat();
+      } else {
+        this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+        setTimeout(() => {
+          this.clearMeeting();
+          this.clearChat();
+        }, 1000);
+      }
     });
   }
 
