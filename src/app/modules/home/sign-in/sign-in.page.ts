@@ -8,6 +8,7 @@ import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
+import { UserPushService } from '../../profile/user-push.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -28,6 +29,7 @@ export class SignInPage {
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
+    private readonly userPush: UserPushService,
   ) {}
 
   show(url: string, title = '') {
@@ -53,6 +55,7 @@ export class SignInPage {
             async () => {
               this.routerNavigation.navigateForward(['/app']);
               await loading.dismiss();
+              this.userPush.initialize();
             },
             async () => {
               this.toastService.createError(
@@ -78,6 +81,7 @@ export class SignInPage {
         async () => {
           this.routerNavigation.navigateForward(['/app']);
           await loading.dismiss();
+          this.userPush.initialize();
         },
         async () => {
           this.toastService.createError(

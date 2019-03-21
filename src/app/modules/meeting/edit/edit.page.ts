@@ -9,7 +9,7 @@ import { MeetingService } from '../meeting.service';
 import { MeetingDrink, MeetingRequest } from '../meeting';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
-import { MeetingHubService } from '../meeting-hub.service';
+import { MeetingSocketService } from '../meeting-socket.service';
 
 @Component({
   selector: 'app-edit',
@@ -37,7 +37,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly meetingService: MeetingService,
-    private readonly meetingHub: MeetingHubService,
+    private readonly meetingSocket: MeetingSocketService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
   ) {
@@ -93,8 +93,12 @@ export class EditPage implements Form, OnSubmit, OnInit {
       this.meetingService.createMeetingRequest(request).subscribe(
         () => {
           this.meetingService.findMeeting().subscribe(
-            () => {
-              this.meetingHub.connect();
+            model => {
+              if (model.meeting) {
+                this.meetingSocket.initializeChatStore();
+                this.meetingSocket.getLatestMessages();
+              }
+
               if (window.history.length > 1) {
                 this.routerNavigation.back();
               } else {

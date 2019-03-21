@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MeetingUser } from '../../../../meeting/meeting';
 import { ChatMessage } from '../../../chat';
 
 @Component({
