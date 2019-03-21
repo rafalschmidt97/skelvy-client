@@ -38,6 +38,8 @@ export class MeetingSocketService {
     this.onUserJoinedMeeting();
     this.onUserFoundMeeting();
     this.onUserLeftMeeting();
+    this.onMeetingRequestExpired();
+    this.onMeetingExpired();
   }
 
   initialize() {
@@ -163,7 +165,7 @@ export class MeetingSocketService {
             this.toastService.createInformation(_('A user has left the group'));
           } else {
             this.toastService.createInformation(_('All users left the group'));
-            this.clearChatStore();
+            this.clearMeetingWithChat();
           }
         },
         () => {
@@ -175,7 +177,23 @@ export class MeetingSocketService {
     });
   }
 
-  private clearChatStore() {
+  private onMeetingRequestExpired() {
+    this.userSocket.on('MeetingRequestExpired', () => {
+      this.toastService.createInformation(_('A meeting request has expired'));
+      this.clearMeetingWithChat();
+    });
+  }
+
+  private onMeetingExpired() {
+    this.userSocket.on('MeetingExpired', () => {
+      this.toastService.createInformation(_('A meeting has expired'));
+      this.clearMeetingWithChat();
+    });
+  }
+
+  private clearMeetingWithChat() {
+    this.meetingStore.set(null);
     this.chatStore.set(null);
+    this.storage.remove('lastMessageDate');
   }
 }
