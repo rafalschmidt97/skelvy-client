@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { IframeService } from '../../../shared/iframe/iframe.service';
 import { Iframe } from '../../../shared/iframe/iframe';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
@@ -15,7 +15,7 @@ import { UserPushService } from '../../profile/user-push.service';
   templateUrl: './sign-in.page.html',
   styleUrls: ['./sign-in.page.scss'],
 })
-export class SignInPage {
+export class SignInPage implements OnInit {
   iframe: Iframe;
   @ViewChild('iframe') iframeTemplate: TemplateRef<any>;
   url: string;
@@ -31,6 +31,10 @@ export class SignInPage {
     private readonly loadingService: LoadingService,
     private readonly userPush: UserPushService,
   ) {}
+
+  ngOnInit() {
+    this.userPush.initialize();
+  }
 
   show(url: string, title = '') {
     this.url = url;
@@ -55,7 +59,6 @@ export class SignInPage {
             async () => {
               this.routerNavigation.navigateForward(['/app']);
               await loading.dismiss();
-              this.userPush.initialize();
             },
             async () => {
               this.toastService.createError(
