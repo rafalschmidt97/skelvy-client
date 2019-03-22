@@ -38,7 +38,7 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: './modules/settings/settings.module#SettingsModule',
       },
-      { path: '', redirectTo: 'tabs', pathMatch: 'full' },
+      { path: '', redirectTo: 'tabs/profile', pathMatch: 'full' },
     ],
   },
 ];
