@@ -18,12 +18,12 @@ export class DynamicHeightDirective implements AfterViewInit {
 
   constructor(private readonly element: ElementRef) {}
 
-  public ngAfterViewInit() {
+  ngAfterViewInit() {
     this.resize();
   }
 
   @HostListener('ngModelChange')
-  public resize() {
+  resize() {
     const textarea = this.element.nativeElement as HTMLTextAreaElement;
     // Reset textarea height to auto that correctly calculate the new height
     textarea.style.height = 'auto';
