@@ -31,7 +31,7 @@ export class EditPage implements Form, OnSubmit {
   adultDate = moment()
     .add(-18, 'years')
     .toDate();
-  deathDate = moment()
+  tooOldDate = moment()
     .add(-100, 'years')
     .toDate();
 

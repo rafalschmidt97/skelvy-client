@@ -24,7 +24,7 @@
       <app-date
         name="birthday"
         [max]="adultDate"
-        [min]="deathDate"
+        [min]="tooOldDate"
         [label]="'Date of birth' | translate"
       ></app-date>
       <app-select
@@ -32,7 +32,6 @@
         [label]="'Gender' | translate"
         [options]="genders"
       ></app-select>
-      <!--autosize is bugged when it's in scrollable view inside of ios bounce content-->
       <app-textarea
         name="description"
         [label]="'About me' | translate"
