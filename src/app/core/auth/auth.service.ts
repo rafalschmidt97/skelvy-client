@@ -22,9 +22,9 @@ export class AuthService {
     private readonly storage: Storage,
   ) {}
 
-  signInWithFacebook(authToken: string): Observable<any> {
+  signInWithFacebook(authToken: string, language: string): Observable<any> {
     return this.http
-      .post<any>(environment.apiUrl + 'auth/facebook', { authToken })
+      .post<any>(environment.apiUrl + 'auth/facebook', { authToken, language })
       .pipe(
         tap(async res => {
           if (res && res.token) {
@@ -34,9 +34,9 @@ export class AuthService {
       );
   }
 
-  signInWithGoogle(authToken: string): Observable<any> {
+  signInWithGoogle(authToken: string, language: string): Observable<any> {
     return this.http
-      .post<any>(environment.apiUrl + 'auth/google', { authToken })
+      .post<any>(environment.apiUrl + 'auth/google', { authToken, language })
       .pipe(
         tap(async res => {
           if (res && res.token) {

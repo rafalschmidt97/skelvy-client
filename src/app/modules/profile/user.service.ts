@@ -27,6 +27,12 @@ export class UserService {
     return this.http.delete<void>(environment.apiUrl + 'users/self');
   }
 
+  updateLanguage(language: string): Observable<void> {
+    return this.http.patch<void>(environment.apiUrl + 'users/self/language', {
+      language,
+    });
+  }
+
   updateProfile(profile: Profile): Observable<void> {
     return this.http
       .put<void>(environment.apiUrl + 'users/self/profile', profile)
