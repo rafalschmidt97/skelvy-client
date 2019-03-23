@@ -90,7 +90,6 @@ export class SignInPage implements OnInit {
           async () => {
             this.routerNavigation.navigateForward(['/app']);
             await loading.dismiss();
-            this.userPush.initialize();
           },
           async () => {
             this.toastService.createError(
