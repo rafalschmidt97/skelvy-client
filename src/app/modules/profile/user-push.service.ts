@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { _ } from '../../core/i18n/translate';
 import { ToastService } from '../../core/toast/toast.service';
-import { Push } from '@ionic-native/push/ngx';
+import { Push, PushObject } from '@ionic-native/push/ngx';
 import { UserService } from './user.service';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
@@ -11,6 +11,8 @@ import { UserStoreService } from './user-store.service';
   providedIn: 'root',
 })
 export class UserPushService {
+  private push$: PushObject;
+
   constructor(
     private readonly push: Push,
     private readonly userService: UserService,
@@ -18,7 +20,9 @@ export class UserPushService {
     private readonly storage: Storage,
     private readonly platform: Platform,
     private readonly userStore: UserStoreService,
-  ) {}
+  ) {
+    this.push$ = this.push.init({});
+  }
 
   initialize() {
     this.storage.get('push').then((exists: boolean) => {
@@ -29,15 +33,25 @@ export class UserPushService {
           importance: 3,
         });
 
-        const push$ = this.getPushListener();
+        this.push$ = this.push.init({
+          android: {
+            topics: ['all', 'android'],
+          },
+          ios: {
+            alert: true,
+            badge: true,
+            sound: true,
+            topics: ['all', 'ios'],
+          },
+        });
 
-        push$.on('registration').subscribe(async () => {
+        this.push$.on('registration').subscribe(async () => {
           await this.storage.set('push', true);
           await this.storage.set('pushTopicAll', true);
           await this.storage.set('pushTopicPlatform', true);
         });
 
-        push$.on('error').subscribe(x => {
+        this.push$.on('error').subscribe(x => {
           this.toastService.createError(
             _('A problem occurred while registering the device'),
           );
@@ -59,79 +73,29 @@ export class UserPushService {
   }
 
   addTopic(topic: string, storageKey: string) {
-    this.getInitializedPushListener().then(listener => {
-      listener.subscribe(topic).then(
-        () => {
-          this.storage.set(storageKey, true);
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while adding a push notification topic'),
-          );
-        },
-      );
-    });
+    this.push$.subscribe(topic).then(
+      () => {
+        this.storage.set(storageKey, true);
+      },
+      () => {
+        this.toastService.createError(
+          _('A problem occurred while adding a push notification topic'),
+        );
+      },
+    );
   }
 
   removeTopic(topic: string, storageKey: string) {
-    this.getInitializedPushListener().then(listener => {
-      listener.unsubscribe(topic).then(
-        () => {
-          this.storage.set(storageKey, false);
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while removing a push notification topic'),
-          );
-        },
-      );
-    });
-  }
-
-  private getPushListener() {
-    return this.push.init({
-      android: {
-        topics: ['all', 'android'],
+    this.push$.unsubscribe(topic).then(
+      () => {
+        this.storage.set(storageKey, false);
       },
-      ios: {
-        alert: true,
-        badge: true,
-        sound: true,
-        topics: ['all', 'ios'],
+      () => {
+        this.toastService.createError(
+          _('A problem occurred while removing a push notification topic'),
+        );
       },
-    });
-  }
-
-  private async getInitializedPushListener() {
-    const all = await this.storage.get('pushTopicAll');
-    const platform = await this.storage.get('pushTopicPlatform');
-    const user = await this.storage.get('pushTopicUser');
-    const topics: string[] = [];
-
-    if (all) {
-      topics.push('all');
-    }
-
-    if (platform) {
-      const platformName = this.platform.is('android') ? 'android' : 'ios';
-      topics.push(platformName);
-    }
-
-    if (user) {
-      topics.push('user-' + this.getUserId());
-    }
-
-    return this.push.init({
-      android: {
-        topics: topics,
-      },
-      ios: {
-        alert: true,
-        badge: true,
-        sound: true,
-        topics: topics,
-      },
-    });
+    );
   }
 
   private getUserId(): number {
