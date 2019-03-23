@@ -7,7 +7,6 @@ import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { LanguageConstants } from '../../../core/i18n/language.constants';
 import { UserService } from '../../profile/user.service';
-import { MeetingRequest } from '../../meeting/meeting';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { NavController } from '@ionic/angular';
