@@ -48,7 +48,7 @@ export class OverviewPage {
 
   confirmLogout() {
     this.userSocket.disconnect();
-    this.removePushTopics();
+    this.userPush.disconnect();
 
     this.logout().then(() => {
       this.alert.hide();
@@ -66,7 +66,7 @@ export class OverviewPage {
 
     this.userService.removeUser().subscribe(
       () => {
-        this.removePushTopics();
+        this.userPush.disconnect();
 
         this.logout().then(() => {
           this.alert.hide();
@@ -115,10 +115,5 @@ export class OverviewPage {
     await this.authService.logout();
     await this.facebook.logout();
     await this.google.logout();
-  }
-
-  private removePushTopics() {
-    const userId = this.userStore.data.id;
-    this.userPush.removeUserTopic(userId);
   }
 }

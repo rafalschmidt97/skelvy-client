@@ -26,9 +26,9 @@ export class UserResolver implements Resolve<User> {
 
   resolve(): Observable<User> {
     return this.userService.findUser().pipe(
-      tap(user => {
+      tap(() => {
         this.userSocket.connect();
-        this.userPush.addUserTopic(user.id);
+        this.userPush.connect();
       }),
       catchError(error => {
         this.authService.logout().then(() => {
