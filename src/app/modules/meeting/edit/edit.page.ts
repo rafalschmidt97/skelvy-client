@@ -19,9 +19,12 @@ export class EditPage implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
   drinks: Checkbox[];
-  today = moment().toDate();
+  today = moment()
+    .startOf('day')
+    .toDate();
   tomorrow = moment()
     .add(1, 'days')
+    .startOf('day')
     .toDate();
   private readonly drinksToTranslate = [
     _('tea'),

@@ -196,11 +196,8 @@ export class MeetingSocketService {
     this.loadMessages(
       moment()
         .add(-1, 'days')
-        .toDate()
-        .toUTCString(),
-      moment()
-        .toDate()
-        .toUTCString(),
+        .toISOString(),
+      moment().toISOString(),
     );
   }
 

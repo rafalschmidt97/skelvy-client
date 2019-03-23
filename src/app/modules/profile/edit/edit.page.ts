@@ -6,7 +6,7 @@ import { _ } from '../../../core/i18n/translate';
 import { InputComponent } from '../../../shared/form/input/input.component';
 import * as moment from 'moment';
 import { UserStoreService } from '../user-store.service';
-import { Gender } from '../user';
+import { Gender, Profile } from '../user';
 import { UserService } from '../user.service';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
@@ -30,9 +30,11 @@ export class EditPage implements Form, OnSubmit {
   ];
   adultDate = moment()
     .add(-18, 'years')
+    .startOf('day')
     .toDate();
   tooOldDate = moment()
     .add(-100, 'years')
+    .startOf('day')
     .toDate();
 
   constructor(
@@ -71,7 +73,7 @@ export class EditPage implements Form, OnSubmit {
       this.isLoading = true;
       const form = this.form.value;
 
-      const profile = {
+      const profile: Profile = {
         name: form.name.trim(),
         description: form.description.trim(),
         birthday: form.birthday,

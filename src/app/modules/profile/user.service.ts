@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserStoreService } from './user-store.service';
 import { Observable } from 'rxjs';
-import { User } from './user';
+import { Profile, User } from './user';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
@@ -27,7 +27,7 @@ export class UserService {
     return this.http.delete<void>(environment.apiUrl + 'users/self');
   }
 
-  updateProfile(profile): Observable<void> {
+  updateProfile(profile: Profile): Observable<void> {
     return this.http
       .put<void>(environment.apiUrl + 'users/self/profile', profile)
       .pipe(

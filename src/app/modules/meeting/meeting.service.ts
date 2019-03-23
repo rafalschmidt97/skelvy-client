@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { MeetingStoreService } from './meeting-store.service';
-import { MeetingDrink, MeetingModel } from './meeting';
+import { MeetingDrink, MeetingModel, MeetingRequest } from './meeting';
 import { ChatStoreService } from '../chat/chat-store.service';
 import { Storage } from '@ionic/storage';
 
@@ -39,7 +39,7 @@ export class MeetingService {
     );
   }
 
-  createMeetingRequest(request): Observable<void> {
+  createMeetingRequest(request: MeetingRequest): Observable<void> {
     return this.http.post<void>(
       environment.apiUrl + 'meetings/requests/self',
       request,

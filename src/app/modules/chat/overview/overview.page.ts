@@ -36,12 +36,10 @@ export class OverviewPage {
   loadOlderMessages() {
     const oldestMessageDate = moment(this.chatStore.data.messages[0].date)
       .add(-1, 'milliseconds')
-      .toDate()
-      .toUTCString();
+      .toISOString();
     const weekFromOldest = moment(oldestMessageDate)
       .add(-1, 'days')
-      .toDate()
-      .toUTCString();
+      .toISOString();
 
     this.meetingSocket.loadMessages(weekFromOldest, oldestMessageDate);
   }

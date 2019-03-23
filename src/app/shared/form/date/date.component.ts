@@ -32,7 +32,7 @@ export class DateComponent extends ComplexFieldComponent implements OnInit {
 
   onChange() {
     this.form.patchValue({
-      [this.name]: this.datePicker,
+      [this.name]: moment(this.datePicker).toDate(),
     });
   }
 }

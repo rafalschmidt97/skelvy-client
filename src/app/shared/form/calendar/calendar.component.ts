@@ -93,11 +93,11 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
 
     if (value[1]) {
       this.form.patchValue({
-        [this.name]: [moment(value[0]).format(), moment(value[1]).format()],
+        [this.name]: [value[0], value[1]],
       });
     } else {
       this.form.patchValue({
-        [this.name]: [moment(value[0]).format()],
+        [this.name]: [value[0]],
       });
     }
 
