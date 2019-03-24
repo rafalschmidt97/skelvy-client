@@ -47,6 +47,10 @@
   padding-bottom: 2rem;
 }
 
+::ng-deep .swiper-wrapper {
+  align-items: center;
+}
+
 ::ng-deep .swiper-pagination-bullets {
   bottom: 0 !important;
 }
