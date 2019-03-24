@@ -56,7 +56,7 @@ export class SearchingComponent implements OnInit {
         () => {
           this.loadingLocation = false;
           this.toastService.createError(
-            _('A problem occurred while searching the location'),
+            _('A problem occurred while searching for the location'),
           );
         },
       );

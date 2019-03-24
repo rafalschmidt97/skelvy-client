@@ -109,7 +109,7 @@ export class MeetingSocketService {
       this.meetingService.findMeeting().subscribe(
         () => {
           this.toastService.createInformation(
-            _('A new user has been added to the group'),
+            _('New user has been added to the group'),
           );
         },
         () => {
@@ -125,9 +125,7 @@ export class MeetingSocketService {
     this.userSocket.on('UserFoundMeeting', () => {
       this.meetingService.findMeeting().subscribe(
         () => {
-          this.toastService.createInformation(
-            _('A new meeting has been found'),
-          );
+          this.toastService.createInformation(_('New meeting has been found'));
           this.initializeChatStore();
           this.getLatestMessages();
         },
@@ -145,9 +143,11 @@ export class MeetingSocketService {
       this.meetingService.findMeeting().subscribe(
         model => {
           if (model.meeting) {
-            this.toastService.createInformation(_('A user has left the group'));
+            this.toastService.createInformation(_('User has left the group'));
           } else {
-            this.toastService.createInformation(_('All users left the group'));
+            this.toastService.createInformation(
+              _('All users have left the group'),
+            );
 
             if (this.router.url !== '/app/chat') {
               this.clearChat();
@@ -170,14 +170,14 @@ export class MeetingSocketService {
 
   private onMeetingRequestExpired() {
     this.userSocket.on('MeetingRequestExpired', () => {
-      this.toastService.createInformation(_('A meeting request has expired'));
+      this.toastService.createInformation(_('Meeting request has expired'));
       this.clearMeeting();
     });
   }
 
   private onMeetingExpired() {
     this.userSocket.on('MeetingExpired', () => {
-      this.toastService.createInformation(_('A meeting has expired'));
+      this.toastService.createInformation(_('The meeting has expired'));
 
       if (this.router.url !== '/app/chat') {
         this.clearMeeting();

@@ -38,15 +38,30 @@
     <section class="py-4 text-center bg-white">
       <ion-slides pager="true" class="slider" [options]="{ autoplay: true }">
         <ion-slide>
-          <div class="slide">{{ 'Profile hint 1' | translate }}</div>
+          <div class="slide">
+            {{
+              'Can you do us a favour? Please rate our app in store if you like it!'
+                | translate
+            }}
+          </div>
         </ion-slide>
 
         <ion-slide>
-          <div class="slide">{{ 'Profile hint 2' | translate }}</div>
+          <div class="slide">
+            {{
+              'Share the app with your friends! More friends means more opportunities!'
+                | translate
+            }}
+          </div>
         </ion-slide>
 
         <ion-slide>
-          <div class="slide">{{ 'Profile hint 3' | translate }}</div>
+          <div class="slide">
+            {{
+              'Noticed a bug? Explain the problem you have encountered while using the app!'
+                | translate
+            }}
+          </div>
         </ion-slide>
       </ion-slides>
     </section>

@@ -71,7 +71,7 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
         },
         () => {
           this.toastService.createError(
-            _('A problem occurred while searching locations'),
+            _('A problem occurred while searching for locations'),
           );
         },
       );

@@ -1,9 +1,9 @@
 {
   "app" : {
     "USER_JOINED_MEETING": "Nowy użytkownik został dodany do grupy",
-    "USER_FOUND_MEETING": "Nowe spotkanie zostało znalezione",
+    "USER_FOUND_MEETING": "Znaleziono nowe spotkanie",
     "USER_LEFT_MEETING": "Użytkownik opuścił grupę",
-    "MEETING_REQUEST_EXPIRED": "Preferencja spotkania wygasła",
+    "MEETING_REQUEST_EXPIRED": "Preferencje spotkania wygasły",
     "MEETING_EXPIRED": "Spotkanie wygasło"
   }
 }

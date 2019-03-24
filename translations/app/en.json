@@ -1,9 +1,9 @@
 {
   "app" : {
-    "USER_JOINED_MEETING": "A new user has been added to the group",
-    "USER_FOUND_MEETING": "A new meeting has been found",
-    "USER_LEFT_MEETING": "A user has left the group",
-    "MEETING_REQUEST_EXPIRED": "A meeting request has expired",
-    "MEETING_EXPIRED": "A meeting has expired"
+    "USER_JOINED_MEETING": "New user has been added to the group",
+    "USER_FOUND_MEETING": "New meeting has been found",
+    "USER_LEFT_MEETING": "User has left the group",
+    "MEETING_REQUEST_EXPIRED": "Meeting request has expired",
+    "MEETING_EXPIRED": "The meeting has expired"
   }
 }

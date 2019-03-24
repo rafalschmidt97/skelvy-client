@@ -79,7 +79,7 @@ export class UserPushService {
       },
       () => {
         this.toastService.createError(
-          _('A problem occurred while adding a push notification topic'),
+          _('A problem occurred while adding push notification topic'),
         );
       },
     );
@@ -92,7 +92,7 @@ export class UserPushService {
       },
       () => {
         this.toastService.createError(
-          _('A problem occurred while removing a push notification topic'),
+          _('A problem occurred while removing push notification topic'),
         );
       },
     );

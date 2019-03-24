@@ -104,7 +104,7 @@ export class OverviewPage {
       .then(() => {
         this.toastService.createInformation(
           _(
-            `If you have any further questions, don't hesitate to contact using our website.`,
+            `If you have any further questions, don't hesitate to contact us by using our website`,
           ),
           0,
         );
