@@ -162,3 +162,11 @@
     [autoCrop]="false"
   ></image-cropper>
 </ng-template>
+
+<ng-template #alert>
+  <app-alert
+    (confirm)="confirmAlert()"
+    (decline)="declineAlert()"
+    [title]="'Are you sure?' | translate"
+  ></app-alert>
+</ng-template>

@@ -19,6 +19,8 @@ import { UploadService } from '../../../../core/upload/upload.service';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
 import { LoadingService } from '../../../../core/loading/loading.service';
+import { Alert } from '../../../../shared/alert/alert';
+import { AlertService } from '../../../../shared/alert/alert.service';
 
 @Component({
   selector: 'app-images',
@@ -27,6 +29,7 @@ import { LoadingService } from '../../../../core/loading/loading.service';
 })
 export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   modal: Modal;
+  alert: Alert;
   inputForm: FormGroup;
   imageChangedEvent = '';
   croppedName: string;
@@ -37,7 +40,9 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   image3Name = 'image3';
   @ViewChild('cropper') cropper: TemplateRef<any>;
   @ViewChild('cropperComponentContent') imageCropper: ImageCropperComponent;
+  @ViewChild('alert') alertTemplate: TemplateRef<any>;
   loadingUpload = false;
+  private removeIndex: number;
 
   get isDirty(): boolean {
     return this.dirty;
@@ -46,6 +51,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
     private readonly modalService: ModalService,
+    private readonly alertService: AlertService,
     private readonly formBuilder: FormBuilder,
     private readonly uploadService: UploadService,
     private readonly toastService: ToastService,
@@ -138,6 +144,20 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   }
 
   remove(index: number) {
+    this.removeIndex = index;
+    this.alert = this.alertService.show(this.alertTemplate);
+  }
+
+  confirmAlert() {
+    this.removeFromInput(this.removeIndex);
+    this.alert.hide();
+  }
+
+  declineAlert() {
+    this.alert.hide();
+  }
+
+  private removeFromInput(index: number) {
     this.dirty = true;
 
     if (index === 1) {
