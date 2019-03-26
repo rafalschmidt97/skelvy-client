@@ -66,7 +66,7 @@ export class LanguagePage implements Form, OnSubmit, OnInit {
         this.userService.updateLanguage(form.language).subscribe(
           () => {
             this.isLoading = false;
-            this.routerNavigation.navigateBack(['/app/tabs/more']);
+            this.routerNavigation.navigateBack(['/app/tabs/settings']);
           },
           () => {
             this.isLoading = false;
@@ -76,7 +76,7 @@ export class LanguagePage implements Form, OnSubmit, OnInit {
           },
         );
       } else {
-        this.routerNavigation.navigateBack(['/app/tabs/more']);
+        this.routerNavigation.navigateBack(['/app/tabs/settings']);
       }
     }
   }

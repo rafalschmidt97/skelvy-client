@@ -79,7 +79,7 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
       }
 
       setTimeout(() => {
-        this.routerNavigation.navigateBack(['/app/tabs/more']);
+        this.routerNavigation.navigateBack(['/app/tabs/settings']);
       }, 3000);
     }
   }

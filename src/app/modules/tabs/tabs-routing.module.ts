@@ -16,7 +16,7 @@ const routes: Routes = [
         loadChildren: '../meeting/overview/overview.module#OverviewPageModule',
       },
       {
-        path: 'more',
+        path: 'settings',
         loadChildren: '../settings/overview/overview.module#OverviewPageModule',
       },
     ],
