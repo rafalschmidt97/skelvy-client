@@ -14,6 +14,7 @@ import { LoadingService } from '../../../core/loading/loading.service';
 import { UserSocketService } from '../../profile/user-socket.service';
 import { UserPushService } from '../../profile/user-push.service';
 import { UserStoreService } from '../../profile/user-store.service';
+import { Device } from '@ionic-native/device/ngx';
 
 @Component({
   selector: 'app-overview',
@@ -38,6 +39,7 @@ export class OverviewPage {
     private readonly userSocket: UserSocketService,
     private readonly userStore: UserStoreService,
     private readonly userPush: UserPushService,
+    private readonly device: Device,
   ) {
     this.version = environment.version;
   }
@@ -100,6 +102,17 @@ export class OverviewPage {
       .open({
         to: 'rafalschmidt97@gmail.com',
         subject: '[skelvy] Report a bug',
+        body: `
+
+
+
+--------------------
+App version: ${environment.version}
+Manufacturer: ${this.device.manufacturer}
+Model: ${this.device.model}
+Platform: ${this.device.platform}
+Version: ${this.device.version}
+--------------------`,
       })
       .then(() => {
         this.toastService.createInformation(

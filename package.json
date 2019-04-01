@@ -46,6 +46,7 @@
     "@aspnet/signalr": "^1.1.2",
     "@fortawesome/fontawesome-free": "^5.7.2",
     "@ionic-native/core": "^5.2.0",
+    "@ionic-native/device": "^5.2.0",
     "@ionic-native/email-composer": "^5.2.0",
     "@ionic-native/facebook": "^5.2.0",
     "@ionic-native/geolocation": "^5.2.0",
