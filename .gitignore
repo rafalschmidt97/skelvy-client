@@ -32,3 +32,6 @@ $RECYCLE.BIN/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+
+resources/android/google-services.json
+resources/ios/GoogleService-Info.plist
