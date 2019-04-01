@@ -32,7 +32,7 @@ export class FoundComponent implements OnInit {
   @Input() user: User;
   @ViewChild('details') detailsTemplate: TemplateRef<any>;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
-  profileForModal: Profile;
+  userForModal: MeetingUser;
   modal: Modal;
   alert: Alert;
   loadingLocation = true;
@@ -102,7 +102,7 @@ export class FoundComponent implements OnInit {
   }
 
   openDetails(user: MeetingUser) {
-    this.profileForModal = user.profile;
+    this.userForModal = user;
     this.modal = this.modalService.show(this.detailsTemplate, true);
   }
 

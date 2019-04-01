@@ -1,6 +1,6 @@
 <div class="slider">
   <ion-slides pager="true">
-    <ion-slide *ngFor="let photo of profile.photos">
+    <ion-slide *ngFor="let photo of user.profile.photos">
       <div
         class="slide"
         [style.background-image]="'url(' + photo.url + ')'"
@@ -9,15 +9,22 @@
   </ion-slides>
 </div>
 <div class="content container pb-3">
-  <h2>{{ profile.name }}, {{ profile.birthday | age }}</h2>
+  <h2>{{ user.profile.name }}, {{ user.profile.birthday | age }}</h2>
   <h5>{{ 'About me' | translate }}</h5>
-  <p class="mb-0 description" *ngIf="profile.description?.length > 0">
-    {{ profile.description }}
+  <p class="mb-0 description" *ngIf="user.profile.description?.length > 0">
+    {{ user.profile.description }}
   </p>
   <p
-    class="mb-0 text-muted"
-    *ngIf="!profile.description || profile.description.length === 0"
+    class="text-muted"
+    *ngIf="!user.profile.description || user.profile.description.length === 0"
   >
     {{ 'User did not fill his bio yet.' | translate }}
   </p>
+  <button
+    type="button"
+    (click)="sendReport()"
+    class="btn btn-block btn-outline-dark"
+  >
+    {{ 'Report user' | translate }}
+  </button>
 </div>
