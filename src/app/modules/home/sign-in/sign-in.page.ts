@@ -10,6 +10,7 @@ import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { UserPushService } from '../../profile/user-push.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-sign-in',
@@ -32,6 +33,7 @@ export class SignInPage implements OnInit {
     private readonly loadingService: LoadingService,
     private readonly userPush: UserPushService,
     private readonly translateService: TranslateService,
+    private readonly storage: Storage,
   ) {}
 
   ngOnInit() {
@@ -61,6 +63,7 @@ export class SignInPage implements OnInit {
             .signInWithFacebook(token, this.translateService.currentLang)
             .subscribe(
               async () => {
+                await this.storage.set('signInMethod', 'facebook');
                 this.routerNavigation.navigateForward(['/app']);
                 await loading.dismiss();
               },
@@ -88,6 +91,7 @@ export class SignInPage implements OnInit {
         .signInWithGoogle(token, this.translateService.currentLang)
         .subscribe(
           async () => {
+            await this.storage.set('signInMethod', 'google');
             this.routerNavigation.navigateForward(['/app']);
             await loading.dismiss();
           },

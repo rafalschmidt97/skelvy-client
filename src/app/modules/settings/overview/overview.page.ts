@@ -15,6 +15,7 @@ import { UserSocketService } from '../../profile/user-socket.service';
 import { UserPushService } from '../../profile/user-push.service';
 import { UserStoreService } from '../../profile/user-store.service';
 import { Device } from '@ionic-native/device/ngx';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-overview',
@@ -40,6 +41,7 @@ export class OverviewPage {
     private readonly userStore: UserStoreService,
     private readonly userPush: UserPushService,
     private readonly device: Device,
+    private readonly storage: Storage,
   ) {
     this.version = environment.version;
   }
@@ -126,7 +128,15 @@ Version: ${this.device.version}
 
   private async logout() {
     await this.authService.logout();
-    await this.facebook.logout();
-    await this.google.logout();
+    const method = await this.storage.get('signInMethod');
+    console.log(method);
+
+    if (method === 'facebook') {
+      await this.facebook.logout();
+    } else if (method === 'google') {
+      await this.google.logout();
+    }
+
+    await this.storage.remove('signInMethod');
   }
 }
