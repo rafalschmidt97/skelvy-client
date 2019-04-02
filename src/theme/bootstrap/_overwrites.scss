@@ -22,6 +22,11 @@ a {
     padding: var(--ion-safe-area-top) var(--ion-safe-area-right) 0
       var(--ion-safe-area-left);
 
+    .md & {
+      padding: calc(var(--ion-safe-area-top) + 8px) var(--ion-safe-area-right) 0
+        var(--ion-safe-area-left);
+    }
+
     @include media-breakpoint-up(sm) {
       margin: 0 auto;
     }
