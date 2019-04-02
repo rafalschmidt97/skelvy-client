@@ -20,7 +20,7 @@ export class ProfileDetailsComponent {
   sendReport() {
     this.emailComposer
       .open({
-        to: 'rafalschmidt97@gmail.com',
+        to: 'contact.skelvy@gmail.com',
         subject: `[skelvy] Report user#${this.user.id}`,
       })
       .then(() => {

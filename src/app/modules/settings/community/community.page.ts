@@ -37,7 +37,7 @@ export class CommunityPage {
   sendFeedback() {
     this.emailComposer
       .open({
-        to: 'rafalschmidt97@gmail.com',
+        to: 'contact.skelvy@gmail.com',
         subject: '[skelvy] Feedback',
       })
       .then(() => {
