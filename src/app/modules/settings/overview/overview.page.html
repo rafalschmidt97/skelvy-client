@@ -40,6 +40,37 @@
     >
       {{ 'Log out' | translate }}
     </button>
+    <button
+      type="button"
+      (click)="sendReport()"
+      class="btn btn-settings justify-content-center"
+    >
+      {{ 'Report a bug' | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="showIframe('https://facebook.com/skelvyapp', 'Facebook')"
+      class="btn btn-settings justify-content-center mt-3"
+    >
+      Facebook
+      <ion-icon class="ml-2" name="logo-facebook"></ion-icon>
+    </button>
+    <button
+      type="button"
+      (click)="showIframe('https://twitter.com/skelvyapp', 'Twitter')"
+      class="btn btn-settings justify-content-center"
+    >
+      Twitter
+      <ion-icon class="ml-2" name="logo-twitter"></ion-icon>
+    </button>
+    <button
+      type="button"
+      (click)="showIframe('https://instagram.com/skelvyapp/', 'Instagram')"
+      class="btn btn-settings justify-content-center"
+    >
+      Instagram
+      <ion-icon class="ml-2" name="logo-instagram"></ion-icon>
+    </button>
     <section class="about d-flex justify-content-center py-3">
       <div class="text-center">{{ 'Version' | translate }}: {{ version }}</div>
     </section>
@@ -49,13 +80,6 @@
       class="btn btn-settings justify-content-center"
     >
       {{ 'Delete account' | translate }}
-    </button>
-    <button
-      type="button"
-      (click)="sendReport()"
-      class="btn btn-settings justify-content-center"
-    >
-      {{ 'Report a bug' | translate }}
     </button>
   </div>
 </ion-content>
@@ -75,4 +99,12 @@
     [confirmLoading]="loadingRemove"
     [title]="'Are you sure you want delete your account?' | translate"
   ></app-alert>
+</ng-template>
+
+<ng-template #iframe>
+  <app-iframe
+    [url]="url"
+    [title]="title"
+    (decline)="declineIframe()"
+  ></app-iframe>
 </ng-template>

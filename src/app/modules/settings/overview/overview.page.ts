@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Alert } from '../../../shared/alert/alert';
 import { AlertService } from '../../../shared/alert/alert.service';
 import { NavController } from '@ionic/angular';
@@ -16,6 +16,8 @@ import { UserPushService } from '../../profile/user-push.service';
 import { UserStoreService } from '../../profile/user-store.service';
 import { Device } from '@ionic-native/device/ngx';
 import { Storage } from '@ionic/storage';
+import { IframeService } from '../../../shared/iframe/iframe.service';
+import { Iframe } from '../../../shared/iframe/iframe';
 
 @Component({
   selector: 'app-overview',
@@ -26,6 +28,10 @@ export class OverviewPage {
   alert: Alert;
   version: string;
   loadingRemove = false;
+  iframe: Iframe;
+  @ViewChild('iframe') iframeTemplate: TemplateRef<any>;
+  url: string;
+  title: string;
 
   constructor(
     private readonly alertService: AlertService,
@@ -42,6 +48,7 @@ export class OverviewPage {
     private readonly userPush: UserPushService,
     private readonly device: Device,
     private readonly storage: Storage,
+    private readonly iframeService: IframeService,
   ) {
     this.version = environment.version;
   }
@@ -124,6 +131,17 @@ Version: ${this.device.version}
           0,
         );
       });
+  }
+
+  showIframe(url: string, title = '') {
+    this.url = url;
+    this.title = title;
+
+    this.iframe = this.iframeService.show(this.iframeTemplate);
+  }
+
+  declineIframe() {
+    this.iframe.hide();
   }
 
   private async logout() {
