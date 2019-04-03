@@ -49,7 +49,7 @@
     </button>
     <button
       type="button"
-      (click)="showIframe('https://facebook.com/skelvyapp', 'Facebook')"
+      (click)="openLink('https://facebook.com/skelvyapp')"
       class="btn btn-settings justify-content-center mt-3"
     >
       Facebook
@@ -57,7 +57,7 @@
     </button>
     <button
       type="button"
-      (click)="showIframe('https://twitter.com/skelvyapp', 'Twitter')"
+      (click)="openLink('https://twitter.com/skelvyapp')"
       class="btn btn-settings justify-content-center"
     >
       Twitter
@@ -65,7 +65,7 @@
     </button>
     <button
       type="button"
-      (click)="showIframe('https://instagram.com/skelvyapp/', 'Instagram')"
+      (click)="openLink('https://instagram.com/skelvyapp/')"
       class="btn btn-settings justify-content-center"
     >
       Instagram
@@ -99,12 +99,4 @@
     [confirmLoading]="loadingRemove"
     [title]="'Are you sure you want delete your account?' | translate"
   ></app-alert>
-</ng-template>
-
-<ng-template #iframe>
-  <app-iframe
-    [url]="url"
-    [title]="title"
-    (decline)="declineIframe()"
-  ></app-iframe>
 </ng-template>

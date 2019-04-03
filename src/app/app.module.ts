@@ -19,13 +19,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Push } from '@ionic-native/push/ngx';
 import { Device } from '@ionic-native/device/ngx';
-
-const libraries = [
-  IonicModule.forRoot(),
-  TranslateModule.forRoot(i18nConfiguration),
-  IonicStorageModule.forRoot(),
-  ModalModule.forRoot(),
-];
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,7 +30,10 @@ const libraries = [
     HttpClientModule,
     AppRoutingModule,
     CoreModule,
-    ...libraries,
+    IonicModule.forRoot(),
+    TranslateModule.forRoot(i18nConfiguration),
+    IonicStorageModule.forRoot(),
+    ModalModule.forRoot(),
   ],
   providers: [
     StatusBar,
@@ -47,6 +44,7 @@ const libraries = [
     Geolocation,
     Push,
     Device,
+    InAppBrowser,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],
