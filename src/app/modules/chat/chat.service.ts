@@ -10,11 +10,9 @@ import { HttpClient } from '@angular/common/http';
 export class ChatService {
   constructor(private readonly http: HttpClient) {}
 
-  findMessages(fromDate, toDate): Observable<ChatMessage[]> {
+  findMessages(page: number = 1): Observable<ChatMessage[]> {
     return this.http.get<ChatMessage[]>(
-      `${
-        environment.apiUrl
-      }meetings/self/chat?fromDate=${fromDate}&toDate=${toDate}`,
+      `${environment.apiUrl}meetings/self/chat?page=${page}`,
     );
   }
 }

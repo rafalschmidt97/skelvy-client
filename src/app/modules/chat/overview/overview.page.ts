@@ -34,13 +34,8 @@ export class OverviewPage {
   }
 
   loadOlderMessages() {
-    const oldestMessageDate = moment(this.chatStore.data.messages[0].date)
-      .add(-1, 'milliseconds')
-      .toISOString();
-    const weekFromOldest = moment(oldestMessageDate)
-      .add(-1, 'days')
-      .toISOString();
-
-    this.meetingSocket.loadMessages(weekFromOldest, oldestMessageDate);
+    const nextPage = this.chatStore.data.page + 1;
+    this.chatStore.setPage(nextPage);
+    this.meetingSocket.loadMessages(nextPage);
   }
 }

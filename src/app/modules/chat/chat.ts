@@ -6,5 +6,6 @@ export interface ChatMessage {
 
 export interface ChatModel {
   messagesToRead: number;
+  page: number;
   messages: ChatMessage[];
 }

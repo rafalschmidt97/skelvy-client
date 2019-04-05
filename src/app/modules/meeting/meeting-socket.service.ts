@@ -59,8 +59,8 @@ export class MeetingSocketService {
     });
   }
 
-  loadMessages(fromDate, toDate) {
-    this.chatService.findMessages(fromDate, toDate).subscribe(
+  loadMessages(page?: number) {
+    this.chatService.findMessages(page).subscribe(
       (messages: ChatMessage[]) => {
         const mergedMessages = messages.concat(this.chatStore.data.messages);
         mergedMessages.sort((a, b) => {
@@ -193,17 +193,13 @@ export class MeetingSocketService {
   }
 
   private getLatestMessages() {
-    this.loadMessages(
-      moment()
-        .add(-1, 'days')
-        .toISOString(),
-      moment().toISOString(),
-    );
+    this.loadMessages();
   }
 
   private initializeChatStore() {
     this.chatStore.set({
       messagesToRead: 0,
+      page: 1,
       messages: [],
     });
   }
