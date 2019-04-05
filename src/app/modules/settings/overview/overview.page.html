@@ -47,10 +47,13 @@
     >
       {{ 'Report a bug' | translate }}
     </button>
+    <section class="about d-flex justify-content-center py-3">
+      <div class="text-center">{{ 'Version' | translate }}: {{ version }}</div>
+    </section>
     <button
       type="button"
       (click)="openLink('https://facebook.com/skelvyapp')"
-      class="btn btn-settings justify-content-center mt-3"
+      class="btn btn-settings justify-content-center"
     >
       Facebook
       <ion-icon class="ml-2" name="logo-facebook"></ion-icon>
@@ -71,16 +74,6 @@
       Instagram
       <ion-icon class="ml-2" name="logo-instagram"></ion-icon>
     </button>
-    <section class="about d-flex justify-content-center py-3">
-      <div class="text-center">{{ 'Version' | translate }}: {{ version }}</div>
-    </section>
-    <button
-      type="button"
-      (click)="open(delete)"
-      class="btn btn-settings justify-content-center"
-    >
-      {{ 'Delete account' | translate }}
-    </button>
   </div>
 </ion-content>
 
@@ -89,14 +82,5 @@
     (confirm)="confirmLogout()"
     (decline)="decline()"
     [title]="'Are you sure you want to log out from your account?' | translate"
-  ></app-alert>
-</ng-template>
-
-<ng-template #delete>
-  <app-alert
-    (confirm)="confirmRemove()"
-    (decline)="decline()"
-    [confirmLoading]="loadingRemove"
-    [title]="'Are you sure you want delete your account?' | translate"
   ></app-alert>
 </ng-template>

@@ -65,38 +65,6 @@ export class OverviewPage {
     });
   }
 
-  confirmRemove() {
-    this.loadingRemove = true;
-    this.loadingService.lock();
-    this.userSocket.disconnect();
-
-    this.userService.removeUser().subscribe(
-      () => {
-        this.userPush.disconnect();
-
-        this.logout().then(() => {
-          this.alert.hide();
-          this.loadingService.unlock();
-          this.routerNavigation.navigateBack(['/home']);
-          setTimeout(() => {
-            this.toastService.createInformation(
-              _('The account has been successfully deleted'),
-            );
-          }, 1000);
-        });
-      },
-      () => {
-        this.userSocket.connect();
-        this.alert.hide();
-        this.loadingService.unlock();
-        this.toastService.createError(
-          _('A problem occurred while deleting the account'),
-        );
-        this.loadingRemove = false;
-      },
-    );
-  }
-
   decline() {
     this.alert.hide();
   }
