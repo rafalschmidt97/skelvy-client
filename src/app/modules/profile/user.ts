@@ -18,4 +18,5 @@ export interface ProfilePhoto {
 export enum Gender {
   MALE = 'male',
   FEMALE = 'female',
+  OTHER = 'other',
 }

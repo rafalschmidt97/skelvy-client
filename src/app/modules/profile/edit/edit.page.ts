@@ -27,6 +27,10 @@ export class EditPage implements Form, OnSubmit {
       label: _('Female'),
       value: Gender.FEMALE,
     },
+    {
+      label: _('Other'),
+      value: Gender.OTHER,
+    },
   ];
   adultDate = moment()
     .add(-18, 'years')
