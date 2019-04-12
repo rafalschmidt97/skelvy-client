@@ -26,8 +26,9 @@ export class UserSocketService {
   ) {
     this.socket = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'users', {
-        accessTokenFactory: () => {
-          return this.sessionService.getSession();
+        accessTokenFactory: async () => {
+          const auth = await this.sessionService.getSession();
+          return auth.accessToken;
         },
         logger: LogLevel.Error,
       })

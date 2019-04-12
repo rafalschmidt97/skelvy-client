@@ -4,12 +4,12 @@ import { Resolve } from '@angular/router';
 import { UserService } from './user.service';
 import { User } from './user';
 import { catchError, tap } from 'rxjs/operators';
-import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../core/toast/toast.service';
 import { _ } from '../../core/i18n/translate';
 import { UserSocketService } from './user-socket.service';
 import { UserPushService } from './user-push.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,6 @@ import { UserPushService } from './user-push.service';
 export class UserResolver implements Resolve<User> {
   constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly userSocket: UserSocketService,
@@ -30,13 +29,13 @@ export class UserResolver implements Resolve<User> {
         this.userSocket.connect();
         this.userPush.connect();
       }),
-      catchError(error => {
-        this.authService.logout().then(() => {
+      catchError((error: HttpErrorResponse) => {
+        if (error.status !== 401) {
           this.routerNavigation.navigateBack(['/home']);
           this.toastService.createError(
             _('A problem occurred while finding the user'),
           );
-        });
+        }
 
         return throwError(error);
       }),

@@ -14,11 +14,11 @@ export class SessionService {
     return session !== null;
   }
 
-  getSession(): Promise<string> {
+  getSession(): Promise<any> {
     return this.storage.get(SessionService.SESSION_STORAGE_KEY);
   }
 
-  async createSession(token: string) {
+  async createSession(token: any) {
     await this.storage.set(SessionService.SESSION_STORAGE_KEY, token);
   }
 

@@ -38,10 +38,25 @@ export class AuthInterceptor implements HttpInterceptor {
               error.status === 401 &&
               this.router.url !== '/home/sign-in'
             ) {
-              this.authService.logout().then(() => {
-                this.routerNavigation.navigateBack(['/home/sign-in']);
-                this.toastService.createError(_('The session has expired'));
-              });
+              if (
+                error.error &&
+                error.error.message === 'Refresh Token has expired'
+              ) {
+                this.authService.logoutWithoutRequest().then(() => {
+                  this.routerNavigation.navigateBack(['/home/sign-in']);
+                  this.toastService.createError(_('The session has expired'));
+                });
+              } else {
+                return this.authService.refreshToken().pipe(
+                  switchMap(() => {
+                    return from(this.addAuthHeader(rawRequest)).pipe(
+                      switchMap(refreshedBearerRequest => {
+                        return next.handle(refreshedBearerRequest);
+                      }),
+                    );
+                  }),
+                );
+              }
             }
 
             return throwError(error);
@@ -59,7 +74,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (session) {
       return (request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${session}`,
+          Authorization: `Bearer ${session.accessToken}`,
         },
       }));
     }
