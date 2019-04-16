@@ -129,7 +129,9 @@ You will need Node.js version 10.15.0+.
 $ npm i # (or yarn install)
 ```
 
-2. In order to prepare your environment run `prepare.sh` shell script:
+2. Fill keys (marked as REPLACE_WITH_SECRET) in config.xml and package.json
+
+3. In order to prepare your environment run `prepare.sh` shell script:
 
 ```bash
 $ sh scripts/prepare.sh // TODO: script is not ready yet
@@ -140,9 +142,14 @@ $ sh scripts/prepare.sh // TODO: script is not ready yet
 ```bash
 # run server
 $ npm start
+$ npm run ios
+$ npm run android
 
 # run linter
 $ npm run lint
+
+# translate texts
+$ npm run translate
 
 # build for ios
 $ npm run ios:build
