@@ -11,7 +11,7 @@
         <div class="font-weight-bold">{{ 'Date' | translate }}</div>
         <div>{{ meeting.date | date: 'dd.MM.yyyy' }}</div>
       </div>
-      <div *ngIf="!loadingLocation; else loading" class="py-2 w-50">
+      <div *ngIf="!loadingLocation && location; else loading" class="py-2 w-50">
         <div class="font-weight-bold">{{ 'City' | translate }}</div>
         <div>{{ location.city }}</div>
       </div>
