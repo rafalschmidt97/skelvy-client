@@ -10,6 +10,7 @@ import { UserPushService } from './user-push.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SelfModel } from './self';
 import { SelfService } from './self.service';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,7 @@ import { SelfService } from './self.service';
 export class SelfResolver implements Resolve<SelfModel> {
   constructor(
     private readonly selfService: SelfService,
+    private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly userSocket: UserSocketService,
@@ -30,11 +32,14 @@ export class SelfResolver implements Resolve<SelfModel> {
         this.userPush.connect();
       }),
       catchError((error: HttpErrorResponse) => {
+        console.log(error);
         if (error.status !== 401) {
-          this.routerNavigation.navigateBack(['/home']);
-          this.toastService.createError(
-            _('A problem occurred while finding the user'),
-          );
+          this.authService.logoutWithoutRequest().then(() => {
+            this.routerNavigation.navigateBack(['/home']);
+            this.toastService.createError(
+              _('A problem occurred while finding the user'),
+            );
+          });
         }
 
         return throwError(error);
