@@ -1,4 +1,12 @@
 import { Profile } from '../profile/user';
+import { ChatMessage } from '../chat/chat';
+
+export interface MeetingDto {
+  status: MeetingStatus;
+  meeting: Meeting;
+  meetingMessages: ChatMessage[];
+  request: MeetingRequest;
+}
 
 export interface MeetingModel {
   status: MeetingStatus;

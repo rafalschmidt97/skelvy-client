@@ -5,7 +5,6 @@ import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
 import { Router } from '@angular/router';
 import { ChatStoreService } from '../chat/chat-store.service';
-import * as moment from 'moment';
 import { Storage } from '@ionic/storage';
 import { MeetingStoreService } from './meeting-store.service';
 import { MeetingService } from './meeting.service';
@@ -44,13 +43,6 @@ export class MeetingSocketService {
     this.onMeetingExpired();
   }
 
-  initialize() {
-    if (this.meetingStore.data && this.meetingStore.data.meeting) {
-      this.initializeChatStore();
-      this.getLatestMessages();
-    }
-  }
-
   sendMessage(message: any) {
     this.userSocket.invoke('SendMessage', message).catch(() => {
       this.toastService.createError(
@@ -62,10 +54,7 @@ export class MeetingSocketService {
   loadMessages(page?: number) {
     this.chatService.findMessages(page).subscribe(
       (messages: ChatMessage[]) => {
-        const mergedMessages = messages.concat(this.chatStore.data.messages);
-        mergedMessages.sort((a, b) => {
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        });
+        const mergedMessages = [...messages, ...this.chatStore.data.messages];
         this.chatStore.setMessages(mergedMessages);
 
         if (this.router.url !== '/app/chat') {
@@ -126,8 +115,6 @@ export class MeetingSocketService {
       this.meetingService.findMeeting().subscribe(
         () => {
           this.toastService.createInformation(_('New meeting has been found'));
-          this.initializeChatStore();
-          this.getLatestMessages();
         },
         () => {
           this.toastService.createError(
@@ -189,18 +176,6 @@ export class MeetingSocketService {
           this.clearChat();
         }, 1000);
       }
-    });
-  }
-
-  private getLatestMessages() {
-    this.loadMessages();
-  }
-
-  private initializeChatStore() {
-    this.chatStore.set({
-      messagesToRead: 0,
-      page: 1,
-      messages: [],
     });
   }
 
