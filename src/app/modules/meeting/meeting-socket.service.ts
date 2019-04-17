@@ -9,7 +9,6 @@ import { Storage } from '@ionic/storage';
 import { MeetingStoreService } from './meeting-store.service';
 import { MeetingService } from './meeting.service';
 import { HubConnection } from '@aspnet/signalr';
-import { ChatService } from '../chat/chat.service';
 import { NavController } from '@ionic/angular';
 
 @Injectable({
@@ -26,7 +25,6 @@ export class MeetingSocketService {
     private readonly chatStore: ChatStoreService,
     private readonly meetingStore: MeetingStoreService,
     private readonly meetingService: MeetingService,
-    private readonly chatService: ChatService,
     private readonly storage: Storage,
   ) {}
 
@@ -49,36 +47,6 @@ export class MeetingSocketService {
         _('A problem occurred while sending the message'),
       );
     });
-  }
-
-  loadMessages(page?: number) {
-    this.chatService.findMessages(page).subscribe(
-      (messages: ChatMessage[]) => {
-        const mergedMessages = [...messages, ...this.chatStore.data.messages];
-        this.chatStore.setMessages(mergedMessages);
-
-        if (this.router.url !== '/app/chat') {
-          this.storage.get('lastMessageDate').then((date: Date) => {
-            const notRedMessages = mergedMessages.filter(message => {
-              return new Date(message.date) > new Date(date);
-            });
-            this.chatStore.setToRead(notRedMessages.length);
-          });
-        } else {
-          if (mergedMessages.length > 0) {
-            this.storage.set(
-              'lastMessageDate',
-              mergedMessages[mergedMessages.length - 1].date,
-            );
-          }
-        }
-      },
-      () => {
-        this.toastService.createError(
-          _('A problem occurred while loading messages'),
-        );
-      },
-    );
   }
 
   private onUserSentMeetingChatMessage() {

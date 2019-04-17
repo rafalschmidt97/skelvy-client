@@ -6,7 +6,6 @@ import { MeetingModel } from '../../meeting/meeting';
 import { UserStoreService } from '../../profile/user-store.service';
 import { User } from '../../profile/user';
 import { ChatStoreService } from '../chat-store.service';
-import * as moment from 'moment';
 import { MeetingSocketService } from '../../meeting/meeting-socket.service';
 
 @Component({
@@ -31,11 +30,5 @@ export class OverviewPage {
 
   sendMessage(message) {
     this.meetingSocket.sendMessage(message);
-  }
-
-  loadOlderMessages() {
-    const nextPage = this.chatStore.data.page + 1;
-    this.chatStore.setPage(nextPage);
-    this.meetingSocket.loadMessages(nextPage);
   }
 }
