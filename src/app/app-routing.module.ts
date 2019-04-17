@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/auth/auth.guard';
-import { UserResolver } from './modules/profile/user.resolver';
-import { MeetingResolver } from './modules/meeting/meeting.resolver';
+import { SelfResolver } from './modules/profile/self.resolver';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -14,8 +13,7 @@ const routes: Routes = [
     path: 'app',
     canActivate: [AuthGuard],
     resolve: {
-      user: UserResolver,
-      meeting: MeetingResolver,
+      self: SelfResolver,
     },
     children: [
       {

@@ -85,9 +85,7 @@ export class UserSocketService {
   private connectToSocket() {
     this.socket
       .start()
-      .then(() => {
-        this.meetingSocket.initialize();
-      })
+      .then(() => {})
       .catch(() => {
         this.toastService.createError(
           _('A problem occurred while connecting to the server'),

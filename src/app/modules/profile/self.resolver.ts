@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { Resolve } from '@angular/router';
-import { UserService } from './user.service';
-import { User } from './user';
 import { catchError, tap } from 'rxjs/operators';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../core/toast/toast.service';
@@ -10,21 +8,23 @@ import { _ } from '../../core/i18n/translate';
 import { UserSocketService } from './user-socket.service';
 import { UserPushService } from './user-push.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SelfModel } from './self';
+import { SelfService } from './self.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserResolver implements Resolve<User> {
+export class SelfResolver implements Resolve<SelfModel> {
   constructor(
-    private readonly userService: UserService,
+    private readonly selfService: SelfService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly userSocket: UserSocketService,
     private readonly userPush: UserPushService,
   ) {}
 
-  resolve(): Observable<User> {
-    return this.userService.findUser().pipe(
+  resolve(): Observable<SelfModel> {
+    return this.selfService.findSelf().pipe(
       tap(() => {
         this.userSocket.connect();
         this.userPush.connect();
