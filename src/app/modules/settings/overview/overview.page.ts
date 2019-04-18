@@ -20,6 +20,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 export class OverviewPage {
   alert: Alert;
   version: string;
+  loadingLogout: boolean;
 
   constructor(
     private readonly alertService: AlertService,
@@ -40,6 +41,7 @@ export class OverviewPage {
   }
 
   confirmLogout() {
+    this.loadingLogout = true;
     this.userSocket.disconnect();
     this.userPush.disconnect();
 

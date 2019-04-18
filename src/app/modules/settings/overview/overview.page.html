@@ -80,6 +80,7 @@
 <ng-template #logout>
   <app-alert
     (confirm)="confirmLogout()"
+    [confirmLoading]="loadingLogout"
     (decline)="decline()"
     [title]="'Are you sure you want to log out from your account?' | translate"
   ></app-alert>
