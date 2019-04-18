@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/auth/auth.guard';
-import { SelfResolver } from './modules/profile/self.resolver';
+import { SelfResolver } from './modules/user/self.resolver';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -21,8 +21,8 @@ const routes: Routes = [
         loadChildren: './modules/tabs/tabs.module#TabsModule',
       },
       {
-        path: 'profile',
-        loadChildren: './modules/profile/profile.module#ProfileModule',
+        path: 'user',
+        loadChildren: './modules/user/user.module#UserModule',
       },
       {
         path: 'meeting',
@@ -36,7 +36,7 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: './modules/settings/settings.module#SettingsModule',
       },
-      { path: '', redirectTo: 'tabs/profile', pathMatch: 'full' },
+      { path: '', redirectTo: 'tabs/user', pathMatch: 'full' },
     ],
   },
 ];

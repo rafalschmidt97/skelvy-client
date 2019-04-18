@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { MeetingRequest } from '../../meeting';
+import { MeetingRequestDto } from '../../meeting';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
 import { MapsService } from '../../../../core/maps/maps.service';
@@ -22,7 +22,7 @@ import { MeetingService } from '../../meeting.service';
   styleUrls: ['./searching.component.scss'],
 })
 export class SearchingComponent implements OnInit {
-  @Input() request: MeetingRequest;
+  @Input() request: MeetingRequestDto;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
   alert: Alert;
   loadingLocation = true;

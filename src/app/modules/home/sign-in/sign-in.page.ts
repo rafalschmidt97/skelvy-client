@@ -8,7 +8,7 @@ import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
-import { UserPushService } from '../../profile/user-push.service';
+import { UserPushService } from '../../user/user-push.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 

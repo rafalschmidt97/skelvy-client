@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { LanguageConstants } from '../../../core/i18n/language.constants';
-import { UserService } from '../../profile/user.service';
+import { UserService } from '../../user/user.service';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { NavController } from '@ionic/angular';

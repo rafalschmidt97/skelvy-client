@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { User } from '../user';
+import { UserDto } from '../user';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { Modal } from '../../../shared/modal/modal';
 import { Observable } from 'rxjs';
@@ -13,7 +13,7 @@ import { UserStoreService } from '../user-store.service';
 export class OverviewPage {
   @ViewChild('details') details: TemplateRef<any>;
   modal: Modal;
-  user$: Observable<User>;
+  user$: Observable<UserDto>;
 
   constructor(
     private readonly userStore: UserStoreService,

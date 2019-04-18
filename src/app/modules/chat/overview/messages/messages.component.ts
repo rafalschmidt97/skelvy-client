@@ -5,9 +5,9 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ChatMessage } from '../../chat';
-import { Meeting, MeetingUser } from '../../../meeting/meeting';
-import { User } from '../../../profile/user';
+import { ChatMessageDto } from '../../chat';
+import { MeetingDto, MeetingUserDto } from '../../../meeting/meeting';
+import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
 import { ChatStoreService } from '../../chat-store.service';
 import { ChatService } from '../../chat.service';
@@ -21,9 +21,9 @@ import { ToastService } from '../../../../core/toast/toast.service';
 })
 export class MessagesComponent implements OnInit {
   @ViewChild('actions') actions: TemplateRef<any>;
-  @Input() messages: ChatMessage[];
-  @Input() meeting: Meeting;
-  @Input() user: User;
+  @Input() messages: ChatMessageDto[];
+  @Input() meeting: MeetingDto;
+  @Input() user: UserDto;
   dateToShow: Date;
   isLoading: boolean;
   hasMoreMessages: boolean;
@@ -41,7 +41,7 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  findUser(userId: number): MeetingUser {
+  findUser(userId: number): MeetingUserDto {
     return this.meeting.users.find(user => user.id === userId);
   }
 
@@ -59,7 +59,7 @@ export class MessagesComponent implements OnInit {
     this.chatStore.setPage(nextPage);
 
     this.chatService.findMessages(nextPage).subscribe(
-      (messages: ChatMessage[]) => {
+      (messages: ChatMessageDto[]) => {
         const mergedMessages = [...messages, ...this.chatStore.data.messages];
         this.chatStore.setMessages(mergedMessages);
 

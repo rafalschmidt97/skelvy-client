@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChatMessage } from '../chat/chat';
+import { ChatMessageDto } from '../chat/chat';
 import { _ } from '../../core/i18n/translate';
 import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
@@ -50,15 +50,18 @@ export class MeetingSocketService {
   }
 
   private onUserSentMeetingChatMessage() {
-    this.userSocket.on('UserSentMeetingChatMessage', (message: ChatMessage) => {
-      this.chatStore.addMessage(message);
+    this.userSocket.on(
+      'UserSentMeetingChatMessage',
+      (message: ChatMessageDto) => {
+        this.chatStore.addMessage(message);
 
-      if (this.router.url !== '/app/chat') {
-        this.chatStore.addToRead(1);
-      } else {
-        this.storage.set('lastMessageDate', message.date);
-      }
-    });
+        if (this.router.url !== '/app/chat') {
+          this.chatStore.addToRead(1);
+        } else {
+          this.storage.set('lastMessageDate', message.date);
+        }
+      },
+    );
   }
 
   private onUserJoinedMeeting() {

@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { StoreService } from '../../shared/store.service';
-import { ChatMessage, ChatModel } from './chat';
+import { ChatMessageDto, ChatModel } from './chat';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatStoreService extends StoreService<ChatModel> {
-  addMessage(message: ChatMessage) {
+  addMessage(message: ChatMessageDto) {
     this.subject.next({
       ...this.subject.getValue(),
       messages: [...this.subject.getValue().messages, message],
     });
   }
 
-  setMessages(messages: ChatMessage[]) {
+  setMessages(messages: ChatMessageDto[]) {
     this.subject.next({
       ...this.subject.getValue(),
       messages: messages,

@@ -1,17 +1,17 @@
-import { Profile } from '../profile/user';
-import { ChatMessage } from '../chat/chat';
+import { ProfileDto } from '../user/user';
+import { ChatMessageDto } from '../chat/chat';
 
-export interface MeetingDto {
+export interface MeetingModelDto {
   status: MeetingStatus;
-  meeting: Meeting;
-  meetingMessages: ChatMessage[];
-  request: MeetingRequest;
+  meeting: MeetingDto;
+  meetingMessages: ChatMessageDto[];
+  request: MeetingRequestDto;
 }
 
 export interface MeetingModel {
   status: MeetingStatus;
-  meeting: Meeting;
-  request: MeetingRequest;
+  meeting: MeetingDto;
+  request: MeetingRequestDto;
 }
 
 export enum MeetingStatus {
@@ -19,16 +19,16 @@ export enum MeetingStatus {
   SEARCHING = 'searching',
 }
 
-export interface Meeting {
+export interface MeetingDto {
   id: number;
   date: Date;
   latitude: number;
   longitude: number;
-  drink: MeetingDrink;
-  users: MeetingUser[];
+  drink: MeetingDrinkDto;
+  users: MeetingUserDto[];
 }
 
-export interface MeetingRequest {
+export interface MeetingRequestDto {
   id?: number;
   minDate: Date;
   maxDate: Date;
@@ -36,15 +36,15 @@ export interface MeetingRequest {
   maxAge: number;
   latitude: number;
   longitude: number;
-  drinks: MeetingDrink[];
+  drinks: MeetingDrinkDto[];
 }
 
-export interface MeetingUser {
+export interface MeetingUserDto {
   id: number;
-  profile: Profile;
+  profile: ProfileDto;
 }
 
-export interface MeetingDrink {
+export interface MeetingDrinkDto {
   id: number;
   name?: string;
 }

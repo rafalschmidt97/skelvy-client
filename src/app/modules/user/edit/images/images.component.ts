@@ -13,7 +13,7 @@ import { Modal } from '../../../../shared/modal/modal';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { base64StringToBlob } from 'blob-util';
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
-import { ProfilePhoto } from '../../user';
+import { ProfilePhotoDto } from '../../user';
 import { get } from 'lodash';
 import { UploadService } from '../../../../core/upload/upload.service';
 import { ToastService } from '../../../../core/toast/toast.service';
@@ -71,7 +71,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     });
 
     this.inputForm.valueChanges.subscribe(items => {
-      const newValue: ProfilePhoto[] = [];
+      const newValue: ProfilePhotoDto[] = [];
       if (items.image1 !== '') {
         newValue.push({ url: items.image1 });
       }

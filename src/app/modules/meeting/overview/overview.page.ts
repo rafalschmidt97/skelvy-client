@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { MeetingModel } from '../meeting';
 import { MeetingStoreService } from '../meeting-store.service';
 import { Observable } from 'rxjs';
-import { UserStoreService } from '../../profile/user-store.service';
-import { User } from '../../profile/user';
+import { UserStoreService } from '../../user/user-store.service';
+import { UserDto } from '../../user/user';
 import { MeetingService } from '../meeting.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { MeetingService } from '../meeting.service';
 })
 export class OverviewPage {
   meeting$: Observable<MeetingModel>;
-  user$: Observable<User>;
+  user$: Observable<UserDto>;
 
   constructor(
     private readonly meetingStore: MeetingStoreService,

@@ -3,8 +3,8 @@ import { ChatModel } from '../chat';
 import { MeetingStoreService } from '../../meeting/meeting-store.service';
 import { Observable } from 'rxjs';
 import { MeetingModel } from '../../meeting/meeting';
-import { UserStoreService } from '../../profile/user-store.service';
-import { User } from '../../profile/user';
+import { UserStoreService } from '../../user/user-store.service';
+import { UserDto } from '../../user/user';
 import { ChatStoreService } from '../chat-store.service';
 import { MeetingSocketService } from '../../meeting/meeting-socket.service';
 
@@ -15,7 +15,7 @@ import { MeetingSocketService } from '../../meeting/meeting-socket.service';
 export class OverviewPage {
   chat$: Observable<ChatModel>;
   meeting$: Observable<MeetingModel>;
-  user$: Observable<User>;
+  user$: Observable<UserDto>;
 
   constructor(
     private readonly meetingStore: MeetingStoreService,

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Profile } from '../../user';
+import { ProfileDto } from '../../user';
 
 @Component({
   selector: 'app-details',
@@ -7,5 +7,5 @@ import { Profile } from '../../user';
   styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent {
-  @Input() profile: Profile;
+  @Input() profile: ProfileDto;
 }

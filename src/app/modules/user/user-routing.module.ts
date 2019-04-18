@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/app/tabs/profile', pathMatch: 'full' },
+  { path: '', redirectTo: '/app/tabs/user', pathMatch: 'full' },
   {
     path: 'edit',
     loadChildren: './edit/edit-profile.module#EditProfilePageModule',
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ProfileRoutingModule {}
+export class UserRoutingModule {}

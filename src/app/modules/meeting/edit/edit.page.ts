@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { Checkbox } from '../../../shared/form/checkbox/checkbox';
 import { RangeComponent } from '../../../shared/form/range/range.component';
 import { MeetingService } from '../meeting.service';
-import { MeetingDrink, MeetingRequest } from '../meeting';
+import { MeetingDrinkDto, MeetingRequestDto } from '../meeting';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting-socket.service';
@@ -54,7 +54,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
 
   ngOnInit() {
     this.meetingService.findDrinks().subscribe(
-      (drinks: MeetingDrink[]) => {
+      (drinks: MeetingDrinkDto[]) => {
         this.drinks = drinks.map(drink => {
           return {
             label: drink.name,
@@ -81,7 +81,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
     if (this.form.valid && !this.isLoading && !this.loadingDrinks) {
       this.isLoading = true;
       const form = this.form.value;
-      const request: MeetingRequest = {
+      const request: MeetingRequestDto = {
         minDate: form.date[0],
         maxDate: form.date[1] || form.date[0],
         minAge: form.age[0],

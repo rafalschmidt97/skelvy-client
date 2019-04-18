@@ -7,8 +7,8 @@ import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
-import { UserSocketService } from '../../profile/user-socket.service';
-import { UserPushService } from '../../profile/user-push.service';
+import { UserSocketService } from '../../user/user-socket.service';
+import { UserPushService } from '../../user/user-push.service';
 import { Device } from '@ionic-native/device/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 

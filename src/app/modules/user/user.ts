@@ -1,17 +1,17 @@
-export interface User {
+export interface UserDto {
   id: number;
-  profile: Profile;
+  profile: ProfileDto;
 }
 
-export interface Profile {
+export interface ProfileDto {
   name: string;
   birthday: Date;
   gender: Gender;
-  photos: ProfilePhoto[];
+  photos: ProfilePhotoDto[];
   description: string;
 }
 
-export interface ProfilePhoto {
+export interface ProfilePhotoDto {
   url: string;
 }
 

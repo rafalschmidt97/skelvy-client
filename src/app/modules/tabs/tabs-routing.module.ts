@@ -8,8 +8,8 @@ const routes: Routes = [
     component: TabsComponent,
     children: [
       {
-        path: 'profile',
-        loadChildren: '../profile/overview/overview.module#OverviewPageModule',
+        path: 'user',
+        loadChildren: '../user/overview/overview.module#OverviewPageModule',
       },
       {
         path: 'meeting',

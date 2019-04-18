@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserStoreService } from './user-store.service';
 import { Observable } from 'rxjs';
-import { Profile, User } from './user';
+import { ProfileDto, UserDto } from './user';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
@@ -15,8 +15,8 @@ export class UserService {
     private readonly userStore: UserStoreService,
   ) {}
 
-  findUser(): Observable<User> {
-    return this.http.get<User>(environment.apiUrl + 'users/self').pipe(
+  findUser(): Observable<UserDto> {
+    return this.http.get<UserDto>(environment.apiUrl + 'users/self').pipe(
       tap(user => {
         this.userStore.set(user);
       }),
@@ -29,7 +29,7 @@ export class UserService {
     });
   }
 
-  updateProfile(profile: Profile): Observable<void> {
+  updateProfile(profile: ProfileDto): Observable<void> {
     return this.http
       .put<void>(environment.apiUrl + 'users/self/profile', profile)
       .pipe(

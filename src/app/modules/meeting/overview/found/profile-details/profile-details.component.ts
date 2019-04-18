@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { _ } from '../../../../../core/i18n/translate';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { ToastService } from '../../../../../core/toast/toast.service';
-import { MeetingUser } from '../../../meeting';
+import { MeetingUserDto } from '../../../meeting';
 
 @Component({
   selector: 'app-profile-details',
@@ -10,7 +10,7 @@ import { MeetingUser } from '../../../meeting';
   styleUrls: ['./profile-details.component.scss'],
 })
 export class ProfileDetailsComponent {
-  @Input() user: MeetingUser;
+  @Input() user: MeetingUserDto;
 
   constructor(
     private readonly emailComposer: EmailComposer,

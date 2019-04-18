@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Form, OnSubmit } from '../../../shared/form/form';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Storage } from '@ionic/storage';
-import { UserPushService } from '../../profile/user-push.service';
+import { UserPushService } from '../../user/user-push.service';
 import { NavController, Platform } from '@ionic/angular';
-import { UserStoreService } from '../../profile/user-store.service';
+import { UserStoreService } from '../../user/user-store.service';
 
 @Component({
   selector: 'app-notifications',

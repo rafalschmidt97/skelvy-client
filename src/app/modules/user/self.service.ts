@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserStoreService } from './user-store.service';
 import { Observable } from 'rxjs';
-import { Profile, User } from './user';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { SelfModel } from './self';
+import { SelfModelDto } from './self';
 import { MeetingStoreService } from '../meeting/meeting-store.service';
 import { ChatStoreService } from '../chat/chat-store.service';
-import { ChatMessage, ChatModel } from '../chat/chat';
+import { ChatMessageDto } from '../chat/chat';
 import { Storage } from '@ionic/storage';
 
 @Injectable({
@@ -23,8 +22,8 @@ export class SelfService {
     private readonly storage: Storage,
   ) {}
 
-  findSelf(): Observable<SelfModel> {
-    return this.http.get<SelfModel>(environment.apiUrl + 'self').pipe(
+  findSelf(): Observable<SelfModelDto> {
+    return this.http.get<SelfModelDto>(environment.apiUrl + 'self').pipe(
       tap(async model => {
         this.userStore.set(model.user);
 
@@ -47,7 +46,7 @@ export class SelfService {
     );
   }
 
-  private async initializedChatModel(messages: ChatMessage[]) {
+  private async initializedChatModel(messages: ChatMessageDto[]) {
     const lastMessageDate = await this.storage.get('lastMessageDate');
     const notRedMessages = messages.filter(message => {
       return new Date(message.date) > new Date(lastMessageDate);

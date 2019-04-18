@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ChatMessage } from '../../../chat';
+import { ChatMessageDto } from '../../../chat';
 
 @Component({
   selector: 'app-message-anonymous',
@@ -7,7 +7,7 @@ import { ChatMessage } from '../../../chat';
   styleUrls: ['./message-anonymous.component.scss'],
 })
 export class MessageAnonymousComponent {
-  @Input() message: ChatMessage;
+  @Input() message: ChatMessageDto;
   @Input() isLast: boolean;
   @Input() isFirst: boolean;
   @Input() dateToShow: Date;

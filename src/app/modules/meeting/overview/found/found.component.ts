@@ -5,9 +5,9 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Meeting, MeetingUser } from '../../meeting';
+import { MeetingDto, MeetingUserDto } from '../../meeting';
 import { ModalService } from '../../../../shared/modal/modal.service';
-import { Profile, User } from '../../../profile/user';
+import { UserDto } from '../../../user/user';
 import { Modal } from '../../../../shared/modal/modal';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
@@ -28,11 +28,11 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./found.component.scss'],
 })
 export class FoundComponent implements OnInit {
-  @Input() meeting: Meeting;
-  @Input() user: User;
+  @Input() meeting: MeetingDto;
+  @Input() user: UserDto;
   @ViewChild('details') detailsTemplate: TemplateRef<any>;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
-  userForModal: MeetingUser;
+  userForModal: MeetingUserDto;
   modal: Modal;
   alert: Alert;
   loadingLocation = true;
@@ -53,7 +53,7 @@ export class FoundComponent implements OnInit {
     private readonly storage: Storage,
   ) {}
 
-  get filteredMeetingUsers(): MeetingUser[] {
+  get filteredMeetingUsers(): MeetingUserDto[] {
     return this.meeting.users.filter(user => user.id !== this.user.id);
   }
 
@@ -101,7 +101,7 @@ export class FoundComponent implements OnInit {
     });
   }
 
-  openDetails(user: MeetingUser) {
+  openDetails(user: MeetingUserDto) {
     this.userForModal = user;
     this.modal = this.modalService.show(this.detailsTemplate, true);
   }

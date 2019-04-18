@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { MeetingStoreService } from './meeting-store.service';
-import { MeetingDrink, MeetingDto, MeetingRequest } from './meeting';
+import { MeetingDrinkDto, MeetingModelDto, MeetingRequestDto } from './meeting';
 import { ChatStoreService } from '../chat/chat-store.service';
 import { Storage } from '@ionic/storage';
-import { ChatMessage } from '../chat/chat';
+import { ChatMessageDto } from '../chat/chat';
 
 @Injectable({
   providedIn: 'root',
@@ -20,24 +20,26 @@ export class MeetingService {
     private readonly storage: Storage,
   ) {}
 
-  findMeeting(): Observable<MeetingDto> {
-    return this.http.get<MeetingDto>(environment.apiUrl + 'meetings/self').pipe(
-      tap(async model => {
-        this.meetingStore.set({
-          status: model.status,
-          meeting: model.meeting,
-          request: model.request,
-        });
+  findMeeting(): Observable<MeetingModelDto> {
+    return this.http
+      .get<MeetingModelDto>(environment.apiUrl + 'meetings/self')
+      .pipe(
+        tap(async model => {
+          this.meetingStore.set({
+            status: model.status,
+            meeting: model.meeting,
+            request: model.request,
+          });
 
-        if (model.meetingMessages) {
-          const chatModel = await this.initializedChatModel(
-            model.meetingMessages,
-          );
+          if (model.meetingMessages) {
+            const chatModel = await this.initializedChatModel(
+              model.meetingMessages,
+            );
 
-          this.chatStore.set(chatModel);
-        }
-      }),
-    );
+            this.chatStore.set(chatModel);
+          }
+        }),
+      );
   }
 
   leaveMeeting(): Observable<void> {
@@ -50,7 +52,7 @@ export class MeetingService {
     );
   }
 
-  createMeetingRequest(request: MeetingRequest): Observable<void> {
+  createMeetingRequest(request: MeetingRequestDto): Observable<void> {
     return this.http.post<void>(
       environment.apiUrl + 'users/self/request',
       request,
@@ -67,11 +69,11 @@ export class MeetingService {
       );
   }
 
-  findDrinks(): Observable<MeetingDrink[]> {
-    return this.http.get<MeetingDrink[]>(environment.apiUrl + 'drinks');
+  findDrinks(): Observable<MeetingDrinkDto[]> {
+    return this.http.get<MeetingDrinkDto[]>(environment.apiUrl + 'drinks');
   }
 
-  private async initializedChatModel(messages: ChatMessage[]) {
+  private async initializedChatModel(messages: ChatMessageDto[]) {
     const lastMessageDate = await this.storage.get('lastMessageDate');
     const notRedMessages = messages.filter(message => {
       return new Date(message.date) > new Date(lastMessageDate);
