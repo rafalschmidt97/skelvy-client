@@ -12,12 +12,14 @@
       *ngIf="hasConfirm"
       (click)="confirm.emit()"
     >
-      <ng-container *ngIf="!confirmLoading">
+      <ng-container *ngIf="!confirmLoading; else loading">
         {{ confirmText || 'Confirm' | translate }}
       </ng-container>
-      <ng-container *ngIf="confirmLoading">
-        <ion-spinner class="align-middle"></ion-spinner>
-      </ng-container>
+      <ng-template #loading>
+        <ng-container *ngIf="confirmLoading">
+          <ion-spinner class="align-middle"></ion-spinner>
+        </ng-container>
+      </ng-template>
     </button>
     <button
       type="button"
