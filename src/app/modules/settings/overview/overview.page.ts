@@ -43,13 +43,26 @@ export class OverviewPage {
     this.userSocket.disconnect();
     this.userPush.disconnect();
 
-    this.authService.logout().subscribe(() => {
-      this.alert.hide();
-      this.routerNavigation.navigateBack(['/home']);
-      setTimeout(() => {
-        this.toastService.createInformation(_('Successfully logged out'));
-      }, 1000);
-    });
+    this.authService.logout().subscribe(
+      () => {
+        this.alert.hide();
+        this.routerNavigation.navigateBack(['/home']);
+        setTimeout(() => {
+          this.toastService.createInformation(_('Successfully logged out'));
+        }, 1000);
+      },
+      () => {
+        this.authService.logoutWithoutRequest().then(() => {
+          this.alert.hide();
+          this.routerNavigation.navigateBack(['/home']);
+          setTimeout(() => {
+            this.toastService.createInformation(
+              _('A problem occurred while logging out'),
+            );
+          }, 1000);
+        });
+      },
+    );
   }
 
   decline() {

@@ -8,6 +8,7 @@
 	"A problem occurred while finding the user": "Wystąpił problem podczas wyszukiwania użytkownika",
 	"A problem occurred while leaving the meeting": "Wystąpił problem podczas opuszczania spotkania",
 	"A problem occurred while loading messages": "Wystąpił problem podczas pobierania wiadomości",
+	"A problem occurred while logging out": "Wystąpił problem podczas wylogowywania się",
 	"A problem occurred while reconnecting to the server": "Wystąpił problem podczas ponownego łączenia się z serwerem",
 	"A problem occurred while registering the device": "Wystąpił problem podczas rejestracji urządzenia",
 	"A problem occurred while removing push notification topic": "Wystąpił problem podczas usuwania tematu powiadomień push",
