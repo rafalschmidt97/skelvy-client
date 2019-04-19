@@ -20,7 +20,6 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private readonly sessionService: SessionService,
     private readonly authService: AuthService,
-    private readonly router: Router,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
   ) {}
@@ -33,14 +32,10 @@ export class AuthInterceptor implements HttpInterceptor {
       switchMap(bearerRequest => {
         return next.handle(bearerRequest).pipe(
           catchError(error => {
-            if (
-              error instanceof HttpErrorResponse &&
-              error.status === 401 &&
-              this.router.url !== '/home/sign-in'
-            ) {
+            if (error instanceof HttpErrorResponse && error.status === 401) {
               if (
-                error.error &&
-                error.error.message === 'Refresh Token has expired'
+                bearerRequest.url.includes('auth') ||
+                bearerRequest.url.includes('refresh')
               ) {
                 this.authService.logoutWithoutRequest().then(() => {
                   this.routerNavigation.navigateBack(['/home/sign-in']);
