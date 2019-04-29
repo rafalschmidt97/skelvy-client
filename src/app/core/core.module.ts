@@ -1,9 +1,9 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import { AuthModule } from './auth/auth.module';
+import { HttpInterceptorsModule } from './http/http-interceptors.module';
 
 @NgModule({
-  imports: [AuthModule],
+  imports: [HttpInterceptorsModule],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

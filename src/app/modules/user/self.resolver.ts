@@ -32,7 +32,6 @@ export class SelfResolver implements Resolve<SelfModelDto> {
         this.userPush.connect();
       }),
       catchError((error: HttpErrorResponse) => {
-        console.log(error);
         if (error.status !== 401) {
           this.authService.logoutWithoutRequest().then(() => {
             this.routerNavigation.navigateBack(['/home']);

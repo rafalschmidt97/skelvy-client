@@ -9,8 +9,8 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, switchMap } from 'rxjs/operators';
-import { AuthService } from './auth.service';
-import { SessionService } from './session.service';
+import { AuthService } from '../auth/auth.service';
+import { SessionService } from '../auth/session.service';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../toast/toast.service';
 import { _ } from '../i18n/translate';
