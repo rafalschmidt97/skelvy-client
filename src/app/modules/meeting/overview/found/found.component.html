@@ -37,7 +37,12 @@
     <div class="container py-2">
       <button (click)="showMessages()" class="btn btn-primary btn-block">
         {{ 'Group chat' | translate }}
-        <span *ngIf="messagesToRead > 0">({{ messagesToRead }})</span>
+        <span
+          *ngIf="messagesToRead > 0"
+          [innerHTML]="
+            messagesToRead < 20 ? '(' + messagesToRead + ')' : '(20+)'
+          "
+        ></span>
         <ion-icon
           name="chatbubbles"
           class="ml-1 chat-icon align-middle"

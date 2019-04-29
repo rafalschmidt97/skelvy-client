@@ -9,7 +9,7 @@
       <ion-label>{{ 'Meeting' | translate }}</ion-label>
       <ion-badge
         *ngIf="messagesToRead > 0"
-        [innerHTML]="messagesToRead"
+        [innerHTML]="messagesToRead < 20 ? messagesToRead : '20+'"
       ></ion-badge>
     </ion-tab-button>
     <ion-tab-button tab="settings">
