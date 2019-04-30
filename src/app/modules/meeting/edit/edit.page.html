@@ -21,6 +21,12 @@
 
 <ion-content>
   <div class="container py-3">
+    <div class="guidelines pb-3 mb-3">
+      {{
+        'By choosing more drinks and wider range of age and date, you increase your chances of finding quicker new meetings!'
+          | translate
+      }}
+    </div>
     <app-form [form]="form" (onSubmit)="onSubmit()" [isLoading]="isLoading">
       <app-calendar
         name="date"

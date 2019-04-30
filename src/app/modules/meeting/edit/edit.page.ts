@@ -14,6 +14,7 @@ import { MeetingSocketService } from '../meeting-socket.service';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.page.html',
+  styleUrls: ['./edit.page.scss'],
 })
 export class EditPage implements Form, OnSubmit, OnInit {
   form: FormGroup;
