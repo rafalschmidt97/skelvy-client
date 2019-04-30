@@ -62,7 +62,7 @@ export class UserPushService {
 
   connect() {
     this.storage.get('pushTopicUser').then((exists: boolean) => {
-      if (exists == null) {
+      if (!exists) {
         this.addTopic('user-' + this.getUserId(), 'pushTopicUser');
       }
     });

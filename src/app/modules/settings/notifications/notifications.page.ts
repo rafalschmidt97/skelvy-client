@@ -19,7 +19,6 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
   initializedAll: string;
   initializedPlatform: string;
   initializedUser: string;
-  permissionDenied: boolean;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -54,7 +53,7 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid && !this.isLoading && !this.permissionDenied) {
+    if (this.form.valid && !this.isLoading) {
       this.isLoading = true;
       const form = this.form.value;
 
