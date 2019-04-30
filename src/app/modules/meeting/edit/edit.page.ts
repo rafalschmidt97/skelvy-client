@@ -10,6 +10,7 @@ import { MeetingDrinkDto, MeetingRequestDto } from '../meeting';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting-socket.service';
+import { UserStoreService } from '../../user/user-store.service';
 
 @Component({
   selector: 'app-edit',
@@ -44,6 +45,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
     private readonly meetingSocket: MeetingSocketService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
+    private readonly userStore: UserStoreService,
   ) {
     this.form = this.formBuilder.group({
       date: [[this.today, this.tomorrow], Validators.required],
@@ -64,7 +66,11 @@ export class EditPage implements Form, OnSubmit, OnInit {
         });
 
         this.form.patchValue({
-          drinks: [this.drinks[0].value],
+          drinks: [
+            this.drinks[1].value,
+            this.drinks[2].value,
+            this.drinks[3].value,
+          ],
         });
 
         this.loadingDrinks = false;
@@ -76,6 +82,23 @@ export class EditPage implements Form, OnSubmit, OnInit {
         );
       },
     );
+
+    const userAge = moment().diff(
+      this.userStore.data.profile.birthday,
+      'years',
+    );
+
+    if (userAge >= 21 && userAge < 52) {
+      this.form.patchValue({
+        age: [userAge - 3, userAge + 3],
+      });
+    } else {
+      if (userAge > 52) {
+        this.form.patchValue({
+          age: [45, 55],
+        });
+      }
+    }
   }
 
   onSubmit() {
