@@ -48,7 +48,7 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
 
     this.search$
       .pipe(
-        debounceTime(1000),
+        debounceTime(3000),
         distinctUntilChanged(),
         switchMap((text: string) => {
           if (text.trim().length > 0) {
