@@ -8,7 +8,7 @@ import { _ } from '../i18n/translate';
 })
 export class ToastService {
   static readonly TOAST_POSITION = 'top';
-  static readonly TOAST_DURATION = 4000;
+  static readonly TOAST_DURATION = 5000;
 
   constructor(
     private readonly translateService: TranslateService,
@@ -30,16 +30,17 @@ export class ToastService {
     }
 
     if (showCloseButton) {
-      const translatedDone = await this.translateService
-        .get(_('Done'))
-        .toPromise();
-
       toast = await this.toastController.create({
         message: message,
-        showCloseButton: true,
         color: color,
         duration: duration,
-        closeButtonText: translatedDone,
+        buttons: [
+          {
+            side: 'end',
+            icon: 'close',
+            role: 'cancel',
+          },
+        ],
         position: position,
       });
     } else {
