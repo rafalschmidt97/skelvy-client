@@ -7,7 +7,7 @@ import * as npm from '../../package.json';
 export const environment = {
   production: false,
   version: npm.version,
-  apiUrl: 'http://rafalschmidt.local:5000/api/',
+  apiUrl: 'http://localhost:5000/',
 };
 
 /*
