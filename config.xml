@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.skelvy" version="0.0.2" android-versionCode="1" ios-CFBundleVersion="1"
-        xmlns="http://www.w3.org/ns/widgets" xmlns:android="schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="1" id="com.skelvy" ios-CFBundleVersion="1" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:android="schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Skelvy</name>
-    <description>Mobile app for meetings over beer or coffee</description>
+    <description>Mobile app for meetings over your favorite drinks.</description>
     <author email="rafalschmidt97@gmail.com" href="https://rafalschmidt.com/">Rafał Schmidt</author>
     <content src="index.html" />
     <access origin="*" />
