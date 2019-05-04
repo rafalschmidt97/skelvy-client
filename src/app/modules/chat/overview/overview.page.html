@@ -12,8 +12,8 @@
 
 <ion-content [scrollY]="false">
   <div class="d-flex flex-column h-100 safe-area-b">
-    <ng-container *ngIf="(meeting$ | async) as meetingModel">
-      <ng-container *ngIf="(chat$ | async) as chatModel">
+    <ng-container *ngIf="meeting$ | async as meetingModel">
+      <ng-container *ngIf="chat$ | async as chatModel">
         <app-messages
           *ngIf="chatModel.messages?.length > 0; else empty"
           [messages]="chatModel.messages"

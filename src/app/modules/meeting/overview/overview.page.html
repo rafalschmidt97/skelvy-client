@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <ng-container *ngIf="(meeting$ | async) as model; else notFound">
+  <ng-container *ngIf="meeting$ | async as model; else notFound">
     <ng-container *ngIf="model.meeting; else searching">
       <app-found [meeting]="model.meeting" [user]="user$ | async"></app-found>
     </ng-container>
