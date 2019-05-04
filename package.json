@@ -26,7 +26,7 @@
     "ios": "ionic cordova run ios -l  -- --buildFlag=\"-UseModernBuildSystem=0\"",
     "ios:emulate": "ionic cordova emulate ios -l --target=\"iPhone-X\"  -- --buildFlag=\"-UseModernBuildSystem=0\"",
     "ios:prepare": "ionic cordova prepare ios",
-    "ios:build": "ionic cordova build ios --prod --release",
+    "ios:build": "ionic cordova build ios --prod --release -- --buildFlag=\"-UseModernBuildSystem=0\" --verbose",
     "android": "ionic cordova run android -l",
     "android:emulate": "ionic cordova emulate android -l",
     "android:prepare": "ionic cordova prepare android",
