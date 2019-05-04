@@ -59,7 +59,10 @@
         <allow-intent href="itms-apps:*" />
         <resource-file src="resources/ios/GoogleService-Info.plist" target="GoogleService-Info.plist" />
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-            <string>To suggest address based on location.</string>
+            <string>To suggest addresses based on the location.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
+            <string>To suggest addresses based on the location.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
             <string>To take pictures.</string>
