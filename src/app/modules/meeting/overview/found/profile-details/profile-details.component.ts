@@ -28,7 +28,7 @@ export class ProfileDetailsComponent {
           _(
             `If you have any further problems, don't hesitate to contact us by using our website`,
           ),
-          0,
+          10000,
         );
       });
   }
