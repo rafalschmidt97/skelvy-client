@@ -13,21 +13,30 @@
 
     <ng-container *ngIf="hasFeedback">
       <div *ngIf="isInvalid && isTouched" class="invalid-feedback">
-        <ng-container *ngIf="hasErrorRequired">
+        <div *ngIf="hasErrorRequired">
           {{ 'The field is required' | translate }}
-        </ng-container>
-        <ng-container *ngIf="hasErrorEmail">
+        </div>
+        <div *ngIf="hasErrorEmail">
           {{ 'Enter a valid email address' | translate }}
-        </ng-container>
-        <ng-container *ngIf="hasErrorEqual">
+        </div>
+        <div *ngIf="hasErrorEqual">
           {{ 'The fields have to be the same' | translate }}
-        </ng-container>
-        <ng-container *ngIf="hasErrorMinLength">
+        </div>
+        <div *ngIf="hasErrorMinLength">
           {{ 'The text is too short' | translate }}
-        </ng-container>
-        <ng-container *ngIf="hasErrorMaxLength">
+        </div>
+        <div *ngIf="hasErrorMaxLength">
           {{ 'The text is too long' | translate }}
-        </ng-container>
+        </div>
+        <div *ngIf="hasErrorMaxEndline">
+          {{ 'The text contains to many end lines' | translate }}
+        </div>
+        <div *ngIf="hasErrorMaxWhiteSpaces">
+          {{ 'The text contains to many white spaces' | translate }}
+        </div>
+        <div *ngIf="hasErrorRegexp">
+          {{ 'The text contains forbidden characters' | translate }}
+        </div>
       </div>
       <div *ngIf="!(isInvalid && isTouched)" class="feedback">
         {{ 'The field is valid' | translate }}

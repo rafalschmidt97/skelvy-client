@@ -63,12 +63,22 @@ export class EditPage implements Form, OnSubmit {
         [
           Validators.required,
           InputComponent.noWhitespaceValidation(),
+          Validators.minLength(3),
           Validators.maxLength(50),
+          InputComponent.regex(/^[\p{L} ]+$/gu),
+          InputComponent.maxWhiteSpaces(5),
         ],
       ],
       birthday: [moment(birthday).toDate(), Validators.required],
       gender: [gender, Validators.required],
-      description: [description || '', Validators.maxLength(500)],
+      description: [
+        description || '',
+        [
+          Validators.maxLength(500),
+          InputComponent.maxEndline(5),
+          InputComponent.maxWhiteSpaces(200),
+        ],
+      ],
     });
   }
 
