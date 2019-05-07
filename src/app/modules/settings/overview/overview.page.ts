@@ -11,6 +11,7 @@ import { UserSocketService } from '../../user/user-socket.service';
 import { UserPushService } from '../../user/user-push.service';
 import { Device } from '@ionic-native/device/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { AppRate } from '@ionic-native/app-rate/ngx';
 
 @Component({
   selector: 'app-overview',
@@ -32,6 +33,7 @@ export class OverviewPage {
     private readonly userPush: UserPushService,
     private readonly device: Device,
     private readonly browser: InAppBrowser,
+    private readonly rate: AppRate,
   ) {
     this.version = environment.version;
   }
@@ -96,6 +98,15 @@ Version: ${this.device.version}
           0,
         );
       });
+  }
+
+  rateInStore() {
+    this.rate.preferences.storeAppURL = {
+      ios: '1462518070',
+      android: 'market://details?id=com.skelvy',
+    };
+
+    this.rate.navigateToAppStore();
   }
 
   openLink(url: string) {

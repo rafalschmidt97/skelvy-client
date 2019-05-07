@@ -20,6 +20,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Push } from '@ionic-native/push/ngx';
 import { Device } from '@ionic-native/device/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { AppRate } from '@ionic-native/app-rate/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -45,6 +46,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
     Push,
     Device,
     InAppBrowser,
+    AppRate,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],
