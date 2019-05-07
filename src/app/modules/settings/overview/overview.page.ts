@@ -12,6 +12,7 @@ import { UserPushService } from '../../user/user-push.service';
 import { Device } from '@ionic-native/device/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppRate } from '@ionic-native/app-rate/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @Component({
   selector: 'app-overview',
@@ -34,6 +35,7 @@ export class OverviewPage {
     private readonly device: Device,
     private readonly browser: InAppBrowser,
     private readonly rate: AppRate,
+    private readonly share: SocialSharing,
   ) {
     this.version = environment.version;
   }
@@ -107,6 +109,10 @@ Version: ${this.device.version}
     };
 
     this.rate.navigateToAppStore();
+  }
+
+  shareApp() {
+    this.share.share('Join me: https://skelvy.com', 'Check out Skelvy!');
   }
 
   openLink(url: string) {
