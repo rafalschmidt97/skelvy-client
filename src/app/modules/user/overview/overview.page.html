@@ -36,7 +36,11 @@
       </div>
     </section>
     <section class="py-4 text-center bg-white">
-      <ion-slides pager="true" class="slider" [options]="{ autoplay: true }">
+      <ion-slides
+        pager="true"
+        class="slider"
+        [options]="{ autoplay: { delay: 6000 } }"
+      >
         <ion-slide>
           <div class="slide">
             {{
