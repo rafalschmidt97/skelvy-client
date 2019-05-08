@@ -9,6 +9,7 @@ import { MeetingStoreService } from '../meeting/meeting-store.service';
 import { ChatStoreService } from '../chat/chat-store.service';
 import { ChatMessageDto } from '../chat/chat';
 import { Storage } from '@ionic/storage';
+import { Connection } from './user';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,11 @@ export class SelfService {
   findSelf(): Observable<SelfModelDto> {
     return this.http.get<SelfModelDto>(environment.apiUrl + 'self').pipe(
       tap(async model => {
-        this.userStore.set(model.user);
+        this.userStore.set({
+          connection: Connection.CONNECTED,
+          id: model.user.id,
+          profile: model.user.profile,
+        });
 
         if (model.meetingModel) {
           this.meetingStore.set({

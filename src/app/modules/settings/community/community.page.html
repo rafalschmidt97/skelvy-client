@@ -11,30 +11,33 @@
 </ion-header>
 
 <ion-content>
-  <div class="content minh-100 bg-ultra-light py-3">
-    <button
-      type="button"
-      (click)="show('https://skelvy.com/community/support-us/', 'Support us')"
-      class="btn btn-settings"
-    >
-      {{ 'Support us' | translate }}
-      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
-    </button>
-    <button
-      type="button"
-      (click)="show('https://skelvy.com/community/help/', 'Help')"
-      class="btn btn-settings"
-    >
-      {{ 'Help' | translate }}
-      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
-    </button>
-    <button
-      type="button"
-      (click)="sendFeedback()"
-      class="btn btn-settings justify-content-center mt-3"
-    >
-      {{ 'Send feedback' | translate }}
-    </button>
+  <div class="content minh-100 bg-ultra-light">
+    <app-connection></app-connection>
+    <div class="py-3">
+      <button
+        type="button"
+        (click)="show('https://skelvy.com/community/support-us/', 'Support us')"
+        class="btn btn-settings"
+      >
+        {{ 'Support us' | translate }}
+        <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+      </button>
+      <button
+        type="button"
+        (click)="show('https://skelvy.com/community/help/', 'Help')"
+        class="btn btn-settings"
+      >
+        {{ 'Help' | translate }}
+        <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+      </button>
+      <button
+        type="button"
+        (click)="sendFeedback()"
+        class="btn btn-settings justify-content-center mt-3"
+      >
+        {{ 'Send feedback' | translate }}
+      </button>
+    </div>
   </div>
 </ion-content>
 

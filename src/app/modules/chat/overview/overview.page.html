@@ -13,13 +13,13 @@
 <ion-content [scrollY]="false">
   <div class="d-flex flex-column h-100 safe-area-b">
     <ng-container *ngIf="meeting$ | async as meetingModel">
+      <app-connection></app-connection>
       <ng-container *ngIf="chat$ | async as chatModel">
         <app-messages
           *ngIf="chatModel.messages?.length > 0; else empty"
           [messages]="chatModel.messages"
           [meeting]="meetingModel.meeting"
           [user]="user$ | async"
-          (loadMessages)="loadOlderMessages($event)"
         ></app-messages>
         <ng-template #empty>
           <app-empty></app-empty>

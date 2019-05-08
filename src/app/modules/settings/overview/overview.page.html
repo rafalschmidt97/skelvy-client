@@ -5,89 +5,94 @@
 </ion-header>
 
 <ion-content>
-  <div class="content minh-100 bg-ultra-light py-3">
-    <section class="container mb-3">
-      <a
-        routerLink="/app/settings/community"
-        class="text-primary support border text-center p-3 bg-white d-block"
-      >
-        <h3 class="mb-0">{{ 'Support us' | translate }}</h3>
-        <p class="mb-0 font-weight-normal">
-          {{ 'Make the app better today!' | translate }}
-        </p>
+  <div class="content minh-100 bg-ultra-light">
+    <app-connection></app-connection>
+    <div class="py-3">
+      <section class="container mb-3">
+        <a
+          routerLink="/app/settings/community"
+          class="text-primary support border text-center p-3 bg-white d-block"
+        >
+          <h3 class="mb-0">{{ 'Support us' | translate }}</h3>
+          <p class="mb-0 font-weight-normal">
+            {{ 'Make the app better today!' | translate }}
+          </p>
+        </a>
+      </section>
+      <a routerLink="/app/settings/notifications" class="btn btn-settings">
+        {{ 'Notifications' | translate }}
+        <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
-    </section>
-    <a routerLink="/app/settings/notifications" class="btn btn-settings">
-      {{ 'Notifications' | translate }}
-      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
-    </a>
-    <a routerLink="/app/settings/language" class="btn btn-settings">
-      {{ 'Language' | translate }}
-      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
-    </a>
-    <a routerLink="/app/settings/community" class="btn btn-settings">
-      {{ 'Community' | translate }}
-      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
-    </a>
-    <a routerLink="/app/settings/legal" class="btn btn-settings">
-      {{ 'Legal' | translate }}
-      <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
-    </a>
-    <button
-      type="button"
-      (click)="open(logout)"
-      class="btn btn-settings justify-content-center mt-3"
-    >
-      {{ 'Log out' | translate }}
-    </button>
-    <button
-      type="button"
-      (click)="sendReport()"
-      class="btn btn-settings justify-content-center"
-    >
-      {{ 'Report a bug' | translate }}
-    </button>
-    <button
-      type="button"
-      (click)="rateInStore()"
-      class="btn btn-settings justify-content-center mt-3"
-    >
-      {{ 'Rate in store' | translate }}
-    </button>
-    <button
-      type="button"
-      (click)="shareApp()"
-      class="btn btn-settings justify-content-center"
-    >
-      {{ 'Share with friends' | translate }}
-    </button>
-    <section class="about d-flex justify-content-center py-3">
-      <div class="text-center">{{ 'Version' | translate }}: {{ version }}</div>
-    </section>
-    <button
-      type="button"
-      (click)="openLink('https://facebook.com/skelvyapp')"
-      class="btn btn-settings justify-content-center"
-    >
-      Facebook
-      <ion-icon class="ml-2" name="logo-facebook"></ion-icon>
-    </button>
-    <button
-      type="button"
-      (click)="openLink('https://twitter.com/skelvyapp')"
-      class="btn btn-settings justify-content-center"
-    >
-      Twitter
-      <ion-icon class="ml-2" name="logo-twitter"></ion-icon>
-    </button>
-    <button
-      type="button"
-      (click)="openLink('https://instagram.com/skelvyapp/')"
-      class="btn btn-settings justify-content-center"
-    >
-      Instagram
-      <ion-icon class="ml-2" name="logo-instagram"></ion-icon>
-    </button>
+      <a routerLink="/app/settings/language" class="btn btn-settings">
+        {{ 'Language' | translate }}
+        <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+      </a>
+      <a routerLink="/app/settings/community" class="btn btn-settings">
+        {{ 'Community' | translate }}
+        <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+      </a>
+      <a routerLink="/app/settings/legal" class="btn btn-settings">
+        {{ 'Legal' | translate }}
+        <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+      </a>
+      <button
+        type="button"
+        (click)="open(logout)"
+        class="btn btn-settings justify-content-center mt-3"
+      >
+        {{ 'Log out' | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="sendReport()"
+        class="btn btn-settings justify-content-center"
+      >
+        {{ 'Report a bug' | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="rateInStore()"
+        class="btn btn-settings justify-content-center mt-3"
+      >
+        {{ 'Rate in store' | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="shareApp()"
+        class="btn btn-settings justify-content-center"
+      >
+        {{ 'Share with friends' | translate }}
+      </button>
+      <section class="about d-flex justify-content-center py-3">
+        <div class="text-center">
+          {{ 'Version' | translate }}: {{ version }}
+        </div>
+      </section>
+      <button
+        type="button"
+        (click)="openLink('https://facebook.com/skelvyapp')"
+        class="btn btn-settings justify-content-center"
+      >
+        Facebook
+        <ion-icon class="ml-2" name="logo-facebook"></ion-icon>
+      </button>
+      <button
+        type="button"
+        (click)="openLink('https://twitter.com/skelvyapp')"
+        class="btn btn-settings justify-content-center"
+      >
+        Twitter
+        <ion-icon class="ml-2" name="logo-twitter"></ion-icon>
+      </button>
+      <button
+        type="button"
+        (click)="openLink('https://instagram.com/skelvyapp/')"
+        class="btn btn-settings justify-content-center"
+      >
+        Instagram
+        <ion-icon class="ml-2" name="logo-instagram"></ion-icon>
+      </button>
+    </div>
   </div>
 </ion-content>
 

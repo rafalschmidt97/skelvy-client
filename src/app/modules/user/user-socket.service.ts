@@ -12,6 +12,7 @@ import { ToastService } from '../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting/meeting-socket.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
+import { UserStoreService } from './user-store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,7 @@ export class UserSocketService {
     private readonly meetingSocket: MeetingSocketService,
     private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
+    private readonly userStore: UserStoreService,
   ) {
     this.socket = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'users', {
@@ -60,9 +62,8 @@ export class UserSocketService {
             this.connectToSocket();
           })
           .catch(() => {
-            this.toastService.createError(
-              _('A problem occurred while reconnecting to the server'),
-            );
+            this.userStore.reconnect();
+            setTimeout(() => this.reconnectToSocket(), 5000);
           });
       }
     }
@@ -70,21 +71,29 @@ export class UserSocketService {
 
   disconnect() {
     if (this.socket.state === HubConnectionState.Connected) {
-      this.disconnecting = true;
-      this.socket.stop().catch(() => {
-        this.toastService.createError(
-          _('A problem occurred while disconnecting from the server'),
-        );
-      });
+      this.socket
+        .stop()
+        .then(() => {
+          this.userStore.disconnect();
+          this.disconnecting = true;
+        })
+        .catch(() => {
+          this.toastService.createError(
+            _('A problem occurred while disconnecting from the server'),
+          );
+        });
     }
   }
 
   private onClose() {
     this.socket.onclose(() => {
       if (!this.disconnecting) {
-        this.toastService.createWarning(_('The connection has been lost'));
+        this.userStore.reconnect();
+        setTimeout(() => this.reconnectToSocket(), 5000);
+      } else {
+        this.userStore.disconnect();
+        this.disconnecting = false;
       }
-      this.disconnecting = false;
     });
   }
 
@@ -117,11 +126,25 @@ export class UserSocketService {
   private connectToSocket() {
     this.socket
       .start()
-      .then(() => {})
+      .then(() => {
+        this.userStore.connect();
+      })
       .catch(() => {
         this.toastService.createError(
           _('A problem occurred while connecting to the server'),
         );
+      });
+  }
+
+  private reconnectToSocket() {
+    this.socket
+      .start()
+      .then(() => {
+        this.userStore.connect();
+      })
+      .catch(() => {
+        this.userStore.disconnect();
+        setTimeout(() => this.reconnectToSocket(), 5000);
       });
   }
 }

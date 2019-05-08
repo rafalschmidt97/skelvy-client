@@ -1,0 +1,14 @@
+<div [ngSwitch]="connection$ | async">
+  <div
+    *ngSwitchCase="connectedStatus.DISCONNECTED"
+    class="connection bg-danger text-white text-center"
+  >
+    {{ 'Disconnected' | translate }}
+  </div>
+  <div
+    *ngSwitchCase="connectedStatus.RECONNECTING"
+    class="connection bg-warning text-white text-center"
+  >
+    {{ 'Reconnecting' | translate }}
+  </div>
+</div>
