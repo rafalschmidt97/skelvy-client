@@ -133,6 +133,7 @@ export class UserSocketService {
         this.toastService.createError(
           _('A problem occurred while connecting to the server'),
         );
+        setTimeout(() => this.reconnectToSocket(), 5000);
       });
   }
 
@@ -142,8 +143,14 @@ export class UserSocketService {
       .then(() => {
         this.userStore.connect();
       })
-      .catch(() => {
-        this.userStore.disconnect();
+      .catch(error => {
+        if (error.statusCode === 401) {
+          this.authService.refreshToken().subscribe();
+          this.userStore.reconnect();
+        } else {
+          this.userStore.disconnect();
+        }
+
         setTimeout(() => this.reconnectToSocket(), 5000);
       });
   }
