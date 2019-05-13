@@ -15,6 +15,7 @@ import { _ } from '../../../../core/i18n/translate';
 import { MapsResponse } from '../../../../core/maps/maps';
 import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-searching',
@@ -60,6 +61,19 @@ export class SearchingComponent implements OnInit {
           );
         },
       );
+  }
+
+  get label(): string {
+    const start = this.request.minDate;
+    const end = this.request.maxDate;
+
+    if (end !== start) {
+      return `${moment(start).format('DD.MM.YYYY')} - ${moment(end).format(
+        'DD.MM.YYYY',
+      )}`;
+    }
+
+    return moment(start).format('DD.MM.YYYY');
   }
 
   stop() {

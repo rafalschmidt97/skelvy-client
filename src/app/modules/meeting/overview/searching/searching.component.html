@@ -13,8 +13,7 @@
       <div class="py-2 border-bottom">
         <div class="font-weight-bold">{{ 'Date' | translate }}</div>
         <div>
-          {{ request.minDate | date: 'dd.MM.yyyy' }} -
-          {{ request.maxDate | date: 'dd.MM.yyyy' }}
+          {{ label }}
         </div>
       </div>
       <div *ngIf="!loadingLocation; else loading" class="py-2 border-bottom">
