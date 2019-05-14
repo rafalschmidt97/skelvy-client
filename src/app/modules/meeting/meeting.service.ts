@@ -22,7 +22,7 @@ export class MeetingService {
 
   findMeeting(): Observable<MeetingModelDto> {
     return this.http
-      .get<MeetingModelDto>(environment.apiUrl + 'meetings/self')
+      .get<MeetingModelDto>(environment.versionApiUrl + 'meetings/self')
       .pipe(
         tap(async model => {
           this.meetingStore.set({
@@ -43,25 +43,27 @@ export class MeetingService {
   }
 
   leaveMeeting(): Observable<void> {
-    return this.http.delete<void>(environment.apiUrl + 'meetings/self').pipe(
-      tap(() => {
-        this.meetingStore.set(null);
-        this.chatStore.set(null);
-        this.storage.remove('lastMessageDate');
-      }),
-    );
+    return this.http
+      .delete<void>(environment.versionApiUrl + 'meetings/self')
+      .pipe(
+        tap(() => {
+          this.meetingStore.set(null);
+          this.chatStore.set(null);
+          this.storage.remove('lastMessageDate');
+        }),
+      );
   }
 
   createMeetingRequest(request: MeetingRequestDto): Observable<void> {
     return this.http.post<void>(
-      environment.apiUrl + 'users/self/request',
+      environment.versionApiUrl + 'users/self/request',
       request,
     );
   }
 
   removeMeetingRequest(): Observable<void> {
     return this.http
-      .delete<void>(environment.apiUrl + 'users/self/request')
+      .delete<void>(environment.versionApiUrl + 'users/self/request')
       .pipe(
         tap(() => {
           this.meetingStore.set(null);
@@ -70,7 +72,9 @@ export class MeetingService {
   }
 
   findDrinks(): Observable<MeetingDrinkDto[]> {
-    return this.http.get<MeetingDrinkDto[]>(environment.apiUrl + 'drinks');
+    return this.http.get<MeetingDrinkDto[]>(
+      environment.versionApiUrl + 'drinks',
+    );
   }
 
   private async initializedChatModel(messages: ChatMessageDto[]) {

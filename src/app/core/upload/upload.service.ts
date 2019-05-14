@@ -10,6 +10,6 @@ export class UploadService {
   constructor(private readonly http: HttpClient) {}
 
   upload(file: FormData): Observable<any> {
-    return this.http.post<string>(environment.apiUrl + 'uploads', file);
+    return this.http.post<string>(environment.versionApiUrl + 'uploads', file);
   }
 }

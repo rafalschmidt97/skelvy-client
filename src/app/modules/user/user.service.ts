@@ -16,22 +16,27 @@ export class UserService {
   ) {}
 
   findUser(): Observable<UserDto> {
-    return this.http.get<UserDto>(environment.apiUrl + 'users/self').pipe(
-      tap(user => {
-        this.userStore.setUser(user);
-      }),
-    );
+    return this.http
+      .get<UserDto>(environment.versionApiUrl + 'users/self')
+      .pipe(
+        tap(user => {
+          this.userStore.setUser(user);
+        }),
+      );
   }
 
   updateLanguage(language: string): Observable<void> {
-    return this.http.patch<void>(environment.apiUrl + 'users/self/language', {
-      language,
-    });
+    return this.http.patch<void>(
+      environment.versionApiUrl + 'users/self/language',
+      {
+        language,
+      },
+    );
   }
 
   updateProfile(profile: ProfileDto): Observable<void> {
     return this.http
-      .put<void>(environment.apiUrl + 'users/self/profile', profile)
+      .put<void>(environment.versionApiUrl + 'users/self/profile', profile)
       .pipe(
         tap(() => {
           this.findUser().subscribe();

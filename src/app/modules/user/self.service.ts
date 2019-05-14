@@ -24,7 +24,7 @@ export class SelfService {
   ) {}
 
   findSelf(): Observable<SelfModelDto> {
-    return this.http.get<SelfModelDto>(environment.apiUrl + 'self').pipe(
+    return this.http.get<SelfModelDto>(environment.versionApiUrl + 'self').pipe(
       tap(async model => {
         this.userStore.set({
           connection: Connection.CONNECTED,

@@ -12,7 +12,7 @@ export class ChatService {
 
   findMessages(page: number = 1): Observable<ChatMessageDto[]> {
     return this.http.get<ChatMessageDto[]>(
-      `${environment.apiUrl}meetings/self/chat?page=${page}`,
+      `${environment.versionApiUrl}meetings/self/chat?page=${page}`,
     );
   }
 }

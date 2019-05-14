@@ -8,6 +8,7 @@ export const environment = {
   production: false,
   version: npm.version,
   apiUrl: 'http://localhost:5000/',
+  versionApiUrl: 'http://localhost:5000/v1.0/',
 };
 
 /*

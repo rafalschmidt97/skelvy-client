@@ -29,7 +29,10 @@ export class AuthService {
 
   signInWithFacebook(authToken: string, language: string): Observable<any> {
     return this.http
-      .post<any>(environment.apiUrl + 'auth/facebook', { authToken, language })
+      .post<any>(environment.versionApiUrl + 'auth/facebook', {
+        authToken,
+        language,
+      })
       .pipe(
         tap(async res => {
           if (res && res.accessToken && res.refreshToken) {
@@ -41,7 +44,10 @@ export class AuthService {
 
   signInWithGoogle(authToken: string, language: string): Observable<any> {
     return this.http
-      .post<any>(environment.apiUrl + 'auth/google', { authToken, language })
+      .post<any>(environment.versionApiUrl + 'auth/google', {
+        authToken,
+        language,
+      })
       .pipe(
         tap(async res => {
           if (res && res.accessToken && res.refreshToken) {
@@ -55,7 +61,9 @@ export class AuthService {
     return from(this.getRefreshToken()).pipe(
       switchMap(refreshToken => {
         return this.http
-          .post<any>(environment.apiUrl + 'auth/refresh', { refreshToken })
+          .post<any>(environment.versionApiUrl + 'auth/refresh', {
+            refreshToken,
+          })
           .pipe(
             tap(async res => {
               if (res && res.accessToken && res.refreshToken) {
@@ -71,7 +79,9 @@ export class AuthService {
     return from(this.getRefreshToken()).pipe(
       switchMap(refreshToken => {
         return this.http
-          .post<any>(environment.apiUrl + 'auth/logout', { refreshToken })
+          .post<any>(environment.versionApiUrl + 'auth/logout', {
+            refreshToken,
+          })
           .pipe(
             tap(async () => {
               await this.logoutWithoutRequest();
