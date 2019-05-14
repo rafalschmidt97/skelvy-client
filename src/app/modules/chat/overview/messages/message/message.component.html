@@ -10,21 +10,23 @@
       {{ user.profile.name }}
     </div>
     <div
-      class="message"
+      class="message d-flex"
       [class.mr-auto]="!isMine"
       [class.ml-auto]="isMine"
-      [class.text-right]="isMine"
     >
       <div
         (click)="toggleDate()"
         class="text pointer"
         [class.bg-primary]="isMine"
         [class.text-white]="isMine"
+        [class.mr-auto]="!isMine"
+        [class.ml-auto]="isMine"
       >
         <div>{{ message.message }}</div>
         <div
           *ngIf="isDateShown"
           class="date"
+          [class.text-right]="isMine"
           [innerHTML]="message.date | date: 'HH:mm'"
         ></div>
       </div>
