@@ -21,6 +21,7 @@ import { MeetingService } from '../../meeting.service';
 import { ChatStoreService } from '../../../chat/chat-store.service';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-found',
@@ -123,7 +124,12 @@ export class FoundComponent implements OnInit {
         this.alert.hide();
         this.loadingService.unlock();
       },
-      () => {
+      (error: HttpErrorResponse) => {
+        // data is not relevant (connection lost and reconnected)
+        if (error.status === 404) {
+          this.meetingService.findMeeting().subscribe();
+        }
+
         this.alert.hide();
         this.loadingService.unlock();
         this.toastService.createError(

@@ -16,6 +16,7 @@ import { MapsResponse } from '../../../../core/maps/maps';
 import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
 import * as moment from 'moment';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-searching',
@@ -89,7 +90,12 @@ export class SearchingComponent implements OnInit {
         this.alert.hide();
         this.loadingService.unlock();
       },
-      () => {
+      (error: HttpErrorResponse) => {
+        // data is not relevant (connection lost and reconnected)
+        if (error.status === 404 || error.status === 409) {
+          this.meetingService.findMeeting().subscribe();
+        }
+
         this.alert.hide();
         this.loadingService.unlock();
         this.toastService.createError(
