@@ -20,21 +20,14 @@
       <div class="terms text-center my-3">
         <a
           class="text-primary"
-          (click)="
-            show(
-              'https://skelvy.com/legal/terms-of-service/',
-              'Terms of service'
-            )
-          "
+          (click)="openLink('https://skelvy.com/legal/terms-of-service/')"
         >
           {{ 'Terms of service' | translate }}
         </a>
         &
         <a
           class="text-primary"
-          (click)="
-            show('https://skelvy.com/legal/privacy-policy/', 'Privacy policy')
-          "
+          (click)="openLink('https://skelvy.com/legal/privacy-policy/')"
         >
           {{ 'Privacy policy' | translate }}
         </a>
@@ -42,11 +35,3 @@
     </div>
   </div>
 </ion-content>
-
-<ng-template #iframe>
-  <app-iframe
-    [url]="url"
-    [title]="title | translate"
-    (decline)="decline()"
-  ></app-iframe>
-</ng-template>

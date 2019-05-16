@@ -16,9 +16,7 @@
     <div class="py-3">
       <button
         type="button"
-        (click)="
-          show('https://skelvy.com/legal/privacy-policy/', 'Privacy policy')
-        "
+        (click)="openLink('https://skelvy.com/legal/privacy-policy/')"
         class="btn btn-settings"
       >
         {{ 'Privacy policy' | translate }}
@@ -26,9 +24,7 @@
       </button>
       <button
         type="button"
-        (click)="
-          show('https://skelvy.com/legal/terms-of-service/', 'Terms of service')
-        "
+        (click)="openLink('https://skelvy.com/legal/terms-of-service/')"
         class="btn btn-settings"
       >
         {{ 'Terms of service' | translate }}
@@ -36,9 +32,7 @@
       </button>
       <button
         type="button"
-        (click)="
-          show('https://skelvy.com/legal/cookie-policy/', 'Cookie policy')
-        "
+        (click)="openLink('https://skelvy.com/legal/cookie-policy/')"
         class="btn btn-settings"
       >
         {{ 'Cookie policy' | translate }}
@@ -46,7 +40,7 @@
       </button>
       <button
         type="button"
-        (click)="show('https://skelvy.com/legal/safety-tips/', 'Safety tips')"
+        (click)="openLink('https://skelvy.com/legal/safety-tips/')"
         class="btn btn-settings"
       >
         {{ 'Safety tips' | translate }}
@@ -54,12 +48,7 @@
       </button>
       <button
         type="button"
-        (click)="
-          show(
-            'https://skelvy.com/legal/community-guidelines/',
-            'Community guidelines'
-          )
-        "
+        (click)="openLink('https://skelvy.com/legal/community-guidelines/')"
         class="btn btn-settings"
       >
         {{ 'Community guidelines' | translate }}
@@ -68,11 +57,3 @@
     </div>
   </div>
 </ion-content>
-
-<ng-template #iframe>
-  <app-iframe
-    [url]="url"
-    [title]="title | translate"
-    (decline)="decline()"
-  ></app-iframe>
-</ng-template>

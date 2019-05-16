@@ -1,9 +1,8 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { Iframe } from '../../../shared/iframe/iframe';
-import { IframeService } from '../../../shared/iframe/iframe.service';
+import { Component } from '@angular/core';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'app-community',
@@ -11,27 +10,14 @@ import { ToastService } from '../../../core/toast/toast.service';
   styleUrls: ['./community.page.scss'],
 })
 export class CommunityPage {
-  iframe: Iframe;
-  @ViewChild('iframe') iframeTemplate: TemplateRef<any>;
-
-  url: string;
-  title: string;
-
   constructor(
-    private readonly iframeService: IframeService,
     private readonly emailComposer: EmailComposer,
     private readonly toastService: ToastService,
+    private readonly browser: InAppBrowser,
   ) {}
 
-  show(url: string, title = '') {
-    this.url = url;
-    this.title = title;
-
-    this.iframe = this.iframeService.show(this.iframeTemplate);
-  }
-
-  decline() {
-    this.iframe.hide();
+  openLink(url: string) {
+    this.browser.create(url, '_system');
   }
 
   sendFeedback() {

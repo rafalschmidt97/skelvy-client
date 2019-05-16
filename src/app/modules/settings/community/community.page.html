@@ -16,7 +16,7 @@
     <div class="py-3">
       <button
         type="button"
-        (click)="show('https://skelvy.com/community/support-us/', 'Support us')"
+        (click)="openLink('https://skelvy.com/community/support-us/')"
         class="btn btn-settings"
       >
         {{ 'Support us' | translate }}
@@ -24,7 +24,7 @@
       </button>
       <button
         type="button"
-        (click)="show('https://skelvy.com/community/help/', 'Help')"
+        (click)="openLink('https://skelvy.com/community/help/')"
         class="btn btn-settings"
       >
         {{ 'Help' | translate }}
@@ -40,11 +40,3 @@
     </div>
   </div>
 </ion-content>
-
-<ng-template #iframe>
-  <app-iframe
-    [url]="url"
-    [title]="title | translate"
-    (decline)="decline()"
-  ></app-iframe>
-</ng-template>

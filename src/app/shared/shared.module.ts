@@ -4,7 +4,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AlertModule } from './alert/alert.module';
-import { IframeModule } from './iframe/iframe.module';
 import { ModalModule } from './modal/modal.module';
 import { FormModule } from './form/form.module';
 import { AgePipe } from './pipes/age.pipe';
@@ -17,7 +16,6 @@ import { ConnectionComponent } from './components/connection/connection.componen
     TranslateModule,
     RouterModule,
     AlertModule,
-    IframeModule,
     ModalModule,
     FormModule,
   ],
@@ -28,7 +26,6 @@ import { ConnectionComponent } from './components/connection/connection.componen
     TranslateModule,
     RouterModule,
     AlertModule,
-    IframeModule,
     ModalModule,
     FormModule,
     AgePipe,

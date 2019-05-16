@@ -1,6 +1,4 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { IframeService } from '../../../shared/iframe/iframe.service';
-import { Iframe } from '../../../shared/iframe/iframe';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -11,6 +9,7 @@ import { LoadingService } from '../../../core/loading/loading.service';
 import { UserPushService } from '../../user/user-push.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'app-sign-in',
@@ -18,13 +17,7 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./sign-in.page.scss'],
 })
 export class SignInPage implements OnInit {
-  iframe: Iframe;
-  @ViewChild('iframe') iframeTemplate: TemplateRef<any>;
-  url: string;
-  title: string;
-
   constructor(
-    private readonly iframeService: IframeService,
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
     private readonly authService: AuthService,
@@ -34,21 +27,15 @@ export class SignInPage implements OnInit {
     private readonly userPush: UserPushService,
     private readonly translateService: TranslateService,
     private readonly storage: Storage,
+    private readonly browser: InAppBrowser,
   ) {}
 
   ngOnInit() {
     this.userPush.initialize();
   }
 
-  show(url: string, title = '') {
-    this.url = url;
-    this.title = title;
-
-    this.iframe = this.iframeService.show(this.iframeTemplate);
-  }
-
-  decline() {
-    this.iframe.hide();
+  openLink(url: string) {
+    this.browser.create(url, '_system');
   }
 
   async signInWithFacebook() {
