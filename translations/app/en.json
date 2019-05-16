@@ -3,7 +3,9 @@
     "USER_JOINED_MEETING": "New user has been added to the group",
     "USER_FOUND_MEETING": "New meeting has been found",
     "USER_LEFT_MEETING": "User has left the group",
-    "MEETING_REQUEST_EXPIRED": "Meeting request has expired",
-    "MEETING_EXPIRED": "The meeting has expired"
+    "MEETING_REQUEST_EXPIRED": "Your request has expired",
+    "MEETING_EXPIRED": "Your meeting has expired",
+    "MEETING": "Meeting",
+    "MEETING_REQUEST": "Meeting request"
   }
 }
