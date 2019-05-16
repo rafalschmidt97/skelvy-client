@@ -13,6 +13,10 @@
   font-weight: 200;
   max-width: 330px;
 
+  &:first-letter {
+    text-transform: uppercase;
+  }
+
   .header-icon {
     color: theme-color('danger');
     margin-bottom: -7px;
