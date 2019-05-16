@@ -48,7 +48,7 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
 
     this.search$
       .pipe(
-        debounceTime(3000),
+        debounceTime(2500),
         distinctUntilChanged(),
         switchMap((text: string) => {
           if (text.trim().length > 0) {
@@ -80,7 +80,7 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
   ngOnInit() {
     this.geolocation
       .getCurrentPosition({
-        timeout: 30000,
+        timeout: 5000,
         maximumAge: 0,
         enableHighAccuracy: true,
       })
