@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/app/tabs/settings"
+        [text]="'Back' | translate"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Blocked users' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="blocked content minh-100 bg-ultra-light">
+    <app-connection></app-connection>
+    <div class="label text-muted">{{ 'Users you ignore' | translate }}</div>
+    <ng-container *ngIf="!loadingBlocked; else loading">
+      <div
+        *ngIf="blockedUsers.length > 0; else emptyList"
+        class="bg-white border-top"
+      >
+        <app-profile
+          *ngFor="let user of blockedUsers"
+          [user]="user"
+          (openDetails)="openDetails($event)"
+        ></app-profile>
+      </div>
+      <div *ngIf="!loadingBlockedMore; else loadingMore" class="container">
+        <button
+          *ngIf="showLoadMore"
+          type="button"
+          (click)="loadMoreBlockedUsers()"
+          class="btn btn-primary btn-block mt-3"
+        >
+          {{ 'Load more' | translate }}
+        </button>
+      </div>
+      <ng-template #loadingMore>
+        <div class="text-center mt-3 py-1">
+          <ion-spinner></ion-spinner>
+        </div>
+      </ng-template>
+      <ng-template #emptyList>
+        <div class="mb-3 text-center">
+          <div class="border-top border-bottom text-center p-3 bg-white">
+            <p>{{ 'Your blocked list is empty' | translate }}</p>
+            <button
+              type="button"
+              (click)="loadBlockedUsers()"
+              class="btn btn-primary btn-block"
+            >
+              {{ 'Load again' | translate }}
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-template #loading>
+      <div class="text-center py-3">
+        <ion-spinner></ion-spinner>
+      </div>
+    </ng-template>
+  </div>
+</ion-content>
+
+<ng-template #details>
+  <app-modal (confirm)="confirmDetails()">
+    <app-profile-details
+      [user]="userForModal"
+      (removeBlockedUser)="removeBlockedUser()"
+    ></app-profile-details>
+  </app-modal>
+</ng-template>
+
+<ng-template #alert>
+  <app-alert
+    (confirm)="confirmAlert()"
+    [confirmLoading]="loadingRemove"
+    (decline)="declineAlert()"
+    [title]="'Are you sure?' | translate"
+  ></app-alert>
+</ng-template>

@@ -1,0 +1,35 @@
+@import '~src/theme/bootstrap/variables';
+
+.slider {
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: white;
+    height: 1rem;
+    width: 100%;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    z-index: 2;
+    -webkit-transform: translate3d(0, 0, 0); // fix safari z-index bug
+  }
+
+  ::ng-deep .swiper-pagination-bullets {
+    bottom: 25px !important;
+  }
+}
+
+.slide {
+  width: 100%;
+  padding-top: 100%;
+  background-size: cover;
+  background-color: theme-color('light');
+}
+
+.description {
+  white-space: pre-line;
+}

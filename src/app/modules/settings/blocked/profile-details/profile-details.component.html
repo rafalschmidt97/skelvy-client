@@ -21,24 +21,12 @@
     {{ 'User did not fill his bio yet.' | translate }}
   </p>
   <button
-    *ngIf="!blocked; else unblock"
     type="button"
-    [disabled]="loadingBlocking"
-    (click)="blockUser()"
-    class="btn btn-block btn-danger"
+    (click)="removeBlockedUser.emit()"
+    class="btn btn-block btn-dark"
   >
-    {{ 'Block user' | translate }}
+    {{ 'Unblock user' | translate }}
   </button>
-  <ng-template #unblock>
-    <button
-      type="button"
-      [disabled]="loadingBlocking"
-      (click)="removeBlockUser()"
-      class="btn btn-block btn-dark"
-    >
-      {{ 'Unblock user' | translate }}
-    </button>
-  </ng-template>
   <button
     type="button"
     (click)="sendReport()"
