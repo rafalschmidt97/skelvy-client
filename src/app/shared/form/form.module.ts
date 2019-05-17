@@ -42,6 +42,7 @@ import { SwitchComponent } from './switch/switch.component';
     SliderModule,
   ],
   exports: [
+    FormsModule,
     ReactiveFormsModule,
     FormComponent,
     InputComponent,

@@ -35,6 +35,8 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
   resultLoading = false;
   resultSearched = false;
   loadingLocation = true;
+  search = '';
+  private lastSearch = '';
 
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
@@ -51,16 +53,7 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
         debounceTime(2500),
         distinctUntilChanged(),
         switchMap((text: string) => {
-          if (text.trim().length > 0) {
-            this.resultLoading = true;
-
-            return this.mapsService.search(
-              text,
-              this.translateService.currentLang,
-            );
-          } else {
-            return of(this.results);
-          }
+          return this.searchLocation(text);
         }),
       )
       .subscribe(
@@ -120,6 +113,27 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
     }
   }
 
+  onSubmit() {
+    if (
+      this.search.toLowerCase() !== this.lastSearch.toLowerCase() &&
+      !this.isLoading &&
+      !this.loadingLocation
+    ) {
+      this.searchLocation(this.search).subscribe(
+        results => {
+          this.resultSearched = true;
+          this.results = results;
+          this.resultLoading = false;
+        },
+        () => {
+          this.toastService.createError(
+            _('A problem occurred while searching for locations'),
+          );
+        },
+      );
+    }
+  }
+
   select(result: MapsResponse) {
     this.form.markAsDirty();
     this.form.markAsTouched();
@@ -143,5 +157,16 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
 
   filterVillages(response: MapsResponse[]): MapsResponse[] {
     return response.filter(x => x.type !== MapsResponseType.LOCALITY);
+  }
+
+  private searchLocation(text: string) {
+    this.lastSearch = text;
+    if (text.trim().length > 0) {
+      this.resultLoading = true;
+
+      return this.mapsService.search(text, this.translateService.currentLang);
+    } else {
+      return of(this.results);
+    }
   }
 }

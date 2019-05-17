@@ -30,12 +30,16 @@
 <ng-template #address>
   <app-modal (confirm)="confirm()">
     <div class="container pb-4 pt-1 border-bottom">
-      <input
-        (keyup)="search$.next($event.target.value)"
-        class="form-control"
-        [placeholder]="placeholder"
-        appAutofocus
-      />
+      <form (ngSubmit)="onSubmit()" novalidate>
+        <input
+          (keyup)="search$.next($event.target.value)"
+          class="form-control"
+          [(ngModel)]="search"
+          name="search"
+          [placeholder]="placeholder"
+          appAutofocus
+        />
+      </form>
     </div>
     <div class="content">
       <ng-container *ngIf="resultLoading">
