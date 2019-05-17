@@ -20,7 +20,7 @@ import { UserStoreService } from './user-store.service';
 export class UserSocketService {
   private readonly socket: HubConnection;
   private initialized: boolean;
-  private disconnecting: boolean;
+  private disconnected: boolean;
 
   constructor(
     private readonly sessionService: SessionService,
@@ -71,11 +71,12 @@ export class UserSocketService {
 
   disconnect() {
     if (this.socket.state === HubConnectionState.Connected) {
+      this.disconnected = true;
+
       this.socket
         .stop()
         .then(() => {
           this.userStore.disconnect();
-          this.disconnecting = true;
         })
         .catch(() => {
           this.toastService.createError(
@@ -87,12 +88,12 @@ export class UserSocketService {
 
   private onClose() {
     this.socket.onclose(() => {
-      if (!this.disconnecting) {
+      if (!this.disconnected) {
         this.userStore.reconnect();
         setTimeout(() => this.reconnectToSocket(), 5000);
       } else {
         this.userStore.disconnect();
-        this.disconnecting = false;
+        this.disconnected = false;
       }
     });
   }
