@@ -5,6 +5,10 @@ const routes: Routes = [
   { path: '', redirectTo: '/app/tabs/settings', pathMatch: 'full' },
   { path: 'legal', loadChildren: './legal/legal.module#LegalPageModule' },
   {
+    path: 'blocked',
+    loadChildren: './blocked/blocked.module#BlockedPageModule',
+  },
+  {
     path: 'community',
     loadChildren: './community/community.module#CommunityPageModule',
   },
