@@ -50,9 +50,7 @@ export class BlockedPage implements OnInit {
         this.blockedUsers = results;
         this.loadingBlocked = false;
 
-        if (this.blockedUsers.length % 10 === 0) {
-          this.allBlockedLoaded = true;
-        }
+        this.allBlockedLoaded = this.blockedUsers.length % 10 !== 0;
       },
       () => {
         this.blockedUsers = [];
