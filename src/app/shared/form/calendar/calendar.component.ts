@@ -90,6 +90,7 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
     this.form.markAsDirty();
     this.form.markAsTouched();
     const value = this.inputForm.get(this.name).value;
+    value[0].setHours(0, 0, 0, 0);
 
     if (value[1]) {
       this.form.patchValue({
