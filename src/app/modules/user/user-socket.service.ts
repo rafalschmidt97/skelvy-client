@@ -13,6 +13,7 @@ import { MeetingSocketService } from '../meeting/meeting-socket.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
 import { UserStoreService } from './user-store.service';
+import { MeetingService } from '../meeting/meeting.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,7 @@ export class UserSocketService {
     private readonly sessionService: SessionService,
     private readonly toastService: ToastService,
     private readonly meetingSocket: MeetingSocketService,
+    private readonly meetingService: MeetingService,
     private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
     private readonly userStore: UserStoreService,
@@ -52,20 +54,6 @@ export class UserSocketService {
       this.connectToSocket();
 
       this.initialized = true;
-    } else {
-      if (this.socket.state === HubConnectionState.Disconnected) {
-        this.connectToSocket();
-      } else {
-        this.socket
-          .stop()
-          .then(() => {
-            this.connectToSocket();
-          })
-          .catch(() => {
-            this.userStore.reconnect();
-            setTimeout(() => this.reconnectToSocket(), 5000);
-          });
-      }
     }
   }
 
@@ -130,29 +118,34 @@ export class UserSocketService {
       .then(() => {
         this.userStore.connect();
       })
-      .catch(() => {
-        this.toastService.createError(
-          _('A problem occurred while connecting to the server'),
-        );
-        setTimeout(() => this.reconnectToSocket(), 5000);
+      .catch(error => {
+        this.userStore.reconnect();
+
+        if (error.statusCode === 401) {
+          this.authService.refreshToken().subscribe();
+        }
+
+        setTimeout(() => this.reconnectToSocket(), 2000);
       });
   }
 
   private reconnectToSocket() {
-    this.socket
-      .start()
-      .then(() => {
-        this.userStore.connect();
-      })
-      .catch(error => {
-        if (error.statusCode === 401) {
-          this.authService.refreshToken().subscribe();
+    if (this.socket.state !== HubConnectionState.Connected) {
+      this.socket
+        .start()
+        .then(() => {
+          this.userStore.connect();
+          this.meetingService.findMeeting().subscribe();
+        })
+        .catch(error => {
           this.userStore.reconnect();
-        } else {
-          this.userStore.disconnect();
-        }
 
-        setTimeout(() => this.reconnectToSocket(), 5000);
-      });
+          if (error.statusCode === 401) {
+            this.authService.refreshToken().subscribe();
+          }
+
+          setTimeout(() => this.reconnectToSocket(), 2000);
+        });
+    }
   }
 }
