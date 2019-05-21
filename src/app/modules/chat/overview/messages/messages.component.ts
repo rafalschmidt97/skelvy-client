@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   Input,
   OnInit,
   TemplateRef,
@@ -20,7 +21,7 @@ import { ToastService } from '../../../../core/toast/toast.service';
   styleUrls: ['./messages.component.scss'],
 })
 export class MessagesComponent implements OnInit {
-  @ViewChild('actions') actions: TemplateRef<any>;
+  @ViewChild('content') content: ElementRef;
   @Input() messages: ChatMessageDto[];
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
@@ -39,6 +40,10 @@ export class MessagesComponent implements OnInit {
     if (this.chatStore.data.messages.length === 20) {
       this.hasMoreMessages = true;
     }
+
+    setTimeout(() => {
+      this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
+    }, 100);
   }
 
   findUser(userId: number): MeetingUserDto {
