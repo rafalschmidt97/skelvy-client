@@ -66,6 +66,12 @@ export class UserPushService {
         this.addTopic('user-' + this.getUserId(), 'pushTopicUser');
       }
     });
+
+    this.clear().then(() => {});
+
+    this.platform.resume.subscribe(async () => {
+      await this.clear();
+    });
   }
 
   disconnect() {
@@ -96,6 +102,12 @@ export class UserPushService {
         );
       },
     );
+  }
+
+  async clear() {
+    await this.push$.setApplicationIconBadgeNumber(1);
+    await this.push$.setApplicationIconBadgeNumber(0);
+    await this.push$.clearAllNotifications();
   }
 
   private getUserId(): number {
