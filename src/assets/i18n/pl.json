@@ -1,7 +1,6 @@
 {
 	"A problem occurred while adding blocked user": "Wystąpił problem podczas blokowania użytkownika",
 	"A problem occurred while adding push notification topic": "Wystąpił problem podczas dodawania tematu powiadomień push",
-	"A problem occurred while connecting to the server": "Wystąpił problem podczas łączenia się z serwerem",
 	"A problem occurred while creating the request": "Wystąpił problem podczas tworzenia żądania",
 	"A problem occurred while disconnecting from the server": "Wystąpił problem podczas rozłączania się z serwerem",
 	"A problem occurred while finding blocked users": "Wystąpił problem podczas wyszukiwania zablokowanych użytkowników",
@@ -48,6 +47,7 @@
 	"Country": "Kraj",
 	"Date": "Data",
 	"Date of birth": "Data urodzenia",
+	"Determining your location...": "Określanie lokalizacji...",
 	"Disconnected": "Rozłączony",
 	"District": "Dzielnica",
 	"Done": "Gotowe",
