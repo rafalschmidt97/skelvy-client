@@ -134,6 +134,7 @@ $ npm i # (or yarn install)
 3. In order to prepare your environment run `prepare.sh` shell script:
 
 ```bash
+# read preparing environment
 $ sh scripts/prepare.sh // TODO: script is not ready yet
 ```
 
@@ -148,14 +149,79 @@ $ npm run android
 # run linter
 $ npm run lint
 
+# run formatter
+$ npm run format
+
 # translate texts
 $ npm run translate
+```
 
-# build for ios
+### Preparing iOS environment
+
+```bash
+$ npm install
+$ npm run ios:prepare
+# add developer account
+```
+
+### Publishing iOS version
+
+```bash
+# increment version in config.xml and package.json
 $ npm run ios:build
+# add developer account
+# open xcode and run Archive
+# run Organiser
+```
 
-#build for android
+### Preparing Android environment
+
+```bash
+$ npm install
+$ npm run ios:prepare
+# copy custom config
+# accept sdk licenses
+$ ~/Library/Android/sdk/tools/bin/sdkmanager --licenses
+# add debug keystore
+# change ip address in environment
+```
+
+### Publishing Android version
+
+```bash
+# increment version in config.xml and package.json
 $ npm run android:build
+$ cd platforms/android/app/build/outputs/apk/release
+# copy release keystore
+$ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore release.keystore app-release-unsigned.apk skelvy 
+$ rm app-release.apk # remove previous apk
+$ ~/Library/Android/sdk/build-tools/28.0.3/zipalign -v 4 app-release-unsigned.apk app-release.apk 
+```
+
+
+### Hashes and Keystores
+
+```bash
+# Google hash:
+
+# Debug:
+$ keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
+$ keytool -list -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android
+
+# Release
+$ keytool -genkey -v -keystore release.keystore -alias skelvy -keyalg RSA -keysize 2048 -validity 10000
+$ keytool -list -v -keystore release.keystore -alias skelvy -storepass XXX -keypass XXX
+
+# Facebook hash:
+
+# Debug
+$ keytool -exportcert -alias androiddebugkey -keystore debug.keystore | openssl sha1 -binary | openssl base64
+
+# Production
+$ keytool -exportcert -alias skelvy -keystore release.keystore | openssl sha1 -binary | openssl base64
+
+# Extra
+$ keytool -list -v -keystore debug.keystore
 ```
 
 ## <a name="rules"></a> Coding Rules
