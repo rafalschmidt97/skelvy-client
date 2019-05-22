@@ -21,8 +21,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class CalendarComponent extends ComplexFieldComponent implements OnInit {
   @Input() range: boolean;
-  @Input() min: number;
-  @Input() max: number;
+  @Input() min: Date;
+  @Input() max: Date;
   inputForm: FormGroup;
 
   locale: LocaleSettings = {

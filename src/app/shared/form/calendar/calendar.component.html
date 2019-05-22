@@ -43,7 +43,7 @@
             ? 'form-control is-invalid'
             : 'form-control'
         "
-        [minDate]="today"
+        [minDate]="min || today"
         dateFormat="dd.mm.yy"
         selectionMode="range"
         [inline]="true"

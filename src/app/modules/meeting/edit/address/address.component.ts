@@ -18,6 +18,7 @@ import { MapsResponse, MapsResponseType } from '../../../../core/maps/maps';
 import { _ } from '../../../../core/i18n/translate';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { isNil } from 'lodash';
 
 @Component({
   selector: 'app-address',
@@ -71,35 +72,39 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.geolocation
-      .getCurrentPosition({
-        timeout: 5000,
-        maximumAge: 0,
-        enableHighAccuracy: true,
-      })
-      .then(res => {
-        this.mapsService
-          .reverse(
-            res.coords.latitude,
-            res.coords.longitude,
-            this.translateService.currentLang,
-          )
-          .subscribe(
-            results => {
-              if (results.length > 0) {
-                this.select(results[0]);
-              }
+    if (isNil(this.form.get(this.name).value)) {
+      this.geolocation
+        .getCurrentPosition({
+          timeout: 5000,
+          maximumAge: 0,
+          enableHighAccuracy: true,
+        })
+        .then(res => {
+          this.mapsService
+            .reverse(
+              res.coords.latitude,
+              res.coords.longitude,
+              this.translateService.currentLang,
+            )
+            .subscribe(
+              results => {
+                if (results.length > 0) {
+                  this.select(results[0]);
+                }
 
-              this.loadingLocation = false;
-            },
-            () => {
-              this.loadingLocation = false;
-            },
-          );
-      })
-      .catch(() => {
-        this.loadingLocation = false;
-      });
+                this.loadingLocation = false;
+              },
+              () => {
+                this.loadingLocation = false;
+              },
+            );
+        })
+        .catch(() => {
+          this.loadingLocation = false;
+        });
+    } else {
+      this.loadingLocation = false;
+    }
   }
 
   get dateLabel(): string {

@@ -10,7 +10,7 @@
     <ion-title>{{ 'Add meeting' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button
-        [disabled]="isLoading || form.invalid || loadingDrinks"
+        [disabled]="isLoading || form.invalid || loadingForm"
         (click)="onSubmit()"
       >
         {{ 'Done' | translate }}
@@ -29,7 +29,12 @@
             | translate
         }}
       </div>
-      <app-form [form]="form" (onSubmit)="onSubmit()" [isLoading]="isLoading">
+      <app-form
+        [form]="form"
+        (onSubmit)="onSubmit()"
+        [isLoading]="isLoading"
+        *ngIf="!loadingForm; else loading"
+      >
         <app-calendar
           name="date"
           [min]="today"
@@ -50,17 +55,17 @@
           [maxValueToRound]="55"
         ></app-range>
         <app-checkbox
-          *ngIf="drinks; else loading"
+          *ngIf="drinks.length > 0"
           name="drinks"
           [label]="'Drinks' | translate"
           [options]="drinks"
         ></app-checkbox>
-        <ng-template #loading>
-          <div class="text-center py-3">
-            <ion-spinner></ion-spinner>
-          </div>
-        </ng-template>
       </app-form>
+      <ng-template #loading>
+        <div class="text-center py-3">
+          <ion-spinner></ion-spinner>
+        </div>
+      </ng-template>
     </div>
   </section>
 </ion-content>
