@@ -9,10 +9,17 @@
       (isInvalid && (isDirty || isTouched) ? 'is-invalid ' : '') +
       (isLoading || loadingLocation ? 'is-disabled' : '')
     "
-    [innerHtml]="
+  >
+    {{
       loadingLocation ? ('Determining your location...' | translate) : dateLabel
-    "
-  ></div>
+    }}
+    <ion-icon
+      name="locate"
+      class="geolocation"
+      (click)="findCurrentLocation()"
+      [class.disabled]="isLoading || loadingLocation"
+    ></ion-icon>
+  </div>
 
   <div [class.is-invalid]="isInvalid && (isDirty || isTouched) && hasFeedback">
     <ng-container *ngIf="hasFeedback">

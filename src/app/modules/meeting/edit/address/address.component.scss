@@ -18,12 +18,27 @@
 }
 
 .form-control-placeholder {
+  position: relative;
+
   &.is-invalid {
     border-color: theme-color('danger');
   }
 
   &.is-disabled {
     background-color: theme-color('light');
+  }
+
+  .geolocation {
+    padding: 7px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 23px;
+    color: theme-color('primary');
+
+    &.disabled {
+      color: gray('600');
+    }
   }
 }
 

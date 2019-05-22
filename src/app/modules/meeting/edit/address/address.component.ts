@@ -35,7 +35,7 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
   results: MapsResponse[];
   resultLoading = false;
   resultSearched = false;
-  loadingLocation = true;
+  loadingLocation = false;
   search = '';
   private lastSearch = '';
 
@@ -73,6 +73,18 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
 
   ngOnInit() {
     if (isNil(this.form.get(this.name).value)) {
+      this.findCurrentLocation();
+    }
+  }
+
+  get dateLabel(): string {
+    const value: MapsResponse = this.form.get(this.name).value;
+    return value ? `${value.city}, ${value.country}` : this.placeholder;
+  }
+
+  findCurrentLocation() {
+    if (!this.isLoading && !this.loadingLocation) {
+      this.loadingLocation = true;
       this.geolocation
         .getCurrentPosition({
           timeout: 5000,
@@ -102,14 +114,7 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
         .catch(() => {
           this.loadingLocation = false;
         });
-    } else {
-      this.loadingLocation = false;
     }
-  }
-
-  get dateLabel(): string {
-    const value: MapsResponse = this.form.get(this.name).value;
-    return value ? `${value.city}, ${value.country}` : this.placeholder;
   }
 
   open(template: TemplateRef<any>) {
