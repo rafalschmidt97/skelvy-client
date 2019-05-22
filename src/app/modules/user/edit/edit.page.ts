@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Form, OnSubmit } from '../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Select } from '../../../shared/form/select/select';
@@ -10,12 +10,13 @@ import { Gender, ProfileDto } from '../user';
 import { UserService } from '../user.service';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.page.html',
 })
-export class EditPage implements Form, OnSubmit {
+export class EditPage implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
   genders: Select[] = [
@@ -40,6 +41,7 @@ export class EditPage implements Form, OnSubmit {
     .add(-100, 'years')
     .startOf('day')
     .toDate();
+  created: boolean;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -47,6 +49,7 @@ export class EditPage implements Form, OnSubmit {
     private readonly userService: UserService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
+    private readonly route: ActivatedRoute,
   ) {
     const {
       photos,
@@ -80,6 +83,10 @@ export class EditPage implements Form, OnSubmit {
         ],
       ],
     });
+  }
+
+  ngOnInit() {
+    this.created = !!this.route.snapshot.paramMap.get('created');
   }
 
   onSubmit() {

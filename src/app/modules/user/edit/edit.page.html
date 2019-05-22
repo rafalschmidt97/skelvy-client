@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button
-        [hidden]="isLoading"
+        [hidden]="isLoading || created"
         defaultHref="/app/tabs/user"
         [text]="'Back' | translate"
       ></ion-back-button>

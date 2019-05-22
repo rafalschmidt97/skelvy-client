@@ -63,9 +63,18 @@ export class SignInPage implements OnInit {
           this.authService
             .signInWithFacebook(token, this.translateService.currentLang)
             .subscribe(
-              async () => {
+              async auth => {
                 await this.storage.set('signInMethod', 'facebook');
-                this.routerNavigation.navigateForward(['/app']);
+
+                if (auth.accountCreated) {
+                  this.routerNavigation.navigateForward([
+                    '/app/user/edit',
+                    { created: true },
+                  ]);
+                } else {
+                  this.routerNavigation.navigateForward(['/app']);
+                }
+
                 await loading.dismiss();
               },
               async () => {
@@ -91,9 +100,18 @@ export class SignInPage implements OnInit {
       this.authService
         .signInWithGoogle(token, this.translateService.currentLang)
         .subscribe(
-          async () => {
+          async auth => {
             await this.storage.set('signInMethod', 'google');
-            this.routerNavigation.navigateForward(['/app']);
+
+            if (auth.accountCreated) {
+              this.routerNavigation.navigateForward([
+                '/app/user/edit',
+                { created: true },
+              ]);
+            } else {
+              this.routerNavigation.navigateForward(['/app']);
+            }
+
             await loading.dismiss();
           },
           async () => {
