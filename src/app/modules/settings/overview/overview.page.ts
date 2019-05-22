@@ -62,7 +62,7 @@ export class OverviewPage {
           this.alert.hide();
           this.routerNavigation.navigateBack(['/home']);
           setTimeout(() => {
-            this.toastService.createInformation(
+            this.toastService.createError(
               _('A problem occurred while logging out'),
             );
           }, 1000);
