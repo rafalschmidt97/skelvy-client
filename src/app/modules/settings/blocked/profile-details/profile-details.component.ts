@@ -3,6 +3,7 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile-details',
@@ -16,13 +17,18 @@ export class ProfileDetailsComponent {
   constructor(
     private readonly emailComposer: EmailComposer,
     private readonly toastService: ToastService,
+    private readonly translateService: TranslateService,
   ) {}
 
-  sendReport() {
+  async sendReport() {
+    const subject = await this.translateService
+      .get(_('Report user'))
+      .toPromise();
+
     this.emailComposer
       .open({
         to: 'contact.skelvy@gmail.com',
-        subject: `[skelvy] Report user#${this.user.id}`,
+        subject: `[Skelvy] ${subject}#${this.user.id}`,
       })
       .then(() => {
         this.toastService.createInformation(

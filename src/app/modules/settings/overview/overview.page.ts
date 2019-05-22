@@ -13,6 +13,7 @@ import { Device } from '@ionic-native/device/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppRate } from '@ionic-native/app-rate/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-overview',
@@ -36,6 +37,7 @@ export class OverviewPage {
     private readonly browser: InAppBrowser,
     private readonly rate: AppRate,
     private readonly share: SocialSharing,
+    private readonly translateService: TranslateService,
   ) {
     this.version = environment.version;
   }
@@ -75,11 +77,15 @@ export class OverviewPage {
     this.alert.hide();
   }
 
-  sendReport() {
+  async sendReport() {
+    const subject = await this.translateService
+      .get(_('Report a bug'))
+      .toPromise();
+
     this.emailComposer
       .open({
         to: 'contact.skelvy@gmail.com',
-        subject: '[skelvy] Report a bug',
+        subject: `[Skelvy] ${subject}`,
         body: `
 
 
@@ -111,8 +117,21 @@ Version: ${this.device.version}
     this.rate.navigateToAppStore();
   }
 
-  shareApp() {
-    this.share.share('Join me: https://skelvy.com', 'Check out Skelvy!');
+  async shareApp() {
+    const checkOutText = await this.translateService
+      .get(_('Check out Skelvy!'))
+      .toPromise();
+
+    const descriptionText = await this.translateService
+      .get(
+        _(`Join me on Skelvy! It is a mobile app for meetings over your favorite drinks.
+
+You can find more information here:
+https://skelvy.com`),
+      )
+      .toPromise();
+
+    this.share.share(descriptionText, checkOutText);
   }
 
   openLink(url: string) {
