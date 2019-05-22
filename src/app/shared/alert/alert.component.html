@@ -16,9 +16,7 @@
         {{ confirmText || 'Confirm' | translate }}
       </ng-container>
       <ng-template #loading>
-        <ng-container *ngIf="confirmLoading">
-          <ion-spinner class="align-middle"></ion-spinner>
-        </ng-container>
+        <ion-spinner></ion-spinner>
       </ng-template>
     </button>
     <button

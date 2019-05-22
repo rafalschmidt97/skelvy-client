@@ -27,7 +27,9 @@
     (click)="blockUser()"
     class="btn btn-block btn-danger"
   >
-    {{ 'Block user' | translate }}
+    <ng-container *ngIf="!loadingBlocking; else loading">{{
+      'Block user' | translate
+    }}</ng-container>
   </button>
   <ng-template #unblock>
     <button
@@ -36,8 +38,13 @@
       (click)="removeBlockUser()"
       class="btn btn-block btn-dark"
     >
-      {{ 'Unblock user' | translate }}
+      <ng-container *ngIf="!loadingBlocking; else loading">{{
+        'Unblock user' | translate
+      }}</ng-container>
     </button>
+  </ng-template>
+  <ng-template #loading>
+    <ion-spinner></ion-spinner>
   </ng-template>
   <button
     type="button"

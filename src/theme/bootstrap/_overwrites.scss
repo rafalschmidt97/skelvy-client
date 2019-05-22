@@ -67,3 +67,9 @@ a {
 .pointer {
   cursor: pointer !important;
 }
+
+.btn ion-spinner {
+  display: block;
+  vertical-align: middle;
+  margin: -2px auto;
+}
