@@ -4,7 +4,7 @@ import { ToastService } from '../../core/toast/toast.service';
 import { Push, PushObject } from '@ionic-native/push/ngx';
 import { UserService } from './user.service';
 import { Storage } from '@ionic/storage';
-import { Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { UserStoreService } from './user-store.service';
 
 @Injectable({
@@ -20,6 +20,7 @@ export class UserPushService {
     private readonly storage: Storage,
     private readonly platform: Platform,
     private readonly userStore: UserStoreService,
+    private readonly routerNavigation: NavController,
   ) {
     this.push$ = this.push.init({});
   }
@@ -61,6 +62,17 @@ export class UserPushService {
   }
 
   connect() {
+    this.push$.on('notification').subscribe(notification => {
+      if (!notification.additionalData.foreground) {
+        const { redirect_to } = notification.additionalData;
+        if (redirect_to === 'meeting') {
+          this.routerNavigation.navigateRoot(['/app/tabs/meeting']);
+        } else if (redirect_to === 'chat') {
+          this.routerNavigation.navigateForward(['/app/chat']);
+        }
+      }
+    });
+
     this.storage.get('pushTopicUser').then((exists: boolean) => {
       if (!exists) {
         this.addTopic('user-' + this.getUserId(), 'pushTopicUser');
