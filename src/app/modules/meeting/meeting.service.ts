@@ -82,6 +82,13 @@ export class MeetingService {
     );
   }
 
+  sendMessage(message: any) {
+    return this.http.post<void>(
+      environment.versionApiUrl + 'meetings/self/chat',
+      message,
+    );
+  }
+
   findMeetingSuggestions(
     latitude: number,
     longitude: number,

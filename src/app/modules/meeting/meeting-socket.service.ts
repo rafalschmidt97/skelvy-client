@@ -41,21 +41,6 @@ export class MeetingSocketService {
     this.onMeetingExpired();
   }
 
-  sendMessage(message: any) {
-    this.userSocket.invoke('SendMessage', message).catch(() => {
-      // data is not relevant (connection lost and reconnected)
-      this.meetingService.findMeeting().subscribe();
-
-      if (this.router.url === '/app/chat') {
-        this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-      }
-
-      this.toastService.createError(
-        _('A problem occurred while sending the message'),
-      );
-    });
-  }
-
   private onUserSentMeetingChatMessage() {
     this.userSocket.on(
       'UserSentMeetingChatMessage',

@@ -13,6 +13,17 @@ export class ChatStoreService extends StoreService<ChatModel> {
     });
   }
 
+  removeMessage(message: ChatMessageDto) {
+    this.subject.next({
+      ...this.subject.getValue(),
+      messages: [
+        ...this.subject
+          .getValue()
+          .messages.filter(x => x.date.getTime() === message.date.getTime()),
+      ],
+    });
+  }
+
   setMessages(messages: ChatMessageDto[]) {
     this.subject.next({
       ...this.subject.getValue(),

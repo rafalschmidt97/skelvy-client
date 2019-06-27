@@ -17,16 +17,12 @@
     ></textarea>
   </ng-container>
 
-  <button
-    (click)="onSubmit()"
-    [disabled]="isLoading || !(connected$ | async)"
-    class="btn-send"
-  >
+  <button (click)="onSubmit()" [disabled]="isLoading" class="btn-send">
     <ion-icon
       name="arrow-dropup-circle"
       class="text-primary d-block"
-      [class.text-muted]="hasErrorRequired && (connected$ | async)"
-      [class.text-danger]="hasErrorMaxLength || !(connected$ | async)"
+      [class.text-muted]="hasErrorRequired"
+      [class.text-danger]="hasErrorMaxLength"
     ></ion-icon>
   </button>
 </app-form>

@@ -9,9 +9,8 @@ import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/form/input/input.component';
 import { UserStoreService } from '../../../user/user-store.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Connection } from '../../../user/user';
+import { ChatMessageDto } from '../../chat';
 
 @Component({
   selector: 'app-message-form',
@@ -21,9 +20,8 @@ import { Connection } from '../../../user/user';
 export class MessageFormComponent implements Form, OnSubmit {
   form: FormGroup;
   isLoading = false;
-  connected$: Observable<boolean>;
 
-  @Output() sendMessage = new EventEmitter();
+  @Output() sendMessage = new EventEmitter<ChatMessageDto>();
   @ViewChild('messageInput') messageInput: ElementRef;
 
   constructor(
@@ -40,10 +38,6 @@ export class MessageFormComponent implements Form, OnSubmit {
         ],
       ],
     });
-
-    this.connected$ = userStore.data$.pipe(
-      map(x => x.connection === Connection.CONNECTED),
-    );
   }
 
   onSubmit() {
@@ -57,6 +51,7 @@ export class MessageFormComponent implements Form, OnSubmit {
       this.isLoading = true;
 
       this.sendMessage.emit({
+        userId: this.userStore.data.id,
         date: new Date(),
         message: this.form.get('message').value.trim(),
       });

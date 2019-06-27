@@ -6,7 +6,13 @@ import { MeetingModel } from '../../meeting/meeting';
 import { UserStoreService } from '../../user/user-store.service';
 import { UserDto } from '../../user/user';
 import { ChatStoreService } from '../chat-store.service';
-import { MeetingSocketService } from '../../meeting/meeting-socket.service';
+import { MeetingService } from '../../meeting/meeting.service';
+import { _ } from '../../../core/i18n/translate';
+import { NavController } from '@ionic/angular';
+import { ToastService } from '../../../core/toast/toast.service';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-overview',
@@ -20,8 +26,12 @@ export class OverviewPage {
   constructor(
     private readonly meetingStore: MeetingStoreService,
     private readonly userStore: UserStoreService,
-    private readonly meetingSocket: MeetingSocketService,
+    private readonly meetingService: MeetingService,
     private readonly chatStore: ChatStoreService,
+    private readonly routerNavigation: NavController,
+    private readonly toastService: ToastService,
+    private readonly router: Router,
+    private readonly storage: Storage,
   ) {
     this.meeting$ = meetingStore.data$;
     this.user$ = userStore.data$;
@@ -29,6 +39,27 @@ export class OverviewPage {
   }
 
   sendMessage(message) {
-    this.meetingSocket.sendMessage(message);
+    this.chatStore.addMessage(message);
+    this.storage.set('lastMessageDate', message.date);
+
+    this.meetingService.sendMessage(message).subscribe(
+      () => {},
+      (error: HttpErrorResponse) => {
+        // data is not relevant (connection lost and reconnected)
+        if (error.status === 404 || error.status === 409) {
+          this.meetingService.findMeeting().subscribe();
+
+          if (this.router.url === '/app/chat') {
+            this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+          }
+        } else {
+          this.chatStore.removeMessage(message);
+        }
+
+        this.toastService.createError(
+          _('A problem occurred while sending the message'),
+        );
+      },
+    );
   }
 }
