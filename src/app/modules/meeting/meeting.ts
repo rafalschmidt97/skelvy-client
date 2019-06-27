@@ -24,7 +24,7 @@ export interface MeetingDto {
   date: Date;
   latitude: number;
   longitude: number;
-  drink: MeetingDrinkDto;
+  drinkType: MeetingDrinkTypeDto;
   users: MeetingUserDto[];
 }
 
@@ -36,7 +36,7 @@ export interface MeetingRequestDto {
   maxAge: number;
   latitude: number;
   longitude: number;
-  drinks: MeetingDrinkDto[];
+  drinkTypes: MeetingDrinkTypeDto[];
 }
 
 export interface MeetingUserDto {
@@ -44,7 +44,12 @@ export interface MeetingUserDto {
   profile: ProfileDto;
 }
 
-export interface MeetingDrinkDto {
+export interface MeetingDrinkTypeDto {
   id: number;
   name?: string;
+}
+
+export interface MeetingSuggestionsModel {
+  meetingRequests: MeetingRequestDto[];
+  meetings: MeetingDto[];
 }

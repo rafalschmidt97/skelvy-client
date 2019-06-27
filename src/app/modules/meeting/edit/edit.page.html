@@ -45,6 +45,18 @@
           [label]="'Address' | translate"
           [placeholder]="'Type in your city...' | translate"
         ></app-address>
+        <app-suggestions
+          *ngIf="
+            !loadingSuggestions &&
+            suggestions &&
+            (suggestions.meetingRequests.length > 0 ||
+              suggestions.meetings.length > 0)
+          "
+          [suggestions]="suggestions"
+          (join)="join($event)"
+          (connect)="connect($event)"
+          [label]="'Suggestions' | translate"
+        ></app-suggestions>
         <app-range
           name="age"
           [min]="18"
@@ -55,10 +67,10 @@
           [maxValueToRound]="55"
         ></app-range>
         <app-checkbox
-          *ngIf="drinks.length > 0"
-          name="drinks"
+          *ngIf="drinkTypes?.length > 0"
+          name="drinkTypes"
           [label]="'Drinks' | translate"
-          [options]="drinks"
+          [options]="drinkTypes"
         ></app-checkbox>
       </app-form>
       <ng-template #loading>

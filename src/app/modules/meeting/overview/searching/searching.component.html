@@ -29,9 +29,9 @@
       <div class="py-2 border-bottom">
         <div class="font-weight-bold">{{ 'Drinks' | translate }}</div>
         <div>
-          <ng-container *ngFor="let drink of request.drinks; let i = index">
+          <ng-container *ngFor="let drink of request.drinkTypes; let i = index">
             <span class="d-inline-block">{{ drink.name | translate }}</span>
-            <span *ngIf="i !== request.drinks.length - 1">, </span>
+            <span *ngIf="i !== request.drinkTypes.length - 1">, </span>
           </ng-container>
         </div>
       </div>
