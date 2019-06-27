@@ -6,6 +6,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { AddressComponent } from './address/address.component';
 import { AutofocusDirective } from './address/autofocus.directive';
 import { AddressItemComponent } from './address/address-item/address-item.component';
+import { SuggestionsComponent } from './suggestions/suggestions.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
     AddressComponent,
     AutofocusDirective,
     AddressItemComponent,
+    SuggestionsComponent,
   ],
 })
 export class EditMeetingPageModule {}

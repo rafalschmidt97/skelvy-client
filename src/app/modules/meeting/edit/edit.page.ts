@@ -6,7 +6,11 @@ import * as moment from 'moment';
 import { Checkbox } from '../../../shared/form/checkbox/checkbox';
 import { RangeComponent } from '../../../shared/form/range/range.component';
 import { MeetingService } from '../meeting.service';
-import { MeetingDrinkDto, MeetingRequestDto } from '../meeting';
+import {
+  MeetingDrinkTypeDto,
+  MeetingRequestDto,
+  MeetingSuggestionsModel,
+} from '../meeting';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting-socket.service';
@@ -22,7 +26,7 @@ import { isNil } from 'lodash';
 export class EditPage implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
-  drinks: Checkbox[];
+  drinkTypes: Checkbox[];
   today = moment()
     .startOf('day')
     .toDate();
@@ -30,16 +34,13 @@ export class EditPage implements Form, OnSubmit, OnInit {
     .add(1, 'days')
     .startOf('day')
     .toDate();
-  private readonly drinksToTranslate = [
-    _('tea'),
-    _('chocolate'),
-    _('coffee'),
-    _('beer'),
-    _('wine'),
-    _('vodka'),
-    _('whiskey'),
-  ];
   loadingForm = true;
+  loadingSuggestions = false;
+  suggestions: MeetingSuggestionsModel;
+  private readonly drinkTypesTranslateMarker = [
+    _('soft drinkTypes'),
+    _('alcoholic drinkTypes'),
+  ];
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -54,17 +55,17 @@ export class EditPage implements Form, OnSubmit, OnInit {
       date: [[this.today, this.tomorrow], Validators.required],
       address: [null, Validators.required],
       age: [[18, 25], RangeComponent.minimumRangeValidator(4)],
-      drinks: [[], Validators.required],
+      drinkTypes: [[], Validators.required],
     });
   }
 
   ngOnInit() {
     this.meetingService.findDrinks().subscribe(
-      (drinks: MeetingDrinkDto[]) => {
-        this.drinks = drinks.map(drink => {
+      (drinkTypes: MeetingDrinkTypeDto[]) => {
+        this.drinkTypes = drinkTypes.map(type => {
           return {
-            label: drink.name,
-            value: drink.id.toString(),
+            label: type.name,
+            value: type.id.toString(),
           };
         });
 
@@ -77,6 +78,10 @@ export class EditPage implements Form, OnSubmit, OnInit {
         );
       },
     );
+
+    this.form.get('address').valueChanges.subscribe(address => {
+      this.findSuggestions(address.latitude, address.longitude);
+    });
   }
 
   onSubmit() {
@@ -90,7 +95,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
         maxAge: form.age[1],
         latitude: form.address.latitude,
         longitude: form.address.longitude,
-        drinks: form.drinks.map(drink => {
+        drinkTypes: form.drinkTypes.map(drink => {
           return { id: drink };
         }),
       };
@@ -124,6 +129,77 @@ export class EditPage implements Form, OnSubmit, OnInit {
     }
   }
 
+  join(meetingId: number) {
+    if (!this.isLoading) {
+      this.isLoading = true;
+
+      this.meetingService.joinMeeting(meetingId).subscribe(
+        () => {
+          this.meetingService.findMeeting().subscribe(
+            () => {
+              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+            },
+            () => {
+              this.toastService.createError(
+                _('A problem occurred while finding the meeting'),
+              );
+            },
+          );
+        },
+        () => {
+          this.isLoading = false;
+          this.toastService.createError(
+            _('A problem occurred while joining the meeting'),
+          );
+        },
+      );
+    }
+  }
+
+  connect(requestId: number) {
+    if (!this.isLoading) {
+      this.isLoading = true;
+
+      this.meetingService.connectMeetingRequest(requestId).subscribe(
+        () => {
+          this.meetingService.findMeeting().subscribe(
+            () => {
+              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+            },
+            () => {
+              this.toastService.createError(
+                _('A problem occurred while finding the meeting'),
+              );
+            },
+          );
+        },
+        () => {
+          this.isLoading = false;
+          this.toastService.createError(
+            _('A problem occurred while connecting the request'),
+          );
+          const { latitude, longitude } = this.form.get('address').value;
+          this.findSuggestions(latitude, longitude);
+        },
+      );
+    }
+  }
+
+  findSuggestions(latitude: number, longitude: number) {
+    if (!this.loadingSuggestions) {
+      this.loadingSuggestions = true;
+      this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
+        suggestions => {
+          this.suggestions = suggestions;
+          this.loadingSuggestions = false;
+        },
+        () => {
+          this.loadingSuggestions = false;
+        },
+      );
+    }
+  }
+
   private fillForm() {
     this.storage
       .get('lastMeetingRequestForm')
@@ -149,15 +225,11 @@ export class EditPage implements Form, OnSubmit, OnInit {
               : [minDateValidated],
             address: requestForm.address,
             age: requestForm.age,
-            drinks: requestForm.drinks,
+            drinkTypes: requestForm.drinkTypes,
           });
         } else {
           this.form.patchValue({
-            drinks: [
-              this.drinks[1].value,
-              this.drinks[2].value,
-              this.drinks[3].value,
-            ],
+            drinkTypes: [this.drinkTypes[0].value, this.drinkTypes[1].value],
           });
 
           const userAge = moment().diff(

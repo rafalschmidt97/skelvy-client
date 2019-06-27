@@ -4,7 +4,12 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { MeetingStoreService } from './meeting-store.service';
-import { MeetingDrinkDto, MeetingModelDto, MeetingRequestDto } from './meeting';
+import {
+  MeetingDrinkTypeDto,
+  MeetingModelDto,
+  MeetingRequestDto,
+  MeetingSuggestionsModel,
+} from './meeting';
 import { ChatStoreService } from '../chat/chat-store.service';
 import { Storage } from '@ionic/storage';
 import { ChatMessageDto } from '../chat/chat';
@@ -71,9 +76,34 @@ export class MeetingService {
       );
   }
 
-  findDrinks(): Observable<MeetingDrinkDto[]> {
-    return this.http.get<MeetingDrinkDto[]>(
-      environment.versionApiUrl + 'drinks',
+  findDrinks(): Observable<MeetingDrinkTypeDto[]> {
+    return this.http.get<MeetingDrinkTypeDto[]>(
+      environment.versionApiUrl + 'drinks/types',
+    );
+  }
+
+  findMeetingSuggestions(
+    latitude: number,
+    longitude: number,
+  ): Observable<MeetingSuggestionsModel> {
+    return this.http.get<MeetingSuggestionsModel>(
+      `${
+        environment.versionApiUrl
+      }users/self/meeting-suggestions?latitude=${latitude}&longitude=${longitude}`,
+    );
+  }
+
+  joinMeeting(meetingId: number): Observable<void> {
+    return this.http.post<void>(
+      `${environment.versionApiUrl}users/self/join-meeting/${meetingId}`,
+      null,
+    );
+  }
+
+  connectMeetingRequest(requestId: number): Observable<void> {
+    return this.http.post<void>(
+      `${environment.versionApiUrl}users/self/connect-request/${requestId}`,
+      null,
     );
   }
 
