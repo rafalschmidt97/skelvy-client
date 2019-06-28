@@ -88,8 +88,8 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
       this.geolocation
         .getCurrentPosition({
           timeout: 5000,
-          maximumAge: 0,
-          enableHighAccuracy: true,
+          maximumAge: 10000,
+          enableHighAccuracy: false,
         })
         .then(res => {
           this.mapsService
