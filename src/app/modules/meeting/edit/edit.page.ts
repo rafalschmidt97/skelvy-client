@@ -151,6 +151,8 @@ export class EditPage implements Form, OnSubmit, OnInit {
           this.toastService.createError(
             _('A problem occurred while joining the meeting'),
           );
+          const { latitude, longitude } = this.form.get('address').value;
+          this.findSuggestions(latitude, longitude);
         },
       );
     }
