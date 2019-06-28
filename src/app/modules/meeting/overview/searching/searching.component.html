@@ -16,16 +16,10 @@
           {{ label }}
         </div>
       </div>
-      <div *ngIf="!loadingLocation; else loading" class="py-2 border-bottom">
+      <div class="py-2 border-bottom">
         <div class="font-weight-bold">{{ 'City' | translate }}</div>
-        <div>{{ location.city }}</div>
+        <div>{{ request.city }}</div>
       </div>
-      <ng-template #loading>
-        <div class="py-2 border-bottom loading">
-          <div class="font-weight-bold">{{ 'City' | translate }}</div>
-          <div class="load d-inline-block">placeholder</div>
-        </div>
-      </ng-template>
       <div class="py-2 border-bottom">
         <div class="font-weight-bold">{{ 'Drinks' | translate }}</div>
         <div>

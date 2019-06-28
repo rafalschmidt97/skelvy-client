@@ -12,16 +12,10 @@
         <div class="font-weight-bold">{{ 'Date' | translate }}</div>
         <div>{{ meeting.date | date: 'dd.MM.yyyy' }}</div>
       </div>
-      <div *ngIf="!loadingLocation && location; else loading" class="py-2 w-50">
+      <div class="py-2 w-50">
         <div class="font-weight-bold">{{ 'City' | translate }}</div>
-        <div>{{ location.city }}</div>
+        <div>{{ meeting.city }}</div>
       </div>
-      <ng-template #loading>
-        <div class="p-2 w-50 loading">
-          <div class="font-weight-bold">{{ 'City' | translate }}</div>
-          <div class="load d-inline-block">placeholder</div>
-        </div>
-      </ng-template>
     </div>
   </section>
   <section class="users">

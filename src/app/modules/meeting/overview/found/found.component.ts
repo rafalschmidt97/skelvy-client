@@ -36,16 +36,12 @@ export class FoundComponent implements OnInit {
   userForModal: MeetingUserDto;
   modal: Modal;
   alert: Alert;
-  loadingLocation = true;
-  location: MapsResponse;
   loadingLeave = false;
   messagesToRead = 0;
 
   constructor(
     private readonly modalService: ModalService,
     private readonly alertService: AlertService,
-    private readonly mapsService: MapsService,
-    private readonly translateService: TranslateService,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
@@ -71,28 +67,6 @@ export class FoundComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.mapsService
-      .reverse(
-        this.meeting.latitude,
-        this.meeting.longitude,
-        this.translateService.currentLang,
-      )
-      .subscribe(
-        results => {
-          if (results.length > 0) {
-            this.location = results[0];
-          }
-
-          this.loadingLocation = false;
-        },
-        () => {
-          this.loadingLocation = false;
-          this.toastService.createError(
-            _('A problem occurred while searching for the location'),
-          );
-        },
-      );
-
     this.chatStore.data$.subscribe(chat => {
       if (chat && chat.messages) {
         this.messagesToRead = chat.messagesToRead;

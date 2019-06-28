@@ -12,6 +12,7 @@ import {
 import { ChatStoreService } from '../chat/chat-store.service';
 import { Storage } from '@ionic/storage';
 import { ChatMessageDto } from '../chat/chat';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
@@ -22,11 +23,14 @@ export class MeetingService {
     private readonly meetingStore: MeetingStoreService,
     private readonly chatStore: ChatStoreService,
     private readonly storage: Storage,
+    private readonly translateService: TranslateService,
   ) {}
 
   findMeeting(): Observable<MeetingModelDto> {
     return this.http
-      .get<MeetingModelDto>(environment.versionApiUrl + 'meetings/self')
+      .get<MeetingModelDto>(
+        `${environment.versionApiUrl}meetings/self?language=${this.translateService.currentLang}`,
+      )
       .pipe(
         tap(async model => {
           this.meetingStore.set({
@@ -86,7 +90,8 @@ export class MeetingService {
     longitude: number,
   ): Observable<MeetingSuggestionsModel> {
     return this.http.get<MeetingSuggestionsModel>(
-      `${environment.versionApiUrl}users/self/meeting-suggestions?latitude=${latitude}&longitude=${longitude}`,
+      `${environment.versionApiUrl}users/self/meeting-suggestions` +
+        `?latitude=${latitude}&longitude=${longitude}&language=${this.translateService.currentLang}`,
     );
   }
 

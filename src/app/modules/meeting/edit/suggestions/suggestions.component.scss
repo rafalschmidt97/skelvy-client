@@ -20,11 +20,13 @@
 
   .item {
     border-radius: $input-border-radius;
+    font-size: 14px;
   }
 
   .join {
     white-space: nowrap;
     font-weight: 600;
+    font-size: 1rem;
   }
 
   .meetings.has-sibling {

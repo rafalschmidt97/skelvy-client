@@ -10,6 +10,7 @@ import { ChatStoreService } from '../chat/chat-store.service';
 import { ChatMessageDto } from '../chat/chat';
 import { Storage } from '@ionic/storage';
 import { Connection } from './user';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
@@ -21,34 +22,39 @@ export class SelfService {
     private readonly meetingStore: MeetingStoreService,
     private readonly chatStore: ChatStoreService,
     private readonly storage: Storage,
+    private readonly translateService: TranslateService,
   ) {}
 
   findSelf(): Observable<SelfModelDto> {
-    return this.http.get<SelfModelDto>(environment.versionApiUrl + 'self').pipe(
-      tap(async model => {
-        this.userStore.set({
-          connection: Connection.CONNECTED,
-          id: model.user.id,
-          profile: model.user.profile,
-        });
-
-        if (model.meetingModel) {
-          this.meetingStore.set({
-            status: model.meetingModel.status,
-            meeting: model.meetingModel.meeting,
-            request: model.meetingModel.request,
+    return this.http
+      .get<SelfModelDto>(
+        `${environment.versionApiUrl}self?language=${this.translateService.currentLang}`,
+      )
+      .pipe(
+        tap(async model => {
+          this.userStore.set({
+            connection: Connection.CONNECTED,
+            id: model.user.id,
+            profile: model.user.profile,
           });
 
-          if (model.meetingModel.meetingMessages) {
-            const chatModel = await this.initializedChatModel(
-              model.meetingModel.meetingMessages,
-            );
+          if (model.meetingModel) {
+            this.meetingStore.set({
+              status: model.meetingModel.status,
+              meeting: model.meetingModel.meeting,
+              request: model.meetingModel.request,
+            });
 
-            this.chatStore.set(chatModel);
+            if (model.meetingModel.meetingMessages) {
+              const chatModel = await this.initializedChatModel(
+                model.meetingModel.meetingMessages,
+              );
+
+              this.chatStore.set(chatModel);
+            }
           }
-        }
-      }),
-    );
+        }),
+      );
   }
 
   private async initializedChatModel(messages: ChatMessageDto[]) {

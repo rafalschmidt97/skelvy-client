@@ -17,10 +17,20 @@
     >
       <div class="py-2 pl-2">
         <div>
-          {{ 'Date' | translate }}: {{ meeting.date | date: 'dd.MM.yyyy' }}
+          <span class="font-weight-bold">{{ 'Date' | translate }}</span
+          >: {{ meeting.date | date: 'dd.MM.yyyy' }}
         </div>
         <div>
-          {{ 'Drink' | translate }}: {{ meeting.drinkType.name | translate }}
+          <span class="font-weight-bold">{{ 'City' | translate }}</span
+          >: {{ meeting.city }}
+        </div>
+        <div>
+          <span class="font-weight-bold">{{ 'People' | translate }}</span
+          >: {{ meeting.users.length }}
+        </div>
+        <div>
+          <span class="font-weight-bold">{{ 'Drink' | translate }}</span
+          >: {{ meeting.drinkType.name | translate }}
         </div>
       </div>
       <div
@@ -41,11 +51,17 @@
     >
       <div class="py-2 pl-2">
         <div>
-          {{ 'Date' | translate }}: {{ request.minDate | date: 'dd.MM.yyyy' }} -
+          <span class="font-weight-bold">{{ 'Date' | translate }}</span
+          >: {{ request.minDate | date: 'dd.MM.yyyy' }} -
           {{ request.maxDate | date: 'dd.MM.yyyy' }}
         </div>
         <div>
-          {{ 'Drinks' | translate }}:
+          <span class="font-weight-bold">{{ 'City' | translate }}</span
+          >: {{ request.city }}
+        </div>
+        <div>
+          <span class="font-weight-bold">{{ 'Drinks' | translate }}</span
+          >:
           <ng-container *ngFor="let drink of request.drinkTypes; let i = index">
             <span class="d-inline-block">{{ drink.name | translate }}</span>
             <span *ngIf="i !== request.drinkTypes.length - 1">, </span>
