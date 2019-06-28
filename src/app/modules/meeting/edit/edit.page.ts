@@ -88,7 +88,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
     if (this.form.valid && !this.isLoading && !this.loadingForm) {
       this.isLoading = true;
       const form = this.form.value;
-      const request: MeetingRequestDto = {
+      const request = {
         minDate: form.date[0],
         maxDate: form.date[1] || form.date[0],
         minAge: form.age[0],

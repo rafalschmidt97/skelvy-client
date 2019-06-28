@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserStoreService } from './user-store.service';
 import { Observable } from 'rxjs';
-import { ProfileDto, UserDto } from './user';
+import { UserDto } from './user';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
@@ -34,7 +34,7 @@ export class UserService {
     );
   }
 
-  updateProfile(profile: ProfileDto): Observable<void> {
+  updateProfile(profile): Observable<void> {
     return this.http
       .put<void>(environment.versionApiUrl + 'users/self/profile', profile)
       .pipe(

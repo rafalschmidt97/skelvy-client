@@ -15,4 +15,11 @@ export class ChatService {
       `${environment.versionApiUrl}meetings/self/chat?page=${page}`,
     );
   }
+
+  sendMessage(message: any) {
+    return this.http.post<void>(
+      environment.versionApiUrl + 'meetings/self/chat',
+      message,
+    );
+  }
 }

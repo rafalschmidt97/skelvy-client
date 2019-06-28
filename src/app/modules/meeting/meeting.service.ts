@@ -7,7 +7,6 @@ import { MeetingStoreService } from './meeting-store.service';
 import {
   MeetingDrinkTypeDto,
   MeetingModelDto,
-  MeetingRequestDto,
   MeetingSuggestionsModel,
 } from './meeting';
 import { ChatStoreService } from '../chat/chat-store.service';
@@ -59,7 +58,7 @@ export class MeetingService {
       );
   }
 
-  createMeetingRequest(request: MeetingRequestDto): Observable<void> {
+  createMeetingRequest(request): Observable<void> {
     return this.http.post<void>(
       environment.versionApiUrl + 'users/self/request',
       request,
@@ -82,21 +81,12 @@ export class MeetingService {
     );
   }
 
-  sendMessage(message: any) {
-    return this.http.post<void>(
-      environment.versionApiUrl + 'meetings/self/chat',
-      message,
-    );
-  }
-
   findMeetingSuggestions(
     latitude: number,
     longitude: number,
   ): Observable<MeetingSuggestionsModel> {
     return this.http.get<MeetingSuggestionsModel>(
-      `${
-        environment.versionApiUrl
-      }users/self/meeting-suggestions?latitude=${latitude}&longitude=${longitude}`,
+      `${environment.versionApiUrl}users/self/meeting-suggestions?latitude=${latitude}&longitude=${longitude}`,
     );
   }
 

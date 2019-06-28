@@ -13,6 +13,7 @@ import { ToastService } from '../../../core/toast/toast.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
+import { ChatService } from '../chat.service';
 
 @Component({
   selector: 'app-overview',
@@ -27,6 +28,7 @@ export class OverviewPage {
     private readonly meetingStore: MeetingStoreService,
     private readonly userStore: UserStoreService,
     private readonly meetingService: MeetingService,
+    private readonly chatService: ChatService,
     private readonly chatStore: ChatStoreService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
@@ -42,7 +44,7 @@ export class OverviewPage {
     this.chatStore.addMessage(message);
     this.storage.set('lastMessageDate', message.date);
 
-    this.meetingService.sendMessage(message).subscribe(
+    this.chatService.sendMessage(message).subscribe(
       () => {},
       (error: HttpErrorResponse) => {
         // data is not relevant (connection lost and reconnected)
