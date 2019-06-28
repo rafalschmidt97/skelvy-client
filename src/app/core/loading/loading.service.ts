@@ -17,7 +17,7 @@ export class LoadingService {
   }
 
   async show() {
-    const loading = await this.loadingController.create();
+    const loading = await this.loadingController.create({});
     await loading.present();
     return loading;
   }
