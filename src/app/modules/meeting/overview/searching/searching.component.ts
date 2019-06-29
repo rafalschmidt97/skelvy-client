@@ -5,7 +5,11 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { MeetingRequestDto, MeetingSuggestionsModel } from '../../meeting';
+import {
+  MeetingRequestDto,
+  MeetingStatus,
+  MeetingSuggestionsModel,
+} from '../../meeting';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
 import { MapsService } from '../../../../core/maps/maps.service';
@@ -16,6 +20,7 @@ import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
 import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MeetingStoreService } from '../../meeting-store.service';
 
 @Component({
   selector: 'app-searching',
@@ -37,6 +42,7 @@ export class SearchingComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
+    private readonly meetingStore: MeetingStoreService,
   ) {}
 
   getDate(minDate: Date, maxDate: Date): string {
@@ -50,8 +56,13 @@ export class SearchingComponent implements OnInit {
   }
 
   ngOnInit() {
-    const { latitude, longitude } = this.request;
-    this.findSuggestions(latitude, longitude);
+    this.findSuggestions(this.request.latitude, this.request.longitude);
+
+    this.meetingStore.data$.subscribe(model => {
+      if (model.status === MeetingStatus.SEARCHING) {
+        this.findSuggestions(model.request.latitude, model.request.longitude);
+      }
+    });
   }
 
   findSuggestions(latitude: number, longitude: number) {
@@ -89,8 +100,7 @@ export class SearchingComponent implements OnInit {
           this.toastService.createError(
             _('A problem occurred while joining the meeting'),
           );
-          const { latitude, longitude } = this.request;
-          this.findSuggestions(latitude, longitude);
+          this.findSuggestions(this.request.latitude, this.request.longitude);
         },
       );
     }
@@ -116,8 +126,7 @@ export class SearchingComponent implements OnInit {
           this.toastService.createError(
             _('A problem occurred while connecting the request'),
           );
-          const { latitude, longitude } = this.request;
-          this.findSuggestions(latitude, longitude);
+          this.findSuggestions(this.request.latitude, this.request.longitude);
         },
       );
     }
