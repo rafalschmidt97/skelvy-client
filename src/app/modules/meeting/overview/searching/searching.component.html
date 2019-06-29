@@ -1,6 +1,6 @@
-<div class="d-flex flex-column minh-100 flex-column">
+<div class="d-flex flex-column minh-100 flex-column bg-ultra-light">
   <app-connection></app-connection>
-  <section class="drink d-flex flex-grow-1 bg-ultra-light py-3">
+  <section class="drink d-flex flex-grow-1 py-3">
     <div class="my-auto w-100 text-center header container">
       {{
         'Feel free to leave the app. We will notify you about new meetings!'
@@ -8,38 +8,50 @@
       }}
     </div>
   </section>
-  <section class="info">
-    <div class="text-center border-bottom border-top">
-      <div class="py-2 border-bottom">
-        <div class="font-weight-bold">{{ 'Date' | translate }}</div>
+  <app-suggestions
+    class="border-top border-bottom mb-3"
+    *ngIf="
+      !loadingSuggestions &&
+      suggestions &&
+      (suggestions.meetingRequests.length > 0 ||
+        suggestions.meetings.length > 0)
+    "
+    [suggestions]="suggestions"
+    (join)="join($event)"
+    (connect)="connect($event)"
+    [isLoading]="isLoading"
+  ></app-suggestions>
+  <section class="info border-top bg-white">
+    <label [innerText]="'Current searching preferences' | translate"></label>
+    <div class="d-flex align-items-center bg-white mb-1 item border">
+      <div class="py-2 pl-2">
         <div>
-          {{ label }}
+          <span class="font-weight-bold">{{ 'Date' | translate }}</span
+          >: {{ getDate(request.minDate, request.maxDate) }}
         </div>
-      </div>
-      <div class="py-2 border-bottom">
-        <div class="font-weight-bold">{{ 'City' | translate }}</div>
-        <div>{{ request.city }}</div>
-      </div>
-      <div class="py-2 border-bottom">
-        <div class="font-weight-bold">{{ 'Drinks' | translate }}</div>
         <div>
+          <span class="font-weight-bold">{{ 'City' | translate }}</span
+          >: {{ request.city }}
+        </div>
+        <div>
+          <span class="font-weight-bold">{{ 'Drinks' | translate }}</span
+          >:
           <ng-container *ngFor="let drink of request.drinkTypes; let i = index">
             <span class="d-inline-block">{{ drink.name | translate }}</span>
             <span *ngIf="i !== request.drinkTypes.length - 1">, </span>
           </ng-container>
         </div>
+        <div>
+          <span class="font-weight-bold">{{ 'Age range' | translate }}</span
+          >: {{ request.minAge }} - {{ request.maxAge }}
+        </div>
       </div>
-      <div class="py-2">
-        <div class="font-weight-bold">{{ 'Age range' | translate }}</div>
-        <div>{{ request.minAge }} - {{ request.maxAge }}</div>
-      </div>
-    </div>
-  </section>
-  <section class="more">
-    <div class="container py-2">
-      <button (click)="stop()" class="btn btn-outline-primary btn-block">
-        {{ 'Stop browsing' | translate }}
-      </button>
+      <div
+        class="remove text-danger ml-auto align-self-stretch d-flex align-items-center px-3"
+        [class.text-muted]="isLoading"
+        [innerText]="'remove' | translate"
+        (click)="stop()"
+      ></div>
     </div>
   </section>
 </div>
@@ -47,7 +59,7 @@
 <ng-template #alert>
   <app-alert
     (confirm)="confirmAlert()"
-    [confirmLoading]="loadingRemove"
+    [confirmLoading]="isLoading"
     (decline)="declineAlert()"
     [title]="'Are you sure?' | translate"
   ></app-alert>

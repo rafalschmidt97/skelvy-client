@@ -1,7 +1,4 @@
-<label>
-  {{ label }}
-</label>
-<div class="suggestions bg-primary" [class.disabled]="isLoading">
+<div class="suggestions bg-primary">
   <div
     class="meetings"
     *ngIf="suggestions.meetings.length > 0"
@@ -13,7 +10,7 @@
     ></label>
     <div
       *ngFor="let meeting of suggestions.meetings"
-      class="d-flex align-items-center bg-white mb-1 item"
+      class="d-flex align-items-center bg-white mb-1 item border"
     >
       <div class="py-2 pl-2">
         <div>
@@ -35,6 +32,7 @@
       </div>
       <div
         class="join text-primary ml-auto align-self-stretch d-flex align-items-center px-3"
+        [class.text-muted]="isLoading"
         [innerText]="'join' | translate"
         (click)="join.emit(meeting.id)"
       ></div>
@@ -47,7 +45,7 @@
     ></label>
     <div
       *ngFor="let request of suggestions.meetingRequests"
-      class="d-flex align-items-center bg-white mb-1 item"
+      class="d-flex align-items-center bg-white mb-1 item border"
     >
       <div class="py-2 pl-2">
         <div>
@@ -69,6 +67,7 @@
       </div>
       <div
         class="join text-primary ml-auto align-self-stretch d-flex align-items-center px-3"
+        [class.text-muted]="isLoading"
         [innerText]="'connect' | translate"
         (click)="connect.emit(request.id)"
       ></div>

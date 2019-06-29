@@ -1,5 +1,11 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
-import { MeetingRequestDto } from '../../meeting';
+import {
+  Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { MeetingRequestDto, MeetingSuggestionsModel } from '../../meeting';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
 import { MapsService } from '../../../../core/maps/maps.service';
@@ -16,11 +22,13 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './searching.component.html',
   styleUrls: ['./searching.component.scss'],
 })
-export class SearchingComponent {
+export class SearchingComponent implements OnInit {
   @Input() request: MeetingRequestDto;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
   alert: Alert;
-  loadingRemove = false;
+  isLoading = false;
+  loadingSuggestions = false;
+  suggestions: MeetingSuggestionsModel;
 
   constructor(
     private readonly alertService: AlertService,
@@ -31,26 +39,97 @@ export class SearchingComponent {
     private readonly meetingService: MeetingService,
   ) {}
 
-  get label(): string {
-    const start = this.request.minDate;
-    const end = this.request.maxDate;
-
-    if (end !== start) {
-      return `${moment(start).format('DD.MM.YYYY')} - ${moment(end).format(
-        'DD.MM.YYYY',
-      )}`;
+  getDate(minDate: Date, maxDate: Date): string {
+    if (maxDate !== minDate) {
+      return `${moment(minDate).format('DD.MM.YYYY')} - ${moment(
+        maxDate,
+      ).format('DD.MM.YYYY')}`;
     }
 
-    return moment(start).format('DD.MM.YYYY');
+    return moment(minDate).format('DD.MM.YYYY');
+  }
+
+  ngOnInit() {
+    const { latitude, longitude } = this.request;
+    this.findSuggestions(latitude, longitude);
+  }
+
+  findSuggestions(latitude: number, longitude: number) {
+    if (!this.loadingSuggestions) {
+      this.loadingSuggestions = true;
+      this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
+        suggestions => {
+          this.suggestions = suggestions;
+          this.loadingSuggestions = false;
+        },
+        () => {
+          this.loadingSuggestions = false;
+        },
+      );
+    }
+  }
+
+  join(meetingId: number) {
+    if (!this.isLoading) {
+      this.isLoading = true;
+
+      this.meetingService.joinMeeting(meetingId).subscribe(
+        () => {
+          this.meetingService.findMeeting().subscribe(
+            () => {},
+            () => {
+              this.toastService.createError(
+                _('A problem occurred while finding the meeting'),
+              );
+            },
+          );
+        },
+        () => {
+          this.isLoading = false;
+          this.toastService.createError(
+            _('A problem occurred while joining the meeting'),
+          );
+          const { latitude, longitude } = this.request;
+          this.findSuggestions(latitude, longitude);
+        },
+      );
+    }
+  }
+
+  connect(requestId: number) {
+    if (!this.isLoading) {
+      this.isLoading = true;
+
+      this.meetingService.connectMeetingRequest(requestId).subscribe(
+        () => {
+          this.meetingService.findMeeting().subscribe(
+            () => {},
+            () => {
+              this.toastService.createError(
+                _('A problem occurred while finding the meeting'),
+              );
+            },
+          );
+        },
+        () => {
+          this.isLoading = false;
+          this.toastService.createError(
+            _('A problem occurred while connecting the request'),
+          );
+          const { latitude, longitude } = this.request;
+          this.findSuggestions(latitude, longitude);
+        },
+      );
+    }
   }
 
   stop() {
-    this.loadingRemove = false;
+    this.isLoading = false;
     this.alert = this.alertService.show(this.alertTemplate);
   }
 
   confirmAlert() {
-    this.loadingRemove = true;
+    this.isLoading = true;
     this.loadingService.lock();
     this.meetingService.removeMeetingRequest().subscribe(
       () => {

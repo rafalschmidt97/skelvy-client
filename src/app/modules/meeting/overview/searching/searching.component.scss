@@ -14,19 +14,21 @@
   max-width: 330px;
 }
 
-.image {
-  background-size: cover;
-  background-color: theme-color('light');
-  width: 50px;
-  height: 50px;
-}
+.info {
+  padding: 8px 12px;
 
-.description {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  label {
+    margin-left: 4px;
+  }
 
-.min-width {
-  min-width: 0;
+  .item {
+    border-radius: $input-border-radius;
+    font-size: 14px;
+  }
+
+  .remove {
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 1rem;
+  }
 }
