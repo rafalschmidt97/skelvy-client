@@ -9,6 +9,7 @@ import { MessageFormComponent } from './message-form/message-form.component';
 import { MessageComponent } from './messages/message/message.component';
 import { AutoScrollDirective } from './auto-scroll.directive';
 import { MessageAnonymousComponent } from './messages/message-anonymous/message-anonymous.component';
+import { MessageUserComponent } from './messages/message-user/message-user.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
     MessagesComponent,
     MessageFormComponent,
     MessageComponent,
+    MessageUserComponent,
     MessageAnonymousComponent,
     AutoScrollDirective,
   ],

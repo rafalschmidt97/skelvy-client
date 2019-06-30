@@ -1,43 +1,28 @@
-<div class="message-container d-flex" [class.mb-3]="!isMine && isLast">
+<div class="message-container d-flex" [class.mb-3]="isLast">
   <div
-    *ngIf="!isMine && isLast"
+    *ngIf="isLast"
     class="image rounded-circle flex-shrink-0 pointer"
-    [class.image-first-last]="!isMine && isLast && isFirst"
+    [class.image-first-last]="isLast && isFirst"
     [style.background-image]="'url(' + user.profile.photos[0].url + ')'"
   ></div>
-  <div class="flex-fill" [class.message-continuation]="!isMine && !isLast">
-    <div *ngIf="!isMine && isFirst" class="name">
+  <div class="flex-fill" [class.message-continuation]="!isLast">
+    <div *ngIf="isFirst" class="name">
       {{ user.profile.name }}
     </div>
-    <div
-      class="message d-flex flex-column"
-      [class.mr-auto]="!isMine"
-      [class.ml-auto]="isMine"
-    >
+    <div class="message mr-auto">
       <div
         (click)="toggleDate()"
         class="text pointer"
-        [class.bg-primary]="isMine"
         [class.bg-danger]="message.failed"
         [class.sending]="message.sending"
-        [class.text-white]="isMine"
-        [class.mr-auto]="!isMine"
-        [class.ml-auto]="isMine"
       >
         <div>{{ message.message }}</div>
         <div
           *ngIf="isDateShown"
           class="date"
-          [class.text-right]="isMine"
           [innerHTML]="message.date | date: 'HH:mm'"
         ></div>
       </div>
-      <div
-        *ngIf="isMine && message.failed"
-        (click)="sendAgain()"
-        class="send-again ml-auto text-danger"
-        [innerHTML]="'Send failed. Tap to retry.' | translate"
-      ></div>
     </div>
   </div>
 </div>

@@ -25,7 +25,7 @@ export class MessagesComponent implements OnInit {
   @Input() messages: ChatMessageDto[];
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
-  dateToShow: Date;
+  dateToShow: string;
   isLoading: boolean;
   hasMoreMessages: boolean;
 

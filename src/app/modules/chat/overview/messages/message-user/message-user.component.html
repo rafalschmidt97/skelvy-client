@@ -1,0 +1,25 @@
+<div class="message-container d-flex">
+  <div class="flex-fill">
+    <div class="message d-flex flex-column ml-auto">
+      <div
+        (click)="toggleDate()"
+        class="text pointer bg-primary text-white ml-auto"
+        [class.bg-danger]="message.failed"
+        [class.sending]="message.sending"
+      >
+        <div>{{ message.message }}</div>
+        <div
+          *ngIf="isDateShown"
+          class="date text-right"
+          [innerHTML]="message.date | date: 'HH:mm'"
+        ></div>
+      </div>
+      <div
+        *ngIf="message.failed"
+        (click)="sendAgain()"
+        class="send-again ml-auto text-danger"
+        [innerHTML]="'Send failed. Tap to retry.' | translate"
+      ></div>
+    </div>
+  </div>
+</div>

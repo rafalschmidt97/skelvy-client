@@ -7,20 +7,41 @@
     {{ 'Load more messages' | translate }}
   </div>
   <ng-container *ngFor="let message of messages; let i = index">
-    <app-message
+    <ng-container
       *ngIf="findUser(message.userId) as meetingUser; else anonymous"
-      [message]="message"
-      [user]="meetingUser"
-      [isMine]="user.id === message.userId"
-      [isLast]="
-        i === messages.length - 1
-          ? true
-          : messages[i].userId !== messages[i + 1].userId
-      "
-      [isFirst]="i === 0 ? true : messages[i].userId !== messages[i - 1].userId"
-      [dateToShow]="dateToShow"
-      (showDate)="showDate($event)"
-    ></app-message>
+    >
+      <app-message-user
+        *ngIf="user.id === message.userId; else notMine"
+        [message]="message"
+        [user]="meetingUser"
+        [isLast]="
+          i === messages.length - 1
+            ? true
+            : messages[i].userId !== messages[i + 1].userId
+        "
+        [isFirst]="
+          i === 0 ? true : messages[i].userId !== messages[i - 1].userId
+        "
+        [dateToShow]="dateToShow"
+        (showDate)="showDate($event)"
+      ></app-message-user>
+      <ng-template #notMine>
+        <app-message
+          [message]="message"
+          [user]="meetingUser"
+          [isLast]="
+            i === messages.length - 1
+              ? true
+              : messages[i].userId !== messages[i + 1].userId
+          "
+          [isFirst]="
+            i === 0 ? true : messages[i].userId !== messages[i - 1].userId
+          "
+          [dateToShow]="dateToShow"
+          (showDate)="showDate($event)"
+        ></app-message>
+      </ng-template>
+    </ng-container>
     <ng-template #anonymous>
       <app-message-anonymous
         [message]="message"

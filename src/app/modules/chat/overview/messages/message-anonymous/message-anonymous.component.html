@@ -5,9 +5,6 @@
     [class.image-first-last]="isLast && isFirst"
   ></div>
   <div class="flex-fill" [class.message-continuation]="!isLast">
-    <div *ngIf="isFirst" class="name">
-      {{ 'Anonymous' | translate }}
-    </div>
     <div class="message mr-auto">
       <div (click)="toggleDate()" class="text pointer">
         <div>{{ message.message }}</div>
