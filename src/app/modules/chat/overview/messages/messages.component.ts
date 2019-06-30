@@ -50,7 +50,7 @@ export class MessagesComponent implements OnInit {
     return this.meeting.users.find(user => user.id === userId);
   }
 
-  showDate(date: Date) {
+  showDate(date) {
     if (this.dateToShow === date) {
       this.dateToShow = null; // toggle if same date passed
     } else {

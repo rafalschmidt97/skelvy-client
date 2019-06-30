@@ -10,8 +10,8 @@ export class MessageAnonymousComponent {
   @Input() message: ChatMessageDto;
   @Input() isLast: boolean;
   @Input() isFirst: boolean;
-  @Input() dateToShow: Date;
-  @Output() showDate = new EventEmitter<Date>();
+  @Input() dateToShow: string;
+  @Output() showDate = new EventEmitter<string>();
 
   toggleDate() {
     this.showDate.emit(this.message.date);

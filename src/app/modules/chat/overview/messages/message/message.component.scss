@@ -38,8 +38,38 @@
     display: inline-block;
     white-space: pre-line;
 
+    &.sending {
+      animation-duration: 1.5s;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      animation-name: move-gradient;
+      animation-timing-function: linear;
+      background: lighten($primary, 10%) !important;
+      background: linear-gradient(
+        to right,
+        lighten($primary, 10%) 8%,
+        lighten($primary, 5%) 18%,
+        lighten($primary, 10%) 33%
+      ) !important;
+      background-size: 1000px 1000px !important;
+    }
+
     .date {
       font-size: 12px;
     }
+  }
+
+  .send-again {
+    font-size: 10px;
+  }
+}
+
+@keyframes move-gradient {
+  0% {
+    background-position: -500px 0;
+  }
+
+  100% {
+    background-position: 500px 0;
   }
 }

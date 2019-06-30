@@ -10,7 +10,7 @@
       {{ user.profile.name }}
     </div>
     <div
-      class="message d-flex"
+      class="message d-flex flex-column"
       [class.mr-auto]="!isMine"
       [class.ml-auto]="isMine"
     >
@@ -18,6 +18,8 @@
         (click)="toggleDate()"
         class="text pointer"
         [class.bg-primary]="isMine"
+        [class.bg-danger]="message.failed"
+        [class.sending]="message.sending"
         [class.text-white]="isMine"
         [class.mr-auto]="!isMine"
         [class.ml-auto]="isMine"
@@ -30,6 +32,12 @@
           [innerHTML]="message.date | date: 'HH:mm'"
         ></div>
       </div>
+      <div
+        *ngIf="isMine && message.failed"
+        (click)="sendAgain()"
+        class="send-again ml-auto text-danger"
+        [innerHTML]="'Send failed. Tap to retry.' | translate"
+      ></div>
     </div>
   </div>
 </div>

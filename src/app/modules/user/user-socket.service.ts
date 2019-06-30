@@ -135,7 +135,8 @@ export class UserSocketService {
         .start()
         .then(() => {
           this.userStore.connect();
-          this.meetingService.findMeeting().subscribe();
+          // TODO: Load only missing instead of entire meeting
+          // this.meetingService.findMeeting().subscribe();
         })
         .catch(error => {
           this.userStore.reconnect();

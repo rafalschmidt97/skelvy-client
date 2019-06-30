@@ -1,7 +1,9 @@
 export interface ChatMessageDto {
-  date: Date;
+  date: string;
   message: string;
   userId: number;
+  sending?: boolean;
+  failed?: boolean;
 }
 
 export interface ChatModel {
