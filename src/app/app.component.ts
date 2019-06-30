@@ -19,12 +19,15 @@ export class AppComponent {
     private readonly translateService: TranslateService,
     private readonly storage: Storage,
   ) {
-    this.initializeApp();
-    this.setLanguage();
+    this.initializeApp().then(() => {
+      console.log('Skelvy has been initialized');
+    });
   }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
+  async initializeApp() {
+    await this.setLanguage();
+
+    return this.platform.ready().then(() => {
       this.statusBar.styleDefault();
 
       if (this.platform.is('android')) {
@@ -35,22 +38,24 @@ export class AppComponent {
     });
   }
 
-  private setLanguage() {
+  private async setLanguage() {
     this.translateService.addLangs(LanguageConstants.SUPPORTED_LANGUAGES);
     this.translateService.setDefaultLang(LanguageConstants.DEFAULT_LANGUAGE);
 
-    this.storage.get('language').then(language => {
-      if (!language) {
-        const browserLanguage = this.translateService.getBrowserLang();
-        language = browserLanguage.match(LanguageConstants.LANGUAGES_REGEX)
-          ? browserLanguage
-          : LanguageConstants.DEFAULT_LANGUAGE;
+    const language = await this.storage.get('language');
 
-        this.storage.set('language', language);
-      }
+    if (!language) {
+      const browserLanguage = this.translateService.getBrowserLang();
+      const languageToSet = browserLanguage.match(
+        LanguageConstants.LANGUAGES_REGEX,
+      )
+        ? browserLanguage
+        : LanguageConstants.DEFAULT_LANGUAGE;
 
-      this.translateService.use(language);
-      moment.locale(language);
-    });
+      await this.storage.set('language', languageToSet);
+    }
+
+    this.translateService.use(language);
+    moment.locale(language);
   }
 }
