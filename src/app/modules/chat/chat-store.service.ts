@@ -19,7 +19,7 @@ export class ChatStoreService extends StoreService<ChatModel> {
       messages: [
         ...this.subject
           .getValue()
-          .messages.filter(x => x.date.getTime() === message.date.getTime()),
+          .messages.filter(x => x.date.getTime() !== message.date.getTime()),
       ],
     });
   }
