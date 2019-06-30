@@ -57,16 +57,17 @@ export class MeetingSocketService {
   }
 
   private onUserJoinedMeeting() {
-    this.userSocket.on('UserJoinedMeeting', () => {
-      this.meetingService.findMeeting().subscribe(
-        () => {
+    this.userSocket.on('UserJoinedMeeting', data => {
+      this.meetingService.findUser(data.userId).subscribe(
+        user => {
+          this.meetingStore.addUser(user);
           this.toastService.createInformation(
             _('New user has been added to the group'),
           );
         },
         () => {
           this.toastService.createError(
-            _('A problem occurred while finding the meeting'),
+            _('A problem occurred loading meeting user'),
           );
         },
       );
@@ -89,12 +90,12 @@ export class MeetingSocketService {
   }
 
   private onUserLeftMeeting() {
-    this.userSocket.on('UserLeftMeeting', () => {
-      this.meetingService.findMeeting().subscribe(
-        model => {
-          if (model.meeting) {
-            this.toastService.createInformation(_('User has left the group'));
-          } else {
+    this.userSocket.on('UserLeftMeeting', data => {
+      if (this.meetingStore.data.meeting.users.length !== 2) {
+        this.meetingStore.removeUser(data.userId);
+      } else {
+        this.meetingService.findMeeting().subscribe(
+          () => {
             this.toastService.createInformation(
               _('All users have left the group'),
             );
@@ -107,14 +108,14 @@ export class MeetingSocketService {
                 this.clearChat();
               }, 1000);
             }
-          }
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while finding the meeting'),
-          );
-        },
-      );
+          },
+          () => {
+            this.toastService.createError(
+              _('A problem occurred while finding the meeting'),
+            );
+          },
+        );
+      }
     });
   }
 

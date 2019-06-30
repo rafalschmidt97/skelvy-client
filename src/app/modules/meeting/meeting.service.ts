@@ -8,6 +8,7 @@ import {
   MeetingDrinkTypeDto,
   MeetingModelDto,
   MeetingSuggestionsModel,
+  MeetingUserDto,
 } from './meeting';
 import { ChatStoreService } from '../chat/chat-store.service';
 import { Storage } from '@ionic/storage';
@@ -106,6 +107,12 @@ export class MeetingService {
     return this.http.post<void>(
       `${environment.versionApiUrl}users/self/connect-request/${requestId}`,
       null,
+    );
+  }
+
+  findUser(userId: number): Observable<MeetingUserDto> {
+    return this.http.get<MeetingUserDto>(
+      `${environment.versionApiUrl}users/${userId}`,
     );
   }
 
