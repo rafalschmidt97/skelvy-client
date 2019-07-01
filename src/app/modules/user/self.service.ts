@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
 import { SelfModelDto } from './self';
 import { MeetingStoreService } from '../meeting/meeting-store.service';
 import { ChatStoreService } from '../chat/chat-store.service';
-import { ChatMessageDto } from '../chat/chat';
+import { ChatMessageDto, ChatModel } from '../chat/chat';
 import { Storage } from '@ionic/storage';
 import { Connection } from './user';
 import { TranslateService } from '@ngx-translate/core';
@@ -57,15 +57,16 @@ export class SelfService {
       );
   }
 
-  private async initializedChatModel(messages: ChatMessageDto[]) {
+  private async initializedChatModel(
+    messages: ChatMessageDto[],
+  ): Promise<ChatModel> {
     const lastMessageDate = await this.storage.get('lastMessageDate');
     const notRedMessages = messages.filter(message => {
       return new Date(message.date) > new Date(lastMessageDate);
     });
 
     return {
-      messagesToRead: notRedMessages.length,
-      page: 1,
+      toRead: notRedMessages.length,
       messages: messages,
     };
   }

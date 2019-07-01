@@ -69,7 +69,7 @@ export class FoundComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.chatSubscription = this.chatStore.data$.subscribe(chat => {
       if (chat && chat.messages) {
-        this.messagesToRead = chat.messagesToRead;
+        this.messagesToRead = chat.toRead;
       } else {
         this.messagesToRead = 0;
       }

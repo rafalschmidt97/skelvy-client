@@ -8,7 +8,6 @@ export interface ChatMessageDto {
 }
 
 export interface ChatModel {
-  messagesToRead: number;
-  page: number;
+  toRead: number;
   messages: ChatMessageDto[];
 }

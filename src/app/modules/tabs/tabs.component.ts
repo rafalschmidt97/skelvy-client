@@ -22,7 +22,7 @@ export class TabsComponent implements OnInit {
   ngOnInit() {
     this.chatStore.data$.subscribe(chat => {
       if (chat && chat.messages) {
-        this.messagesToRead = chat.messagesToRead;
+        this.messagesToRead = chat.toRead;
       } else {
         this.messagesToRead = 0;
       }

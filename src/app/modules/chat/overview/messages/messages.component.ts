@@ -52,35 +52,36 @@ export class MessagesComponent implements OnInit {
   }
 
   loadMessages() {
-    this.isLoading = true;
-    const nextPage = this.chatStore.data.page + 1;
-    this.chatStore.setPage(nextPage);
+    if (this.hasMoreMessages && !this.isLoading) {
+      this.isLoading = true;
+      const firstMessage = this.chatStore.data.messages[0];
 
-    this.chatService.findMessages(nextPage).subscribe(
-      (messages: ChatMessageDto[]) => {
-        const mergedMessages = [...messages, ...this.chatStore.data.messages];
-        this.chatStore.setMessages(mergedMessages);
+      this.chatService.findMessages(firstMessage.date).subscribe(
+        (messages: ChatMessageDto[]) => {
+          const mergedMessages = [...messages, ...this.chatStore.data.messages];
+          this.chatStore.setMessages(mergedMessages);
 
-        if (mergedMessages.length > 0) {
-          this.storage.set(
-            'lastMessageDate',
-            mergedMessages[mergedMessages.length - 1].date,
+          if (mergedMessages.length > 0) {
+            this.storage.set(
+              'lastMessageDate',
+              mergedMessages[mergedMessages.length - 1].date,
+            );
+          }
+
+          if (messages.length < 20) {
+            this.hasMoreMessages = false;
+          }
+
+          this.isLoading = false;
+        },
+        () => {
+          this.toastService.createError(
+            _('A problem occurred while loading messages'),
           );
-        }
 
-        if (messages.length < 20) {
-          this.hasMoreMessages = false;
-        }
-
-        this.isLoading = false;
-      },
-      () => {
-        this.toastService.createError(
-          _('A problem occurred while loading messages'),
-        );
-
-        this.isLoading = false;
-      },
-    );
+          this.isLoading = false;
+        },
+      );
+    }
   }
 }

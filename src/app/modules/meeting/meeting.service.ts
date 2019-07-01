@@ -59,14 +59,12 @@ export class MeetingService {
 
             if (notRedMessages.length !== 20) {
               this.chatStore.set({
-                messagesToRead: notRedMessages.length,
-                page: 1,
+                toRead: notRedMessages.length,
                 messages: [...this.chatStore.data.messages, ...notRedMessages],
               });
             } else {
               this.chatStore.set({
-                messagesToRead: notRedMessages.length,
-                page: 1,
+                toRead: notRedMessages.length,
                 messages: notRedMessages,
               });
             }
@@ -78,8 +76,7 @@ export class MeetingService {
               });
 
               this.chatStore.set({
-                messagesToRead: notRedMessages.length,
-                page: 1,
+                toRead: notRedMessages.length,
                 messages: model.messages,
               });
             } else {
