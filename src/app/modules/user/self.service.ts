@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserStoreService } from './user-store.service';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { flatMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { SelfModelDto } from './self';
 import { MeetingStoreService } from '../meeting/meeting-store.service';
@@ -11,6 +11,7 @@ import { ChatMessageDto, ChatModel } from '../chat/chat';
 import { Storage } from '@ionic/storage';
 import { Connection } from './user';
 import { TranslateService } from '@ngx-translate/core';
+import { MeetingService } from '../meeting/meeting.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,41 +21,89 @@ export class SelfService {
     private readonly http: HttpClient,
     private readonly userStore: UserStoreService,
     private readonly meetingStore: MeetingStoreService,
+    private readonly meetingService: MeetingService,
     private readonly chatStore: ChatStoreService,
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
   ) {}
 
   findSelf(): Observable<SelfModelDto> {
-    return this.http
-      .get<SelfModelDto>(
-        `${environment.versionApiUrl}self?language=${this.translateService.currentLang}`,
-      )
-      .pipe(
-        tap(async model => {
-          this.userStore.set({
-            connection: Connection.CONNECTED,
-            id: model.user.id,
-            profile: model.user.profile,
-          });
-
-          if (model.meetingModel) {
-            this.meetingStore.set({
-              status: model.meetingModel.status,
-              meeting: model.meetingModel.meeting,
-              request: model.meetingModel.request,
+    return forkJoin(
+      this.storage.get('user'),
+      this.storage.get('meeting'),
+      this.storage.get('chat'),
+    ).pipe(
+      flatMap(([user, meeting, chat]) => {
+        if (user) {
+          if (meeting) {
+            return of({
+              user,
+              meetingModel: {
+                status: meeting.status,
+                meeting: meeting.meeting,
+                messages: chat ? chat.messages : null,
+                request: meeting.request,
+              },
+              fromStorage: true,
             });
+          } else {
+            return of({
+              user,
+              meetingModel: null,
+              fromStorage: true,
+            });
+          }
+        } else {
+          return this.http.get<SelfModelDto>(
+            `${environment.versionApiUrl}self?language=${this.translateService.currentLang}`,
+          );
+        }
+      }),
+      tap(async model => {
+        const user = {
+          connection: Connection.CONNECTED,
+          id: model.user.id,
+          profile: model.user.profile,
+        };
 
-            if (model.meetingModel.messages) {
-              const chatModel = await this.initializedChatModel(
-                model.meetingModel.messages,
-              );
+        this.userStore.set(user);
 
-              this.chatStore.set(chatModel);
+        if (!model.fromStorage) {
+          await this.storage.set('user', user);
+        }
+
+        if (model.meetingModel) {
+          const meeting = {
+            loading: false,
+            status: model.meetingModel.status,
+            meeting: model.meetingModel.meeting,
+            request: model.meetingModel.request,
+          };
+
+          this.meetingStore.set(meeting);
+
+          if (!model.fromStorage) {
+            await this.storage.set('meeting', meeting);
+          }
+
+          if (model.meetingModel.messages) {
+            const chat = await this.initializedChatModel(
+              model.meetingModel.messages,
+            );
+
+            this.chatStore.set(chat);
+
+            if (!model.fromStorage) {
+              await this.storage.set('chat', chat);
             }
           }
-        }),
-      );
+        }
+
+        if (model.fromStorage) {
+          this.meetingService.findMeeting().subscribe();
+        }
+      }),
+    );
   }
 
   private async initializedChatModel(

@@ -109,6 +109,10 @@ export class AuthService {
     await this.storage.remove('signInMethod');
     await this.storage.remove('pushTopicUser');
     await this.storage.remove('lastMeetingRequestForm');
+
+    await this.storage.remove('user');
+    await this.storage.remove('meeting');
+    await this.storage.remove('chat');
   }
 
   private async getRefreshToken(): Promise<string> {

@@ -28,10 +28,6 @@ export class MeetingService {
   ) {}
 
   findMeeting(): Observable<MeetingModelDto> {
-    if (this.meetingStore.data) {
-      this.meetingStore.markAsLoading();
-    }
-
     return this.http
       .get<MeetingModelDto>(
         `${environment.versionApiUrl}meetings/self?language=${this.translateService.currentLang}`,
@@ -45,11 +41,12 @@ export class MeetingService {
             model.meeting.id === this.meetingStore.data.meeting.id
           ) {
             const existingMessages = this.chatStore.data.messages;
-            const notRedMessages = model.messages.filter(message1 => {
+            const newMessages = model.messages.filter(message1 => {
               return (
                 existingMessages.filter(message2 => {
                   return (
-                    message1.date === message2.date &&
+                    new Date(message1.date).getTime() ===
+                      new Date(message2.date).getTime() &&
                     message1.userId === message2.userId &&
                     message1.message === message2.message
                   );
@@ -57,15 +54,25 @@ export class MeetingService {
               );
             });
 
-            if (notRedMessages.length !== 20) {
+            if (newMessages.length !== 20) {
+              const messages = [
+                ...this.chatStore.data.messages,
+                ...newMessages,
+              ];
+              const lastMessageDate = await this.storage.get('lastMessageDate');
+              const notRedMessages = messages.filter(message => {
+                return new Date(message.date) > new Date(lastMessageDate);
+              });
+              console.log(this.chatStore.data.messages, newMessages);
+
               this.chatStore.set({
                 toRead: notRedMessages.length,
-                messages: [...this.chatStore.data.messages, ...notRedMessages],
+                messages: messages,
               });
             } else {
               this.chatStore.set({
-                toRead: notRedMessages.length,
-                messages: notRedMessages,
+                toRead: newMessages.length,
+                messages: newMessages,
               });
             }
           } else {
@@ -96,7 +103,6 @@ export class MeetingService {
             this.clearMeeting();
           }
 
-          this.meetingStore.markAsLoaded();
           return throwError(error);
         }),
       );
