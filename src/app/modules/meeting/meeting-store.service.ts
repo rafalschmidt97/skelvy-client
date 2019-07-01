@@ -28,4 +28,18 @@ export class MeetingStoreService extends StoreService<MeetingModel> {
       },
     });
   }
+
+  markAsLoading() {
+    this.subject.next({
+      ...this.subject.getValue(),
+      loading: true,
+    });
+  }
+
+  markAsLoaded() {
+    this.subject.next({
+      ...this.subject.getValue(),
+      loading: false,
+    });
+  }
 }

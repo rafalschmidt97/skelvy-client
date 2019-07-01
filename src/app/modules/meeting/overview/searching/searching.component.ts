@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -21,19 +22,21 @@ import { MeetingService } from '../../meeting.service';
 import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MeetingStoreService } from '../../meeting-store.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-searching',
   templateUrl: './searching.component.html',
   styleUrls: ['./searching.component.scss'],
 })
-export class SearchingComponent implements OnInit {
+export class SearchingComponent implements OnInit, OnDestroy {
   @Input() request: MeetingRequestDto;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
   alert: Alert;
   isLoading = false;
   loadingSuggestions = false;
   suggestions: MeetingSuggestionsModel;
+  statusSubscription: Subscription;
 
   constructor(
     private readonly alertService: AlertService,
@@ -56,13 +59,15 @@ export class SearchingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.findSuggestions(this.request.latitude, this.request.longitude);
-
-    this.meetingStore.data$.subscribe(model => {
-      if (model.status === MeetingStatus.SEARCHING) {
+    this.statusSubscription = this.meetingStore.data$.subscribe(model => {
+      if (model.status === MeetingStatus.SEARCHING && !model.loading) {
         this.findSuggestions(model.request.latitude, model.request.longitude);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.statusSubscription.unsubscribe();
   }
 
   findSuggestions(latitude: number, longitude: number) {

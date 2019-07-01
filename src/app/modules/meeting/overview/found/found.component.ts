@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -22,13 +23,14 @@ import { ChatStoreService } from '../../../chat/chat-store.service';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-found',
   templateUrl: './found.component.html',
   styleUrls: ['./found.component.scss'],
 })
-export class FoundComponent implements OnInit {
+export class FoundComponent implements OnInit, OnDestroy {
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
   @ViewChild('details') detailsTemplate: TemplateRef<any>;
@@ -38,6 +40,7 @@ export class FoundComponent implements OnInit {
   alert: Alert;
   loadingLeave = false;
   messagesToRead = 0;
+  chatSubscription: Subscription;
 
   constructor(
     private readonly modalService: ModalService,
@@ -67,13 +70,17 @@ export class FoundComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chatStore.data$.subscribe(chat => {
+    this.chatSubscription = this.chatStore.data$.subscribe(chat => {
       if (chat && chat.messages) {
         this.messagesToRead = chat.messagesToRead;
       } else {
         this.messagesToRead = 0;
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.chatSubscription.unsubscribe();
   }
 
   openDetails(user: MeetingUserDto) {

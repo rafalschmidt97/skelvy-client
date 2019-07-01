@@ -45,9 +45,9 @@ export class SelfService {
               request: model.meetingModel.request,
             });
 
-            if (model.meetingModel.meetingMessages) {
+            if (model.meetingModel.messages) {
               const chatModel = await this.initializedChatModel(
-                model.meetingModel.meetingMessages,
+                model.meetingModel.messages,
               );
 
               this.chatStore.set(chatModel);

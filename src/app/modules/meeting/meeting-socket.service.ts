@@ -100,13 +100,8 @@ export class MeetingSocketService {
               _('All users have left the group'),
             );
 
-            if (this.router.url !== '/app/chat') {
-              this.clearChat();
-            } else {
+            if (this.router.url === '/app/chat') {
               this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-              setTimeout(() => {
-                this.clearChat();
-              }, 1000);
             }
           },
           () => {
@@ -122,7 +117,7 @@ export class MeetingSocketService {
   private onMeetingRequestExpired() {
     this.userSocket.on('MeetingRequestExpired', () => {
       this.toastService.createInformation(_('Meeting request has expired'));
-      this.clearMeeting();
+      this.meetingService.clearMeeting();
     });
   }
 
@@ -130,25 +125,11 @@ export class MeetingSocketService {
     this.userSocket.on('MeetingExpired', () => {
       this.toastService.createInformation(_('The meeting has expired'));
 
-      if (this.router.url !== '/app/chat') {
-        this.clearMeeting();
-        this.clearChat();
-      } else {
+      if (this.router.url === '/app/chat') {
         this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-        setTimeout(() => {
-          this.clearMeeting();
-          this.clearChat();
-        }, 1000);
       }
+
+      this.meetingService.clearMeeting();
     });
-  }
-
-  private clearMeeting() {
-    this.meetingStore.set(null);
-  }
-
-  private clearChat() {
-    this.chatStore.set(null);
-    this.storage.remove('lastMessageDate');
   }
 }

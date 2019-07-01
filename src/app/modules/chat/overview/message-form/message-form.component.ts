@@ -54,9 +54,9 @@ export class MessageFormComponent implements Form, OnSubmit {
       this.isLoading = true;
 
       this.sendMessage({
-        userId: this.userStore.data.id,
-        date: moment().format(),
         message: this.form.get('message').value.trim(),
+        date: moment().format(),
+        userId: this.userStore.data.id,
         sending: true,
       });
 

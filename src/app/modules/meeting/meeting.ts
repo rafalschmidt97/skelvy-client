@@ -4,11 +4,12 @@ import { ChatMessageDto } from '../chat/chat';
 export interface MeetingModelDto {
   status: MeetingStatus;
   meeting: MeetingDto;
-  meetingMessages: ChatMessageDto[];
+  messages: ChatMessageDto[];
   request: MeetingRequestDto;
 }
 
 export interface MeetingModel {
+  loading?: boolean;
   status: MeetingStatus;
   meeting: MeetingDto;
   request: MeetingRequestDto;

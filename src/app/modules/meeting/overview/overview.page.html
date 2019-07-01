@@ -6,12 +6,15 @@
 
 <ion-content>
   <ng-container *ngIf="meeting$ | async as model; else notFound">
-    <ng-container *ngIf="model.meeting; else searching">
-      <app-found [meeting]="model.meeting" [user]="user$ | async"></app-found>
-    </ng-container>
-    <ng-template #searching>
-      <app-searching [request]="model.request"></app-searching>
-    </ng-template>
+    <app-found
+      [hidden]="!model.meeting"
+      [meeting]="model.meeting"
+      [user]="user$ | async"
+    ></app-found>
+    <app-searching
+      [hidden]="model.meeting"
+      [request]="model.request"
+    ></app-searching>
   </ng-container>
   <ng-template #notFound>
     <app-unspecified></app-unspecified>

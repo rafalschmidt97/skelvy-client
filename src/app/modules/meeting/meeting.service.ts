@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { MeetingStoreService } from './meeting-store.service';
 import {
   MeetingDrinkTypeDto,
   MeetingModelDto,
+  MeetingStatus,
   MeetingSuggestionsModel,
   MeetingUserDto,
 } from './meeting';
 import { ChatStoreService } from '../chat/chat-store.service';
 import { Storage } from '@ionic/storage';
-import { ChatMessageDto } from '../chat/chat';
 import { TranslateService } from '@ngx-translate/core';
+import { differenceWith, isEqual } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -28,25 +29,79 @@ export class MeetingService {
   ) {}
 
   findMeeting(): Observable<MeetingModelDto> {
+    if (this.meetingStore.data) {
+      this.meetingStore.markAsLoading();
+    }
+
     return this.http
       .get<MeetingModelDto>(
         `${environment.versionApiUrl}meetings/self?language=${this.translateService.currentLang}`,
       )
       .pipe(
         tap(async model => {
+          if (
+            this.meetingStore.data &&
+            model.status === MeetingStatus.FOUND &&
+            this.meetingStore.data.status === MeetingStatus.FOUND &&
+            model.meeting.id === this.meetingStore.data.meeting.id
+          ) {
+            const existingMessages = this.chatStore.data.messages;
+            const notRedMessages = model.messages.filter(message1 => {
+              return (
+                existingMessages.filter(message2 => {
+                  return (
+                    message1.date === message2.date &&
+                    message1.userId === message2.userId &&
+                    message1.message === message2.message
+                  );
+                }).length === 0
+              );
+            });
+
+            if (notRedMessages.length !== 20) {
+              this.chatStore.set({
+                messagesToRead: notRedMessages.length,
+                page: 1,
+                messages: [...this.chatStore.data.messages, ...notRedMessages],
+              });
+            } else {
+              this.chatStore.set({
+                messagesToRead: notRedMessages.length,
+                page: 1,
+                messages: notRedMessages,
+              });
+            }
+          } else {
+            if (model.status === MeetingStatus.FOUND) {
+              const lastMessageDate = await this.storage.get('lastMessageDate');
+              const notRedMessages = model.messages.filter(message => {
+                return new Date(message.date) > new Date(lastMessageDate);
+              });
+
+              this.chatStore.set({
+                messagesToRead: notRedMessages.length,
+                page: 1,
+                messages: model.messages,
+              });
+            } else {
+              this.clearChat();
+            }
+          }
+
           this.meetingStore.set({
+            loading: false,
             status: model.status,
             meeting: model.meeting,
             request: model.request,
           });
-
-          if (model.meetingMessages) {
-            const chatModel = await this.initializedChatModel(
-              model.meetingMessages,
-            );
-
-            this.chatStore.set(chatModel);
+        }),
+        catchError(error => {
+          if (error instanceof HttpErrorResponse && error.status === 404) {
+            this.clearMeeting();
           }
+
+          this.meetingStore.markAsLoaded();
+          return throwError(error);
         }),
       );
   }
@@ -116,16 +171,13 @@ export class MeetingService {
     );
   }
 
-  private async initializedChatModel(messages: ChatMessageDto[]) {
-    const lastMessageDate = await this.storage.get('lastMessageDate');
-    const notRedMessages = messages.filter(message => {
-      return new Date(message.date) > new Date(lastMessageDate);
-    });
+  clearMeeting() {
+    this.meetingStore.set(null);
+    this.clearChat();
+  }
 
-    return {
-      messagesToRead: notRedMessages.length,
-      page: 1,
-      messages: messages,
-    };
+  clearChat() {
+    this.chatStore.set(null);
+    this.storage.remove('lastMessageDate');
   }
 }
