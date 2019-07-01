@@ -36,7 +36,7 @@ export class MessagesComponent implements OnInit {
 
     setTimeout(() => {
       this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
-    }, 100);
+    }, 240);
   }
 
   findUser(userId: number): MeetingUserDto {
