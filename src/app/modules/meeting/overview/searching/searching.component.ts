@@ -60,7 +60,7 @@ export class SearchingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.statusSubscription = this.meetingStore.data$.subscribe(model => {
-      if (model.status === MeetingStatus.SEARCHING && !model.loading) {
+      if (model && model.status === MeetingStatus.SEARCHING && !model.loading) {
         this.findSuggestions(model.request.latitude, model.request.longitude);
       }
     });
