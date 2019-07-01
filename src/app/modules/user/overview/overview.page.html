@@ -6,7 +6,7 @@
 
 <ion-content>
   <div
-    *ngIf="(user$ | async).profile as profile"
+    *ngIf="(user$ | async)?.profile as profile"
     class="d-flex flex-column minh-100"
   >
     <app-connection></app-connection>
@@ -76,7 +76,7 @@
 <ng-template #details>
   <app-modal (confirm)="confirm()">
     <app-details
-      *ngIf="(user$ | async).profile as profile"
+      *ngIf="(user$ | async)?.profile as profile"
       [profile]="profile"
     ></app-details>
   </app-modal>
