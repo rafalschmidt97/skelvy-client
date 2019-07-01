@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MeetingModel, MeetingUserDto } from './meeting';
 import { StoreService } from '../../shared/store.service';
-import { ChatMessageDto } from '../chat/chat';
 
 @Injectable({
   providedIn: 'root',

@@ -6,11 +6,7 @@ import * as moment from 'moment';
 import { Checkbox } from '../../../shared/form/checkbox/checkbox';
 import { RangeComponent } from '../../../shared/form/range/range.component';
 import { MeetingService } from '../meeting.service';
-import {
-  MeetingDrinkTypeDto,
-  MeetingRequestDto,
-  MeetingSuggestionsModel,
-} from '../meeting';
+import { MeetingDrinkTypeDto, MeetingSuggestionsModel } from '../meeting';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting-socket.service';

@@ -12,9 +12,7 @@ export class MapsService {
 
   search(search: string, language: string): Observable<MapsResponse[]> {
     return this.http.get<MapsResponse[]>(
-      `${
-        environment.versionApiUrl
-      }maps/search?search=${search}&language=${language}`,
+      `${environment.versionApiUrl}maps/search?search=${search}&language=${language}`,
     );
   }
 
@@ -24,9 +22,7 @@ export class MapsService {
     language: string,
   ): Observable<MapsResponse[]> {
     return this.http.get<MapsResponse[]>(
-      `${
-        environment.versionApiUrl
-      }maps/reverse?latitude=${latitude}&longitude=${longitude}&language=${language}`,
+      `${environment.versionApiUrl}maps/reverse?latitude=${latitude}&longitude=${longitude}&language=${language}`,
     );
   }
 }

@@ -6,14 +6,6 @@ import { MeetingModel } from '../../meeting/meeting';
 import { UserStoreService } from '../../user/user-store.service';
 import { UserDto } from '../../user/user';
 import { ChatStoreService } from '../chat-store.service';
-import { MeetingService } from '../../meeting/meeting.service';
-import { _ } from '../../../core/i18n/translate';
-import { NavController } from '@ionic/angular';
-import { ToastService } from '../../../core/toast/toast.service';
-import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
-import { ChatService } from '../chat.service';
 
 @Component({
   selector: 'app-overview',

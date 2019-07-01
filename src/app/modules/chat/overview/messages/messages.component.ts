@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ChatMessageDto } from '../../chat';
 import { MeetingDto, MeetingUserDto } from '../../../meeting/meeting';
 import { UserDto } from '../../../user/user';
