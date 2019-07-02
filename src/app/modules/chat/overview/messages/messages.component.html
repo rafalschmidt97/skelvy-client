@@ -24,6 +24,7 @@
         "
         [dateToShow]="dateToShow"
         (showDate)="showDate($event)"
+        (showActions)="showActions($event)"
       ></app-message-user>
       <ng-template #notMine>
         <app-message
@@ -59,3 +60,35 @@
     </ng-template>
   </ng-container>
 </div>
+
+<ng-template #actions>
+  <app-modal>
+    <div class="px-4 pb-4 pt-2">
+      <div
+        class="pb-4 text-center font-weight-medium"
+        [innerText]="'What you want to do with this message?' | translate"
+      ></div>
+      <button
+        type="button"
+        class="btn btn-primary btn-block"
+        (click)="sendAgain(modalMessage)"
+      >
+        {{ 'Send again' | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger btn-block"
+        (click)="remove(modalMessage)"
+      >
+        {{ 'Remove' | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-light btn-block mt-4"
+        (click)="decline()"
+      >
+        {{ 'Cancel' | translate }}
+      </button>
+    </div>
+  </app-modal>
+</ng-template>

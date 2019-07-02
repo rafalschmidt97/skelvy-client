@@ -14,12 +14,13 @@
           [innerHTML]="message.date | date: 'HH:mm'"
         ></div>
       </div>
-      <div
-        *ngIf="message.failed"
-        (click)="sendAgain()"
-        class="send-again ml-auto text-danger"
-        [innerHTML]="'Send failed. Tap to retry.' | translate"
-      ></div>
+      <div *ngIf="message.failed" class="ml-auto d-flex">
+        <div
+          (click)="actions()"
+          class="action text-danger"
+          [innerHTML]="'Tap to retry or remove' | translate"
+        ></div>
+      </div>
     </div>
   </div>
 </div>

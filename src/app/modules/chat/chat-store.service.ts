@@ -34,18 +34,18 @@ export class ChatStoreService extends StoreService<ChatModel> {
     });
   }
 
-  markAsSending(message: ChatMessageDto) {
+  removeOldAndAddNew(oldMessage: ChatMessageDto, newMessage: ChatMessageDto) {
     this.subject.next({
       ...this.subject.getValue(),
       messages: [
-        ...this.subject.getValue().messages.filter(x => {
-          if (new Date(x.date).getTime() === new Date(message.date).getTime()) {
-            x.sending = true;
-            x.failed = false;
-          }
-
-          return x;
-        }),
+        ...this.subject
+          .getValue()
+          .messages.filter(
+            x =>
+              new Date(x.date).getTime() !==
+              new Date(oldMessage.date).getTime(),
+          ),
+        newMessage,
       ],
     });
   }

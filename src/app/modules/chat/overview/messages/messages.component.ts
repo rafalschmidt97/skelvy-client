@@ -1,4 +1,11 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ChatMessageDto } from '../../chat';
 import { MeetingDto, MeetingUserDto } from '../../../meeting/meeting';
 import { UserDto } from '../../../user/user';
@@ -7,6 +14,12 @@ import { ChatStoreService } from '../../chat-store.service';
 import { ChatService } from '../../chat.service';
 import { Storage } from '@ionic/storage';
 import { ToastService } from '../../../../core/toast/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { MeetingService } from '../../../meeting/meeting.service';
+import { Modal } from '../../../../shared/modal/modal';
+import { ModalService } from '../../../../shared/modal/modal.service';
 
 @Component({
   selector: 'app-messages',
@@ -21,12 +34,19 @@ export class MessagesComponent implements OnInit {
   dateToShow: string;
   isLoading: boolean;
   hasMoreMessages: boolean;
+  @ViewChild('actions') modalTemplate: TemplateRef<any>;
+  modal: Modal;
+  modalMessage: ChatMessageDto;
 
   constructor(
-    private readonly chatStore: ChatStoreService,
-    private readonly chatService: ChatService,
-    private readonly storage: Storage,
+    private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
+    private readonly router: Router,
+    private readonly storage: Storage,
+    private readonly meetingService: MeetingService,
+    private readonly chatService: ChatService,
+    private readonly chatStore: ChatStoreService,
+    private readonly modalService: ModalService,
   ) {}
 
   ngOnInit() {
@@ -83,5 +103,55 @@ export class MessagesComponent implements OnInit {
         },
       );
     }
+  }
+
+  showActions(message: ChatMessageDto) {
+    this.modalMessage = message;
+
+    this.modal = this.modalService.show(this.modalTemplate);
+  }
+
+  sendAgain(oldMessage: ChatMessageDto) {
+    const newMessage: ChatMessageDto = {
+      date: new Date().toISOString(),
+      message: oldMessage.message,
+      userId: oldMessage.userId,
+      sending: true,
+    };
+
+    this.chatStore.removeOldAndAddNew(oldMessage, newMessage);
+    this.modal.hide();
+
+    this.chatService.sendMessage(newMessage).subscribe(
+      () => {
+        this.chatStore.markAsSent(newMessage);
+        this.storage.set('lastMessageDate', newMessage.date);
+      },
+      (error: HttpErrorResponse) => {
+        // data is not relevant (connection lost and reconnected)
+        if (error.status === 404 || error.status === 409) {
+          this.meetingService.findMeeting().subscribe();
+
+          if (this.router.url === '/app/chat') {
+            this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+          }
+
+          this.toastService.createError(
+            _('A problem occurred while sending the message'),
+          );
+        } else {
+          this.chatStore.markAsFailed(newMessage);
+        }
+      },
+    );
+  }
+
+  remove(message: ChatMessageDto) {
+    this.chatStore.removeMessage(message);
+    this.modal.hide();
+  }
+
+  decline() {
+    this.modal.hide();
   }
 }
