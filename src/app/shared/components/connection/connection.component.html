@@ -1,7 +1,7 @@
 <ng-container *ngIf="connection$ | async as connection">
   <div
     class="connection"
-    *ngIf="
+    [@fadeInOut]="
       connection === connectedStatus.RECONNECTING ||
       connection === connectedStatus.DISCONNECTED
     "
