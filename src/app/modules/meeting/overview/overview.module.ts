@@ -10,6 +10,7 @@ import { ProfileDetailsComponent } from './found/profile-details/profile-details
 import { ProfileComponent } from './found/profile/profile.component';
 import { ProfileLoadingComponent } from './found/profile-loading/profile-loading.component';
 import { SuggestionsComponent } from './searching/suggestions/suggestions.component';
+import { ProfileMissingComponent } from './found/profile-missing/profile-missing.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
     ProfileDetailsComponent,
     ProfileComponent,
     ProfileLoadingComponent,
+    ProfileMissingComponent,
   ],
 })
 export class OverviewPageModule {}

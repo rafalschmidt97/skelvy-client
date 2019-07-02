@@ -1,0 +1,46 @@
+<div class="border-bottom">
+  <div class="container d-flex" [style.height.px]="missing.length * 98 + 1">
+    <div class="my-auto">
+      <div class="info mb-2">
+        <div class="font-weight-bold text-primary">
+          <ng-container [ngSwitch]="missing.length">
+            <span
+              *ngSwitchCase="1"
+              [innerText]="'Missing one person' | translate"
+            ></span>
+            <span
+              *ngSwitchCase="2"
+              [innerText]="'Missing two people' | translate"
+            ></span>
+            <span
+              *ngSwitchCase="3"
+              [innerText]="'Missing three people' | translate"
+            ></span>
+            <span
+              *ngSwitchDefault
+              [innerText]="
+                ('Missing people' | translate) + ' = ' + missing.length
+              "
+            ></span>
+          </ng-container>
+        </div>
+      </div>
+      <div class="help">
+        <div
+          class="mb-2"
+          [innerText]="
+            'We are looking for more people for you. If you want to help us invite your friends!'
+              | translate
+          "
+        ></div>
+        <div
+          *ngIf="missing.length > 1"
+          [innerText]="
+            'Keep in mind that the app is relatively so it might take a little bit.'
+              | translate
+          "
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

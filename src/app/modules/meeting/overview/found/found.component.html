@@ -23,9 +23,15 @@
       [user]="user"
       (openDetails)="openDetails($event)"
     ></app-profile>
-    <app-profile-loading
-      *ngFor="let user of missingMeetingUsers"
-    ></app-profile-loading>
+    <app-profile-missing
+      *ngIf="!(state$ | async)?.loadingMeeting; else loadingProfiles"
+      [missing]="missingMeetingUsers"
+    ></app-profile-missing>
+    <ng-template #loadingProfiles>
+      <app-profile-loading
+        [missing]="missingMeetingUsers"
+      ></app-profile-loading>
+    </ng-template>
   </section>
   <section class="more">
     <div class="container py-2">

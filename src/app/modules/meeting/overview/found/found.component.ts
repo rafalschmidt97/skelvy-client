@@ -20,8 +20,9 @@ import { ChatStoreService } from '../../../chat/chat-store.service';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { StateStoreService } from '../../../../core/state/state-store.service';
+import { StateModel } from '../../../../core/state/state';
 
 @Component({
   selector: 'app-found',
@@ -39,6 +40,7 @@ export class FoundComponent implements OnInit, OnDestroy {
   loadingLeave = false;
   messagesToRead = 0;
   chatSubscription: Subscription;
+  state$: Observable<StateModel>;
 
   constructor(
     private readonly modalService: ModalService,
@@ -50,7 +52,9 @@ export class FoundComponent implements OnInit, OnDestroy {
     private readonly routerNavigation: NavController,
     private readonly storage: Storage,
     private readonly stateStore: StateStoreService,
-  ) {}
+  ) {
+    this.state$ = stateStore.data$;
+  }
 
   get filteredMeetingUsers(): MeetingUserDto[] {
     return this.meeting.users.filter(user => user.id !== this.user.id);
