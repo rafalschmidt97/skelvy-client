@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/app/tabs/settings"
+        [text]="'Back' | translate"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Data' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content minh-100 bg-ultra-light">
+    <app-connection></app-connection>
+    <div class="py-3">
+      <div class="label text-muted">
+        {{ 'Refresh data' | translate }}
+      </div>
+      <button
+        type="button"
+        (click)="refreshUser()"
+        class="btn btn-settings justify-content-center"
+      >
+        {{ 'Reload user' | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="refreshMeeting()"
+        class="btn btn-settings justify-content-center"
+      >
+        {{ 'Reload meeting' | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="refreshAll()"
+        class="btn btn-settings justify-content-center mt-3"
+      >
+        {{ 'Remove stored data and reload everything' | translate }}
+      </button>
+      <div class="label text-center small text-muted">
+        {{
+          'Tap on any of buttons in case of having a problem with the app. If nothing works try to logout and sign in again.'
+            | translate
+        }}
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ng-template #alertRefreshUser>
+  <app-alert
+    (confirm)="confirmRefreshUser()"
+    [confirmLoading]="loadingData"
+    (decline)="declineAlert()"
+    [title]="'Are you sure you want to force to reload  user data?' | translate"
+  ></app-alert>
+</ng-template>
+
+<ng-template #alertRefreshMeeting>
+  <app-alert
+    (confirm)="confirmRefreshMeeting()"
+    [confirmLoading]="loadingData"
+    (decline)="declineAlert()"
+    [title]="
+      'Are you sure you want to force to reload meeting data?' | translate
+    "
+  ></app-alert>
+</ng-template>
+
+<ng-template #alertClearAll>
+  <app-alert
+    (confirm)="confirmRefreshAll()"
+    [confirmLoading]="loadingData"
+    (decline)="declineAlert()"
+    [title]="
+      'Are you sure you want to remove all stored data and reload everything?'
+        | translate
+    "
+  ></app-alert>
+</ng-template>
