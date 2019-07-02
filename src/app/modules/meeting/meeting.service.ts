@@ -14,6 +14,7 @@ import {
 import { ChatStoreService } from '../chat/chat-store.service';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
+import { StateStoreService } from '../../core/state/state-store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +24,16 @@ export class MeetingService {
     private readonly http: HttpClient,
     private readonly meetingStore: MeetingStoreService,
     private readonly chatStore: ChatStoreService,
+    private readonly stateStore: StateStoreService,
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
   ) {}
 
-  findMeeting(): Observable<MeetingModelDto> {
+  findMeeting(markedAsLoading: boolean = false): Observable<MeetingModelDto> {
+    if (!markedAsLoading) {
+      this.stateStore.markMeetingAsLoading();
+    }
+
     return this.http
       .get<MeetingModelDto>(
         `${environment.versionApiUrl}meetings/self?language=${this.translateService.currentLang}`,
@@ -63,36 +69,34 @@ export class MeetingService {
               const notRedMessages = messages.filter(message => {
                 return new Date(message.date) > new Date(lastMessageDate);
               });
-              console.log(this.chatStore.data.messages, newMessages);
 
               this.chatStore.set({
-                toRead: notRedMessages.length,
-                messages: messages,
+                messages,
               });
+
+              this.stateStore.setToRead(notRedMessages.length);
             } else {
               this.chatStore.set({
-                toRead: newMessages.length,
                 messages: newMessages,
               });
+
+              this.stateStore.setToRead(newMessages.length);
             }
           } else {
             if (model.status === MeetingStatus.FOUND) {
-              const lastMessageDate = await this.storage.get('lastMessageDate');
-              const notRedMessages = model.messages.filter(message => {
-                return new Date(message.date) > new Date(lastMessageDate);
-              });
-
               this.chatStore.set({
-                toRead: notRedMessages.length,
                 messages: model.messages,
               });
+
+              this.stateStore.setToRead(model.messages.length);
             } else {
               this.clearChat();
             }
           }
 
+          this.stateStore.markMeetingAsLoaded();
+
           this.meetingStore.set({
-            loading: false,
             status: model.status,
             meeting: model.meeting,
             request: model.request,
@@ -103,6 +107,7 @@ export class MeetingService {
             this.clearMeeting();
           }
 
+          this.stateStore.markMeetingAsLoaded();
           return throwError(error);
         }),
       );
@@ -180,6 +185,7 @@ export class MeetingService {
 
   clearChat() {
     this.chatStore.set(null);
+    this.stateStore.setToRead(0);
     this.storage.remove('lastMessageDate');
   }
 }

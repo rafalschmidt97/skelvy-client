@@ -1,14 +1,36 @@
-<div [ngSwitch]="connection$ | async">
+<ng-container *ngIf="connection$ | async as connection">
   <div
-    *ngSwitchCase="connectedStatus.DISCONNECTED"
-    class="connection bg-danger text-white text-center"
+    class="connection"
+    [@fadeInOut]="
+      connection === connectedStatus.RECONNECTING ||
+      connection === connectedStatus.DISCONNECTED
+    "
   >
-    {{ 'Disconnected' | translate }}
+    <ng-container [ngSwitch]="connection">
+      <div
+        *ngSwitchCase="connectedStatus.CONNECTING"
+        class="text font-weight-bold text-center"
+      >
+        {{ 'Connecting...' | translate }}
+      </div>
+      <div
+        *ngSwitchCase="connectedStatus.CONNECTED"
+        class="text font-weight-bold text-center"
+      >
+        {{ 'Connected' | translate }}
+      </div>
+      <div
+        *ngSwitchCase="connectedStatus.RECONNECTING"
+        class="text font-weight-bold  text-center"
+      >
+        {{ 'Reconnecting...' | translate }}
+      </div>
+      <div
+        *ngSwitchCase="connectedStatus.DISCONNECTED"
+        class="text text-danger font-weight-bold text-center"
+      >
+        {{ 'Waiting to reconnect...' | translate }}
+      </div>
+    </ng-container>
   </div>
-  <div
-    *ngSwitchCase="connectedStatus.RECONNECTING"
-    class="connection bg-warning text-white text-center"
-  >
-    {{ 'Reconnecting' | translate }}
-  </div>
-</div>
+</ng-container>

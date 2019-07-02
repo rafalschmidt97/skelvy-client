@@ -10,6 +10,7 @@ import { MeetingStoreService } from './meeting-store.service';
 import { MeetingService } from './meeting.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
+import { StateStoreService } from '../../core/state/state-store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,7 @@ export class MeetingSocketService {
     private readonly meetingStore: MeetingStoreService,
     private readonly meetingService: MeetingService,
     private readonly storage: Storage,
+    private readonly stateStore: StateStoreService,
   ) {}
 
   set socket(socket: HubConnection) {
@@ -48,7 +50,7 @@ export class MeetingSocketService {
         this.chatStore.addMessage(message);
 
         if (this.router.url !== '/app/chat') {
-          this.chatStore.addToRead(1);
+          this.stateStore.addToRead(1);
         } else {
           this.storage.set('lastMessageDate', message.date);
         }

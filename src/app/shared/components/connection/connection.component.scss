@@ -1,5 +1,14 @@
 @import '~src/theme/bootstrap/variables';
 
 .connection {
-  font-size: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  .text {
+    font-size: 12px;
+    padding: 2px 0;
+    color: gray('600');
+  }
 }

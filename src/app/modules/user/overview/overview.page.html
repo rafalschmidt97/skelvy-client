@@ -9,7 +9,6 @@
     *ngIf="(user$ | async)?.profile as profile"
     class="d-flex flex-column minh-100"
   >
-    <app-connection></app-connection>
     <section class="container d-flex flex-grow-1 py-3 bg-ultra-light preview">
       <div class="m-auto text-center">
         <div (click)="open()" class="pointer">
