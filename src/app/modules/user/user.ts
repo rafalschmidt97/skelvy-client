@@ -4,15 +4,8 @@ export interface UserDto {
 }
 
 export interface UserModel {
-  connection: Connection;
   id: number;
   profile: ProfileDto;
-}
-
-export enum Connection {
-  CONNECTED,
-  RECONNECTING,
-  DISCONNECTED,
 }
 
 export interface ProfileDto {

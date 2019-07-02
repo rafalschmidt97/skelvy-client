@@ -23,6 +23,7 @@ import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MeetingStoreService } from '../../meeting-store.service';
 import { Subscription } from 'rxjs';
+import { StateStoreService } from '../../../../core/state-store.service';
 
 @Component({
   selector: 'app-searching',
@@ -46,6 +47,7 @@ export class SearchingComponent implements OnInit, OnDestroy {
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
     private readonly meetingStore: MeetingStoreService,
+    private readonly stateStore: StateStoreService,
   ) {}
 
   getDate(minDate: Date, maxDate: Date): string {
@@ -60,14 +62,20 @@ export class SearchingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.statusSubscription = this.meetingStore.data$.subscribe(model => {
-      if (model && model.status === MeetingStatus.SEARCHING && !model.loading) {
+      if (
+        model &&
+        model.status === MeetingStatus.SEARCHING &&
+        !this.stateStore.data.loadingMeeting
+      ) {
         this.findSuggestions(model.request.latitude, model.request.longitude);
       }
     });
   }
 
   ngOnDestroy() {
-    this.statusSubscription.unsubscribe();
+    if (this.statusSubscription) {
+      this.statusSubscription.unsubscribe();
+    }
   }
 
   findSuggestions(latitude: number, longitude: number) {

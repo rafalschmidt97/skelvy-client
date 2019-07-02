@@ -34,20 +34,6 @@ export class ChatStoreService extends StoreService<ChatModel> {
     });
   }
 
-  addToRead(amount: number) {
-    this.subject.next({
-      ...this.subject.getValue(),
-      toRead: this.subject.getValue().toRead + amount,
-    });
-  }
-
-  setToRead(amount: number) {
-    this.subject.next({
-      ...this.subject.getValue(),
-      toRead: amount,
-    });
-  }
-
   markAsSending(message: ChatMessageDto) {
     this.subject.next({
       ...this.subject.getValue(),

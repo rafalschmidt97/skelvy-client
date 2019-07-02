@@ -9,7 +9,6 @@ export interface MeetingModelDto {
 }
 
 export interface MeetingModel {
-  loading?: boolean;
   status: MeetingStatus;
   meeting: MeetingDto;
   request: MeetingRequestDto;

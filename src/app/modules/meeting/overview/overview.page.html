@@ -5,6 +5,7 @@
 </ion-header>
 
 <ion-content>
+  <app-connection></app-connection>
   <ng-container *ngIf="meeting$ | async as model; else notFound">
     <app-found
       [hidden]="!model.meeting"

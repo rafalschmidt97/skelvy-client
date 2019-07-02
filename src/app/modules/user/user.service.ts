@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UserStoreService } from './user-store.service';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { UserDto } from './user';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { StateStoreService } from '../../core/state-store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +14,24 @@ export class UserService {
   constructor(
     private readonly http: HttpClient,
     private readonly userStore: UserStoreService,
+    private readonly stateStore: StateStoreService,
   ) {}
 
-  findUser(): Observable<UserDto> {
+  findUser(markedAsLoading: boolean = false): Observable<UserDto> {
+    if (!markedAsLoading) {
+      this.stateStore.markUserAsLoading();
+    }
+
     return this.http
       .get<UserDto>(environment.versionApiUrl + 'users/self')
       .pipe(
         tap(user => {
           this.userStore.setUser(user);
+          this.stateStore.markUserAsLoaded();
+        }),
+        catchError(error => {
+          this.stateStore.markUserAsLoaded();
+          return throwError(error);
         }),
       );
   }

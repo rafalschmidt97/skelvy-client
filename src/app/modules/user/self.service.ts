@@ -7,11 +7,13 @@ import { environment } from '../../../environments/environment';
 import { SelfModelDto } from './self';
 import { MeetingStoreService } from '../meeting/meeting-store.service';
 import { ChatStoreService } from '../chat/chat-store.service';
-import { ChatMessageDto, ChatModel } from '../chat/chat';
+import { ChatModel } from '../chat/chat';
 import { Storage } from '@ionic/storage';
-import { Connection } from './user';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingService } from '../meeting/meeting.service';
+import { StateStoreService } from '../../core/state-store.service';
+import { Connection, StateModel } from '../../core/state';
+import { MeetingModel, MeetingStatus } from '../meeting/meeting';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +25,7 @@ export class SelfService {
     private readonly meetingStore: MeetingStoreService,
     private readonly meetingService: MeetingService,
     private readonly chatStore: ChatStoreService,
+    private readonly stateStore: StateStoreService,
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
   ) {}
@@ -61,20 +64,15 @@ export class SelfService {
       }),
       tap(async model => {
         const user = {
-          connection: Connection.CONNECTED,
           id: model.user.id,
           profile: model.user.profile,
         };
-
         this.userStore.set(user);
 
-        if (!model.fromStorage) {
-          await this.storage.set('user', user);
-        }
+        let meeting, chat;
 
         if (model.meetingModel) {
-          const meeting = {
-            loading: false,
+          meeting = {
             status: model.meetingModel.status,
             meeting: model.meetingModel.meeting,
             request: model.meetingModel.request,
@@ -82,41 +80,72 @@ export class SelfService {
 
           this.meetingStore.set(meeting);
 
-          if (!model.fromStorage) {
-            await this.storage.set('meeting', meeting);
-          }
-
           if (model.meetingModel.messages) {
-            const chat = await this.initializedChatModel(
-              model.meetingModel.messages,
-            );
-
+            chat = { messages: model.meetingModel.messages };
             this.chatStore.set(chat);
-
-            if (!model.fromStorage) {
-              await this.storage.set('chat', chat);
-            }
           }
         }
 
+        const state = await this.stateModel(meeting, chat, model.fromStorage);
+        this.stateStore.set(state);
+
         if (model.fromStorage) {
-          this.meetingService.findMeeting().subscribe();
+          this.meetingService.findMeeting(true).subscribe();
+        } else {
+          await this.storage.set('user', user);
+          await this.storage.set('meeting', meeting);
+          await this.storage.set('chat', chat);
         }
       }),
     );
   }
 
-  private async initializedChatModel(
-    messages: ChatMessageDto[],
-  ): Promise<ChatModel> {
-    const lastMessageDate = await this.storage.get('lastMessageDate');
-    const notRedMessages = messages.filter(message => {
-      return new Date(message.date) > new Date(lastMessageDate);
-    });
+  private async stateModel(
+    meeting: MeetingModel,
+    chat: ChatModel,
+    fromStorage: boolean,
+  ): Promise<StateModel> {
+    if (fromStorage) {
+      if (meeting && meeting.status === MeetingStatus.FOUND) {
+        const lastMessageDate = await this.storage.get('lastMessageDate');
+        const notRedMessages = chat.messages.filter(message => {
+          return new Date(message.date) > new Date(lastMessageDate);
+        });
 
-    return {
-      toRead: notRedMessages.length,
-      messages: messages,
-    };
+        return {
+          loggedIn: true,
+          connection: Connection.CONNECTING,
+          toRead: notRedMessages.length,
+          loadingUser: false,
+          loadingMeeting: true,
+        };
+      } else {
+        return {
+          loggedIn: true,
+          connection: Connection.CONNECTING,
+          toRead: 0,
+          loadingUser: false,
+          loadingMeeting: true,
+        };
+      }
+    } else {
+      if (meeting && meeting.status === MeetingStatus.FOUND) {
+        return {
+          loggedIn: true,
+          connection: Connection.CONNECTING,
+          toRead: chat.messages.length,
+          loadingUser: false,
+          loadingMeeting: false,
+        };
+      } else {
+        return {
+          loggedIn: true,
+          connection: Connection.CONNECTING,
+          toRead: 0,
+          loadingUser: false,
+          loadingMeeting: false,
+        };
+      }
+    }
   }
 }

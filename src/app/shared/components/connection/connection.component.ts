@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { UserStoreService } from '../../../modules/user/user-store.service';
-import { Connection } from '../../../modules/user/user';
+import { Connection } from '../../../core/state';
+import { StateStoreService } from '../../../core/state-store.service';
 
 @Component({
   selector: 'app-connection',
@@ -13,7 +13,9 @@ export class ConnectionComponent {
   connection$: Observable<Connection>;
   connectedStatus = Connection;
 
-  constructor(userStore: UserStoreService) {
-    this.connection$ = userStore.data$.pipe(map(x => x.connection));
+  constructor(stateStore: StateStoreService) {
+    this.connection$ = stateStore.data$.pipe(
+      map(x => (x && x.connection ? x.connection : null)),
+    );
   }
 }

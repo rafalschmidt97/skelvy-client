@@ -21,6 +21,7 @@ import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { StateStoreService } from '../../../../core/state-store.service';
 
 @Component({
   selector: 'app-found',
@@ -48,6 +49,7 @@ export class FoundComponent implements OnInit, OnDestroy {
     private readonly chatStore: ChatStoreService,
     private readonly routerNavigation: NavController,
     private readonly storage: Storage,
+    private readonly stateStore: StateStoreService,
   ) {}
 
   get filteredMeetingUsers(): MeetingUserDto[] {
@@ -67,17 +69,17 @@ export class FoundComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.chatSubscription = this.chatStore.data$.subscribe(chat => {
-      if (chat && chat.messages) {
-        this.messagesToRead = chat.toRead;
-      } else {
-        this.messagesToRead = 0;
+    this.stateStore.data$.subscribe(state => {
+      if (state) {
+        this.messagesToRead = state.toRead;
       }
     });
   }
 
   ngOnDestroy() {
-    this.chatSubscription.unsubscribe();
+    if (this.chatSubscription) {
+      this.chatSubscription.unsubscribe();
+    }
   }
 
   openDetails(user: MeetingUserDto) {
@@ -124,7 +126,7 @@ export class FoundComponent implements OnInit, OnDestroy {
   showMessages() {
     this.routerNavigation.navigateForward(['/app/chat']).then(() => {
       setTimeout(() => {
-        this.chatStore.setToRead(0);
+        this.stateStore.setToRead(0);
         const messages = this.chatStore.data.messages;
         if (messages.length > 0) {
           this.storage.set(

@@ -14,6 +14,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
 import { UserStoreService } from './user-store.service';
 import { MeetingService } from '../meeting/meeting.service';
+import { StateStoreService } from '../../core/state-store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,7 @@ export class UserSocketService {
     private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
     private readonly userStore: UserStoreService,
+    private readonly stateStore: StateStoreService,
   ) {
     this.socket = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'users', {
@@ -64,7 +66,7 @@ export class UserSocketService {
       this.socket
         .stop()
         .then(() => {
-          this.userStore.disconnect();
+          this.stateStore.disconnect();
         })
         .catch(() => {
           this.toastService.createError(
@@ -77,10 +79,10 @@ export class UserSocketService {
   private onClose() {
     this.socket.onclose(() => {
       if (!this.disconnected) {
-        this.userStore.reconnect();
+        this.stateStore.reconnect();
         setTimeout(() => this.reconnectToSocket(), 5000);
       } else {
-        this.userStore.disconnect();
+        this.stateStore.disconnect();
         this.disconnected = false;
       }
     });
@@ -116,10 +118,10 @@ export class UserSocketService {
     this.socket
       .start()
       .then(() => {
-        this.userStore.connect();
+        this.stateStore.connect();
       })
       .catch(error => {
-        this.userStore.reconnect();
+        this.stateStore.reconnect();
 
         if (error.statusCode === 401) {
           this.authService.refreshToken().subscribe();
@@ -134,11 +136,11 @@ export class UserSocketService {
       this.socket
         .start()
         .then(() => {
-          this.userStore.connect();
+          this.stateStore.connect();
           this.meetingService.findMeeting().subscribe();
         })
         .catch(error => {
-          this.userStore.reconnect();
+          this.stateStore.reconnect();
 
           if (error.statusCode === 401) {
             this.authService.refreshToken().subscribe();
