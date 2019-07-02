@@ -137,11 +137,12 @@ export class MeetingService {
           });
         }),
         catchError(error => {
+          this.stateStore.markMeetingAsLoaded();
+
           if (error instanceof HttpErrorResponse && error.status === 404) {
             this.clearMeeting();
           }
 
-          this.stateStore.markMeetingAsLoaded();
           return throwError(error);
         }),
       );
