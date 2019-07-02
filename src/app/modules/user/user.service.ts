@@ -39,7 +39,7 @@ export class UserService {
       .put<void>(environment.versionApiUrl + 'users/self/profile', profile)
       .pipe(
         tap(() => {
-          this.findUser().subscribe();
+          this.userStore.setProfile(profile);
         }),
       );
   }

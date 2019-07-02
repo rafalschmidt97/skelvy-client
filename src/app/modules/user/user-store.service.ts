@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StoreService } from '../../shared/store.service';
-import { Connection, UserDto, UserModel } from './user';
+import { Connection, ProfileDto, UserDto, UserModel } from './user';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +32,13 @@ export class UserStoreService extends StoreService<UserModel> {
       ...this.subject.getValue(),
       id: user.id,
       profile: user.profile,
+    });
+  }
+
+  setProfile(profile: ProfileDto) {
+    this.subject.next({
+      ...this.subject.getValue(),
+      profile,
     });
   }
 }
