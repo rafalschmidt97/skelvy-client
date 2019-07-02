@@ -4,7 +4,7 @@ import { AuthGuard } from './core/auth/auth.guard';
 import { SelfResolver } from './modules/user/self.resolver';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'app', pathMatch: 'full' },
   {
     path: 'home',
     loadChildren: './modules/home/home.module#HomeModule',
@@ -36,7 +36,7 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: './modules/settings/settings.module#SettingsModule',
       },
-      { path: '', redirectTo: 'tabs/user', pathMatch: 'full' },
+      { path: '', redirectTo: 'tabs/meeting', pathMatch: 'full' },
     ],
   },
 ];
