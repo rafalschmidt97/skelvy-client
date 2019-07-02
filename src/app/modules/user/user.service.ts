@@ -5,7 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { UserDto } from './user';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { StateStoreService } from '../../core/state-store.service';
+import { StateStoreService } from '../../core/state/state-store.service';
 
 @Injectable({
   providedIn: 'root',

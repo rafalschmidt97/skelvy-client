@@ -23,7 +23,7 @@ import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MeetingStoreService } from '../../meeting-store.service';
 import { Subscription } from 'rxjs';
-import { StateStoreService } from '../../../../core/state-store.service';
+import { StateStoreService } from '../../../../core/state/state-store.service';
 
 @Component({
   selector: 'app-searching',

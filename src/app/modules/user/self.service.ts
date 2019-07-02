@@ -11,8 +11,8 @@ import { ChatModel } from '../chat/chat';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingService } from '../meeting/meeting.service';
-import { StateStoreService } from '../../core/state-store.service';
-import { Connection, StateModel } from '../../core/state';
+import { StateStoreService } from '../../core/state/state-store.service';
+import { Connection, StateModel } from '../../core/state/state';
 import { MeetingModel, MeetingStatus } from '../meeting/meeting';
 
 @Injectable({

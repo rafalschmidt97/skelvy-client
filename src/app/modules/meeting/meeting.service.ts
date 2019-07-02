@@ -14,7 +14,7 @@ import {
 import { ChatStoreService } from '../chat/chat-store.service';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
-import { StateStoreService } from '../../core/state-store.service';
+import { StateStoreService } from '../../core/state/state-store.service';
 
 @Injectable({
   providedIn: 'root',

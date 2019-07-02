@@ -5,7 +5,7 @@ import { MeetingStoreService } from '../meeting/meeting-store.service';
 import { ChatStoreService } from '../chat/chat-store.service';
 import { UserStoreService } from '../user/user-store.service';
 import { Storage } from '@ionic/storage';
-import { StateStoreService } from '../../core/state-store.service';
+import { StateStoreService } from '../../core/state/state-store.service';
 
 @Component({
   selector: 'app-tabs',

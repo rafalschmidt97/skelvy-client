@@ -10,7 +10,7 @@ import { MeetingStoreService } from './meeting-store.service';
 import { MeetingService } from './meeting.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
-import { StateStoreService } from '../../core/state-store.service';
+import { StateStoreService } from '../../core/state/state-store.service';
 
 @Injectable({
   providedIn: 'root',

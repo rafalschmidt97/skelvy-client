@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Connection } from '../../../core/state';
-import { StateStoreService } from '../../../core/state-store.service';
+import { Connection } from '../../../core/state/state';
+import { StateStoreService } from '../../../core/state/state-store.service';
 import {
   animate,
   state,

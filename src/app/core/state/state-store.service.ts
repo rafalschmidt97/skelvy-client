@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { StoreService } from '../../shared/store.service';
 import { Connection, StateModel } from './state';
-import { StoreService } from '../shared/store.service';
 
 @Injectable({
   providedIn: 'root',

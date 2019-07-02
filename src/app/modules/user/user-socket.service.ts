@@ -14,7 +14,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
 import { UserStoreService } from './user-store.service';
 import { MeetingService } from '../meeting/meeting.service';
-import { StateStoreService } from '../../core/state-store.service';
+import { StateStoreService } from '../../core/state/state-store.service';
 
 @Injectable({
   providedIn: 'root',
