@@ -15,6 +15,7 @@ import { ChatStoreService } from '../chat/chat-store.service';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { StateStoreService } from '../../core/state/state-store.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,7 @@ export class MeetingService {
     private readonly stateStore: StateStoreService,
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
+    private readonly router: Router,
   ) {}
 
   findMeeting(
@@ -69,24 +71,39 @@ export class MeetingService {
                   ...this.chatStore.data.messages,
                   ...newMessages,
                 ];
-                const lastMessageDate = await this.storage.get(
-                  'lastMessageDate',
-                );
-                const notRedMessages = messages.filter(message => {
-                  return new Date(message.date) > new Date(lastMessageDate);
-                });
 
                 this.chatStore.set({
                   messages,
                 });
 
-                this.stateStore.setToRead(notRedMessages.length);
+                if (this.router.url !== '/app/chat') {
+                  const lastMessageDate = await this.storage.get(
+                    'lastMessageDate',
+                  );
+                  const notRedMessages = messages.filter(message => {
+                    return new Date(message.date) > new Date(lastMessageDate);
+                  });
+
+                  this.stateStore.setToRead(notRedMessages.length);
+                } else {
+                  this.storage.set(
+                    'lastMessageDate',
+                    messages[messages.length - 1].date,
+                  );
+                }
               } else {
                 this.chatStore.set({
                   messages: newMessages,
                 });
 
-                this.stateStore.setToRead(newMessages.length);
+                if (this.router.url !== '/app/chat') {
+                  this.stateStore.setToRead(newMessages.length);
+                } else {
+                  this.storage.set(
+                    'lastMessageDate',
+                    newMessages[newMessages.length - 1].date,
+                  );
+                }
               }
             } else {
               await this.storage.remove('lastMessageDate');
