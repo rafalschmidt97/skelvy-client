@@ -21,6 +21,10 @@ const routes: Routes = [
     loadChildren:
       './notifications/notifications.module#NotificationsPageModule',
   },
+  {
+    path: 'data',
+    loadChildren: './data/data.module#DataPageModule',
+  },
 ];
 
 @NgModule({
