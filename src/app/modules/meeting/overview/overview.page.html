@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>{{ 'Meeting' | translate }}</ion-title>
+    <ion-buttons *ngIf="(state$ | async)?.loadingMeeting" slot="end">
+      <ion-button [disabled]="true">
+        <ion-spinner color="dark" class="small-spinner"></ion-spinner>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
