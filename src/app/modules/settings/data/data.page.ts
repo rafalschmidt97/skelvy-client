@@ -67,7 +67,7 @@ export class DataPage {
     if (!this.loadingData) {
       this.loadingData = true;
       this.loadingService.lock();
-      this.meetingService.findMeeting().subscribe(
+      this.meetingService.findMeeting(false, false).subscribe(
         () => {
           this.alert.hide();
           this.loadingService.unlock();

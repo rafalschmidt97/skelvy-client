@@ -29,7 +29,10 @@ export class MeetingService {
     private readonly translateService: TranslateService,
   ) {}
 
-  findMeeting(markedAsLoading: boolean = false): Observable<MeetingModelDto> {
+  findMeeting(
+    markedAsLoading: boolean = false,
+    mergeExisting: boolean = true,
+  ): Observable<MeetingModelDto> {
     if (!markedAsLoading) {
       this.stateStore.markMeetingAsLoading();
     }
@@ -46,44 +49,58 @@ export class MeetingService {
             this.meetingStore.data.status === MeetingStatus.FOUND &&
             model.meeting.id === this.meetingStore.data.meeting.id
           ) {
-            const existingMessages = this.chatStore.data.messages;
-            const newMessages = model.messages.filter(message1 => {
-              return (
-                existingMessages.filter(message2 => {
-                  return (
-                    new Date(message1.date).getTime() ===
-                      new Date(message2.date).getTime() &&
-                    message1.userId === message2.userId &&
-                    message1.message === message2.message
-                  );
-                }).length === 0
-              );
-            });
-
-            if (newMessages.length !== 20) {
-              const messages = [
-                ...this.chatStore.data.messages,
-                ...newMessages,
-              ];
-              const lastMessageDate = await this.storage.get('lastMessageDate');
-              const notRedMessages = messages.filter(message => {
-                return new Date(message.date) > new Date(lastMessageDate);
+            if (mergeExisting) {
+              const existingMessages = this.chatStore.data.messages;
+              const newMessages = model.messages.filter(message1 => {
+                return (
+                  existingMessages.filter(message2 => {
+                    return (
+                      new Date(message1.date).getTime() ===
+                        new Date(message2.date).getTime() &&
+                      message1.userId === message2.userId &&
+                      message1.message === message2.message
+                    );
+                  }).length === 0
+                );
               });
 
-              this.chatStore.set({
-                messages,
-              });
+              if (newMessages.length !== 20) {
+                const messages = [
+                  ...this.chatStore.data.messages,
+                  ...newMessages,
+                ];
+                const lastMessageDate = await this.storage.get(
+                  'lastMessageDate',
+                );
+                const notRedMessages = messages.filter(message => {
+                  return new Date(message.date) > new Date(lastMessageDate);
+                });
 
-              this.stateStore.setToRead(notRedMessages.length);
+                this.chatStore.set({
+                  messages,
+                });
+
+                this.stateStore.setToRead(notRedMessages.length);
+              } else {
+                this.chatStore.set({
+                  messages: newMessages,
+                });
+
+                this.stateStore.setToRead(newMessages.length);
+              }
             } else {
+              await this.storage.remove('lastMessageDate');
+
               this.chatStore.set({
-                messages: newMessages,
+                messages: model.messages,
               });
 
-              this.stateStore.setToRead(newMessages.length);
+              this.stateStore.setToRead(model.messages.length);
             }
           } else {
             if (model.status === MeetingStatus.FOUND) {
+              await this.storage.remove('lastMessageDate');
+
               this.chatStore.set({
                 messages: model.messages,
               });
