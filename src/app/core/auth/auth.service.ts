@@ -70,10 +70,12 @@ export class AuthService {
             refreshToken,
           })
           .pipe(
-            tap(async res => {
+            map(async res => {
               if (res && res.accessToken && res.refreshToken) {
                 await this.sessionService.createSession(res);
               }
+
+              return res;
             }),
           );
       }),

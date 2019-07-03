@@ -15,6 +15,7 @@ import { NavController } from '@ionic/angular';
 import { UserStoreService } from './user-store.service';
 import { MeetingService } from '../meeting/meeting.service';
 import { StateStoreService } from '../../core/state/state-store.service';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,7 @@ export class UserSocketService {
   private readonly socket: HubConnection;
   private initialized: boolean;
   private disconnected: boolean;
+  private reconnectFailedAttempts = 0;
 
   constructor(
     private readonly sessionService: SessionService,
@@ -80,7 +82,7 @@ export class UserSocketService {
     this.socket.onclose(() => {
       if (!this.disconnected) {
         this.stateStore.reconnect();
-        setTimeout(() => this.reconnectToSocket(), 5000);
+        this.reconnectToSocket();
       } else {
         this.stateStore.disconnect();
         this.disconnected = false;
@@ -127,7 +129,7 @@ export class UserSocketService {
           this.authService.refreshToken().subscribe();
         }
 
-        setTimeout(() => this.reconnectToSocket(), 2000);
+        setTimeout(() => this.reconnectToSocket(), 1000);
       });
   }
 
@@ -136,17 +138,33 @@ export class UserSocketService {
       this.socket
         .start()
         .then(() => {
+          this.reconnectFailedAttempts = 0;
           this.stateStore.connect();
           this.meetingService.findMeeting().subscribe();
         })
         .catch(error => {
-          this.stateStore.reconnect();
+          if (this.reconnectFailedAttempts < 4) {
+            this.reconnectFailedAttempts++;
 
-          if (error.statusCode === 401) {
-            this.authService.refreshToken().subscribe();
+            if (this.reconnectFailedAttempts === 1) {
+              this.stateStore.reconnect();
+            }
+          } else {
+            this.stateStore.waiting();
           }
 
-          setTimeout(() => this.reconnectToSocket(), 2000);
+          if (error.statusCode === 401) {
+            this.authService
+              .refreshToken()
+              .pipe(
+                tap(() => {
+                  this.reconnectToSocket();
+                }),
+              )
+              .subscribe();
+          } else {
+            setTimeout(() => this.reconnectToSocket(), 1000);
+          }
         });
     }
   }

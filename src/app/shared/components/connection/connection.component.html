@@ -3,6 +3,7 @@
     class="connection"
     [@fadeInOut]="
       connection === connectedStatus.RECONNECTING ||
+      connection === connectedStatus.WAITING ||
       connection === connectedStatus.DISCONNECTED
     "
   >
@@ -26,10 +27,16 @@
         {{ 'Reconnecting...' | translate }}
       </div>
       <div
+        *ngSwitchCase="connectedStatus.WAITING"
+        class="text text-warning font-weight-bold text-center"
+      >
+        {{ 'Waiting to reconnect...' | translate }}
+      </div>
+      <div
         *ngSwitchCase="connectedStatus.DISCONNECTED"
         class="text text-danger font-weight-bold text-center"
       >
-        {{ 'Waiting to reconnect...' | translate }}
+        {{ 'Disconnected' | translate }}
       </div>
     </ng-container>
   </div>

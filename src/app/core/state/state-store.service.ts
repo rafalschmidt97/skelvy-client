@@ -20,6 +20,13 @@ export class StateStoreService extends StoreService<StateModel> {
     });
   }
 
+  waiting() {
+    this.subject.next({
+      ...this.subject.getValue(),
+      connection: Connection.WAITING,
+    });
+  }
+
   disconnect() {
     this.subject.next({
       ...this.subject.getValue(),
