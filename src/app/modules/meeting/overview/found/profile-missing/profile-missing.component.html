@@ -1,4 +1,4 @@
-<div class="border-bottom">
+<div class="border-bottom" *ngIf="missing?.length !== 0">
   <div class="container d-flex" [style.height.px]="missing.length * 98 + 1">
     <div class="my-auto">
       <div class="info mb-2">
