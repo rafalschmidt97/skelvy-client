@@ -3,7 +3,6 @@ import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/form/input/input.component';
 import { UserStoreService } from '../../../user/user-store.service';
-import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../../core/i18n/translate';
 import { NavController } from '@ionic/angular';
