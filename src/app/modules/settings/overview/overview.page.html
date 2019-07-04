@@ -7,56 +7,51 @@
 <ion-content>
   <div class="content minh-100 bg-ultra-light">
     <div class="py-3">
-      <a routerLink="/app/settings/notifications" class="btn btn-settings">
+      <a
+        routerLink="/app/settings/notifications"
+        class="btn btn-settings btn-icon"
+      >
         {{ 'Notifications' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
-      <a routerLink="/app/settings/blocked" class="btn btn-settings">
+      <a routerLink="/app/settings/blocked" class="btn btn-settings btn-icon">
         {{ 'Blocked users' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
-      <a routerLink="/app/settings/language" class="btn btn-settings">
+      <a routerLink="/app/settings/language" class="btn btn-settings btn-icon">
         {{ 'Language' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
-      <a routerLink="/app/settings/data" class="btn btn-settings">
+      <a routerLink="/app/settings/data" class="btn btn-settings btn-icon">
         {{ 'Stored data' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
-      <a routerLink="/app/settings/community" class="btn btn-settings">
+      <a routerLink="/app/settings/community" class="btn btn-settings btn-icon">
         {{ 'Community' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
-      <a routerLink="/app/settings/legal" class="btn btn-settings">
+      <a routerLink="/app/settings/legal" class="btn btn-settings btn-icon">
         {{ 'Legal' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
       <button
         type="button"
         (click)="open(logout)"
-        class="btn btn-settings justify-content-center mt-3"
+        class="btn btn-settings mt-3"
       >
         {{ 'Log out' | translate }}
       </button>
-      <button
-        type="button"
-        (click)="sendReport()"
-        class="btn btn-settings justify-content-center"
-      >
+      <button type="button" (click)="sendReport()" class="btn btn-settings">
         {{ 'Report a bug' | translate }}
       </button>
       <button
         type="button"
         (click)="rateInStore()"
-        class="btn btn-settings justify-content-center mt-3"
+        class="btn btn-settings mt-3"
       >
         {{ 'Rate in store' | translate }}
       </button>
-      <button
-        type="button"
-        (click)="shareApp()"
-        class="btn btn-settings justify-content-center"
-      >
+      <button type="button" (click)="shareApp()" class="btn btn-settings">
         {{ 'Share with friends' | translate }}
       </button>
       <section class="about d-flex justify-content-center py-3">
@@ -67,7 +62,7 @@
       <button
         type="button"
         (click)="openLink('https://facebook.com/skelvyapp')"
-        class="btn btn-settings justify-content-center"
+        class="btn btn-settings d-flex align-items-center justify-content-center"
       >
         Facebook
         <ion-icon class="ml-2" name="logo-facebook"></ion-icon>
@@ -75,7 +70,7 @@
       <button
         type="button"
         (click)="openLink('https://twitter.com/skelvyapp')"
-        class="btn btn-settings justify-content-center"
+        class="btn btn-settings d-flex align-items-center justify-content-center"
       >
         Twitter
         <ion-icon class="ml-2" name="logo-twitter"></ion-icon>
@@ -83,7 +78,7 @@
       <button
         type="button"
         (click)="openLink('https://instagram.com/skelvyapp/')"
-        class="btn btn-settings justify-content-center"
+        class="btn btn-settings d-flex align-items-center justify-content-center"
       >
         Instagram
         <ion-icon class="ml-2" name="logo-instagram"></ion-icon>

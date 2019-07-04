@@ -10,8 +10,6 @@
     text-align: left;
     border-radius: 0;
     width: 100%;
-    display: flex;
-    align-items: center;
     background: $white;
     color: $body-color;
     padding: 14px 17px;
@@ -19,12 +17,21 @@
     border-top: 1px solid theme-color('light');
     margin-top: -1px;
 
-    &:focus {
-      box-shadow: none;
+    &.btn-icon {
+      display: flex;
+      align-items: center;
+
+      .icon {
+        color: gray('500');
+      }
     }
 
-    .icon {
-      color: gray('500');
+    &:not(.btn-icon) {
+      text-align: center;
+    }
+
+    &:focus {
+      box-shadow: none;
     }
   }
 }
