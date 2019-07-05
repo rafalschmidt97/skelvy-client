@@ -3,7 +3,7 @@ import { UserDto } from '../user';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { Modal } from '../../../shared/modal/modal';
 import { Observable } from 'rxjs';
-import { UserStoreService } from '../user-store.service';
+import { UserState } from '../user-state';
 
 @Component({
   selector: 'app-overview',
@@ -16,10 +16,10 @@ export class OverviewPage {
   user$: Observable<UserDto>;
 
   constructor(
-    private readonly userStore: UserStoreService,
+    private readonly userState: UserState,
     private readonly modalService: ModalService,
   ) {
-    this.user$ = userStore.data$;
+    this.user$ = userState.data$;
   }
 
   open() {

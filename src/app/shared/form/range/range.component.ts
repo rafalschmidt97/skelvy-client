@@ -13,7 +13,6 @@ export class RangeComponent extends ComplexFieldComponent implements OnInit {
   @Input() max: number;
   @Input() maxLabelToRound: string;
   @Input() maxValueToRound: number;
-
   slider: any;
 
   get hasErrorTight(): boolean {

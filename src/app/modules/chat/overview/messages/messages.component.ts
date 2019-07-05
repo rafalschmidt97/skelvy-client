@@ -6,11 +6,11 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ChatMessageDto } from '../../chat';
+import { ChatMessageDto, ChatMessageState } from '../../chat';
 import { MeetingDto, MeetingUserDto } from '../../../meeting/meeting';
 import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
-import { ChatStoreService } from '../../chat-store.service';
+import { ChatState } from '../../chat-state';
 import { ChatService } from '../../chat.service';
 import { Storage } from '@ionic/storage';
 import { ToastService } from '../../../../core/toast/toast.service';
@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 import { MeetingService } from '../../../meeting/meeting.service';
 import { Modal } from '../../../../shared/modal/modal';
 import { ModalService } from '../../../../shared/modal/modal.service';
+import { storageKeys } from '../../../../core/storage/storage';
 
 @Component({
   selector: 'app-messages',
@@ -28,15 +29,15 @@ import { ModalService } from '../../../../shared/modal/modal.service';
 })
 export class MessagesComponent implements OnInit {
   @ViewChild('content') content: ElementRef;
-  @Input() messages: ChatMessageDto[];
+  @ViewChild('actions') modalTemplate: TemplateRef<any>;
+  @Input() messages: ChatMessageState[];
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
   dateToShow: string;
-  isLoading: boolean;
-  hasMoreMessages: boolean;
-  @ViewChild('actions') modalTemplate: TemplateRef<any>;
+  isLoading = false;
+  hasMoreMessages = false;
   modal: Modal;
-  modalMessage: ChatMessageDto;
+  modalMessage: ChatMessageState;
 
   constructor(
     private readonly routerNavigation: NavController,
@@ -45,18 +46,16 @@ export class MessagesComponent implements OnInit {
     private readonly storage: Storage,
     private readonly meetingService: MeetingService,
     private readonly chatService: ChatService,
-    private readonly chatStore: ChatStoreService,
+    private readonly chatState: ChatState,
     private readonly modalService: ModalService,
   ) {}
 
   ngOnInit() {
-    if (this.chatStore.data.messages.length === 20) {
+    if (this.chatState.data.messages.length === 20) {
       this.hasMoreMessages = true;
     }
 
-    setTimeout(() => {
-      this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
-    }, 240);
+    this.scrollToLastMessage();
   }
 
   findUser(userId: number): MeetingUserDto {
@@ -74,16 +73,16 @@ export class MessagesComponent implements OnInit {
   loadMessages() {
     if (this.hasMoreMessages && !this.isLoading) {
       this.isLoading = true;
-      const firstMessage = this.chatStore.data.messages[0];
+      const firstMessage = this.chatState.data.messages[0];
 
       this.chatService.findMessages(firstMessage.date).subscribe(
         (messages: ChatMessageDto[]) => {
-          const mergedMessages = [...messages, ...this.chatStore.data.messages];
-          this.chatStore.setMessages(mergedMessages);
+          const mergedMessages = [...messages, ...this.chatState.data.messages];
+          this.chatState.setMessages(mergedMessages);
 
           if (mergedMessages.length > 0) {
             this.storage.set(
-              'lastMessageDate',
+              storageKeys.lastMessageDate,
               mergedMessages[mergedMessages.length - 1].date,
             );
           }
@@ -105,27 +104,27 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  showActions(message: ChatMessageDto) {
+  showActions(message: ChatMessageState) {
     this.modalMessage = message;
-
     this.modal = this.modalService.show(this.modalTemplate);
   }
 
-  sendAgain(oldMessage: ChatMessageDto) {
-    const newMessage: ChatMessageDto = {
+  sendAgain(oldMessage: ChatMessageState) {
+    const newMessage: ChatMessageState = {
+      id: 0,
       date: new Date().toISOString(),
       message: oldMessage.message,
       userId: oldMessage.userId,
       sending: true,
     };
 
-    this.chatStore.removeOldAndAddNew(oldMessage, newMessage);
+    this.chatState.removeOldAndAddNew(oldMessage, newMessage);
     this.modal.hide();
 
     this.chatService.sendMessage(newMessage).subscribe(
       () => {
-        this.chatStore.markAsSent(newMessage);
-        this.storage.set('lastMessageDate', newMessage.date);
+        this.chatState.markAsSent(newMessage);
+        this.storage.set(storageKeys.lastMessageDate, newMessage.date);
       },
       (error: HttpErrorResponse) => {
         // data is not relevant (connection lost and reconnected)
@@ -140,18 +139,24 @@ export class MessagesComponent implements OnInit {
             _('A problem occurred while sending the message'),
           );
         } else {
-          this.chatStore.markAsFailed(newMessage);
+          this.chatState.markAsFailed(newMessage);
         }
       },
     );
   }
 
-  remove(message: ChatMessageDto) {
-    this.chatStore.removeMessage(message);
+  remove(message: ChatMessageState) {
+    this.chatState.removeMessage(message);
     this.modal.hide();
   }
 
   decline() {
     this.modal.hide();
+  }
+
+  private scrollToLastMessage() {
+    setTimeout(() => {
+      this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
+    }, 240);
   }
 }

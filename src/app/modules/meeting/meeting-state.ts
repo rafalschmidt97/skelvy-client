@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { MeetingModel, MeetingUserDto } from './meeting';
-import { StoreService } from '../../shared/store.service';
+import { MeetingStateModel, MeetingUserDto } from './meeting';
+import { State } from '../../shared/state';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MeetingStoreService extends StoreService<MeetingModel> {
+export class MeetingState extends State<MeetingStateModel> {
   addUser(user: MeetingUserDto) {
     this.subject.next({
       ...this.subject.getValue(),

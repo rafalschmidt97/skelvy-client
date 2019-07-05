@@ -3,19 +3,21 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
-import { MeetingStoreService } from './meeting-store.service';
+import { MeetingState } from './meeting-state';
 import {
   MeetingDrinkTypeDto,
-  MeetingModelDto,
+  MeetingModel,
+  MeetingRequestRequest,
   MeetingStatus,
   MeetingSuggestionsModel,
   MeetingUserDto,
 } from './meeting';
-import { ChatStoreService } from '../chat/chat-store.service';
+import { ChatState } from '../chat/chat-state';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
-import { StateStoreService } from '../../core/state/state-store.service';
+import { GlobalState } from '../../core/state/global-state';
 import { Router } from '@angular/router';
+import { storageKeys } from '../../core/storage/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -23,9 +25,9 @@ import { Router } from '@angular/router';
 export class MeetingService {
   constructor(
     private readonly http: HttpClient,
-    private readonly meetingStore: MeetingStoreService,
-    private readonly chatStore: ChatStoreService,
-    private readonly stateStore: StateStoreService,
+    private readonly meetingState: MeetingState,
+    private readonly chatState: ChatState,
+    private readonly globalState: GlobalState,
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
     private readonly router: Router,
@@ -34,25 +36,25 @@ export class MeetingService {
   findMeeting(
     markedAsLoading: boolean = false,
     mergeExisting: boolean = true,
-  ): Observable<MeetingModelDto> {
+  ): Observable<MeetingModel> {
     if (!markedAsLoading) {
-      this.stateStore.markMeetingAsLoading();
+      this.globalState.markMeetingAsLoading();
     }
 
     return this.http
-      .get<MeetingModelDto>(
+      .get<MeetingModel>(
         `${environment.versionApiUrl}meetings/self?language=${this.translateService.currentLang}`,
       )
       .pipe(
         tap(async model => {
           if (
-            this.meetingStore.data &&
+            this.meetingState.data &&
             model.status === MeetingStatus.FOUND &&
-            this.meetingStore.data.status === MeetingStatus.FOUND &&
-            model.meeting.id === this.meetingStore.data.meeting.id
+            this.meetingState.data.status === MeetingStatus.FOUND &&
+            model.meeting.id === this.meetingState.data.meeting.id
           ) {
             if (mergeExisting) {
-              const existingMessages = this.chatStore.data.messages;
+              const existingMessages = this.chatState.data.messages;
               const newMessages = model.messages.filter(message1 => {
                 return (
                   existingMessages.filter(message2 => {
@@ -68,76 +70,76 @@ export class MeetingService {
 
               if (newMessages.length !== 20) {
                 const messages = [
-                  ...this.chatStore.data.messages,
+                  ...this.chatState.data.messages,
                   ...newMessages,
                 ];
 
-                this.chatStore.set({
+                this.chatState.set({
                   messages,
                 });
 
                 if (this.router.url !== '/app/chat') {
                   const lastMessageDate = await this.storage.get(
-                    'lastMessageDate',
+                    storageKeys.lastMessageDate,
                   );
                   const notRedMessages = messages.filter(message => {
                     return new Date(message.date) > new Date(lastMessageDate);
                   });
 
-                  this.stateStore.setToRead(notRedMessages.length);
+                  this.globalState.setToRead(notRedMessages.length);
                 } else {
                   this.storage.set(
-                    'lastMessageDate',
+                    storageKeys.lastMessageDate,
                     messages[messages.length - 1].date,
                   );
                 }
               } else {
-                this.chatStore.set({
+                this.chatState.set({
                   messages: newMessages,
                 });
 
                 if (this.router.url !== '/app/chat') {
-                  this.stateStore.setToRead(newMessages.length);
+                  this.globalState.setToRead(newMessages.length);
                 } else {
                   this.storage.set(
-                    'lastMessageDate',
+                    storageKeys.lastMessageDate,
                     newMessages[newMessages.length - 1].date,
                   );
                 }
               }
             } else {
-              await this.storage.remove('lastMessageDate');
+              await this.storage.remove(storageKeys.lastMessageDate);
 
-              this.chatStore.set({
+              this.chatState.set({
                 messages: model.messages,
               });
 
-              this.stateStore.setToRead(model.messages.length);
+              this.globalState.setToRead(model.messages.length);
             }
           } else {
             if (model.status === MeetingStatus.FOUND) {
-              await this.storage.remove('lastMessageDate');
+              await this.storage.remove(storageKeys.lastMessageDate);
 
-              this.chatStore.set({
+              this.chatState.set({
                 messages: model.messages,
               });
 
-              this.stateStore.setToRead(model.messages.length);
+              this.globalState.setToRead(model.messages.length);
             } else {
               this.clearChat();
             }
           }
 
-          this.stateStore.markMeetingAsLoaded();
+          this.globalState.markMeetingAsLoaded();
 
-          this.meetingStore.set({
+          this.meetingState.set({
             status: model.status,
             meeting: model.meeting,
             request: model.request,
           });
         }),
         catchError(error => {
-          this.stateStore.markMeetingAsLoaded();
+          this.globalState.markMeetingAsLoaded();
 
           if (error instanceof HttpErrorResponse && error.status === 404) {
             this.clearMeeting();
@@ -153,14 +155,14 @@ export class MeetingService {
       .delete<void>(environment.versionApiUrl + 'meetings/self')
       .pipe(
         tap(() => {
-          this.meetingStore.set(null);
-          this.chatStore.set(null);
-          this.storage.remove('lastMessageDate');
+          this.meetingState.set(null);
+          this.chatState.set(null);
+          this.storage.remove(storageKeys.lastMessageDate);
         }),
       );
   }
 
-  createMeetingRequest(request): Observable<void> {
+  createMeetingRequest(request: MeetingRequestRequest): Observable<void> {
     return this.http.post<void>(
       environment.versionApiUrl + 'users/self/request',
       request,
@@ -172,7 +174,7 @@ export class MeetingService {
       .delete<void>(environment.versionApiUrl + 'users/self/request')
       .pipe(
         tap(() => {
-          this.meetingStore.set(null);
+          this.meetingState.set(null);
         }),
       );
   }
@@ -214,13 +216,13 @@ export class MeetingService {
   }
 
   clearMeeting() {
-    this.meetingStore.set(null);
+    this.meetingState.set(null);
     this.clearChat();
   }
 
   clearChat() {
-    this.chatStore.set(null);
-    this.stateStore.setToRead(0);
-    this.storage.remove('lastMessageDate');
+    this.chatState.set(null);
+    this.globalState.setToRead(0);
+    this.storage.remove(storageKeys.lastMessageDate);
   }
 }

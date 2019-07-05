@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { ChatModel } from '../chat';
-import { MeetingStoreService } from '../../meeting/meeting-store.service';
+import { ChatStateModel } from '../chat';
+import { MeetingState } from '../../meeting/meeting-state';
 import { Observable } from 'rxjs';
-import { MeetingModel } from '../../meeting/meeting';
-import { UserStoreService } from '../../user/user-store.service';
-import { UserModel } from '../../user/user';
-import { ChatStoreService } from '../chat-store.service';
-import { StateModel } from '../../../core/state/state';
-import { StateStoreService } from '../../../core/state/state-store.service';
+import { MeetingStateModel } from '../../meeting/meeting';
+import { UserState } from '../../user/user-state';
+import { UserStateModel } from '../../user/user';
+import { ChatState } from '../chat-state';
+import { GlobalStateModel } from '../../../core/state/global';
+import { GlobalState } from '../../../core/state/global-state';
 
 @Component({
   selector: 'app-overview',
@@ -15,20 +15,20 @@ import { StateStoreService } from '../../../core/state/state-store.service';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage {
-  chat$: Observable<ChatModel>;
-  meeting$: Observable<MeetingModel>;
-  user$: Observable<UserModel>;
-  state$: Observable<StateModel>;
+  chat$: Observable<ChatStateModel>;
+  meeting$: Observable<MeetingStateModel>;
+  user$: Observable<UserStateModel>;
+  state$: Observable<GlobalStateModel>;
 
   constructor(
-    private readonly meetingStore: MeetingStoreService,
-    private readonly userStore: UserStoreService,
-    private readonly chatStore: ChatStoreService,
-    private readonly stateStore: StateStoreService,
+    private readonly meetingState: MeetingState,
+    private readonly userState: UserState,
+    private readonly chatState: ChatState,
+    private readonly globalState: GlobalState,
   ) {
-    this.meeting$ = meetingStore.data$;
-    this.user$ = userStore.data$;
-    this.chat$ = chatStore.data$;
-    this.state$ = stateStore.data$;
+    this.meeting$ = meetingState.data$;
+    this.user$ = userState.data$;
+    this.chat$ = chatState.data$;
+    this.state$ = globalState.data$;
   }
 }

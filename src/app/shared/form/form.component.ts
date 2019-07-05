@@ -9,6 +9,5 @@ import { FormGroup } from '@angular/forms';
 export class FormComponent implements Form {
   @Input() form: FormGroup;
   @Input() isLoading: boolean;
-
   @Output() onSubmit = new EventEmitter();
 }

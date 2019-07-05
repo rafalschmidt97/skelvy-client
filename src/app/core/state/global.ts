@@ -1,4 +1,4 @@
-export interface StateModel {
+export interface GlobalStateModel {
   loggedIn: boolean;
   connection: Connection;
   toRead: number;

@@ -23,7 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class OverviewPage {
   alert: Alert;
   version: string;
-  loadingLogout: boolean;
+  loadingLogout = false;
 
   constructor(
     private readonly alertService: AlertService,

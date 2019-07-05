@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { StoreService } from '../../shared/store.service';
-import { ChatMessageDto, ChatModel } from './chat';
+import { State } from '../../shared/state';
+import { ChatMessageState, ChatStateModel } from './chat';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ChatStoreService extends StoreService<ChatModel> {
-  addMessage(message: ChatMessageDto) {
+export class ChatState extends State<ChatStateModel> {
+  addMessage(message: ChatMessageState) {
     this.subject.next({
       ...this.subject.getValue(),
       messages: [...this.subject.getValue().messages, message],
     });
   }
 
-  removeMessage(message: ChatMessageDto) {
+  removeMessage(message: ChatMessageState) {
     this.subject.next({
       ...this.subject.getValue(),
       messages: [
@@ -27,14 +27,17 @@ export class ChatStoreService extends StoreService<ChatModel> {
     });
   }
 
-  setMessages(messages: ChatMessageDto[]) {
+  setMessages(messages: ChatMessageState[]) {
     this.subject.next({
       ...this.subject.getValue(),
       messages: messages,
     });
   }
 
-  removeOldAndAddNew(oldMessage: ChatMessageDto, newMessage: ChatMessageDto) {
+  removeOldAndAddNew(
+    oldMessage: ChatMessageState,
+    newMessage: ChatMessageState,
+  ) {
     this.subject.next({
       ...this.subject.getValue(),
       messages: [
@@ -50,7 +53,7 @@ export class ChatStoreService extends StoreService<ChatModel> {
     });
   }
 
-  markAsSent(message: ChatMessageDto) {
+  markAsSent(message: ChatMessageState) {
     this.subject.next({
       ...this.subject.getValue(),
       messages: [
@@ -66,7 +69,7 @@ export class ChatStoreService extends StoreService<ChatModel> {
     });
   }
 
-  markAsFailed(message: ChatMessageDto) {
+  markAsFailed(message: ChatMessageState) {
     this.subject.next({
       ...this.subject.getValue(),
       messages: [

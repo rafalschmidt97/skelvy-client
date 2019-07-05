@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/form/input/input.component';
-import { UserStoreService } from '../../../user/user-store.service';
+import { UserState } from '../../../user/user-state';
 import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../../core/i18n/translate';
 import { NavController } from '@ionic/angular';
@@ -11,7 +11,9 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { MeetingService } from '../../../meeting/meeting.service';
 import { ChatService } from '../../chat.service';
-import { ChatStoreService } from '../../chat-store.service';
+import { ChatState } from '../../chat-state';
+import { ChatMessageState } from '../../chat';
+import { storageKeys } from '../../../../core/storage/storage';
 
 @Component({
   selector: 'app-message-form',
@@ -19,20 +21,20 @@ import { ChatStoreService } from '../../chat-store.service';
   styleUrls: ['./message-form.component.scss'],
 })
 export class MessageFormComponent implements Form, OnSubmit {
+  @ViewChild('messageInput') messageInput: ElementRef;
   form: FormGroup;
   isLoading = false;
-  @ViewChild('messageInput') messageInput: ElementRef;
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly userStore: UserStoreService,
+    private readonly userState: UserState,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly router: Router,
     private readonly storage: Storage,
     private readonly meetingService: MeetingService,
     private readonly chatService: ChatService,
-    private readonly chatStore: ChatStoreService,
+    private readonly chatState: ChatState,
   ) {
     this.form = this.formBuilder.group({
       message: [
@@ -46,6 +48,14 @@ export class MessageFormComponent implements Form, OnSubmit {
     });
   }
 
+  get hasErrorMaxLength(): boolean {
+    return this.form.get('message').hasError('maxlength');
+  }
+
+  get hasErrorRequired(): boolean {
+    return this.form.get('message').hasError('required');
+  }
+
   onSubmit() {
     this.messageInput.nativeElement.focus();
 
@@ -55,7 +65,7 @@ export class MessageFormComponent implements Form, OnSubmit {
       this.sendMessage({
         message: this.form.get('message').value.trim(),
         date: new Date().toISOString(),
-        userId: this.userStore.data.id,
+        userId: this.userState.data.id,
         sending: true,
       });
 
@@ -67,13 +77,13 @@ export class MessageFormComponent implements Form, OnSubmit {
     }
   }
 
-  sendMessage(message) {
-    this.chatStore.addMessage(message);
+  sendMessage(message: ChatMessageState) {
+    this.chatState.addMessage(message);
 
     this.chatService.sendMessage(message).subscribe(
       () => {
-        this.chatStore.markAsSent(message);
-        this.storage.set('lastMessageDate', message.date);
+        this.chatState.markAsSent(message);
+        this.storage.set(storageKeys.lastMessageDate, message.date);
       },
       (error: HttpErrorResponse) => {
         // data is not relevant (connection lost and reconnected)
@@ -88,17 +98,9 @@ export class MessageFormComponent implements Form, OnSubmit {
             _('A problem occurred while sending the message'),
           );
         } else {
-          this.chatStore.markAsFailed(message);
+          this.chatState.markAsFailed(message);
         }
       },
     );
-  }
-
-  get hasErrorMaxLength(): boolean {
-    return this.form.get('message').hasError('maxlength');
-  }
-
-  get hasErrorRequired(): boolean {
-    return this.form.get('message').hasError('required');
   }
 }

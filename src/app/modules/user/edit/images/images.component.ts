@@ -28,6 +28,9 @@ import { AlertService } from '../../../../shared/alert/alert.service';
   styleUrls: ['./images.component.scss'],
 })
 export class ImagesComponent extends ComplexFieldComponent implements OnInit {
+  @ViewChild('cropper') cropper: TemplateRef<any>;
+  @ViewChild('cropperComponentContent') imageCropper: ImageCropperComponent;
+  @ViewChild('alert') alertTemplate: TemplateRef<any>;
   modal: Modal;
   alert: Alert;
   inputForm: FormGroup;
@@ -38,15 +41,8 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   image1Name = 'image1';
   image2Name = 'image2';
   image3Name = 'image3';
-  @ViewChild('cropper') cropper: TemplateRef<any>;
-  @ViewChild('cropperComponentContent') imageCropper: ImageCropperComponent;
-  @ViewChild('alert') alertTemplate: TemplateRef<any>;
   loadingUpload = false;
   private removeIndex: number;
-
-  get isDirty(): boolean {
-    return this.dirty;
-  }
 
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
@@ -58,6 +54,10 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     private readonly loadingService: LoadingService,
   ) {
     super(parent);
+  }
+
+  get isDirty(): boolean {
+    return this.dirty;
   }
 
   ngOnInit() {

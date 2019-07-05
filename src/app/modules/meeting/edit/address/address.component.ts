@@ -71,15 +71,15 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
       );
   }
 
+  get dateLabel(): string {
+    const value: MapsResponse = this.form.get(this.name).value;
+    return value ? `${value.city}, ${value.country}` : this.placeholder;
+  }
+
   ngOnInit() {
     if (isNil(this.form.get(this.name).value)) {
       this.findCurrentLocation();
     }
-  }
-
-  get dateLabel(): string {
-    const value: MapsResponse = this.form.get(this.name).value;
-    return value ? `${value.city}, ${value.country}` : this.placeholder;
   }
 
   findCurrentLocation() {

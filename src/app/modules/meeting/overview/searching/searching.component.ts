@@ -21,9 +21,9 @@ import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
 import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MeetingStoreService } from '../../meeting-store.service';
+import { MeetingState } from '../../meeting-state';
 import { Subscription } from 'rxjs';
-import { StateStoreService } from '../../../../core/state/state-store.service';
+import { GlobalState } from '../../../../core/state/global-state';
 
 @Component({
   selector: 'app-searching',
@@ -31,8 +31,8 @@ import { StateStoreService } from '../../../../core/state/state-store.service';
   styleUrls: ['./searching.component.scss'],
 })
 export class SearchingComponent implements OnInit, OnDestroy {
-  @Input() request: MeetingRequestDto;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
+  @Input() request: MeetingRequestDto;
   alert: Alert;
   isLoading = false;
   loadingSuggestions = false;
@@ -46,26 +46,16 @@ export class SearchingComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
-    private readonly meetingStore: MeetingStoreService,
-    private readonly stateStore: StateStoreService,
+    private readonly meetingState: MeetingState,
+    private readonly globalState: GlobalState,
   ) {}
 
-  getDate(minDate: Date, maxDate: Date): string {
-    if (maxDate !== minDate) {
-      return `${moment(minDate).format('DD.MM.YYYY')} - ${moment(
-        maxDate,
-      ).format('DD.MM.YYYY')}`;
-    }
-
-    return moment(minDate).format('DD.MM.YYYY');
-  }
-
   ngOnInit() {
-    this.statusSubscription = this.meetingStore.data$.subscribe(model => {
+    this.statusSubscription = this.meetingState.data$.subscribe(model => {
       if (
         model &&
         model.status === MeetingStatus.SEARCHING &&
-        !this.stateStore.data.loadingMeeting
+        !this.globalState.data.loadingMeeting
       ) {
         this.findSuggestions(model.request.latitude, model.request.longitude);
       }
@@ -76,6 +66,16 @@ export class SearchingComponent implements OnInit, OnDestroy {
     if (this.statusSubscription) {
       this.statusSubscription.unsubscribe();
     }
+  }
+
+  getDate(minDate: string | Date, maxDate: string | Date): string {
+    if (maxDate !== minDate) {
+      return `${moment(minDate).format('DD.MM.YYYY')} - ${moment(
+        maxDate,
+      ).format('DD.MM.YYYY')}`;
+    }
+
+    return moment(minDate).format('DD.MM.YYYY');
   }
 
   findSuggestions(latitude: number, longitude: number) {

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { TokenDto } from './auth';
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +15,11 @@ export class SessionService {
     return session !== null;
   }
 
-  getSession(): Promise<any> {
+  getSession(): Promise<TokenDto> {
     return this.storage.get(SessionService.SESSION_STORAGE_KEY);
   }
 
-  async createSession(token: any) {
+  async createSession(token: TokenDto) {
     await this.storage.set(SessionService.SESSION_STORAGE_KEY, token);
   }
 

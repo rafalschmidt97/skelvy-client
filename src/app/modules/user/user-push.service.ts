@@ -5,7 +5,8 @@ import { Push, PushObject } from '@ionic-native/push/ngx';
 import { UserService } from './user.service';
 import { Storage } from '@ionic/storage';
 import { NavController, Platform } from '@ionic/angular';
-import { UserStoreService } from './user-store.service';
+import { UserState } from './user-state';
+import { storageKeys } from '../../core/storage/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -19,16 +20,16 @@ export class UserPushService {
     private readonly toastService: ToastService,
     private readonly storage: Storage,
     private readonly platform: Platform,
-    private readonly userStore: UserStoreService,
+    private readonly userState: UserState,
     private readonly routerNavigation: NavController,
   ) {
     this.push$ = this.push.init({});
   }
 
   initialize() {
-    this.storage.get('push').then((exists: boolean) => {
+    this.storage.get(storageKeys.push).then(async (exists: boolean) => {
       if (!exists) {
-        this.push.createChannel({
+        await this.push.createChannel({
           id: 'push',
           description: 'Push Channel',
           importance: 3,
@@ -47,12 +48,12 @@ export class UserPushService {
         });
 
         this.push$.on('registration').subscribe(async () => {
-          await this.storage.set('push', true);
-          await this.storage.set('pushTopicAll', true);
-          await this.storage.set('pushTopicPlatform', true);
+          await this.storage.set(storageKeys.push, true);
+          await this.storage.set(storageKeys.pushTopicAll, true);
+          await this.storage.set(storageKeys.pushTopicPlatform, true);
         });
 
-        this.push$.on('error').subscribe(x => {
+        this.push$.on('error').subscribe(() => {
           this.toastService.createError(
             _('A problem occurred while registering the device'),
           );
@@ -73,7 +74,7 @@ export class UserPushService {
       }
     });
 
-    this.storage.get('pushTopicUser').then((exists: boolean) => {
+    this.storage.get(storageKeys.pushTopicUser).then((exists: boolean) => {
       if (!exists) {
         this.addTopic('user-' + this.getUserId(), 'pushTopicUser');
       }
@@ -123,6 +124,6 @@ export class UserPushService {
   }
 
   private getUserId(): number {
-    return this.userStore.data.id;
+    return this.userState.data.id;
   }
 }

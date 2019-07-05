@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserStoreService } from './user-store.service';
+import { UserState } from './user-state';
 import { Observable, throwError } from 'rxjs';
-import { UserDto } from './user';
+import { ProfileRequest, UserDto } from './user';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { StateStoreService } from '../../core/state/state-store.service';
+import { GlobalState } from '../../core/state/global-state';
 
 @Injectable({
   providedIn: 'root',
@@ -13,24 +13,24 @@ import { StateStoreService } from '../../core/state/state-store.service';
 export class UserService {
   constructor(
     private readonly http: HttpClient,
-    private readonly userStore: UserStoreService,
-    private readonly stateStore: StateStoreService,
+    private readonly userState: UserState,
+    private readonly globalState: GlobalState,
   ) {}
 
   findUser(markedAsLoading: boolean = false): Observable<UserDto> {
     if (!markedAsLoading) {
-      this.stateStore.markUserAsLoading();
+      this.globalState.markUserAsLoading();
     }
 
     return this.http
       .get<UserDto>(environment.versionApiUrl + 'users/self')
       .pipe(
         tap(user => {
-          this.userStore.setUser(user);
-          this.stateStore.markUserAsLoaded();
+          this.userState.setUser(user);
+          this.globalState.markUserAsLoaded();
         }),
         catchError(error => {
-          this.stateStore.markUserAsLoaded();
+          this.globalState.markUserAsLoaded();
           return throwError(error);
         }),
       );
@@ -45,12 +45,12 @@ export class UserService {
     );
   }
 
-  updateProfile(profile): Observable<void> {
+  updateProfile(profile: ProfileRequest): Observable<void> {
     return this.http
       .put<void>(environment.versionApiUrl + 'users/self/profile', profile)
       .pipe(
         tap(() => {
-          this.userStore.setProfile(profile);
+          this.userState.setProfile(profile);
         }),
       );
   }
@@ -61,7 +61,7 @@ export class UserService {
     );
   }
 
-  addBlockUser(id: number): Observable<void> {
+  addBlockedUser(id: number): Observable<void> {
     return this.http.post<void>(
       `${environment.versionApiUrl}users/self/blocked`,
       { blockUserId: id },

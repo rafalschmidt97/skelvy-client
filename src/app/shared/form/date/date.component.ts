@@ -12,7 +12,6 @@ export class DateComponent extends ComplexFieldComponent implements OnInit {
   @Input() max: Date;
   minIso: string;
   maxIso: string;
-
   datePicker: string;
   dayNames = moment.weekdays();
   dayNamesShort = moment.weekdaysShort();

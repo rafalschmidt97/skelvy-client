@@ -8,17 +8,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class AlertComponent {
   @Input() title: string;
   @Input() description: string;
-  @Output() confirm = new EventEmitter();
-  @Output() decline = new EventEmitter();
   @Input() confirmText: string;
   @Input() confirmLoading = false;
   @Input() declineText: string;
+  @Output() confirm = new EventEmitter();
+  @Output() decline = new EventEmitter();
 
-  get hasConfirm() {
+  get hasConfirm(): boolean {
     return this.confirm.observers.length > 0;
   }
 
-  get hasDecline() {
+  get hasDecline(): boolean {
     return this.decline.observers.length > 0;
   }
 }

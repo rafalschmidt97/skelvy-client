@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ChatMessageDto } from './chat';
+import { ChatMessageDto, ChatMessageRequest } from './chat';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 
@@ -18,7 +18,7 @@ export class ChatService {
     );
   }
 
-  sendMessage(message: any) {
+  sendMessage(message: ChatMessageRequest) {
     return this.http.post<void>(
       environment.versionApiUrl + 'meetings/self/chat',
       message,

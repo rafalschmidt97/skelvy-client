@@ -6,13 +6,18 @@ import * as moment from 'moment';
 import { Checkbox } from '../../../shared/form/checkbox/checkbox';
 import { RangeComponent } from '../../../shared/form/range/range.component';
 import { MeetingService } from '../meeting.service';
-import { MeetingDrinkTypeDto, MeetingSuggestionsModel } from '../meeting';
+import {
+  MeetingDrinkTypeDto,
+  MeetingRequestRequest,
+  MeetingSuggestionsModel,
+} from '../meeting';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting-socket.service';
-import { UserStoreService } from '../../user/user-store.service';
+import { UserState } from '../../user/user-state';
 import { Storage } from '@ionic/storage';
 import { isNil } from 'lodash';
+import { storageKeys } from '../../../core/storage/storage';
 
 @Component({
   selector: 'app-edit',
@@ -44,7 +49,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
     private readonly meetingSocket: MeetingSocketService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
-    private readonly userStore: UserStoreService,
+    private readonly userState: UserState,
     private readonly storage: Storage,
   ) {
     this.form = this.formBuilder.group({
@@ -84,7 +89,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
     if (this.form.valid && !this.isLoading && !this.loadingForm) {
       this.isLoading = true;
       const form = this.form.value;
-      const request = {
+      const request: MeetingRequestRequest = {
         minDate: form.date[0],
         maxDate: form.date[1] || form.date[0],
         minAge: form.age[0],
@@ -98,7 +103,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
 
       this.meetingService.createMeetingRequest(request).subscribe(
         () => {
-          this.storage.set('lastMeetingRequestForm', form);
+          this.storage.set(storageKeys.lastRequestForm, form);
 
           this.meetingService.findMeeting().subscribe(
             () => {
@@ -231,7 +236,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
           });
 
           const userAge = moment().diff(
-            this.userStore.data.profile.birthday,
+            this.userState.data.profile.birthday,
             'years',
           );
 

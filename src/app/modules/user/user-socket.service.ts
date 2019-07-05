@@ -12,9 +12,9 @@ import { ToastService } from '../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting/meeting-socket.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
-import { UserStoreService } from './user-store.service';
+import { UserState } from './user-state';
 import { MeetingService } from '../meeting/meeting.service';
-import { StateStoreService } from '../../core/state/state-store.service';
+import { GlobalState } from '../../core/state/global-state';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -22,8 +22,8 @@ import { tap } from 'rxjs/operators';
 })
 export class UserSocketService {
   private readonly socket: HubConnection;
-  private initialized: boolean;
-  private disconnected: boolean;
+  private initialized = false;
+  private disconnected = true;
   private reconnectFailedAttempts = 0;
 
   constructor(
@@ -33,8 +33,8 @@ export class UserSocketService {
     private readonly meetingService: MeetingService,
     private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
-    private readonly userStore: UserStoreService,
-    private readonly stateStore: StateStoreService,
+    private readonly userState: UserState,
+    private readonly globalState: GlobalState,
   ) {
     this.socket = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'users', {
@@ -68,7 +68,7 @@ export class UserSocketService {
       this.socket
         .stop()
         .then(() => {
-          this.stateStore.disconnect();
+          this.globalState.disconnect();
         })
         .catch(() => {
           this.toastService.createError(
@@ -81,11 +81,11 @@ export class UserSocketService {
   private onClose() {
     this.socket.onclose(() => {
       if (!this.disconnected) {
-        this.stateStore.reconnect();
+        this.globalState.reconnect();
         this.reconnectToSocket();
       } else {
-        this.stateStore.disconnect();
-        this.disconnected = false;
+        this.globalState.disconnect();
+        this.disconnected = true;
       }
     });
   }
@@ -120,16 +120,24 @@ export class UserSocketService {
     this.socket
       .start()
       .then(() => {
-        this.stateStore.connect();
+        this.globalState.connect();
+        this.disconnected = false;
       })
       .catch(error => {
-        this.stateStore.reconnect();
+        this.globalState.reconnect();
 
         if (error.statusCode === 401) {
-          this.authService.refreshToken().subscribe();
+          this.authService
+            .refreshToken()
+            .pipe(
+              tap(() => {
+                this.reconnectToSocket();
+              }),
+            )
+            .subscribe();
+        } else {
+          setTimeout(() => this.reconnectToSocket(), 1000);
         }
-
-        setTimeout(() => this.reconnectToSocket(), 1000);
       });
   }
 
@@ -139,7 +147,8 @@ export class UserSocketService {
         .start()
         .then(() => {
           this.reconnectFailedAttempts = 0;
-          this.stateStore.connect();
+          this.globalState.connect();
+          this.disconnected = false;
           this.meetingService.findMeeting().subscribe();
         })
         .catch(error => {
@@ -147,10 +156,10 @@ export class UserSocketService {
             this.reconnectFailedAttempts++;
 
             if (this.reconnectFailedAttempts === 1) {
-              this.stateStore.reconnect();
+              this.globalState.reconnect();
             }
           } else {
-            this.stateStore.waiting();
+            this.globalState.waiting();
           }
 
           if (error.statusCode === 401) {

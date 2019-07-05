@@ -5,7 +5,7 @@ import { Select } from '../../../shared/form/select/select';
 import { _ } from '../../../core/i18n/translate';
 import { InputComponent } from '../../../shared/form/input/input.component';
 import * as moment from 'moment';
-import { UserStoreService } from '../user-store.service';
+import { UserState } from '../user-state';
 import { Gender, ProfileDto } from '../user';
 import { UserService } from '../user.service';
 import { NavController } from '@ionic/angular';
@@ -41,11 +41,11 @@ export class EditPage implements Form, OnSubmit, OnInit {
     .add(-100, 'years')
     .startOf('day')
     .toDate();
-  created: boolean;
+  created = true;
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly userStore: UserStoreService,
+    private readonly userState: UserState,
     private readonly userService: UserService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
@@ -57,7 +57,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
       birthday,
       gender,
       description,
-    } = this.userStore.data.profile;
+    } = this.userState.data.profile;
 
     this.form = this.formBuilder.group({
       photos: [photos, Validators.required],

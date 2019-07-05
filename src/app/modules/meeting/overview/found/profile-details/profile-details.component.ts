@@ -45,7 +45,7 @@ export class ProfileDetailsComponent {
 
   blockUser() {
     this.loadingBlocking = true;
-    this.userService.addBlockUser(this.user.id).subscribe(
+    this.userService.addBlockedUser(this.user.id).subscribe(
       () => {
         this.blocked = true;
         this.loadingBlocking = false;

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { MeetingModel } from '../meeting';
-import { MeetingStoreService } from '../meeting-store.service';
+import { MeetingStateModel } from '../meeting';
+import { MeetingState } from '../meeting-state';
 import { Observable } from 'rxjs';
-import { UserStoreService } from '../../user/user-store.service';
-import { UserModel } from '../../user/user';
-import { StateStoreService } from '../../../core/state/state-store.service';
-import { StateModel } from '../../../core/state/state';
+import { UserState } from '../../user/user-state';
+import { UserStateModel } from '../../user/user';
+import { GlobalState } from '../../../core/state/global-state';
+import { GlobalStateModel } from '../../../core/state/global';
 
 @Component({
   selector: 'app-overview',
@@ -13,17 +13,17 @@ import { StateModel } from '../../../core/state/state';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage {
-  meeting$: Observable<MeetingModel>;
-  user$: Observable<UserModel>;
-  state$: Observable<StateModel>;
+  meeting$: Observable<MeetingStateModel>;
+  user$: Observable<UserStateModel>;
+  state$: Observable<GlobalStateModel>;
 
   constructor(
-    private readonly meetingStore: MeetingStoreService,
-    private readonly userStore: UserStoreService,
-    private readonly stateStore: StateStoreService,
+    private readonly meetingState: MeetingState,
+    private readonly userState: UserState,
+    private readonly globalState: GlobalState,
   ) {
-    this.meeting$ = meetingStore.data$;
-    this.user$ = userStore.data$;
-    this.state$ = stateStore.data$;
+    this.meeting$ = meetingState.data$;
+    this.user$ = userState.data$;
+    this.state$ = globalState.data$;
   }
 }

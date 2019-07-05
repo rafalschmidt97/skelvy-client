@@ -5,7 +5,7 @@ import * as moment from 'moment';
   name: 'age',
 })
 export class AgePipe implements PipeTransform {
-  transform(date: Date): number {
+  transform(date: string | Date): number {
     return moment().diff(moment(date), 'years');
   }
 }

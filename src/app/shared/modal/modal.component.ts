@@ -7,15 +7,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ModalComponent {
   @Input() title: string;
+  @Input() confirmLoading = false;
   @Output() decline = new EventEmitter();
   @Output() confirm = new EventEmitter();
-  @Input() confirmLoading = false;
 
-  get hasConfirm() {
+  get hasConfirm(): boolean {
     return this.confirm.observers.length > 0;
   }
 
-  get hasDecline() {
+  get hasDecline(): boolean {
     return this.decline.observers.length > 0;
   }
 

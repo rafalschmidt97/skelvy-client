@@ -24,7 +24,6 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
   @Input() min: Date;
   @Input() max: Date;
   inputForm: FormGroup;
-
   locale: LocaleSettings = {
     firstDayOfWeek: moment.localeData().firstDayOfWeek(),
     dayNames: moment.weekdays(),
@@ -35,7 +34,6 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
     today: '',
     clear: '',
   };
-
   today = new Date();
   modal: Modal;
 

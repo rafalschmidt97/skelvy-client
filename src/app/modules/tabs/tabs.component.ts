@@ -1,52 +1,53 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MeetingModel } from '../meeting/meeting';
-import { MeetingStoreService } from '../meeting/meeting-store.service';
-import { ChatStoreService } from '../chat/chat-store.service';
-import { UserStoreService } from '../user/user-store.service';
+import { MeetingStateModel } from '../meeting/meeting';
+import { MeetingState } from '../meeting/meeting-state';
+import { ChatState } from '../chat/chat-state';
+import { UserState } from '../user/user-state';
 import { Storage } from '@ionic/storage';
-import { StateStoreService } from '../../core/state/state-store.service';
+import { GlobalState } from '../../core/state/global-state';
+import { storageKeys } from '../../core/storage/storage';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs.component.html',
 })
 export class TabsComponent implements OnInit {
-  meeting$: Observable<MeetingModel>;
+  meeting$: Observable<MeetingStateModel>;
   messagesToRead = 0;
 
   constructor(
-    private readonly meetingStore: MeetingStoreService,
-    private readonly chatStore: ChatStoreService,
-    private readonly userStore: UserStoreService,
-    private readonly stateStore: StateStoreService,
+    private readonly meetingState: MeetingState,
+    private readonly chatState: ChatState,
+    private readonly userState: UserState,
+    private readonly globalState: GlobalState,
     private readonly storage: Storage,
   ) {
-    this.meeting$ = meetingStore.data$;
+    this.meeting$ = meetingState.data$;
   }
 
   ngOnInit() {
-    this.stateStore.data$.subscribe(state => {
+    this.globalState.data$.subscribe(state => {
       if (state) {
         this.messagesToRead = state.toRead;
       }
     });
 
-    this.userStore.data$.subscribe(async user => {
-      await this.storage.set('user', user);
+    this.userState.data$.subscribe(async user => {
+      await this.storage.set(storageKeys.userState, user);
     });
 
-    this.meetingStore.data$.subscribe(async meeting => {
-      const state = this.stateStore.data;
+    this.meetingState.data$.subscribe(async meeting => {
+      const state = this.globalState.data;
       if (state && !state.loadingMeeting) {
-        await this.storage.set('meeting', meeting);
+        await this.storage.set(storageKeys.meetingState, meeting);
       }
     });
 
-    this.chatStore.data$.subscribe(async chat => {
-      const state = this.stateStore.data;
+    this.chatState.data$.subscribe(async chat => {
+      const state = this.globalState.data;
       if (state && !state.loadingMeeting) {
-        await this.storage.set('chat', chat);
+        await this.storage.set(storageKeys.meetingState, chat);
       }
     });
   }

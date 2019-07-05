@@ -12,6 +12,7 @@ import { Storage } from '@ionic/storage';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { Modal } from '../../../shared/modal/modal';
+import { storageKeys } from '../../../core/storage/storage';
 
 @Component({
   selector: 'app-sign-in',
@@ -64,7 +65,7 @@ export class SignInPage implements OnInit {
             .signInWithFacebook(token, this.translateService.currentLang)
             .subscribe(
               async auth => {
-                await this.storage.set('signInMethod', 'facebook');
+                await this.storage.set(storageKeys.signInMethod, 'facebook');
 
                 if (auth.accountCreated) {
                   this.routerNavigation.navigateForward([
@@ -101,7 +102,7 @@ export class SignInPage implements OnInit {
         .signInWithGoogle(token, this.translateService.currentLang)
         .subscribe(
           async auth => {
-            await this.storage.set('signInMethod', 'google');
+            await this.storage.set(storageKeys.signInMethod, 'google');
 
             if (auth.accountCreated) {
               this.routerNavigation.navigateForward([

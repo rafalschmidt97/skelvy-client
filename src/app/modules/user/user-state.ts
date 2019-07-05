@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { StoreService } from '../../shared/store.service';
-import { ProfileDto, UserDto, UserModel } from './user';
+import { State } from '../../shared/state';
+import { ProfileDto, UserDto, UserStateModel } from './user';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserStoreService extends StoreService<UserModel> {
+export class UserState extends State<UserStateModel> {
   setUser(user: UserDto) {
     this.subject.next({
       ...this.subject.getValue(),

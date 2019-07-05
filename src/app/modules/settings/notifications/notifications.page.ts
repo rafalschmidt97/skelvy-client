@@ -4,12 +4,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { UserPushService } from '../../user/user-push.service';
 import { NavController, Platform } from '@ionic/angular';
-import { UserStoreService } from '../../user/user-store.service';
+import { UserState } from '../../user/user-state';
+import { storageKeys } from '../../../core/storage/storage';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.page.html',
-  styleUrls: ['./notifications.page.scss'],
+  styleUrls: ['../overview/overview.page.scss'],
 })
 export class NotificationsPage implements Form, OnSubmit, OnInit {
   form: FormGroup;
@@ -25,10 +26,10 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
     private readonly storage: Storage,
     private readonly userPush: UserPushService,
     private readonly routerNavigation: NavController,
-    userStore: UserStoreService,
+    userState: UserState,
     platform: Platform,
   ) {
-    this.userId = userStore.data.id;
+    this.userId = userState.data.id;
     this.platform = platform.is('android') ? 'android' : 'ios';
 
     this.form = this.formBuilder.group({
@@ -39,9 +40,11 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
   }
 
   async ngOnInit() {
-    this.initializedAll = await this.storage.get('pushTopicAll');
-    this.initializedPlatform = await this.storage.get('pushTopicPlatform');
-    this.initializedUser = await this.storage.get('pushTopicUser');
+    this.initializedAll = await this.storage.get(storageKeys.pushTopicAll);
+    this.initializedPlatform = await this.storage.get(
+      storageKeys.pushTopicPlatform,
+    );
+    this.initializedUser = await this.storage.get(storageKeys.pushTopicUser);
 
     this.form.patchValue({
       all: this.initializedAll,
@@ -58,14 +61,14 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
       const form = this.form.value;
 
       if (form.all !== this.initializedAll) {
-        this.changeNotificationState(form.all, 'all', 'pushTopicAll');
+        this.changeNotificationState(form.all, 'all', storageKeys.pushTopicAll);
       }
 
       if (form.platform !== this.initializedPlatform) {
         this.changeNotificationState(
           form.platform,
           this.platform,
-          'pushTopicPlatform',
+          storageKeys.pushTopicPlatform,
         );
       }
 
@@ -73,7 +76,7 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
         this.changeNotificationState(
           form.user,
           'user-' + this.userId,
-          'pushTopicUser',
+          storageKeys.pushTopicUser,
         );
       }
 

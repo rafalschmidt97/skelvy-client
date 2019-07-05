@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-community',
   templateUrl: './community.page.html',
-  styleUrls: ['./community.page.scss'],
+  styleUrls: ['../overview/overview.page.scss'],
 })
 export class CommunityPage {
   constructor(

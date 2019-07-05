@@ -12,7 +12,7 @@ import { LoadingService } from '../../../core/loading/loading.service';
 @Component({
   selector: 'app-blocked',
   templateUrl: './blocked.page.html',
-  styleUrls: ['./blocked.page.scss'],
+  styleUrls: ['../overview/overview.page.scss'],
 })
 export class BlockedPage implements OnInit {
   @ViewChild('details') detailsTemplate: TemplateRef<any>;

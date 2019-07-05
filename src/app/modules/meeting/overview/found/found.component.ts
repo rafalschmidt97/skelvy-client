@@ -16,13 +16,14 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
 import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
-import { ChatStoreService } from '../../../chat/chat-store.service';
+import { ChatState } from '../../../chat/chat-state';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
-import { StateStoreService } from '../../../../core/state/state-store.service';
-import { StateModel } from '../../../../core/state/state';
+import { GlobalStateModel } from '../../../../core/state/global';
+import { GlobalState } from '../../../../core/state/global-state';
+import { storageKeys } from '../../../../core/storage/storage';
 
 @Component({
   selector: 'app-found',
@@ -30,17 +31,17 @@ import { StateModel } from '../../../../core/state/state';
   styleUrls: ['./found.component.scss'],
 })
 export class FoundComponent implements OnInit, OnDestroy {
-  @Input() meeting: MeetingDto;
-  @Input() user: UserDto;
   @ViewChild('details') detailsTemplate: TemplateRef<any>;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
+  @Input() meeting: MeetingDto;
+  @Input() user: UserDto;
   userForModal: MeetingUserDto;
   modal: Modal;
   alert: Alert;
   loadingLeave = false;
   messagesToRead = 0;
   chatSubscription: Subscription;
-  state$: Observable<StateModel>;
+  state$: Observable<GlobalStateModel>;
 
   constructor(
     private readonly modalService: ModalService,
@@ -48,12 +49,12 @@ export class FoundComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
-    private readonly chatStore: ChatStoreService,
+    private readonly chatState: ChatState,
     private readonly routerNavigation: NavController,
     private readonly storage: Storage,
-    private readonly stateStore: StateStoreService,
+    private readonly globalState: GlobalState,
   ) {
-    this.state$ = stateStore.data$;
+    this.state$ = globalState.data$;
   }
 
   get filteredMeetingUsers(): MeetingUserDto[] {
@@ -73,7 +74,7 @@ export class FoundComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.stateStore.data$.subscribe(state => {
+    this.globalState.data$.subscribe(state => {
       if (state) {
         this.messagesToRead = state.toRead;
       }
@@ -130,11 +131,11 @@ export class FoundComponent implements OnInit, OnDestroy {
   showMessages() {
     this.routerNavigation.navigateForward(['/app/chat']).then(() => {
       setTimeout(() => {
-        this.stateStore.setToRead(0);
-        const messages = this.chatStore.data.messages;
+        this.globalState.setToRead(0);
+        const messages = this.chatState.data.messages;
         if (messages.length > 0) {
           this.storage.set(
-            'lastMessageDate',
+            storageKeys.lastMessageDate,
             messages[messages.length - 1].date,
           );
         }

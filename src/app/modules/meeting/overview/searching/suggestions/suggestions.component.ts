@@ -13,7 +13,7 @@ export class SuggestionsComponent {
   @Output() connect = new EventEmitter<number>();
   @Input() isLoading: boolean;
 
-  getDate(minDate: Date, maxDate: Date): string {
+  getDate(minDate: string | Date, maxDate: string | Date): string {
     if (maxDate !== minDate) {
       return `${moment(minDate).format('DD.MM.YYYY')} - ${moment(
         maxDate,

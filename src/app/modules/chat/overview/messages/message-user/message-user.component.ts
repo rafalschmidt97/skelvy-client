@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MeetingUserDto } from '../../../../meeting/meeting';
-import { ChatMessageDto } from '../../../chat';
+import { ChatMessageState } from '../../../chat';
 
 @Component({
   selector: 'app-message-user',
@@ -9,12 +9,12 @@ import { ChatMessageDto } from '../../../chat';
 })
 export class MessageUserComponent {
   @Input() user: MeetingUserDto;
-  @Input() message: ChatMessageDto;
+  @Input() message: ChatMessageState;
   @Input() isLast: boolean;
   @Input() isFirst: boolean;
   @Input() dateToShow: string;
   @Output() showDate = new EventEmitter<string>();
-  @Output() showActions = new EventEmitter<ChatMessageDto>();
+  @Output() showActions = new EventEmitter<ChatMessageState>();
 
   get isDateShown(): boolean {
     return this.message.date === this.dateToShow;

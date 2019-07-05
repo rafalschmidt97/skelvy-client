@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./profile-missing.component.scss'],
 })
 export class ProfileMissingComponent {
-  @Input() missing: any[];
+  @Input() missing: number[];
 }

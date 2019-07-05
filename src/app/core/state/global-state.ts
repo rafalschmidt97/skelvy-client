@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { StoreService } from '../../shared/store.service';
-import { Connection, StateModel } from './state';
+import { State } from '../../shared/state';
+import { Connection, GlobalStateModel } from './global';
 
 @Injectable({
   providedIn: 'root',
 })
-export class StateStoreService extends StoreService<StateModel> {
+export class GlobalState extends State<GlobalStateModel> {
   connect() {
     this.subject.next({
       ...this.subject.getValue(),

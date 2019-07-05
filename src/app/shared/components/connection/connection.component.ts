@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Connection } from '../../../core/state/state';
-import { StateStoreService } from '../../../core/state/state-store.service';
+import { Connection } from '../../../core/state/global';
+import { GlobalState } from '../../../core/state/global-state';
 import {
   animate,
   state,
@@ -40,8 +40,8 @@ export class ConnectionComponent {
   connection$: Observable<Connection>;
   connectedStatus = Connection;
 
-  constructor(stateStore: StateStoreService) {
-    this.connection$ = stateStore.data$.pipe(
+  constructor(globalState: GlobalState) {
+    this.connection$ = globalState.data$.pipe(
       map(x => (x && x.connection ? x.connection : null)),
     );
   }

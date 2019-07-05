@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserStoreService } from './user-store.service';
+import { UserState } from './user-state';
 import { map, mergeMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { SelfModelDto } from './self';
-import { MeetingStoreService } from '../meeting/meeting-store.service';
-import { ChatStoreService } from '../chat/chat-store.service';
-import { ChatModel } from '../chat/chat';
+import { MeetingState } from '../meeting/meeting-state';
+import { ChatState } from '../chat/chat-state';
+import { ChatStateModel } from '../chat/chat';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingService } from '../meeting/meeting.service';
-import { StateStoreService } from '../../core/state/state-store.service';
-import { Connection, StateModel } from '../../core/state/state';
-import { MeetingModel, MeetingStatus } from '../meeting/meeting';
+import { GlobalState } from '../../core/state/global-state';
+import { Connection, GlobalStateModel } from '../../core/state/global';
+import { MeetingStateModel, MeetingStatus } from '../meeting/meeting';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
+import { storageKeys } from '../../core/storage/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -22,11 +23,11 @@ import { AuthService } from '../../core/auth/auth.service';
 export class SelfService {
   constructor(
     private readonly http: HttpClient,
-    private readonly userStore: UserStoreService,
-    private readonly meetingStore: MeetingStoreService,
+    private readonly userState: UserState,
+    private readonly meetingState: MeetingState,
     private readonly meetingService: MeetingService,
-    private readonly chatStore: ChatStoreService,
-    private readonly stateStore: StateStoreService,
+    private readonly chatState: ChatState,
+    private readonly globalState: GlobalState,
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
     private readonly authService: AuthService,
@@ -34,9 +35,9 @@ export class SelfService {
 
   findSelf(): Observable<SelfModelDto> {
     return forkJoin([
-      this.storage.get('user'),
-      this.storage.get('meeting'),
-      this.storage.get('chat'),
+      this.storage.get(storageKeys.userState),
+      this.storage.get(storageKeys.meetingState),
+      this.storage.get(storageKeys.chatState),
     ]).pipe(
       mergeMap(([user, meeting, chat]) => {
         if (user) {
@@ -79,9 +80,9 @@ export class SelfService {
   }
 
   private async saveStateToStorage(user, meeting, chat) {
-    await this.storage.set('user', user);
-    await this.storage.set('meeting', meeting);
-    await this.storage.set('chat', chat);
+    await this.storage.set(storageKeys.userState, user);
+    await this.storage.set(storageKeys.meetingState, meeting);
+    await this.storage.set(storageKeys.chatState, chat);
   }
 
   private fakeSelfRequestFromStorage(
@@ -112,7 +113,7 @@ export class SelfService {
       id: model.user.id,
       profile: model.user.profile,
     };
-    this.userStore.set(user);
+    this.userState.set(user);
 
     let meeting, chat;
 
@@ -123,27 +124,29 @@ export class SelfService {
         request: model.meetingModel.request,
       };
 
-      this.meetingStore.set(meeting);
+      this.meetingState.set(meeting);
 
       if (model.meetingModel.messages) {
         chat = { messages: model.meetingModel.messages };
-        this.chatStore.set(chat);
+        this.chatState.set(chat);
       }
     }
 
     const state = await this.stateModel(meeting, chat, fromStorage);
-    this.stateStore.set(state);
+    this.globalState.set(state);
     return { user, meeting, chat };
   }
 
   private async stateModel(
-    meeting: MeetingModel,
-    chat: ChatModel,
+    meeting: MeetingStateModel,
+    chat: ChatStateModel,
     fromStorage: boolean,
-  ): Promise<StateModel> {
+  ): Promise<GlobalStateModel> {
     if (fromStorage) {
       if (meeting && meeting.status === MeetingStatus.FOUND) {
-        const lastMessageDate = await this.storage.get('lastMessageDate');
+        const lastMessageDate = await this.storage.get(
+          storageKeys.lastMessageDate,
+        );
         const notRedMessages = chat.messages.filter(message => {
           return new Date(message.date) > new Date(lastMessageDate);
         });

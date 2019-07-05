@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { HttpClient } from '@angular/common/http';
-import { UserStoreService } from '../../modules/user/user-store.service';
+import { UserState } from '../../modules/user/user-state';
 import { from, Observable, of } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { MeetingStoreService } from '../../modules/meeting/meeting-store.service';
+import { MeetingState } from '../../modules/meeting/meeting-state';
 import { Storage } from '@ionic/storage';
-import { ChatStoreService } from '../../modules/chat/chat-store.service';
+import { ChatState } from '../../modules/chat/chat-state';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { AuthDto, TokenDto } from './auth';
+import { storageKeys } from '../storage/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -22,9 +24,9 @@ export class AuthService {
   constructor(
     private readonly http: HttpClient,
     private readonly sessionService: SessionService,
-    private readonly userStore: UserStoreService,
-    private readonly meetingStore: MeetingStoreService,
-    private readonly chatStore: ChatStoreService,
+    private readonly userState: UserState,
+    private readonly meetingState: MeetingState,
+    private readonly chatState: ChatState,
     private readonly storage: Storage,
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
@@ -32,9 +34,9 @@ export class AuthService {
     this.jwt = new JwtHelperService();
   }
 
-  signInWithFacebook(authToken: string, language: string): Observable<any> {
+  signInWithFacebook(authToken: string, language: string): Observable<AuthDto> {
     return this.http
-      .post<any>(environment.versionApiUrl + 'auth/facebook', {
+      .post<AuthDto>(environment.versionApiUrl + 'auth/facebook', {
         authToken,
         language,
       })
@@ -47,9 +49,9 @@ export class AuthService {
       );
   }
 
-  signInWithGoogle(authToken: string, language: string): Observable<any> {
+  signInWithGoogle(authToken: string, language: string): Observable<AuthDto> {
     return this.http
-      .post<any>(environment.versionApiUrl + 'auth/google', {
+      .post<AuthDto>(environment.versionApiUrl + 'auth/google', {
         authToken,
         language,
       })
@@ -62,27 +64,27 @@ export class AuthService {
       );
   }
 
-  refreshToken(): Observable<any> {
+  refreshToken(): Observable<TokenDto> {
     return from(this.getRefreshToken()).pipe(
       switchMap(refreshToken => {
-        return this.http
-          .post<any>(environment.versionApiUrl + 'auth/refresh', {
+        return this.http.post<TokenDto>(
+          environment.versionApiUrl + 'auth/refresh',
+          {
             refreshToken,
-          })
-          .pipe(
-            map(async res => {
-              if (res && res.accessToken && res.refreshToken) {
-                await this.sessionService.createSession(res);
-              }
+          },
+        );
+      }),
+      mergeMap(async res => {
+        if (res && res.accessToken && res.refreshToken) {
+          await this.sessionService.createSession(res);
+        }
 
-              return res;
-            }),
-          );
+        return res;
       }),
     );
   }
 
-  refreshTokenIfExpired(): Observable<any> {
+  refreshTokenIfExpired(): Observable<TokenDto> {
     return from(this.getToken()).pipe(
       switchMap(async token => {
         const isExpired =
@@ -95,28 +97,31 @@ export class AuthService {
       mergeMap(({ isExpired, token }) => {
         return isExpired
           ? this.http
-              .post<any>(environment.versionApiUrl + 'auth/refresh', {
+              .post<TokenDto>(environment.versionApiUrl + 'auth/refresh', {
                 refreshToken: token.refreshToken,
               })
               .pipe(
-                map(async res => {
-                  if (res && res.accessToken && res.refreshToken) {
-                    await this.sessionService.createSession(res);
-                  }
-
-                  return res;
+                map(res => {
+                  return { isExpired, res };
                 }),
               )
-          : of(token);
+          : of({ isExpired, res: token });
+      }),
+      mergeMap(async ({ isExpired, res }) => {
+        if (isExpired && res && res.accessToken && res.refreshToken) {
+          await this.sessionService.createSession(res);
+        }
+
+        return res;
       }),
     );
   }
 
-  logout(): Observable<any> {
+  logout(): Observable<void> {
     return from(this.getRefreshToken()).pipe(
       switchMap(refreshToken => {
         return this.http
-          .post<any>(environment.versionApiUrl + 'auth/logout', {
+          .post<void>(environment.versionApiUrl + 'auth/logout', {
             refreshToken,
           })
           .pipe(
@@ -130,12 +135,12 @@ export class AuthService {
 
   async logoutWithoutRequest() {
     await this.sessionService.removeSession();
-    this.userStore.set(null);
-    this.meetingStore.set(null);
-    this.chatStore.set(null);
-    await this.storage.remove('lastMessageDate');
+    this.userState.set(null);
+    this.meetingState.set(null);
+    this.chatState.set(null);
+    await this.storage.remove(storageKeys.lastMessageDate);
 
-    const method = await this.storage.get('signInMethod');
+    const method = await this.storage.get(storageKeys.signInMethod);
 
     if (method === 'facebook') {
       await this.facebook.logout();
@@ -143,21 +148,21 @@ export class AuthService {
       await this.google.logout();
     }
 
-    await this.storage.remove('signInMethod');
-    await this.storage.remove('pushTopicUser');
-    await this.storage.remove('lastMeetingRequestForm');
+    await this.storage.remove(storageKeys.signInMethod);
+    await this.storage.remove(storageKeys.pushTopicUser);
+    await this.storage.remove(storageKeys.lastRequestForm);
 
-    await this.storage.remove('user');
-    await this.storage.remove('meeting');
-    await this.storage.remove('chat');
+    await this.storage.remove(storageKeys.userState);
+    await this.storage.remove(storageKeys.meetingState);
+    await this.storage.remove(storageKeys.chatState);
   }
 
-  private getToken(): Promise<any> {
+  private getToken(): Promise<TokenDto> {
     return this.sessionService.getSession();
   }
 
   private async getRefreshToken(): Promise<string> {
     const session = await this.getToken();
-    return session ? session.refreshToken : '';
+    return session ? session.refreshToken : null;
   }
 }

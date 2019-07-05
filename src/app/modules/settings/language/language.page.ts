@@ -10,6 +10,7 @@ import { UserService } from '../../user/user.service';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { NavController } from '@ionic/angular';
+import { storageKeys } from '../../../core/storage/storage';
 
 @Component({
   selector: 'app-language',
@@ -46,12 +47,12 @@ export class LanguagePage implements Form, OnSubmit, OnInit {
   }
 
   ngOnInit() {
-    this.form.get('language').valueChanges.subscribe(value => {
+    this.form.get(storageKeys.language).valueChanges.subscribe(value => {
       const language = value.match(LanguageConstants.LANGUAGES_REGEX)
         ? value
         : LanguageConstants.DEFAULT_LANGUAGE;
 
-      this.storage.set('language', language);
+      this.storage.set(storageKeys.language, language);
       this.translateService.use(language);
       moment.locale(language);
     });

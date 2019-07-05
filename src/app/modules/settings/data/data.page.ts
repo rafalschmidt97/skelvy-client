@@ -9,11 +9,12 @@ import { MeetingService } from '../../meeting/meeting.service';
 import { SelfService } from '../../user/self.service';
 import { Storage } from '@ionic/storage';
 import { SessionService } from '../../../core/auth/session.service';
+import { storageKeys } from '../../../core/storage/storage';
 
 @Component({
   selector: 'app-data',
   templateUrl: './data.page.html',
-  styleUrls: ['./data.page.scss'],
+  styleUrls: ['../overview/overview.page.scss'],
 })
 export class DataPage {
   @ViewChild('alertRefreshUser') alertUser: TemplateRef<any>;
@@ -92,9 +93,7 @@ export class DataPage {
     if (!this.loadingData) {
       this.loadingData = true;
       this.loadingService.lock();
-      const token = await this.sessionService.getSession();
-      await this.storage.clear();
-      await this.sessionService.createSession(token);
+      await this.clearStorage();
       this.selfService.findSelf().subscribe(
         () => {
           this.alert.hide();
@@ -109,6 +108,24 @@ export class DataPage {
         },
       );
     }
+  }
+
+  private async clearStorage() {
+    const token = await this.sessionService.getSession();
+    const language = await this.storage.get(storageKeys.language);
+    const signInMethod = await this.storage.get(storageKeys.signInMethod);
+    const push = await this.storage.get(storageKeys.push);
+    const pushAll = await this.storage.get(storageKeys.pushTopicAll);
+    const pushPlatform = await this.storage.get(storageKeys.pushTopicPlatform);
+    const pushUser = await this.storage.get(storageKeys.pushTopicUser);
+    await this.storage.clear();
+    await this.sessionService.createSession(token);
+    await this.storage.set(storageKeys.language, language);
+    await this.storage.set(storageKeys.signInMethod, signInMethod);
+    await this.storage.set(storageKeys.push, push);
+    await this.storage.set(storageKeys.pushTopicAll, pushAll);
+    await this.storage.set(storageKeys.pushTopicPlatform, pushPlatform);
+    await this.storage.set(storageKeys.pushTopicUser, pushUser);
   }
 
   declineAlert() {

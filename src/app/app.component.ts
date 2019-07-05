@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageConstants } from './core/i18n/language.constants';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
+import { storageKeys } from './core/storage/storage';
 
 @Component({
   selector: 'app-root',
@@ -43,7 +44,7 @@ export class AppComponent {
     this.translateService.setDefaultLang(LanguageConstants.DEFAULT_LANGUAGE);
     this.translateService.use(LanguageConstants.DEFAULT_LANGUAGE);
 
-    const language = await this.storage.get('language');
+    const language = await this.storage.get(storageKeys.language);
 
     if (!language) {
       const browserLanguage = this.translateService.getBrowserLang();
@@ -53,7 +54,7 @@ export class AppComponent {
         ? browserLanguage
         : LanguageConstants.DEFAULT_LANGUAGE;
 
-      await this.storage.set('language', languageToSet);
+      await this.storage.set(storageKeys.language, languageToSet);
     }
 
     this.translateService.use(language);
