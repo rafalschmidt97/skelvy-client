@@ -1,4 +1,4 @@
-import { ProfileDto, UserDto } from '../user/user';
+import { UserDto } from '../user/user';
 import { ChatMessageDto } from '../chat/chat';
 
 export interface MeetingStateModel {

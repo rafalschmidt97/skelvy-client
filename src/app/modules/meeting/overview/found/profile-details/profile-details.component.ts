@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { _ } from '../../../../../core/i18n/translate';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { ToastService } from '../../../../../core/toast/toast.service';
-import { UserService } from '../../../../user/user.service';
 import { TranslateService } from '@ngx-translate/core';
 import { UserDto } from '../../../../user/user';
 import { SettingsService } from '../../../../settings/settings.service';
