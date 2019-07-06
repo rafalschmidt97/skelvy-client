@@ -1,4 +1,4 @@
-import { ProfileDto } from '../user/user';
+import { ProfileDto, UserDto } from '../user/user';
 import { ChatMessageDto } from '../chat/chat';
 
 export interface MeetingStateModel {
@@ -26,7 +26,7 @@ export interface MeetingDto {
   longitude: number;
   city: string;
   drinkType: MeetingDrinkTypeDto;
-  users: MeetingUserDto[];
+  users: UserDto[];
 }
 
 export interface MeetingRequestDto {
@@ -39,11 +39,6 @@ export interface MeetingRequestDto {
   longitude: number;
   city: string;
   drinkTypes: MeetingDrinkTypeDto[];
-}
-
-export interface MeetingUserDto {
-  id: number;
-  profile: ProfileDto;
 }
 
 export interface MeetingDrinkTypeDto {

@@ -8,14 +8,14 @@ import { _ } from '../../core/i18n/translate';
 import { UserSocketService } from './user-socket.service';
 import { UserPushService } from './user-push.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SelfModelDto } from './self';
+import { SelfModel } from './self';
 import { SelfService } from './self.service';
 import { AuthService } from '../../core/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SelfResolver implements Resolve<SelfModelDto> {
+export class SelfResolver implements Resolve<SelfModel> {
   constructor(
     private readonly selfService: SelfService,
     private readonly authService: AuthService,
@@ -25,7 +25,7 @@ export class SelfResolver implements Resolve<SelfModelDto> {
     private readonly userPush: UserPushService,
   ) {}
 
-  resolve(): Observable<SelfModelDto> {
+  resolve(): Observable<SelfModel> {
     return this.selfService.findSelf().pipe(
       tap(() => {
         this.userSocket.connect();

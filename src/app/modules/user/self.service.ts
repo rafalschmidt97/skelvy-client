@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { UserState } from './user-state';
 import { map, mergeMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { SelfModelDto } from './self';
+import { SelfModel } from './self';
 import { MeetingState } from '../meeting/meeting-state';
 import { ChatState } from '../chat/chat-state';
 import { ChatStateModel } from '../chat/chat';
@@ -16,6 +16,8 @@ import { MeetingStateModel, MeetingStatus } from '../meeting/meeting';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { storageKeys } from '../../core/storage/storage';
+import { SettingsState } from '../settings/settings-state';
+import { SettingsStateModel } from '../settings/settings';
 
 @Injectable({
   providedIn: 'root',
@@ -31,36 +33,39 @@ export class SelfService {
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
     private readonly authService: AuthService,
+    private readonly settingsState: SettingsState,
   ) {}
 
-  findSelf(): Observable<SelfModelDto> {
+  findSelf(): Observable<SelfModel> {
     return forkJoin([
       this.storage.get(storageKeys.userState),
       this.storage.get(storageKeys.meetingState),
       this.storage.get(storageKeys.chatState),
+      this.storage.get(storageKeys.settingsState),
     ]).pipe(
-      mergeMap(([user, meeting, chat]) => {
+      mergeMap(([user, meeting, chat, settings]) => {
         if (user) {
           return this.fakeSelfRequestFromStorage(user, meeting, chat).pipe(
             map(model => {
-              return { model, fromStorage: true };
+              return { model, settings, fromStorage: true };
             }),
           );
         } else {
           return this.http
-            .get<SelfModelDto>(
+            .get<SelfModel>(
               `${environment.versionApiUrl}self?language=${this.translateService.currentLang}`,
             )
             .pipe(
               map(model => {
-                return { model, fromStorage: false };
+                return { model, settings, fromStorage: false };
               }),
             );
         }
       }),
-      mergeMap(async ({ model, fromStorage }) => {
+      mergeMap(async ({ model, settings, fromStorage }) => {
         const { user, meeting, chat } = await this.initializeState(
           model,
+          settings,
           fromStorage,
         );
 
@@ -89,7 +94,7 @@ export class SelfService {
     user,
     meeting,
     chat,
-  ): Observable<SelfModelDto> {
+  ): Observable<SelfModel> {
     if (meeting) {
       return of({
         user,
@@ -108,7 +113,11 @@ export class SelfService {
     }
   }
 
-  private async initializeState(model, fromStorage) {
+  private async initializeState(
+    model: SelfModel,
+    settings: SettingsStateModel,
+    fromStorage: boolean,
+  ) {
     const user = {
       id: model.user.id,
       profile: model.user.profile,
@@ -132,6 +141,12 @@ export class SelfService {
       }
     }
 
+    if (settings) {
+      this.settingsState.set(settings);
+    } else {
+      this.settingsState.set({ blockedUsers: null });
+    }
+
     const state = await this.stateModel(meeting, chat, fromStorage);
     this.globalState.set(state);
     return { user, meeting, chat };
@@ -152,7 +167,6 @@ export class SelfService {
         });
 
         return {
-          loggedIn: true,
           connection: Connection.CONNECTING,
           toRead: notRedMessages.length,
           loadingUser: false,
@@ -160,7 +174,6 @@ export class SelfService {
         };
       } else {
         return {
-          loggedIn: true,
           connection: Connection.CONNECTING,
           toRead: 0,
           loadingUser: false,
@@ -170,7 +183,6 @@ export class SelfService {
     } else {
       if (meeting && meeting.status === MeetingStatus.FOUND) {
         return {
-          loggedIn: true,
           connection: Connection.CONNECTING,
           toRead: chat.messages.length,
           loadingUser: false,
@@ -178,7 +190,6 @@ export class SelfService {
         };
       } else {
         return {
-          loggedIn: true,
           connection: Connection.CONNECTING,
           toRead: 0,
           loadingUser: false,

@@ -4,6 +4,7 @@ export const storageKeys = {
   userState: 'user-state',
   meetingState: 'meeting-state',
   chatState: 'chat-state',
+  settingsState: 'settings-state',
   push: 'push',
   pushTopicUser: 'push-topic-user',
   pushTopicAll: 'push-topic-all',

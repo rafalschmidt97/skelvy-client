@@ -14,45 +14,44 @@
   <div class="blocked content minh-100 bg-ultra-light">
     <div class="label text-muted">{{ 'Users you ignore' | translate }}</div>
     <ng-container *ngIf="!loadingBlocked; else loading">
-      <div
-        *ngIf="blockedUsers.length > 0; else emptyList"
-        class="bg-white border-top"
-      >
-        <app-profile
-          *ngFor="let user of blockedUsers"
-          [user]="user"
-          (openDetails)="openDetails($event)"
-        ></app-profile>
-      </div>
-      <div *ngIf="!loadingBlockedMore; else loadingMore" class="container">
-        <button
-          *ngIf="showLoadMore"
-          type="button"
-          (click)="loadMoreBlockedUsers()"
-          class="btn btn-primary btn-block mt-3"
+      <ng-container *ngIf="blockedUsers$ | async as blockedUsers">
+        <div
+          *ngIf="blockedUsers.length > 0; else emptyList"
+          class="bg-white border-top"
         >
-          {{ 'Load more' | translate }}
-        </button>
-      </div>
-      <ng-template #loadingMore>
-        <div class="text-center mt-3 py-1">
-          <ion-spinner></ion-spinner>
-        </div>
-      </ng-template>
-      <ng-template #emptyList>
-        <div class="mb-3 text-center">
-          <div class="border-top border-bottom text-center p-3 bg-white">
-            <p>{{ 'Your blocked list is empty' | translate }}</p>
+          <app-profile
+            *ngFor="let user of blockedUsers"
+            [user]="user"
+            (openDetails)="openDetails($event)"
+          ></app-profile>
+          <div class="container">
             <button
+              *ngIf="blockedUsers.length % 10 === 0 && !allBlockedLoaded"
+              [disabled]="loadingBlockedMore"
               type="button"
-              (click)="loadBlockedUsers()"
-              class="btn btn-primary btn-block"
+              (click)="loadMoreBlockedUsers()"
+              class="btn btn-primary btn-block my-3"
             >
-              {{ 'Load again' | translate }}
+              {{ 'Load more' | translate }}
             </button>
           </div>
         </div>
-      </ng-template>
+        <ng-template #emptyList>
+          <div class="mb-3 text-center">
+            <div class="border-top border-bottom text-center p-3 bg-white">
+              <p>
+                {{ 'Your blocked users list is empty.' | translate }}
+              </p>
+              <p class="mb-0">
+                {{
+                  'If you found someone annoying you can always block him from meeting. Just tap on profile and use appropriate button.'
+                    | translate
+                }}
+              </p>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
     </ng-container>
     <ng-template #loading>
       <div class="text-center py-3">

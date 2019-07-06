@@ -10,6 +10,8 @@ import { SelfService } from '../../user/self.service';
 import { Storage } from '@ionic/storage';
 import { SessionService } from '../../../core/auth/session.service';
 import { storageKeys } from '../../../core/storage/storage';
+import { SettingsService } from '../settings.service';
+import { map, mergeMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-data',
@@ -20,6 +22,7 @@ export class DataPage {
   @ViewChild('alertRefreshUser') alertUser: TemplateRef<any>;
   @ViewChild('alertRefreshMeeting') alertMeeting: TemplateRef<any>;
   @ViewChild('alertClearAll') alertAll: TemplateRef<any>;
+  @ViewChild('alertBlockedUsers') alertBlockedUsers: TemplateRef<any>;
   alert: Alert;
   loadingData = false;
 
@@ -32,6 +35,7 @@ export class DataPage {
     private readonly selfService: SelfService,
     private readonly storage: Storage,
     private readonly sessionService: SessionService,
+    private readonly settingsService: SettingsService,
   ) {}
 
   refreshUser() {
@@ -84,17 +88,16 @@ export class DataPage {
     }
   }
 
-  refreshAll() {
+  refreshBlockedUsers() {
     this.loadingData = false;
-    this.alert = this.alertService.show(this.alertAll);
+    this.alert = this.alertService.show(this.alertBlockedUsers);
   }
 
-  async confirmRefreshAll() {
+  confirmRefreshBlockedUsers() {
     if (!this.loadingData) {
       this.loadingData = true;
       this.loadingService.lock();
-      await this.clearStorage();
-      this.selfService.findSelf().subscribe(
+      this.settingsService.findBlockedUsers().subscribe(
         () => {
           this.alert.hide();
           this.loadingService.unlock();
@@ -107,6 +110,44 @@ export class DataPage {
           );
         },
       );
+    }
+  }
+
+  refreshAll() {
+    this.loadingData = false;
+    this.alert = this.alertService.show(this.alertAll);
+  }
+
+  async confirmRefreshAll() {
+    if (!this.loadingData) {
+      this.loadingData = true;
+      this.loadingService.lock();
+      await this.clearStorage();
+
+      this.selfService
+        .findSelf()
+        .pipe(
+          mergeMap(model => {
+            return this.settingsService.findBlockedUsers().pipe(
+              map(blockedUsers => {
+                return { model, blockedUsers };
+              }),
+            );
+          }),
+        )
+        .subscribe(
+          () => {
+            this.alert.hide();
+            this.loadingService.unlock();
+          },
+          () => {
+            this.alert.hide();
+            this.loadingService.unlock();
+            this.toastService.createError(
+              _('A problem occurred while retrieving new data'),
+            );
+          },
+        );
     }
   }
 

@@ -6,7 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { MeetingDto, MeetingUserDto } from '../../meeting';
+import { MeetingDto } from '../../meeting';
 import { ModalService } from '../../../../shared/modal/modal.service';
 import { UserDto } from '../../../user/user';
 import { Modal } from '../../../../shared/modal/modal';
@@ -35,7 +35,7 @@ export class FoundComponent implements OnInit, OnDestroy {
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
-  userForModal: MeetingUserDto;
+  userForModal: UserDto;
   modal: Modal;
   alert: Alert;
   loadingLeave = false;
@@ -57,7 +57,7 @@ export class FoundComponent implements OnInit, OnDestroy {
     this.state$ = globalState.data$;
   }
 
-  get filteredMeetingUsers(): MeetingUserDto[] {
+  get filteredMeetingUsers(): UserDto[] {
     return this.meeting.users.filter(user => user.id !== this.user.id);
   }
 
@@ -87,7 +87,7 @@ export class FoundComponent implements OnInit, OnDestroy {
     }
   }
 
-  openDetails(user: MeetingUserDto) {
+  openDetails(user: UserDto) {
     this.userForModal = user;
     this.modal = this.modalService.show(this.detailsTemplate, true);
   }

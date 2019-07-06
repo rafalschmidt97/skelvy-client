@@ -14,6 +14,8 @@ import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthDto, TokenDto } from './auth';
 import { storageKeys } from '../storage/storage';
+import { GlobalState } from '../state/global-state';
+import { SettingsState } from '../../modules/settings/settings-state';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +29,8 @@ export class AuthService {
     private readonly userState: UserState,
     private readonly meetingState: MeetingState,
     private readonly chatState: ChatState,
+    private readonly globalState: GlobalState,
+    private readonly settingsState: SettingsState,
     private readonly storage: Storage,
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
@@ -135,9 +139,11 @@ export class AuthService {
 
   async logoutWithoutRequest() {
     await this.sessionService.removeSession();
+    this.globalState.set(null);
     this.userState.set(null);
     this.meetingState.set(null);
     this.chatState.set(null);
+    this.settingsState.set(null);
     await this.storage.remove(storageKeys.lastMessageDate);
 
     const method = await this.storage.get(storageKeys.signInMethod);

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MeetingUserDto } from '../../../meeting';
+import { UserDto } from '../../../../user/user';
 
 @Component({
   selector: 'app-profile',
@@ -7,6 +7,6 @@ import { MeetingUserDto } from '../../../meeting';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent {
-  @Input() user: MeetingUserDto;
-  @Output() openDetails = new EventEmitter<MeetingUserDto>();
+  @Input() user: UserDto;
+  @Output() openDetails = new EventEmitter<UserDto>();
 }

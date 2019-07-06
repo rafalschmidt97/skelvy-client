@@ -2,9 +2,10 @@ import { Component, Input } from '@angular/core';
 import { _ } from '../../../../../core/i18n/translate';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { ToastService } from '../../../../../core/toast/toast.service';
-import { MeetingUserDto } from '../../../meeting';
 import { UserService } from '../../../../user/user.service';
 import { TranslateService } from '@ngx-translate/core';
+import { UserDto } from '../../../../user/user';
+import { SettingsService } from '../../../../settings/settings.service';
 
 @Component({
   selector: 'app-profile-details',
@@ -12,14 +13,14 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./profile-details.component.scss'],
 })
 export class ProfileDetailsComponent {
-  @Input() user: MeetingUserDto;
+  @Input() user: UserDto;
   blocked = false;
   loadingBlocking = false;
 
   constructor(
     private readonly emailComposer: EmailComposer,
     private readonly toastService: ToastService,
-    private readonly userService: UserService,
+    private readonly settingsService: SettingsService,
     private readonly translateService: TranslateService,
   ) {}
 
@@ -45,7 +46,7 @@ export class ProfileDetailsComponent {
 
   blockUser() {
     this.loadingBlocking = true;
-    this.userService.addBlockedUser(this.user.id).subscribe(
+    this.settingsService.addBlockedUser(this.user).subscribe(
       () => {
         this.blocked = true;
         this.loadingBlocking = false;
@@ -61,7 +62,7 @@ export class ProfileDetailsComponent {
 
   removeBlockUser() {
     this.loadingBlocking = true;
-    this.userService.removeBlockedUser(this.user.id).subscribe(
+    this.settingsService.removeBlockedUser(this.user.id).subscribe(
       () => {
         this.blocked = false;
         this.loadingBlocking = false;

@@ -7,6 +7,7 @@ import { UserState } from '../user/user-state';
 import { Storage } from '@ionic/storage';
 import { GlobalState } from '../../core/state/global-state';
 import { storageKeys } from '../../core/storage/storage';
+import { SettingsState } from '../settings/settings-state';
 
 @Component({
   selector: 'app-tabs',
@@ -21,6 +22,7 @@ export class TabsComponent implements OnInit {
     private readonly chatState: ChatState,
     private readonly userState: UserState,
     private readonly globalState: GlobalState,
+    private readonly settingsState: SettingsState,
     private readonly storage: Storage,
   ) {
     this.meeting$ = meetingState.data$;
@@ -49,6 +51,10 @@ export class TabsComponent implements OnInit {
       if (state && !state.loadingMeeting) {
         await this.storage.set(storageKeys.meetingState, chat);
       }
+    });
+
+    this.settingsState.data$.subscribe(async settings => {
+      await this.storage.set(storageKeys.settingsState, settings);
     });
   }
 }

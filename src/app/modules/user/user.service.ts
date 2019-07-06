@@ -54,23 +54,4 @@ export class UserService {
         }),
       );
   }
-
-  getBlockedUsers(page: number = 1): Observable<UserDto[]> {
-    return this.http.get<UserDto[]>(
-      `${environment.versionApiUrl}users/self/blocked?page=${page}`,
-    );
-  }
-
-  addBlockedUser(id: number): Observable<void> {
-    return this.http.post<void>(
-      `${environment.versionApiUrl}users/self/blocked`,
-      { blockUserId: id },
-    );
-  }
-
-  removeBlockedUser(id: number): Observable<void> {
-    return this.http.delete<void>(
-      `${environment.versionApiUrl}users/self/blocked/${id}`,
-    );
-  }
 }

@@ -10,7 +10,6 @@ import {
   MeetingRequestRequest,
   MeetingStatus,
   MeetingSuggestionsModel,
-  MeetingUserDto,
 } from './meeting';
 import { ChatState } from '../chat/chat-state';
 import { Storage } from '@ionic/storage';
@@ -18,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { GlobalState } from '../../core/state/global-state';
 import { Router } from '@angular/router';
 import { storageKeys } from '../../core/storage/storage';
+import { UserDto } from '../user/user';
 
 @Injectable({
   providedIn: 'root',
@@ -140,8 +140,8 @@ export class MeetingService {
     );
   }
 
-  findUser(userId: number): Observable<MeetingUserDto> {
-    return this.http.get<MeetingUserDto>(
+  findUser(userId: number): Observable<UserDto> {
+    return this.http.get<UserDto>(
       `${environment.versionApiUrl}users/${userId}`,
     );
   }

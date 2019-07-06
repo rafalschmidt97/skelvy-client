@@ -7,7 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ChatMessageDto, ChatMessageState } from '../../chat';
-import { MeetingDto, MeetingUserDto } from '../../../meeting/meeting';
+import { MeetingDto } from '../../../meeting/meeting';
 import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
 import { ChatState } from '../../chat-state';
@@ -58,7 +58,7 @@ export class MessagesComponent implements OnInit {
     this.scrollToLastMessage();
   }
 
-  findUser(userId: number): MeetingUserDto {
+  findUser(userId: number): UserDto {
     return this.meeting.users.find(user => user.id === userId);
   }
 

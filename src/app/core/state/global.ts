@@ -1,5 +1,4 @@
 export interface GlobalStateModel {
-  loggedIn: boolean;
   connection: Connection;
   toRead: number;
   loadingUser: boolean;
