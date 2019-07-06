@@ -59,7 +59,7 @@ export class SelfService {
         }
       }),
       mergeMap(async ({ model, fromStorage }) => {
-        const { user, meeting, chat } = await this.initializeStore(
+        const { user, meeting, chat } = await this.initializeState(
           model,
           fromStorage,
         );
@@ -108,7 +108,7 @@ export class SelfService {
     }
   }
 
-  private async initializeStore(model, fromStorage) {
+  private async initializeState(model, fromStorage) {
     const user = {
       id: model.user.id,
       profile: model.user.profile,
