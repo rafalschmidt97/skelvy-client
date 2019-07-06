@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserState } from './user-state';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { SelfModel } from './self';
 import { MeetingState } from '../meeting/meeting-state';
@@ -62,7 +62,7 @@ export class SelfService {
             );
         }
       }),
-      mergeMap(async ({ model, settings, fromStorage }) => {
+      switchMap(async ({ model, settings, fromStorage }) => {
         const { user, meeting, chat } = await this.initializeState(
           model,
           settings,

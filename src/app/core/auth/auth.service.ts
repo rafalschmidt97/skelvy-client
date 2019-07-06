@@ -3,14 +3,13 @@ import { SessionService } from './session.service';
 import { HttpClient } from '@angular/common/http';
 import { UserState } from '../../modules/user/user-state';
 import { from, Observable, of } from 'rxjs';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { MeetingState } from '../../modules/meeting/meeting-state';
 import { Storage } from '@ionic/storage';
 import { ChatState } from '../../modules/chat/chat-state';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthDto, TokenDto } from './auth';
 import { storageKeys } from '../storage/storage';
@@ -78,7 +77,7 @@ export class AuthService {
           },
         );
       }),
-      mergeMap(async res => {
+      switchMap(async res => {
         if (res && res.accessToken && res.refreshToken) {
           await this.sessionService.createSession(res);
         }
@@ -98,7 +97,7 @@ export class AuthService {
 
         return { isExpired, token };
       }),
-      mergeMap(({ isExpired, token }) => {
+      switchMap(({ isExpired, token }) => {
         return isExpired
           ? this.http
               .post<TokenDto>(environment.versionApiUrl + 'auth/refresh', {
@@ -111,7 +110,7 @@ export class AuthService {
               )
           : of({ isExpired, res: token });
       }),
-      mergeMap(async ({ isExpired, res }) => {
+      switchMap(async ({ isExpired, res }) => {
         if (isExpired && res && res.accessToken && res.refreshToken) {
           await this.sessionService.createSession(res);
         }

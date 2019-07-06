@@ -11,7 +11,7 @@ import { Storage } from '@ionic/storage';
 import { SessionService } from '../../../core/auth/session.service';
 import { storageKeys } from '../../../core/storage/storage';
 import { SettingsService } from '../settings.service';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-data',
@@ -127,7 +127,7 @@ export class DataPage {
       this.selfService
         .findSelf()
         .pipe(
-          mergeMap(model => {
+          switchMap(model => {
             return this.settingsService.findBlockedUsers().pipe(
               map(blockedUsers => {
                 return { model, blockedUsers };
