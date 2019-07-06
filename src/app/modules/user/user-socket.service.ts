@@ -55,10 +55,11 @@ export class UserSocketService {
       this.onUserRemoved();
       this.onUserDisabled();
       this.onClose();
-      this.connectToSocket();
 
       this.initialized = true;
     }
+
+    this.connectToSocket();
   }
 
   disconnect() {
