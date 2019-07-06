@@ -14,6 +14,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppRate } from '@ionic-native/app-rate/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { TranslateService } from '@ngx-translate/core';
+import { LoadingService } from '../../../core/loading/loading.service';
 
 @Component({
   selector: 'app-overview',
@@ -38,6 +39,7 @@ export class OverviewPage {
     private readonly rate: AppRate,
     private readonly share: SocialSharing,
     private readonly translateService: TranslateService,
+    private readonly loadingService: LoadingService,
   ) {
     this.version = environment.version;
   }
@@ -48,12 +50,14 @@ export class OverviewPage {
 
   confirmLogout() {
     this.loadingLogout = true;
+    this.loadingService.lock();
     this.userSocket.disconnect();
     this.userPush.disconnect();
 
     this.authService.logout().subscribe(
       () => {
         this.alert.hide();
+        this.loadingService.unlock();
         this.routerNavigation.navigateBack(['/home']);
         setTimeout(() => {
           this.toastService.createInformation(_('Successfully logged out'));
@@ -61,6 +65,7 @@ export class OverviewPage {
       },
       () => {
         this.authService.logoutWithoutRequest().then(() => {
+          this.loadingService.unlock();
           this.alert.hide();
           this.routerNavigation.navigateBack(['/home']);
           setTimeout(() => {
