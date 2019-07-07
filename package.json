@@ -12,6 +12,9 @@
     "type": "git",
     "url": "https://github.com/rafalschmidt97/skelvy-client"
   },
+  "config": {
+    "hostname": "REPLACE_WITH_MACHINE_IP"
+  },
   "scripts": {
     "start": "ionic lab",
     "serve": "ionic serve",
@@ -31,7 +34,8 @@
     "android:emulate": "ionic cordova emulate android -l",
     "android:prepare": "ionic cordova prepare android",
     "android:build": "ionic cordova build android --prod --release",
-    "translate": "ngx-translate-extract --input ./src --output ./src/assets/i18n/*.json --clean --sort --format json --marker _"
+    "translate": "ngx-translate-extract --input ./src --output ./src/assets/i18n/*.json --clean --sort --format json --marker _",
+    "redux": "npx remotedev --hostname=$hostname --port=8000"
   },
   "dependencies": {
     "@angular/animations": "^7.2.15",
@@ -62,6 +66,7 @@
     "@ionic/storage": "^2.2.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
+    "@ngxs/store": "^3.4.3",
     "blob-util": "^2.0.2",
     "bootstrap": "^4.3.1",
     "cordova-android": "7.1.4",
@@ -109,6 +114,7 @@
     "@biesbjerg/ngx-translate-extract": "^2.3.4",
     "@ionic/angular-toolkit": "^1.5.1",
     "@ionic/lab": "^1.0.24",
+    "@ngxs/devtools-plugin": "^3.4.3",
     "@types/jasmine": "^2.8.16",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^10.14.10",
@@ -124,6 +130,8 @@
     "popper.js": "^1.15.0",
     "prettier": "^1.18.2",
     "protractor": "~5.4.0",
+    "remotedev": "^0.2.9",
+    "remotedev-server": "^0.3.1",
     "stylelint": "^9.10.1",
     "stylelint-config-prettier": "^4.0.0",
     "stylelint-prettier": "^1.1.1",

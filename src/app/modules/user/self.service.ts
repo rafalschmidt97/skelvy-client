@@ -18,6 +18,8 @@ import { AuthService } from '../../core/auth/auth.service';
 import { storageKeys } from '../../core/storage/storage';
 import { SettingsState } from '../settings/settings-state';
 import { SettingsStateModel } from '../settings/settings';
+import { FeedAnimals } from './store/user2';
+import { Store } from '@ngxs/store';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +36,7 @@ export class SelfService {
     private readonly translateService: TranslateService,
     private readonly authService: AuthService,
     private readonly settingsState: SettingsState,
+    private readonly store: Store,
   ) {}
 
   findSelf(): Observable<SelfModel> {
@@ -149,6 +152,8 @@ export class SelfService {
 
     const state = await this.stateModel(meeting, chat, fromStorage);
     this.globalState.set(state);
+
+    this.store.dispatch(new FeedAnimals());
     return { user, meeting, chat };
   }
 

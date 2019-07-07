@@ -22,6 +22,15 @@ import { Device } from '@ionic-native/device/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppRate } from '@ionic-native/app-rate/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { environment } from '../environments/environment';
+import { state } from './core/redux/redux';
+import { registerReduxDevToolOnDevice } from './core/redux/remote-devtools-proxy';
+
+if (!environment.production) {
+  registerReduxDevToolOnDevice();
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +44,11 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
     IonicModule.forRoot(),
     TranslateModule.forRoot(i18nConfiguration),
     IonicStorageModule.forRoot(),
+    NgxsModule.forRoot(state),
+    NgxsReduxDevtoolsPluginModule.forRoot({
+      name: 'skelvy',
+      disabled: environment.production,
+    }),
     ModalModule.forRoot(),
   ],
   providers: [
