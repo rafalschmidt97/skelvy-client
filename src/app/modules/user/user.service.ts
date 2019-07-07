@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserState } from './user-state';
+import { UserState } from './store/user-state';
 import { Observable, throwError } from 'rxjs';
 import { ProfileRequest, UserDto } from './user';
 import { catchError, tap } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class UserService {
       .get<UserDto>(environment.versionApiUrl + 'users/self')
       .pipe(
         tap(user => {
-          this.userState.setUser(user);
+          this.userState.set(user);
           this.globalState.markUserAsLoaded();
         }),
         catchError(error => {
@@ -50,7 +50,7 @@ export class UserService {
       .put<void>(environment.versionApiUrl + 'users/self/profile', profile)
       .pipe(
         tap(() => {
-          this.userState.setProfile(profile);
+          this.userState.updateProfile(profile);
         }),
       );
   }

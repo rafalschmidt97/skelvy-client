@@ -1,7 +1,3 @@
-export interface ChatStateModel {
-  messages: ChatMessageState[];
-}
-
 export interface ChatMessageDto {
   id: number;
   date: string;

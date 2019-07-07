@@ -16,13 +16,15 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
 import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
-import { ChatState } from '../../../chat/chat-state';
+import { ChatState } from '../../../chat/store/chat-state';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
-import { GlobalStateModel } from '../../../../core/state/global';
-import { GlobalState } from '../../../../core/state/global-state';
+import {
+  GlobalState,
+  GlobalStateModel,
+} from '../../../../core/state/global-state';
 import { storageKeys } from '../../../../core/storage/storage';
 
 @Component({

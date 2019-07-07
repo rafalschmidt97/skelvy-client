@@ -12,7 +12,7 @@ import { ToastService } from '../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting/meeting-socket.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
-import { UserState } from './user-state';
+import { UserState } from './store/user-state';
 import { MeetingService } from '../meeting/meeting.service';
 import { GlobalState } from '../../core/state/global-state';
 import { tap } from 'rxjs/operators';

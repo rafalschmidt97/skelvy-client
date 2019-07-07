@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/form/input/input.component';
-import { UserState } from '../../../user/user-state';
+import { UserState } from '../../../user/store/user-state';
 import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../../core/i18n/translate';
 import { NavController } from '@ionic/angular';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { MeetingService } from '../../../meeting/meeting.service';
 import { ChatService } from '../../chat.service';
-import { ChatState } from '../../chat-state';
+import { ChatState } from '../../store/chat-state';
 import { ChatMessageState } from '../../chat';
 import { storageKeys } from '../../../../core/storage/storage';
 

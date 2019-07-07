@@ -1,25 +1,30 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserState } from './user-state';
+import { UserState } from './store/user-state';
 import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { SelfModel } from './self';
-import { MeetingState } from '../meeting/meeting-state';
-import { ChatState } from '../chat/chat-state';
-import { ChatStateModel } from '../chat/chat';
+import {
+  MeetingState,
+  MeetingStateModel,
+} from '../meeting/store/meeting-state';
+import { ChatState, ChatStateModel } from '../chat/store/chat-state';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingService } from '../meeting/meeting.service';
-import { GlobalState } from '../../core/state/global-state';
-import { Connection, GlobalStateModel } from '../../core/state/global';
-import { MeetingStateModel, MeetingStatus } from '../meeting/meeting';
+import {
+  Connection,
+  GlobalState,
+  GlobalStateModel,
+} from '../../core/state/global-state';
+import { MeetingStatus } from '../meeting/meeting';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { storageKeys } from '../../core/storage/storage';
-import { SettingsState } from '../settings/settings-state';
-import { SettingsStateModel } from '../settings/settings';
-import { FeedAnimals } from './store/user2';
-import { Store } from '@ngxs/store';
+import {
+  SettingsState,
+  SettingsStateModel,
+} from '../settings/store/settings-state';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +41,6 @@ export class SelfService {
     private readonly translateService: TranslateService,
     private readonly authService: AuthService,
     private readonly settingsState: SettingsState,
-    private readonly store: Store,
   ) {}
 
   findSelf(): Observable<SelfModel> {
@@ -153,7 +157,6 @@ export class SelfService {
     const state = await this.stateModel(meeting, chat, fromStorage);
     this.globalState.set(state);
 
-    this.store.dispatch(new FeedAnimals());
     return { user, meeting, chat };
   }
 

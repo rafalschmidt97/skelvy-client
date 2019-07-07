@@ -10,7 +10,7 @@ import { ChatMessageDto, ChatMessageState } from '../../chat';
 import { MeetingDto } from '../../../meeting/meeting';
 import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
-import { ChatState } from '../../chat-state';
+import { ChatState } from '../../store/chat-state';
 import { ChatService } from '../../chat.service';
 import { Storage } from '@ionic/storage';
 import { ToastService } from '../../../../core/toast/toast.service';

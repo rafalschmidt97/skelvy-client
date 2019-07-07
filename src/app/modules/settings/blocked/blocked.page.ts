@@ -7,7 +7,7 @@ import { Alert } from '../../../shared/alert/alert';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { AlertService } from '../../../shared/alert/alert.service';
 import { LoadingService } from '../../../core/loading/loading.service';
-import { SettingsState } from '../settings-state';
+import { SettingsState } from '../store/settings-state';
 import { SettingsService } from '../settings.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';

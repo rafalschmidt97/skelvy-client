@@ -1,12 +1,6 @@
 import { UserDto } from '../user/user';
 import { ChatMessageDto } from '../chat/chat';
 
-export interface MeetingStateModel {
-  status: MeetingStatus;
-  meeting: MeetingDto;
-  request: MeetingRequestDto;
-}
-
 export interface MeetingModel {
   status: MeetingStatus;
   meeting: MeetingDto;

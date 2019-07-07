@@ -5,7 +5,7 @@ import { Push, PushObject } from '@ionic-native/push/ngx';
 import { UserService } from './user.service';
 import { Storage } from '@ionic/storage';
 import { NavController, Platform } from '@ionic/angular';
-import { UserState } from './user-state';
+import { UserState } from './store/user-state';
 import { storageKeys } from '../../core/storage/storage';
 
 @Injectable({

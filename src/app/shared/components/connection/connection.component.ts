@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Connection } from '../../../core/state/global';
-import { GlobalState } from '../../../core/state/global-state';
+import { Connection, GlobalState } from '../../../core/state/global-state';
 import {
   animate,
   state,

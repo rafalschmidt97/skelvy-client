@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { HttpClient } from '@angular/common/http';
-import { UserState } from '../../modules/user/user-state';
+import { UserState } from '../../modules/user/store/user-state';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { MeetingState } from '../../modules/meeting/meeting-state';
+import { MeetingState } from '../../modules/meeting/store/meeting-state';
 import { Storage } from '@ionic/storage';
-import { ChatState } from '../../modules/chat/chat-state';
+import { ChatState } from '../../modules/chat/store/chat-state';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthDto, TokenDto } from './auth';
 import { storageKeys } from '../storage/storage';
 import { GlobalState } from '../state/global-state';
-import { SettingsState } from '../../modules/settings/settings-state';
+import { SettingsState } from '../../modules/settings/store/settings-state';
 
 @Injectable({
   providedIn: 'root',

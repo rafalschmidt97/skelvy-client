@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { UserPushService } from '../../user/user-push.service';
 import { NavController, Platform } from '@ionic/angular';
-import { UserState } from '../../user/user-state';
+import { UserState } from '../../user/store/user-state';
 import { storageKeys } from '../../../core/storage/storage';
 
 @Component({

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { UserDto } from '../user/user';
-import { SettingsState } from './settings-state';
+import { SettingsState } from './store/settings-state';
 import { tap } from 'rxjs/operators';
 
 @Injectable({

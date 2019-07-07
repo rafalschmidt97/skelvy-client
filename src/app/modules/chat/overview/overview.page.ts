@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
-import { ChatStateModel } from '../chat';
-import { MeetingState } from '../../meeting/meeting-state';
+import {
+  MeetingState,
+  MeetingStateModel,
+} from '../../meeting/store/meeting-state';
 import { Observable } from 'rxjs';
-import { MeetingStateModel } from '../../meeting/meeting';
-import { UserState } from '../../user/user-state';
-import { UserStateModel } from '../../user/user';
-import { ChatState } from '../chat-state';
-import { GlobalStateModel } from '../../../core/state/global';
-import { GlobalState } from '../../../core/state/global-state';
+import { ChatState, ChatStateModel } from '../store/chat-state';
+import { UserState, UserStateModel } from '../../user/store/user-state';
+import {
+  GlobalState,
+  GlobalStateModel,
+} from '../../../core/state/global-state';
 
 @Component({
   selector: 'app-overview',

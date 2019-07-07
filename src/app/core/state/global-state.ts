@@ -1,78 +1,170 @@
 import { Injectable } from '@angular/core';
-import { State } from '../../shared/state';
-import { Connection, GlobalStateModel } from './global';
+import { Action, State, StateContext, Store } from '@ngxs/store';
+import {
+  AddChatMessagesToRead,
+  ChangeConnectionStatus,
+  MarkMeetingAsLoaded,
+  MarkMeetingAsLoading,
+  MarkUserAsLoaded,
+  MarkUserAsLoading,
+  SetChatMessagesToRead,
+  SetGlobal,
+} from './global-actions';
+import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
+export interface GlobalStateModel {
+  connection: Connection;
+  toRead: number;
+  loadingUser: boolean;
+  loadingMeeting: boolean;
+}
+
+export enum Connection {
+  CONNECTING = 'connecting',
+  CONNECTED = 'connected',
+  RECONNECTING = 'reconnecting',
+  WAITING = 'waiting',
+  DISCONNECTED = 'disconnected',
+}
+
+@State<GlobalStateModel>({
+  name: 'global',
+  defaults: null,
 })
-export class GlobalState extends State<GlobalStateModel> {
-  connect() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      connection: Connection.CONNECTED,
+export class GlobalStateRedux {
+  @Action(ChangeConnectionStatus)
+  changeConnectionStatus(
+    { getState, setState }: StateContext<GlobalStateModel>,
+    { status }: ChangeConnectionStatus,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      connection: status,
     });
   }
 
-  reconnect() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      connection: Connection.RECONNECTING,
-    });
-  }
-
-  waiting() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      connection: Connection.WAITING,
-    });
-  }
-
-  disconnect() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      connection: Connection.DISCONNECTED,
-    });
-  }
-
-  markMeetingAsLoading() {
-    this.subject.next({
-      ...this.subject.getValue(),
+  @Action(MarkMeetingAsLoading)
+  markMeetingAsLoading({ getState, setState }: StateContext<GlobalStateModel>) {
+    const state = getState();
+    setState({
+      ...state,
       loadingMeeting: true,
     });
   }
 
-  markMeetingAsLoaded() {
-    this.subject.next({
-      ...this.subject.getValue(),
+  @Action(MarkMeetingAsLoaded)
+  markMeetingAsLoaded({ getState, setState }: StateContext<GlobalStateModel>) {
+    const state = getState();
+    setState({
+      ...state,
       loadingMeeting: false,
     });
   }
 
-  markUserAsLoading() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      loadingUser: true,
+  @Action(MarkUserAsLoading)
+  markUserAsLoading({ getState, setState }: StateContext<GlobalStateModel>) {
+    const state = getState();
+    setState({
+      ...state,
+      loadingMeeting: true,
     });
+  }
+
+  @Action(MarkUserAsLoaded)
+  markUserAsLoaded({ getState, setState }: StateContext<GlobalStateModel>) {
+    const state = getState();
+    setState({
+      ...state,
+      loadingMeeting: false,
+    });
+  }
+
+  @Action(AddChatMessagesToRead)
+  addChatMessagesToRead(
+    { getState, setState }: StateContext<GlobalStateModel>,
+    { amount }: AddChatMessagesToRead,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      toRead: state.toRead + amount,
+    });
+  }
+
+  @Action(SetChatMessagesToRead)
+  setChatMessagesToRead(
+    { getState, setState }: StateContext<GlobalStateModel>,
+    { amount }: SetChatMessagesToRead,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      toRead: amount,
+    });
+  }
+
+  @Action(SetGlobal)
+  set({ setState }: StateContext<GlobalStateModel>, { model }: SetGlobal) {
+    setState(model);
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class GlobalState {
+  constructor(private readonly store: Store) {}
+
+  connect() {
+    this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTED));
+  }
+
+  reconnect() {
+    this.store.dispatch(new ChangeConnectionStatus(Connection.RECONNECTING));
+  }
+
+  waiting() {
+    this.store.dispatch(new ChangeConnectionStatus(Connection.WAITING));
+  }
+
+  disconnect() {
+    this.store.dispatch(new ChangeConnectionStatus(Connection.DISCONNECTED));
+  }
+
+  markMeetingAsLoading() {
+    this.store.dispatch(new MarkMeetingAsLoading());
+  }
+
+  markMeetingAsLoaded() {
+    this.store.dispatch(new MarkMeetingAsLoaded());
+  }
+
+  markUserAsLoading() {
+    this.store.dispatch(new MarkUserAsLoading());
   }
 
   markUserAsLoaded() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      loadingUser: false,
-    });
+    this.store.dispatch(new MarkUserAsLoaded());
   }
 
   addToRead(amount: number) {
-    this.subject.next({
-      ...this.subject.getValue(),
-      toRead: this.subject.getValue().toRead + amount,
-    });
+    this.store.dispatch(new AddChatMessagesToRead(amount));
   }
 
   setToRead(amount: number) {
-    this.subject.next({
-      ...this.subject.getValue(),
-      toRead: amount,
-    });
+    this.store.dispatch(new SetChatMessagesToRead(amount));
+  }
+
+  set(model: GlobalStateModel) {
+    this.store.dispatch(new SetGlobal(model));
+  }
+
+  get data(): GlobalStateModel {
+    return this.store.selectSnapshot(state => state.global);
+  }
+
+  get data$(): Observable<GlobalStateModel> {
+    return this.store.select(state => state.global);
   }
 }

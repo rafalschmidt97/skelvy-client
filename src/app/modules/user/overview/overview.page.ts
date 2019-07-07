@@ -3,7 +3,7 @@ import { UserDto } from '../user';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { Modal } from '../../../shared/modal/modal';
 import { Observable } from 'rxjs';
-import { UserState } from '../user-state';
+import { UserState } from '../store/user-state';
 
 @Component({
   selector: 'app-overview',

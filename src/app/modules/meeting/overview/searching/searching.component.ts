@@ -21,7 +21,7 @@ import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
 import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MeetingState } from '../../meeting-state';
+import { MeetingState } from '../../store/meeting-state';
 import { Subscription } from 'rxjs';
 import { GlobalState } from '../../../../core/state/global-state';
 

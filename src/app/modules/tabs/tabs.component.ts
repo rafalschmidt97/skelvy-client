@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MeetingStateModel } from '../meeting/meeting';
-import { MeetingState } from '../meeting/meeting-state';
-import { ChatState } from '../chat/chat-state';
-import { UserState } from '../user/user-state';
+import { ChatState } from '../chat/store/chat-state';
+import { UserState } from '../user/store/user-state';
 import { Storage } from '@ionic/storage';
 import { GlobalState } from '../../core/state/global-state';
 import { storageKeys } from '../../core/storage/storage';
-import { SettingsState } from '../settings/settings-state';
+import { SettingsState } from '../settings/store/settings-state';
+import {
+  MeetingState,
+  MeetingStateModel,
+} from '../meeting/store/meeting-state';
 
 @Component({
   selector: 'app-tabs',

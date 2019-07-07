@@ -5,7 +5,7 @@ import { Select } from '../../../shared/form/select/select';
 import { _ } from '../../../core/i18n/translate';
 import { InputComponent } from '../../../shared/form/input/input.component';
 import * as moment from 'moment';
-import { UserState } from '../user-state';
+import { UserState } from '../store/user-state';
 import { Gender, ProfileDto } from '../user';
 import { UserService } from '../user.service';
 import { NavController } from '@ionic/angular';

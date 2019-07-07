@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
-import { MeetingState } from './meeting-state';
+import { MeetingState } from './store/meeting-state';
 import {
   MeetingDrinkTypeDto,
   MeetingModel,
@@ -11,13 +11,14 @@ import {
   MeetingStatus,
   MeetingSuggestionsModel,
 } from './meeting';
-import { ChatState } from '../chat/chat-state';
+import { ChatState } from '../chat/store/chat-state';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { GlobalState } from '../../core/state/global-state';
 import { Router } from '@angular/router';
 import { storageKeys } from '../../core/storage/storage';
 import { UserDto } from '../user/user';
+import { isEqual } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -50,24 +51,24 @@ export class MeetingService {
           if (this.isSameMeeting(model)) {
             if (mergeExisting) {
               await this.initializeChatWithExistingChatMessages(model);
+              this.globalState.markMeetingAsLoaded();
+              this.initializeMeetingWithMergedModel(model);
             } else {
               await this.initializeFreshChat(model);
+              this.globalState.markMeetingAsLoaded();
+              this.initializeFreshMeetingModel(model);
             }
           } else {
             if (model.status === MeetingStatus.FOUND) {
               await this.initializeFreshChat(model);
+              this.globalState.markMeetingAsLoaded();
+              this.initializeFreshMeetingModel(model);
             } else {
               this.clearChat();
+              this.globalState.markMeetingAsLoaded();
+              this.initializeFreshMeetingModel(model);
             }
           }
-
-          this.globalState.markMeetingAsLoaded();
-
-          this.meetingState.set({
-            status: model.status,
-            meeting: model.meeting,
-            request: model.request,
-          });
         }),
         catchError(error => {
           this.globalState.markMeetingAsLoaded();
@@ -178,9 +179,11 @@ export class MeetingService {
     if (newMessages.length !== 20) {
       const messages = [...this.chatState.data.messages, ...newMessages];
 
-      this.chatState.set({
-        messages,
-      });
+      if (newMessages.length > 0) {
+        this.chatState.set({
+          messages,
+        });
+      }
 
       if (this.router.url !== '/app/chat') {
         const lastMessageDate = await this.storage.get(
@@ -205,10 +208,12 @@ export class MeetingService {
       if (this.router.url !== '/app/chat') {
         this.globalState.setToRead(newMessages.length);
       } else {
-        this.storage.set(
-          storageKeys.lastMessageDate,
-          newMessages[newMessages.length - 1].date,
-        );
+        if (newMessages.length > 0) {
+          this.storage.set(
+            storageKeys.lastMessageDate,
+            newMessages[newMessages.length - 1].date,
+          );
+        }
       }
     }
   }
@@ -220,7 +225,37 @@ export class MeetingService {
       messages: model.messages,
     });
 
-    this.globalState.setToRead(model.messages.length);
+    if (this.router.url !== '/app/chat') {
+      this.globalState.setToRead(model.messages.length);
+    } else {
+      if (model.messages.length > 0) {
+        this.storage.set(
+          storageKeys.lastMessageDate,
+          model.messages[model.messages.length - 1].date,
+        );
+      }
+    }
+  }
+
+  private initializeMeetingWithMergedModel(model) {
+    if (
+      !isEqual(model.meeting, this.meetingState.data.meeting) ||
+      !isEqual(model.request, this.meetingState.data.request)
+    ) {
+      this.meetingState.set({
+        status: model.status,
+        meeting: model.meeting,
+        request: model.request,
+      });
+    }
+  }
+
+  private initializeFreshMeetingModel(model) {
+    this.meetingState.set({
+      status: model.status,
+      meeting: model.meeting,
+      request: model.request,
+    });
   }
 
   private clearChat() {

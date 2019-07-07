@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { MeetingStateModel } from '../meeting';
-import { MeetingState } from '../meeting-state';
+import { MeetingState, MeetingStateModel } from '../store/meeting-state';
 import { Observable } from 'rxjs';
-import { UserState } from '../../user/user-state';
-import { UserStateModel } from '../../user/user';
-import { GlobalState } from '../../../core/state/global-state';
-import { GlobalStateModel } from '../../../core/state/global';
+import { UserState, UserStateModel } from '../../user/store/user-state';
+import {
+  GlobalState,
+  GlobalStateModel,
+} from '../../../core/state/global-state';
 
 @Component({
   selector: 'app-overview',
