@@ -97,8 +97,9 @@ export class MeetingSocketService {
   private onUserLeftMeeting() {
     this.userSocket.on('UserLeftMeeting', data => {
       if (
-        this.store.selectSnapshot(state => state.meeting.meeting.meeting.users)
-          .length !== 2
+        this.store.selectSnapshot(
+          state => state.meeting.meetingModel.meeting.users,
+        ).length !== 2
       ) {
         this.store.dispatch(new RemoveMeetingUser(data.userId));
       } else {

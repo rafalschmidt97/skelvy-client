@@ -106,7 +106,7 @@ export class FoundComponent {
       setTimeout(() => {
         this.store.dispatch(new UpdateChatMessagesToRead(0));
         const messages = this.store.selectSnapshot(
-          state => state.meeting.meeting.messages,
+          state => state.meeting.meetingModel.messages,
         );
         if (messages.length > 0) {
           this.storage.set(

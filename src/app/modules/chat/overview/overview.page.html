@@ -17,12 +17,12 @@
 
 <ion-content [scrollY]="false">
   <div class="d-flex flex-column h-100 safe-area-b">
-    <ng-container *ngIf="meeting$ | async as meetingState">
+    <ng-container *ngIf="meeting$ | async as meeting">
       <app-connection></app-connection>
       <app-messages
-        *ngIf="meetingState.meeting?.messages.length > 0; else empty"
-        [messages]="meetingState.meeting.messages"
-        [meeting]="meetingState.meeting.meeting"
+        *ngIf="meeting.meetingModel?.messages.length > 0; else empty"
+        [messages]="meeting.meetingModel.messages"
+        [meeting]="meeting.meetingModel.meeting"
         [user]="(user$ | async).user"
       ></app-messages>
       <ng-template #empty>

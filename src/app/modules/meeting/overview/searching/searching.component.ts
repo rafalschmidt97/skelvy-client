@@ -53,13 +53,13 @@ export class SearchingComponent implements OnInit, OnDestroy {
       .select(state => state.meeting)
       .subscribe(meeting => {
         if (
-          meeting.meeting &&
-          meeting.meeting.status === MeetingStatus.SEARCHING &&
+          meeting.meetingModel &&
+          meeting.meetingModel.status === MeetingStatus.SEARCHING &&
           !meeting.loading
         ) {
           this.findSuggestions(
-            meeting.meeting.request.latitude,
-            meeting.meeting.request.longitude,
+            meeting.meetingModel.request.latitude,
+            meeting.meetingModel.request.longitude,
           );
         }
       });

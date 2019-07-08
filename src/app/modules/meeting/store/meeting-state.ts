@@ -24,7 +24,7 @@ import {
 export interface MeetingStateModel {
   loading: boolean;
   toRead: number;
-  meeting: MeetingModelState;
+  meetingModel: MeetingModelState;
 }
 
 export interface MeetingModelState {
@@ -39,7 +39,7 @@ export interface MeetingModelState {
   defaults: {
     loading: false,
     toRead: 0,
-    meeting: null,
+    meetingModel: null,
   },
 })
 export class MeetingState {
@@ -63,11 +63,11 @@ export class MeetingState {
     const state = getState();
     setState({
       ...state,
-      meeting: {
-        ...state.meeting,
+      meetingModel: {
+        ...state.meetingModel,
         meeting: {
-          ...state.meeting.meeting,
-          user: [...state.meeting.meeting.users, user],
+          ...state.meetingModel.meeting,
+          user: [...state.meetingModel.meeting.users, user],
         },
       },
     });
@@ -81,11 +81,11 @@ export class MeetingState {
     const state = getState();
     setState({
       ...state,
-      meeting: {
-        ...state.meeting,
+      meetingModel: {
+        ...state.meetingModel,
         meeting: {
-          ...state.meeting.meeting,
-          user: state.meeting.meeting.users.filter(x => x.id !== userId),
+          ...state.meetingModel.meeting,
+          user: state.meetingModel.meeting.users.filter(x => x.id !== userId),
         },
       },
     });
@@ -99,7 +99,7 @@ export class MeetingState {
     const state = getState();
     setState({
       ...state,
-      meeting: model,
+      meetingModel: model,
     });
   }
 
@@ -135,9 +135,9 @@ export class MeetingState {
     const state = getState();
     setState({
       ...state,
-      meeting: {
-        ...state.meeting,
-        messages: [...state.meeting.messages, message],
+      meetingModel: {
+        ...state.meetingModel,
+        messages: [...state.meetingModel.messages, message],
       },
     });
   }
@@ -152,17 +152,17 @@ export class MeetingState {
     if (end) {
       setState({
         ...state,
-        meeting: {
-          ...state.meeting,
-          messages: [...state.meeting.messages, ...messages],
+        meetingModel: {
+          ...state.meetingModel,
+          messages: [...state.meetingModel.messages, ...messages],
         },
       });
     } else {
       setState({
         ...state,
-        meeting: {
-          ...state.meeting,
-          messages: [...messages, ...state.meeting.messages],
+        meetingModel: {
+          ...state.meetingModel,
+          messages: [...messages, ...state.meetingModel.messages],
         },
       });
     }
@@ -176,9 +176,9 @@ export class MeetingState {
     const state = getState();
     setState({
       ...state,
-      meeting: {
-        ...state.meeting,
-        messages: state.meeting.messages.filter(
+      meetingModel: {
+        ...state.meetingModel,
+        messages: state.meetingModel.messages.filter(
           x => new Date(x.date).getTime() !== new Date(message.date).getTime(),
         ),
       },
@@ -193,8 +193,8 @@ export class MeetingState {
     const state = getState();
     setState({
       ...state,
-      meeting: {
-        ...state.meeting,
+      meetingModel: {
+        ...state.meetingModel,
         messages,
       },
     });
@@ -208,10 +208,10 @@ export class MeetingState {
     const state = getState();
     setState({
       ...state,
-      meeting: {
-        ...state.meeting,
+      meetingModel: {
+        ...state.meetingModel,
         messages: [
-          ...state.meeting.messages.filter(
+          ...state.meetingModel.messages.filter(
             x =>
               new Date(x.date).getTime() !==
               new Date(oldMessage.date).getTime(),
@@ -230,9 +230,9 @@ export class MeetingState {
     const state = getState();
     setState({
       ...state,
-      meeting: {
-        ...state.meeting,
-        messages: state.meeting.messages.map(x => {
+      meetingModel: {
+        ...state.meetingModel,
+        messages: state.meetingModel.messages.map(x => {
           if (new Date(x.date).getTime() === new Date(message.date).getTime()) {
             return {
               ...x,
@@ -255,9 +255,9 @@ export class MeetingState {
     const state = getState();
     setState({
       ...state,
-      meeting: {
-        ...state.meeting,
-        messages: state.meeting.messages.map(x => {
+      meetingModel: {
+        ...state.meetingModel,
+        messages: state.meetingModel.messages.map(x => {
           if (new Date(x.date).getTime() === new Date(message.date).getTime()) {
             return {
               ...x,

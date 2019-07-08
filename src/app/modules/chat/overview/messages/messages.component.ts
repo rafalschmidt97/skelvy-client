@@ -62,7 +62,7 @@ export class MessagesComponent implements OnInit {
 
   ngOnInit() {
     if (
-      this.store.selectSnapshot(state => state.meeting.meeting.messages)
+      this.store.selectSnapshot(state => state.meeting.meetingModel.messages)
         .length === 20
     ) {
       this.hasMoreMessages = true;
@@ -87,7 +87,7 @@ export class MessagesComponent implements OnInit {
     if (this.hasMoreMessages && !this.isLoading) {
       this.isLoading = true;
       const firstMessage = this.store.selectSnapshot(
-        state => state.meeting.meeting.messages,
+        state => state.meeting.meetingModel.messages,
       )[0];
 
       this.chatService.findMessages(firstMessage.date).subscribe(

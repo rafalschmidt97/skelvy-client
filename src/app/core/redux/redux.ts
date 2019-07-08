@@ -40,7 +40,7 @@ export function clearState(state: AppStateModel, action, next) {
       meeting: {
         loading: false,
         toRead: 0,
-        meeting: null,
+        meetingModel: null,
       },
       settings: {
         blockedUsers: null,

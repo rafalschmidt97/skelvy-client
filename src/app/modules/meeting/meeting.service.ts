@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import {
+  ChatMessageState,
   MeetingDrinkTypeDto,
   MeetingModel,
   MeetingRequestRequest,
@@ -157,18 +158,20 @@ export class MeetingService {
   }
 
   private isSameMeeting(model): boolean {
-    const meeting = this.store.selectSnapshot(x => x.meeting.meeting);
+    const storedModel = this.store.selectSnapshot(x => x.meeting.meetingModel);
     return (
-      meeting &&
+      storedModel &&
       model.status === MeetingStatus.FOUND &&
-      meeting.status === MeetingStatus.FOUND &&
-      model.meeting.id === meeting.meeting.id
+      storedModel.status === MeetingStatus.FOUND &&
+      model.meeting.id === storedModel.meeting.id
     );
   }
 
-  private async initializeChatWithExistingChatMessages(model: MeetingModel) {
+  private async initializeChatWithExistingChatMessages(
+    model: MeetingModel,
+  ): Promise<ChatMessageState[]> {
     const existingMessages = this.store.selectSnapshot(
-      x => x.meeting.meeting.messages,
+      x => x.meeting.meetingModel.messages,
     );
     const newMessages = model.messages.filter(message1 => {
       return (
@@ -220,7 +223,9 @@ export class MeetingService {
     }
   }
 
-  private async initializeFreshChat(model: MeetingModel) {
+  private async initializeFreshChat(
+    model: MeetingModel,
+  ): Promise<ChatMessageState[]> {
     await this.storage.remove(storageKeys.lastMessageDate);
 
     if (this.router.url !== '/app/chat') {
@@ -234,10 +239,13 @@ export class MeetingService {
       }
     }
 
-    return model.messages;
+    return <ChatMessageState[]>model.messages;
   }
 
-  private initializeMeetingModel(model, messages) {
+  private initializeMeetingModel(
+    model: MeetingModel,
+    messages: ChatMessageState[],
+  ) {
     this.store.dispatch(
       new UpdateMeeting({
         status: model.status,

@@ -11,18 +11,18 @@
 
 <ion-content>
   <app-connection></app-connection>
-  <ng-container *ngIf="meeting$ | async as meetingState">
-    <ng-container *ngIf="meetingState.meeting as meeting; else notFound">
+  <ng-container *ngIf="meeting$ | async as meeting">
+    <ng-container *ngIf="meeting.meetingModel as meetingModel; else notFound">
       <app-found
-        [hidden]="!meeting?.meeting"
-        [meeting]="meeting.meeting"
+        [hidden]="!meetingModel?.meeting"
+        [meeting]="meetingModel.meeting"
         [user]="(user$ | async).user"
-        [loadingMeeting]="meetingState.loading"
-        [messagesToRead]="meetingState.toRead"
+        [loadingMeeting]="meeting.loading"
+        [messagesToRead]="meeting.toRead"
       ></app-found>
       <app-searching
-        [hidden]="meeting?.meeting"
-        [request]="meeting.request"
+        [hidden]="meetingModel?.meeting"
+        [request]="meetingModel.request"
       ></app-searching>
     </ng-container>
     <ng-template #notFound>

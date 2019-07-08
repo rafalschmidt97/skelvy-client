@@ -77,14 +77,14 @@ export class SelfService {
     user: UserStateModel,
     meeting: MeetingStateModel,
   ): Observable<SelfModel> {
-    if (meeting && meeting.meeting) {
+    if (meeting && meeting.meetingModel) {
       return of({
         user: user.user,
         meetingModel: {
-          status: meeting.meeting.status,
-          meeting: meeting.meeting.meeting,
-          request: meeting.meeting.request,
-          messages: <ChatMessageDto[]>meeting.meeting.messages,
+          status: meeting.meetingModel.status,
+          meeting: meeting.meetingModel.meeting,
+          request: meeting.meetingModel.request,
+          messages: <ChatMessageDto[]>meeting.meetingModel.messages,
         },
       });
     } else {
