@@ -14,10 +14,10 @@ import {
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting-socket.service';
-import { UserState } from '../../user/user-state';
 import { Storage } from '@ionic/storage';
 import { isNil } from 'lodash';
 import { storageKeys } from '../../../core/storage/storage';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-edit',
@@ -49,8 +49,8 @@ export class EditPage implements Form, OnSubmit, OnInit {
     private readonly meetingSocket: MeetingSocketService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
-    private readonly userState: UserState,
     private readonly storage: Storage,
+    private readonly store: Store,
   ) {
     this.form = this.formBuilder.group({
       date: [[this.today, this.tomorrow], Validators.required],
@@ -236,7 +236,9 @@ export class EditPage implements Form, OnSubmit, OnInit {
           });
 
           const userAge = moment().diff(
-            this.userState.data.profile.birthday,
+            this.store.selectSnapshot(
+              state => state.user.user.profile.birthday,
+            ),
             'years',
           );
 

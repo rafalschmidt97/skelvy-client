@@ -12,10 +12,11 @@ import { ToastService } from '../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting/meeting-socket.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
-import { UserState } from './user-state';
 import { MeetingService } from '../meeting/meeting.service';
-import { GlobalState } from '../../core/state/global-state';
+import { Connection } from '../../core/state/global-state';
 import { tap } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { ChangeConnectionStatus } from '../../core/state/global-actions';
 
 @Injectable({
   providedIn: 'root',
@@ -33,8 +34,7 @@ export class UserSocketService {
     private readonly meetingService: MeetingService,
     private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
-    private readonly userState: UserState,
-    private readonly globalState: GlobalState,
+    private readonly store: Store,
   ) {
     this.socket = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'users', {
@@ -66,27 +66,22 @@ export class UserSocketService {
     if (this.socket.state === HubConnectionState.Connected) {
       this.disconnected = true;
 
-      this.socket
-        .stop()
-        .then(() => {
-          this.globalState.disconnect();
-        })
-        .catch(() => {
-          this.toastService.createError(
-            _('A problem occurred while disconnecting from the server'),
-          );
-        });
+      this.socket.stop().catch(() => {
+        this.toastService.createError(
+          _('A problem occurred while disconnecting from the server'),
+        );
+      });
     }
   }
 
   private onClose() {
     this.socket.onclose(() => {
       if (!this.disconnected) {
-        this.globalState.reconnect();
         this.reconnectToSocket();
       } else {
-        this.globalState.disconnect();
-        this.disconnected = true;
+        this.store.dispatch(
+          new ChangeConnectionStatus(Connection.DISCONNECTED),
+        );
       }
     });
   }
@@ -118,15 +113,15 @@ export class UserSocketService {
   }
 
   private connectToSocket() {
+    this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTING));
+
     this.socket
       .start()
       .then(() => {
-        this.globalState.connect();
+        this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTED));
         this.disconnected = false;
       })
       .catch(error => {
-        this.globalState.reconnect();
-
         if (error.statusCode === 401) {
           this.authService
             .refreshToken()
@@ -148,19 +143,19 @@ export class UserSocketService {
         .start()
         .then(() => {
           this.reconnectFailedAttempts = 0;
-          this.globalState.connect();
+          this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTED));
           this.disconnected = false;
           this.meetingService.findMeeting().subscribe();
         })
         .catch(error => {
-          if (this.reconnectFailedAttempts < 4) {
-            this.reconnectFailedAttempts++;
+          this.reconnectFailedAttempts++;
 
-            if (this.reconnectFailedAttempts === 1) {
-              this.globalState.reconnect();
-            }
-          } else {
-            this.globalState.waiting();
+          if (this.reconnectFailedAttempts === 1) {
+            this.store.dispatch(
+              new ChangeConnectionStatus(Connection.RECONNECTING),
+            );
+          } else if (this.reconnectFailedAttempts === 5) {
+            this.store.dispatch(new ChangeConnectionStatus(Connection.WAITING));
           }
 
           if (error.statusCode === 401) {

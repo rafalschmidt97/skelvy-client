@@ -1,8 +1,3 @@
-export interface UserStateModel {
-  id: number;
-  profile: ProfileDto;
-}
-
 export interface UserDto {
   id: number;
   profile: ProfileDto;

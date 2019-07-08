@@ -1,78 +1,39 @@
-import { Injectable } from '@angular/core';
-import { State } from '../../shared/state';
-import { Connection, GlobalStateModel } from './global';
+import { Action, State, StateContext } from '@ngxs/store';
+import { ChangeConnectionStatus, SetGlobal } from './global-actions';
 
-@Injectable({
-  providedIn: 'root',
+export interface GlobalStateModel {
+  connection: Connection;
+}
+
+export enum Connection {
+  CONNECTING = 'connecting',
+  CONNECTED = 'connected',
+  RECONNECTING = 'reconnecting',
+  WAITING = 'waiting',
+  DISCONNECTED = 'disconnected',
+}
+
+@State<GlobalStateModel>({
+  name: 'global',
+  defaults: {
+    connection: Connection.DISCONNECTED,
+  },
 })
-export class GlobalState extends State<GlobalStateModel> {
-  connect() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      connection: Connection.CONNECTED,
+export class GlobalState {
+  @Action(ChangeConnectionStatus)
+  changeConnectionStatus(
+    { getState, setState }: StateContext<GlobalStateModel>,
+    { status }: ChangeConnectionStatus,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      connection: status,
     });
   }
 
-  reconnect() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      connection: Connection.RECONNECTING,
-    });
-  }
-
-  waiting() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      connection: Connection.WAITING,
-    });
-  }
-
-  disconnect() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      connection: Connection.DISCONNECTED,
-    });
-  }
-
-  markMeetingAsLoading() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      loadingMeeting: true,
-    });
-  }
-
-  markMeetingAsLoaded() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      loadingMeeting: false,
-    });
-  }
-
-  markUserAsLoading() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      loadingUser: true,
-    });
-  }
-
-  markUserAsLoaded() {
-    this.subject.next({
-      ...this.subject.getValue(),
-      loadingUser: false,
-    });
-  }
-
-  addToRead(amount: number) {
-    this.subject.next({
-      ...this.subject.getValue(),
-      toRead: this.subject.getValue().toRead + amount,
-    });
-  }
-
-  setToRead(amount: number) {
-    this.subject.next({
-      ...this.subject.getValue(),
-      toRead: amount,
-    });
+  @Action(SetGlobal)
+  set({ setState }: StateContext<GlobalStateModel>, { model }: SetGlobal) {
+    setState(model);
   }
 }

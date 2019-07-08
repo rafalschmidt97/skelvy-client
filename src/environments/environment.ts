@@ -7,8 +7,9 @@ import * as npm from '../../package.json';
 export const environment = {
   production: false,
   version: npm.version,
-  apiUrl: 'http://localhost:5000/',
-  versionApiUrl: 'http://localhost:5000/v1.0/',
+  hostname: npm.config.hostname,
+  apiUrl: `http://${npm.config.hostname}:5000/`,
+  versionApiUrl: `http://${npm.config.hostname}:5000/v1.0/`,
 };
 
 /*

@@ -5,12 +5,12 @@ import { Select } from '../../../shared/form/select/select';
 import { _ } from '../../../core/i18n/translate';
 import { InputComponent } from '../../../shared/form/input/input.component';
 import * as moment from 'moment';
-import { UserState } from '../user-state';
 import { Gender, ProfileDto } from '../user';
 import { UserService } from '../user.service';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-edit',
@@ -45,11 +45,11 @@ export class EditPage implements Form, OnSubmit, OnInit {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly userState: UserState,
     private readonly userService: UserService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly route: ActivatedRoute,
+    private readonly store: Store,
   ) {
     const {
       photos,
@@ -57,7 +57,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
       birthday,
       gender,
       description,
-    } = this.userState.data.profile;
+    } = this.store.selectSnapshot(state => state.user.user.profile);
 
     this.form = this.formBuilder.group({
       photos: [photos, Validators.required],

@@ -5,8 +5,8 @@ import { Push, PushObject } from '@ionic-native/push/ngx';
 import { UserService } from './user.service';
 import { Storage } from '@ionic/storage';
 import { NavController, Platform } from '@ionic/angular';
-import { UserState } from './user-state';
 import { storageKeys } from '../../core/storage/storage';
+import { Store } from '@ngxs/store';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +20,8 @@ export class UserPushService {
     private readonly toastService: ToastService,
     private readonly storage: Storage,
     private readonly platform: Platform,
-    private readonly userState: UserState,
     private readonly routerNavigation: NavController,
+    private readonly store: Store,
   ) {
     this.push$ = this.push.init({});
   }
@@ -124,6 +124,6 @@ export class UserPushService {
   }
 
   private getUserId(): number {
-    return this.userState.data.id;
+    return this.store.selectSnapshot(state => state.user.user.id);
   }
 }

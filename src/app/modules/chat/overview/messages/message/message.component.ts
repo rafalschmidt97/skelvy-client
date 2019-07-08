@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ChatMessageState } from '../../../chat';
 import { UserDto } from '../../../../user/user';
+import { ChatMessageState } from '../../../../meeting/meeting';
 
 @Component({
   selector: 'app-message',

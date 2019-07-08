@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
-import { ChatMessageDto } from '../chat/chat';
 import { _ } from '../../core/i18n/translate';
 import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
 import { Router } from '@angular/router';
-import { ChatState } from '../chat/chat-state';
 import { Storage } from '@ionic/storage';
-import { MeetingState } from './meeting-state';
 import { MeetingService } from './meeting.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
-import { GlobalState } from '../../core/state/global-state';
 import { storageKeys } from '../../core/storage/storage';
+import { ChatMessageDto } from './meeting';
+import { Store } from '@ngxs/store';
+import {
+  AddChatMessage,
+  AddChatMessagesToRead,
+  AddMeetingUser,
+  RemoveMeetingUser,
+} from './store/meeting-actions';
 
 @Injectable({
   providedIn: 'root',
@@ -24,11 +28,9 @@ export class MeetingSocketService {
     private readonly toastService: ToastService,
     private readonly router: Router,
     private readonly routerNavigation: NavController,
-    private readonly chatState: ChatState,
-    private readonly meetingState: MeetingState,
     private readonly meetingService: MeetingService,
     private readonly storage: Storage,
-    private readonly globalState: GlobalState,
+    private readonly store: Store,
   ) {}
 
   set socket(socket: HubConnection) {
@@ -48,10 +50,10 @@ export class MeetingSocketService {
     this.userSocket.on(
       'UserSentMeetingChatMessage',
       (message: ChatMessageDto) => {
-        this.chatState.addMessage(message);
+        this.store.dispatch(new AddChatMessage(message));
 
         if (this.router.url !== '/app/chat') {
-          this.globalState.addToRead(1);
+          this.store.dispatch(new AddChatMessagesToRead(1));
         } else {
           this.storage.set(storageKeys.lastMessageDate, message.date);
         }
@@ -63,7 +65,7 @@ export class MeetingSocketService {
     this.userSocket.on('UserJoinedMeeting', data => {
       this.meetingService.findUser(data.userId).subscribe(
         user => {
-          this.meetingState.addUser(user);
+          this.store.dispatch(new AddMeetingUser(user));
           this.toastService.createInformation(
             _('New user has been added to the group'),
           );
@@ -94,8 +96,12 @@ export class MeetingSocketService {
 
   private onUserLeftMeeting() {
     this.userSocket.on('UserLeftMeeting', data => {
-      if (this.meetingState.data.meeting.users.length !== 2) {
-        this.meetingState.removeUser(data.userId);
+      if (
+        this.store.selectSnapshot(
+          state => state.meeting.meetingModel.meeting.users,
+        ).length !== 2
+      ) {
+        this.store.dispatch(new RemoveMeetingUser(data.userId));
       } else {
         this.meetingService.findMeeting().subscribe(
           () => {

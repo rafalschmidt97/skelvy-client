@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
-import { MeetingStateModel } from '../meeting';
-import { MeetingState } from '../meeting-state';
+import { MeetingStateModel } from '../store/meeting-state';
 import { Observable } from 'rxjs';
-import { UserState } from '../../user/user-state';
-import { UserStateModel } from '../../user/user';
-import { GlobalState } from '../../../core/state/global-state';
-import { GlobalStateModel } from '../../../core/state/global';
+import { UserStateModel } from '../../user/store/user-state';
+import { Select } from '@ngxs/store';
 
 @Component({
   selector: 'app-overview',
@@ -13,17 +10,6 @@ import { GlobalStateModel } from '../../../core/state/global';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage {
-  meeting$: Observable<MeetingStateModel>;
-  user$: Observable<UserStateModel>;
-  state$: Observable<GlobalStateModel>;
-
-  constructor(
-    private readonly meetingState: MeetingState,
-    private readonly userState: UserState,
-    private readonly globalState: GlobalState,
-  ) {
-    this.meeting$ = meetingState.data$;
-    this.user$ = userState.data$;
-    this.state$ = globalState.data$;
-  }
+  @Select(state => state.meeting) meeting$: Observable<MeetingStateModel>;
+  @Select(state => state.user) user$: Observable<UserStateModel>;
 }

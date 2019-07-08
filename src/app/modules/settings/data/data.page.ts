@@ -11,7 +11,11 @@ import { Storage } from '@ionic/storage';
 import { SessionService } from '../../../core/auth/session.service';
 import { storageKeys } from '../../../core/storage/storage';
 import { SettingsService } from '../settings.service';
-import { map, switchMap } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { ClearState } from '../../../core/redux/redux';
+import { tap } from 'rxjs/operators';
+import { Connection } from '../../../core/state/global-state';
+import { ChangeConnectionStatus } from '../../../core/state/global-actions';
 
 @Component({
   selector: 'app-data',
@@ -36,6 +40,7 @@ export class DataPage {
     private readonly storage: Storage,
     private readonly sessionService: SessionService,
     private readonly settingsService: SettingsService,
+    private readonly store: Store,
   ) {}
 
   refreshUser() {
@@ -122,33 +127,35 @@ export class DataPage {
     if (!this.loadingData) {
       this.loadingData = true;
       this.loadingService.lock();
+
+      this.clearState();
       await this.clearStorage();
 
-      this.selfService
-        .findSelf()
-        .pipe(
-          switchMap(model => {
-            return this.settingsService.findBlockedUsers().pipe(
-              map(blockedUsers => {
-                return { model, blockedUsers };
-              }),
-            );
-          }),
-        )
-        .subscribe(
-          () => {
-            this.alert.hide();
-            this.loadingService.unlock();
-          },
-          () => {
-            this.alert.hide();
-            this.loadingService.unlock();
-            this.toastService.createError(
-              _('A problem occurred while retrieving new data'),
-            );
-          },
-        );
+      this.selfService.findSelf().subscribe(
+        () => {
+          this.alert.hide();
+          this.loadingService.unlock();
+        },
+        () => {
+          this.alert.hide();
+          this.loadingService.unlock();
+          this.toastService.createError(
+            _('A problem occurred while retrieving new data'),
+          );
+        },
+      );
     }
+  }
+
+  private clearState() {
+    this.store
+      .dispatch(new ClearState())
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTED));
+        }),
+      )
+      .subscribe();
   }
 
   private async clearStorage() {

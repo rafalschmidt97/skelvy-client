@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>{{ 'Meeting' | translate }}</ion-title>
-    <ion-buttons *ngIf="(state$ | async)?.loadingMeeting" slot="end">
+    <ion-buttons *ngIf="(meeting$ | async).loading" slot="end">
       <ion-button [disabled]="true">
         <ion-spinner color="dark" class="small-spinner"></ion-spinner>
       </ion-button>
@@ -11,18 +11,22 @@
 
 <ion-content>
   <app-connection></app-connection>
-  <ng-container *ngIf="meeting$ | async as model; else notFound">
-    <app-found
-      [hidden]="!model.meeting"
-      [meeting]="model.meeting"
-      [user]="user$ | async"
-    ></app-found>
-    <app-searching
-      [hidden]="model.meeting"
-      [request]="model.request"
-    ></app-searching>
+  <ng-container *ngIf="meeting$ | async as meeting">
+    <ng-container *ngIf="meeting.meetingModel as meetingModel; else notFound">
+      <app-found
+        [hidden]="!meetingModel?.meeting"
+        [meeting]="meetingModel.meeting"
+        [user]="(user$ | async).user"
+        [loadingMeeting]="meeting.loading"
+        [messagesToRead]="meeting.toRead"
+      ></app-found>
+      <app-searching
+        [hidden]="meetingModel?.meeting"
+        [request]="meetingModel.request"
+      ></app-searching>
+    </ng-container>
+    <ng-template #notFound>
+      <app-unspecified></app-unspecified>
+    </ng-template>
   </ng-container>
-  <ng-template #notFound>
-    <app-unspecified></app-unspecified>
-  </ng-template>
 </ion-content>

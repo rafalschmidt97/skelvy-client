@@ -3,7 +3,7 @@ import { UserDto } from '../user';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { Modal } from '../../../shared/modal/modal';
 import { Observable } from 'rxjs';
-import { UserState } from '../user-state';
+import { Select } from '@ngxs/store';
 
 @Component({
   selector: 'app-overview',
@@ -13,14 +13,9 @@ import { UserState } from '../user-state';
 export class OverviewPage {
   @ViewChild('details') details: TemplateRef<any>;
   modal: Modal;
-  user$: Observable<UserDto>;
+  @Select(state => state.user.user) user$: Observable<UserDto>;
 
-  constructor(
-    private readonly userState: UserState,
-    private readonly modalService: ModalService,
-  ) {
-    this.user$ = userState.data$;
-  }
+  constructor(private readonly modalService: ModalService) {}
 
   open() {
     this.modal = this.modalService.show(this.details, true);

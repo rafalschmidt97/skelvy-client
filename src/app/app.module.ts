@@ -22,6 +22,15 @@ import { Device } from '@ionic-native/device/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppRate } from '@ionic-native/app-rate/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { NGXS_PLUGINS, NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { environment } from '../environments/environment';
+import { appState, clearState } from './core/redux/redux';
+import { registerReduxDevToolOnDevice } from './core/redux/remote-devtools-proxy';
+
+if (!environment.production) {
+  registerReduxDevToolOnDevice();
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +44,13 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
     IonicModule.forRoot(),
     TranslateModule.forRoot(i18nConfiguration),
     IonicStorageModule.forRoot(),
+    NgxsModule.forRoot(appState, {
+      developmentMode: !environment.production,
+    }),
+    NgxsReduxDevtoolsPluginModule.forRoot({
+      name: 'skelvy',
+      disabled: environment.production,
+    }),
     ModalModule.forRoot(),
   ],
   providers: [
@@ -50,6 +66,11 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
     AppRate,
     SocialSharing,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {
+      provide: NGXS_PLUGINS,
+      useValue: clearState,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ChatMessageDto, ChatMessageRequest } from './chat';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { ChatMessageDto, ChatMessageRequest } from '../meeting/meeting';
 
 @Injectable({
   providedIn: 'root',

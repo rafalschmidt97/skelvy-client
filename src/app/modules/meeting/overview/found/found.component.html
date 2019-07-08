@@ -24,7 +24,7 @@
       (openDetails)="openDetails($event)"
     ></app-profile>
     <app-profile-missing
-      *ngIf="!(state$ | async)?.loadingMeeting; else loadingProfiles"
+      *ngIf="!loadingMeeting; else loadingProfiles"
       [missing]="missingMeetingUsers"
     ></app-profile-missing>
     <ng-template #loadingProfiles>
