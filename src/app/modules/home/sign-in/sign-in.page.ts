@@ -13,7 +13,6 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { Modal } from '../../../shared/modal/modal';
 import { storageKeys } from '../../../core/storage/storage';
-import { GlobalState } from '../../../core/state/global-state';
 
 @Component({
   selector: 'app-sign-in',
@@ -36,7 +35,6 @@ export class SignInPage implements OnInit {
     private readonly storage: Storage,
     private readonly browser: InAppBrowser,
     private readonly modalService: ModalService,
-    private readonly globalState: GlobalState,
   ) {}
 
   ngOnInit() {

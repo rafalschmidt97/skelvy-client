@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserState } from './store/user-state';
 import { Observable, throwError } from 'rxjs';
 import { ProfileRequest, UserDto } from './user';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { Store } from '@ngxs/store';
+import {
+  ChangeUserLoadingStatus,
+  UpdateProfile,
+  UpdateUser,
+} from './store/user-actions';
 
 @Injectable({
   providedIn: 'root',
@@ -12,23 +17,23 @@ import { environment } from '../../../environments/environment';
 export class UserService {
   constructor(
     private readonly http: HttpClient,
-    private readonly userState: UserState,
+    private readonly store: Store,
   ) {}
 
   findUser(markedAsLoading: boolean = false): Observable<UserDto> {
     if (!markedAsLoading) {
-      this.userState.markAsLoading();
+      this.store.dispatch(new ChangeUserLoadingStatus(false));
     }
 
     return this.http
       .get<UserDto>(environment.versionApiUrl + 'users/self')
       .pipe(
         tap(user => {
-          this.userState.updateUser(user);
-          this.userState.markAsLoaded();
+          this.store.dispatch(new UpdateUser(user));
+          this.store.dispatch(new ChangeUserLoadingStatus(true));
         }),
         catchError(error => {
-          this.userState.markAsLoaded();
+          this.store.dispatch(new ChangeUserLoadingStatus(true));
           return throwError(error);
         }),
       );
@@ -48,7 +53,7 @@ export class UserService {
       .put<void>(environment.versionApiUrl + 'users/self/profile', profile)
       .pipe(
         tap(() => {
-          this.userState.updateProfile(profile);
+          this.store.dispatch(new UpdateProfile(profile));
         }),
       );
   }

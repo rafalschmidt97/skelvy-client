@@ -23,7 +23,14 @@ import { MeetingService } from '../../../meeting/meeting.service';
 import { Modal } from '../../../../shared/modal/modal';
 import { ModalService } from '../../../../shared/modal/modal.service';
 import { storageKeys } from '../../../../core/storage/storage';
-import { MeetingState } from '../../../meeting/store/meeting-state';
+import { Store } from '@ngxs/store';
+import {
+  AddChatMessages,
+  MarkChatMessageAsFailed,
+  MarkChatMessageAsSent,
+  RemoveChatMessage,
+  RemoveOldAndAddNewChatMessage,
+} from '../../../meeting/store/meeting-actions';
 
 @Component({
   selector: 'app-messages',
@@ -49,12 +56,15 @@ export class MessagesComponent implements OnInit {
     private readonly storage: Storage,
     private readonly meetingService: MeetingService,
     private readonly chatService: ChatService,
-    private readonly meetingState: MeetingState,
     private readonly modalService: ModalService,
+    private readonly store: Store,
   ) {}
 
   ngOnInit() {
-    if (this.meetingState.data.meeting.messages.length === 20) {
+    if (
+      this.store.selectSnapshot(state => state.meeting.meeting.messages)
+        .length === 20
+    ) {
       this.hasMoreMessages = true;
     }
 
@@ -76,22 +86,13 @@ export class MessagesComponent implements OnInit {
   loadMessages() {
     if (this.hasMoreMessages && !this.isLoading) {
       this.isLoading = true;
-      const firstMessage = this.meetingState.data.meeting.messages[0];
+      const firstMessage = this.store.selectSnapshot(
+        state => state.meeting.meeting.messages,
+      )[0];
 
       this.chatService.findMessages(firstMessage.date).subscribe(
         (messages: ChatMessageDto[]) => {
-          const mergedMessages = [
-            ...messages,
-            ...this.meetingState.data.meeting.messages,
-          ];
-          this.meetingState.updateMessages(mergedMessages);
-
-          if (mergedMessages.length > 0) {
-            this.storage.set(
-              storageKeys.lastMessageDate,
-              mergedMessages[mergedMessages.length - 1].date,
-            );
-          }
+          this.store.dispatch(new AddChatMessages(messages, false));
 
           if (messages.length < 20) {
             this.hasMoreMessages = false;
@@ -124,12 +125,14 @@ export class MessagesComponent implements OnInit {
       sending: true,
     };
 
-    this.meetingState.removeOldAndAddNewMessage(oldMessage, newMessage);
+    this.store.dispatch(
+      new RemoveOldAndAddNewChatMessage(oldMessage, newMessage),
+    );
     this.modal.hide();
 
     this.chatService.sendMessage(newMessage).subscribe(
       () => {
-        this.meetingState.markMessageAsSent(newMessage);
+        this.store.dispatch(new MarkChatMessageAsSent(newMessage));
         this.storage.set(storageKeys.lastMessageDate, newMessage.date);
       },
       (error: HttpErrorResponse) => {
@@ -145,14 +148,14 @@ export class MessagesComponent implements OnInit {
             _('A problem occurred while sending the message'),
           );
         } else {
-          this.meetingState.markMessageAsFailed(newMessage);
+          this.store.dispatch(new MarkChatMessageAsFailed(newMessage));
         }
       },
     );
   }
 
   remove(message: ChatMessageState) {
-    this.meetingState.removeMessage(message);
+    this.store.dispatch(new RemoveChatMessage(message));
     this.modal.hide();
   }
 

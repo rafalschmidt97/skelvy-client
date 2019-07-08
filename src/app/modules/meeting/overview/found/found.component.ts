@@ -13,7 +13,8 @@ import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { HttpErrorResponse } from '@angular/common/http';
 import { storageKeys } from '../../../../core/storage/storage';
-import { MeetingState } from '../../store/meeting-state';
+import { Store } from '@ngxs/store';
+import { UpdateChatMessagesToRead } from '../../store/meeting-actions';
 
 @Component({
   selector: 'app-found',
@@ -40,7 +41,7 @@ export class FoundComponent {
     private readonly meetingService: MeetingService,
     private readonly routerNavigation: NavController,
     private readonly storage: Storage,
-    private readonly meetingState: MeetingState,
+    private readonly store: Store,
   ) {}
 
   get filteredMeetingUsers(): UserDto[] {
@@ -103,8 +104,10 @@ export class FoundComponent {
   showMessages() {
     this.routerNavigation.navigateForward(['/app/chat']).then(() => {
       setTimeout(() => {
-        this.meetingState.setToRead(0);
-        const messages = this.meetingState.data.meeting.messages;
+        this.store.dispatch(new UpdateChatMessagesToRead(0));
+        const messages = this.store.selectSnapshot(
+          state => state.meeting.meeting.messages,
+        );
         if (messages.length > 0) {
           this.storage.set(
             storageKeys.lastMessageDate,

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Connection, GlobalState } from '../../../core/state/global-state';
+import { Connection } from '../../../core/state/global-state';
 import {
   animate,
   state,
@@ -9,6 +8,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { Select } from '@ngxs/store';
 
 @Component({
   selector: 'app-connection',
@@ -36,10 +36,6 @@ import {
   ],
 })
 export class ConnectionComponent {
-  connection$: Observable<Connection>;
+  @Select(x => x.global.connection) connection$: Observable<Connection>;
   connectedStatus = Connection;
-
-  constructor(globalState: GlobalState) {
-    this.connection$ = globalState.data$.pipe(map(x => x.connection));
-  }
 }

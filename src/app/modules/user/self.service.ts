@@ -1,25 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserState, UserStateModel } from './store/user-state';
+import { UserStateModel } from './store/user-state';
 import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { SelfModel } from './self';
-import {
-  MeetingState,
-  MeetingStateModel,
-} from '../meeting/store/meeting-state';
+import { MeetingStateModel } from '../meeting/store/meeting-state';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingService } from '../meeting/meeting.service';
-import { GlobalState } from '../../core/state/global-state';
 import { ChatMessageDto, MeetingStatus } from '../meeting/meeting';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { storageKeys } from '../../core/storage/storage';
+import { SettingsStateModel } from '../settings/store/settings-state';
+import { Store } from '@ngxs/store';
+import { UpdateUser } from './store/user-actions';
 import {
-  SettingsState,
-  SettingsStateModel,
-} from '../settings/store/settings-state';
+  UpdateChatMessagesToRead,
+  UpdateMeeting,
+} from '../meeting/store/meeting-actions';
+import { UpdateBlockedUsers } from '../settings/store/settings-actions';
 
 @Injectable({
   providedIn: 'root',
@@ -27,14 +27,11 @@ import {
 export class SelfService {
   constructor(
     private readonly http: HttpClient,
-    private readonly userState: UserState,
-    private readonly meetingState: MeetingState,
     private readonly meetingService: MeetingService,
-    private readonly globalState: GlobalState,
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
     private readonly authService: AuthService,
-    private readonly settingsState: SettingsState,
+    private readonly store: Store,
   ) {}
 
   findSelf(): Observable<SelfModel> {
@@ -69,7 +66,7 @@ export class SelfService {
       }),
       tap(({ fromStorage }) => {
         if (fromStorage) {
-          this.meetingService.findMeeting(true).subscribe();
+          this.meetingService.findMeeting().subscribe();
         }
       }),
       map(({ model }) => model),
@@ -103,14 +100,14 @@ export class SelfService {
     settings: SettingsStateModel,
     fromStorage: boolean,
   ) {
-    this.userState.updateUser(model.user);
+    this.store.dispatch(new UpdateUser(model.user));
 
     if (model && model.meetingModel) {
-      this.meetingState.updateMeeting(model.meetingModel);
+      this.store.dispatch(new UpdateMeeting(model.meetingModel));
     }
 
     if (settings && settings.blockedUsers) {
-      this.settingsState.updateBlockedUsers(settings.blockedUsers);
+      this.store.dispatch(new UpdateBlockedUsers(settings.blockedUsers));
     }
 
     if (fromStorage) {
@@ -125,16 +122,18 @@ export class SelfService {
           return new Date(message.date) > new Date(lastMessageDate);
         });
 
-        this.meetingState.setToRead(notRedMessages.length);
+        this.store.dispatch(
+          new UpdateChatMessagesToRead(notRedMessages.length),
+        );
       }
-
-      this.meetingState.markAsLoading();
     } else {
       if (
         model.meetingModel &&
         model.meetingModel.status === MeetingStatus.FOUND
       ) {
-        this.meetingState.setToRead(model.meetingModel.messages.length);
+        this.store.dispatch(
+          new UpdateChatMessagesToRead(model.meetingModel.messages.length),
+        );
       }
     }
   }

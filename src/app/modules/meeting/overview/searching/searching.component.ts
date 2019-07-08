@@ -21,8 +21,8 @@ import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
 import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MeetingState } from '../../store/meeting-state';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-searching',
@@ -45,24 +45,24 @@ export class SearchingComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
-    private readonly meetingState: MeetingState,
+    private readonly store: Store,
   ) {}
 
   ngOnInit() {
-    this.statusSubscription = this.meetingState.data$.subscribe(
-      meetingModel => {
+    this.statusSubscription = this.store
+      .select(state => state.meeting)
+      .subscribe(meeting => {
         if (
-          meetingModel.meeting &&
-          meetingModel.meeting.status === MeetingStatus.SEARCHING &&
-          !meetingModel.loading
+          meeting.meeting &&
+          meeting.meeting.status === MeetingStatus.SEARCHING &&
+          !meeting.loading
         ) {
           this.findSuggestions(
-            meetingModel.meeting.request.latitude,
-            meetingModel.meeting.request.longitude,
+            meeting.meeting.request.latitude,
+            meeting.meeting.request.longitude,
           );
         }
-      },
-    );
+      });
   }
 
   ngOnDestroy() {

@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
 import { UserDto } from '../../user/user';
-import { Action, State, StateContext, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Action, State, StateContext } from '@ngxs/store';
 import {
   AddBlockedUser,
   AddBlockedUsers,
@@ -19,7 +17,7 @@ export interface SettingsStateModel {
     blockedUsers: null,
   },
 })
-export class SettingsStateRedux {
+export class SettingsState {
   @Action(UpdateBlockedUsers)
   updateBlockedUsers(
     { getState, setState }: StateContext<SettingsStateModel>,
@@ -66,36 +64,5 @@ export class SettingsStateRedux {
       ...state,
       blockedUsers: state.blockedUsers.filter(x => x.id !== userId),
     });
-  }
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class SettingsState {
-  constructor(private readonly store: Store) {}
-
-  updateBlockedUsers(users: UserDto[]) {
-    this.store.dispatch(new UpdateBlockedUsers(users));
-  }
-
-  addBlockedUsers(users: UserDto[]) {
-    this.store.dispatch(new AddBlockedUsers(users));
-  }
-
-  addBlockedUser(user: UserDto) {
-    this.store.dispatch(new AddBlockedUser(user));
-  }
-
-  removeBlockedUser(userId: number) {
-    this.store.dispatch(new RemoveBlockedUser(userId));
-  }
-
-  get data(): SettingsStateModel {
-    return this.store.selectSnapshot(state => state.settings);
-  }
-
-  get data$(): Observable<SettingsStateModel> {
-    return this.store.select(state => state.settings);
   }
 }

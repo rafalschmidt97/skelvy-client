@@ -1,19 +1,16 @@
-import {
-  UserStateModel,
-  UserStateRedux,
-} from '../../modules/user/store/user-state';
+import { UserStateModel, UserState } from '../../modules/user/store/user-state';
 import {
   MeetingStateModel,
-  MeetingStateRedux,
+  MeetingState,
 } from '../../modules/meeting/store/meeting-state';
 import {
   Connection,
   GlobalStateModel,
-  GlobalStateRedux,
+  GlobalState,
 } from '../state/global-state';
 import {
   SettingsStateModel,
-  SettingsStateRedux,
+  SettingsState,
 } from '../../modules/settings/store/settings-state';
 import { getActionTypeFromInstance } from '@ngxs/store';
 
@@ -24,12 +21,7 @@ export interface AppStateModel {
   settings: SettingsStateModel;
 }
 
-export const appState = [
-  GlobalStateRedux,
-  UserStateRedux,
-  MeetingStateRedux,
-  SettingsStateRedux,
-];
+export const appState = [GlobalState, UserState, MeetingState, SettingsState];
 
 export class ClearState {
   static readonly type = '[App] Clear state';

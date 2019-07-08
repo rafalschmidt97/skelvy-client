@@ -7,10 +7,9 @@ import { Alert } from '../../../shared/alert/alert';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { AlertService } from '../../../shared/alert/alert.service';
 import { LoadingService } from '../../../core/loading/loading.service';
-import { SettingsState } from '../store/settings-state';
 import { SettingsService } from '../settings.service';
-import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-blocked',
@@ -20,7 +19,7 @@ import { Observable } from 'rxjs';
 export class BlockedPage implements OnInit {
   @ViewChild('details') detailsTemplate: TemplateRef<any>;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
-  blockedUsers$: Observable<UserDto[]>;
+  @Select(x => x.settings.blockedUsers) blockedUsers$: Observable<UserDto[]>;
   userForModal: UserDto;
   modal: Modal;
   alert: Alert;
@@ -32,27 +31,27 @@ export class BlockedPage implements OnInit {
 
   constructor(
     private readonly settingsService: SettingsService,
-    private readonly settingsState: SettingsState,
     private readonly modalService: ModalService,
     private readonly alertService: AlertService,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
-  ) {
-    this.blockedUsers$ = settingsState.data$.pipe(map(x => x.blockedUsers));
-  }
+    private readonly store: Store,
+  ) {}
 
   ngOnInit() {
-    if (!this.settingsState.data || !this.settingsState.data.blockedUsers) {
+    const blockedUsers = this.store.selectSnapshot(
+      state => state.settings.blockedUsers,
+    );
+    if (!blockedUsers) {
       this.loadBlockedUsers();
     } else {
       this.loadingBlocked = false;
-      const blockedUsersAmount = this.settingsState.data.blockedUsers.length;
+      const blockedUsersAmount = blockedUsers.length;
       this.page =
         blockedUsersAmount % 10 !== 0
           ? blockedUsersAmount / 10 + 1
           : blockedUsersAmount / 10;
-      this.allBlockedLoaded =
-        this.settingsState.data.blockedUsers.length % 10 !== 0;
+      this.allBlockedLoaded = blockedUsers.length % 10 !== 0;
     }
   }
 

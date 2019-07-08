@@ -3,8 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { UserDto } from '../user/user';
-import { SettingsState } from './store/settings-state';
 import { tap } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import {
+  AddBlockedUser,
+  AddBlockedUsers,
+  RemoveBlockedUser,
+  UpdateBlockedUsers,
+} from './store/settings-actions';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +18,7 @@ import { tap } from 'rxjs/operators';
 export class SettingsService {
   constructor(
     private readonly http: HttpClient,
-    private readonly settingsState: SettingsState,
+    private readonly store: Store,
   ) {}
 
   findBlockedUsers(page: number = 1): Observable<UserDto[]> {
@@ -23,9 +29,9 @@ export class SettingsService {
       .pipe(
         tap(users => {
           if (page === 1) {
-            this.settingsState.updateBlockedUsers(users);
+            this.store.dispatch(new UpdateBlockedUsers(users));
           } else {
-            this.settingsState.addBlockedUsers(users);
+            this.store.dispatch(new AddBlockedUsers(users));
           }
         }),
       );
@@ -38,17 +44,17 @@ export class SettingsService {
       })
       .pipe(
         tap(() => {
-          this.settingsState.addBlockedUser(user);
+          this.store.dispatch(new AddBlockedUser(user));
         }),
       );
   }
 
-  removeBlockedUser(id: number): Observable<void> {
+  removeBlockedUser(userId: number): Observable<void> {
     return this.http
-      .delete<void>(`${environment.versionApiUrl}users/self/blocked/${id}`)
+      .delete<void>(`${environment.versionApiUrl}users/self/blocked/${userId}`)
       .pipe(
         tap(() => {
-          this.settingsState.removeBlockedUser(id);
+          this.store.dispatch(new RemoveBlockedUser(userId));
         }),
       );
   }

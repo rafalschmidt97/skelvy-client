@@ -12,10 +12,11 @@ import { ToastService } from '../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting/meeting-socket.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
-import { UserState } from './store/user-state';
 import { MeetingService } from '../meeting/meeting.service';
-import { GlobalState } from '../../core/state/global-state';
+import { Connection } from '../../core/state/global-state';
 import { tap } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { ChangeConnectionStatus } from '../../core/state/global-actions';
 
 @Injectable({
   providedIn: 'root',
@@ -33,8 +34,7 @@ export class UserSocketService {
     private readonly meetingService: MeetingService,
     private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
-    private readonly userState: UserState,
-    private readonly globalState: GlobalState,
+    private readonly store: Store,
   ) {
     this.socket = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'users', {
@@ -79,7 +79,9 @@ export class UserSocketService {
       if (!this.disconnected) {
         this.reconnectToSocket();
       } else {
-        this.globalState.markConnectionAsDisconnected();
+        this.store.dispatch(
+          new ChangeConnectionStatus(Connection.DISCONNECTED),
+        );
       }
     });
   }
@@ -111,12 +113,12 @@ export class UserSocketService {
   }
 
   private connectToSocket() {
-    this.globalState.markConnectionAsConnecting();
+    this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTING));
 
     this.socket
       .start()
       .then(() => {
-        this.globalState.markConnectionAsConnected();
+        this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTED));
         this.disconnected = false;
       })
       .catch(error => {
@@ -141,7 +143,7 @@ export class UserSocketService {
         .start()
         .then(() => {
           this.reconnectFailedAttempts = 0;
-          this.globalState.markConnectionAsConnected();
+          this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTED));
           this.disconnected = false;
           this.meetingService.findMeeting().subscribe();
         })
@@ -149,9 +151,11 @@ export class UserSocketService {
           this.reconnectFailedAttempts++;
 
           if (this.reconnectFailedAttempts === 1) {
-            this.globalState.markConnectionAsReconnecting();
+            this.store.dispatch(
+              new ChangeConnectionStatus(Connection.RECONNECTING),
+            );
           } else if (this.reconnectFailedAttempts === 5) {
-            this.globalState.markConnectionAsWaiting();
+            this.store.dispatch(new ChangeConnectionStatus(Connection.WAITING));
           }
 
           if (error.statusCode === 401) {

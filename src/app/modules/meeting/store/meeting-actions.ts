@@ -2,12 +2,9 @@ import { UserDto } from '../../user/user';
 import { MeetingModelState } from './meeting-state';
 import { ChatMessageState } from '../meeting';
 
-export class MarkMeetingAsLoading {
-  static readonly type = '[Meeting] Mark meeting as loading';
-}
-
-export class MarkMeetingAsLoaded {
-  static readonly type = '[Meeting] Mark meeting as loaded';
+export class ChangeMeetingLoadingStatus {
+  static readonly type = '[Meeting] Change meeting loading status';
+  constructor(public status: boolean) {}
 }
 
 export class AddMeetingUser {
@@ -38,6 +35,11 @@ export class UpdateChatMessagesToRead {
 export class AddChatMessage {
   static readonly type = '[Chat] Add message';
   constructor(public message: ChatMessageState) {}
+}
+
+export class AddChatMessages {
+  static readonly type = '[Chat] Add messages';
+  constructor(public messages: ChatMessageState[], public end = true) {}
 }
 
 export class RemoveChatMessage {

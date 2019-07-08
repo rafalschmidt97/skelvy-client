@@ -14,7 +14,8 @@ import { SettingsService } from '../settings.service';
 import { Store } from '@ngxs/store';
 import { ClearState } from '../../../core/redux/redux';
 import { tap } from 'rxjs/operators';
-import { GlobalState } from '../../../core/state/global-state';
+import { Connection } from '../../../core/state/global-state';
+import { ChangeConnectionStatus } from '../../../core/state/global-actions';
 
 @Component({
   selector: 'app-data',
@@ -40,7 +41,6 @@ export class DataPage {
     private readonly sessionService: SessionService,
     private readonly settingsService: SettingsService,
     private readonly store: Store,
-    private readonly globalState: GlobalState,
   ) {}
 
   refreshUser() {
@@ -152,7 +152,7 @@ export class DataPage {
       .dispatch(new ClearState())
       .pipe(
         tap(() => {
-          this.globalState.markConnectionAsConnected();
+          this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTED));
         }),
       )
       .subscribe();

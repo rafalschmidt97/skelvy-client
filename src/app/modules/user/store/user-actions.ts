@@ -1,11 +1,8 @@
 import { ProfileDto, UserDto } from '../user';
 
-export class MarkUserAsLoading {
-  static readonly type = '[User] Mark user as loading';
-}
-
-export class MarkUserAsLoaded {
-  static readonly type = '[User] Mark user as loaded';
+export class ChangeUserLoadingStatus {
+  static readonly type = '[User] Change user loading status';
+  constructor(public status: boolean) {}
 }
 
 export class UpdateProfile {
