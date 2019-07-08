@@ -57,7 +57,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
       birthday,
       gender,
       description,
-    } = this.userState.data.profile;
+    } = this.userState.data.user.profile;
 
     this.form = this.formBuilder.group({
       photos: [photos, Validators.required],

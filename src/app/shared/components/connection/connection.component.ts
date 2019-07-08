@@ -40,8 +40,6 @@ export class ConnectionComponent {
   connectedStatus = Connection;
 
   constructor(globalState: GlobalState) {
-    this.connection$ = globalState.data$.pipe(
-      map(x => (x && x.connection ? x.connection : null)),
-    );
+    this.connection$ = globalState.data$.pipe(map(x => x.connection));
   }
 }

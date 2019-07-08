@@ -236,7 +236,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
           });
 
           const userAge = moment().diff(
-            this.userState.data.profile.birthday,
+            this.userState.data.user.profile.birthday,
             'years',
           );
 

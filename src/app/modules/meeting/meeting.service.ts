@@ -11,14 +11,12 @@ import {
   MeetingStatus,
   MeetingSuggestionsModel,
 } from './meeting';
-import { ChatState } from '../chat/store/chat-state';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { GlobalState } from '../../core/state/global-state';
 import { Router } from '@angular/router';
 import { storageKeys } from '../../core/storage/storage';
 import { UserDto } from '../user/user';
-import { isEqual } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +25,6 @@ export class MeetingService {
   constructor(
     private readonly http: HttpClient,
     private readonly meetingState: MeetingState,
-    private readonly chatState: ChatState,
     private readonly globalState: GlobalState,
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
@@ -39,7 +36,7 @@ export class MeetingService {
     mergeExisting: boolean = true,
   ): Observable<MeetingModel> {
     if (!markedAsLoading) {
-      this.globalState.markMeetingAsLoading();
+      this.meetingState.markAsLoading();
     }
 
     return this.http
@@ -50,28 +47,33 @@ export class MeetingService {
         tap(async model => {
           if (this.isSameMeeting(model)) {
             if (mergeExisting) {
-              await this.initializeChatWithExistingChatMessages(model);
-              this.globalState.markMeetingAsLoaded();
-              this.initializeMeetingWithMergedModel(model);
+              this.meetingState.markAsLoaded();
+              this.initializeMeetingModel(
+                model,
+                await this.initializeChatWithExistingChatMessages(model),
+              );
             } else {
-              await this.initializeFreshChat(model);
-              this.globalState.markMeetingAsLoaded();
-              this.initializeFreshMeetingModel(model);
+              this.meetingState.markAsLoaded();
+              this.initializeMeetingModel(
+                model,
+                await this.initializeFreshChat(model),
+              );
             }
           } else {
             if (model.status === MeetingStatus.FOUND) {
-              await this.initializeFreshChat(model);
-              this.globalState.markMeetingAsLoaded();
-              this.initializeFreshMeetingModel(model);
+              this.meetingState.markAsLoaded();
+              this.initializeMeetingModel(
+                model,
+                await this.initializeFreshChat(model),
+              );
             } else {
-              this.clearChat();
-              this.globalState.markMeetingAsLoaded();
-              this.initializeFreshMeetingModel(model);
+              this.meetingState.markAsLoaded();
+              this.initializeMeetingModel(model, null);
             }
           }
         }),
         catchError(error => {
-          this.globalState.markMeetingAsLoaded();
+          this.meetingState.markAsLoaded();
 
           if (error instanceof HttpErrorResponse && error.status === 404) {
             this.clearMeeting();
@@ -87,8 +89,7 @@ export class MeetingService {
       .delete<void>(environment.versionApiUrl + 'meetings/self')
       .pipe(
         tap(() => {
-          this.meetingState.set(null);
-          this.chatState.set(null);
+          this.meetingState.updateMeeting(null);
           this.storage.remove(storageKeys.lastMessageDate);
         }),
       );
@@ -106,7 +107,7 @@ export class MeetingService {
       .delete<void>(environment.versionApiUrl + 'users/self/request')
       .pipe(
         tap(() => {
-          this.meetingState.set(null);
+          this.meetingState.updateMeeting(null);
         }),
       );
   }
@@ -148,21 +149,21 @@ export class MeetingService {
   }
 
   clearMeeting() {
-    this.meetingState.set(null);
-    this.clearChat();
+    this.meetingState.updateMeeting(null);
+    this.meetingState.setToRead(0);
   }
 
   private isSameMeeting(model): boolean {
     return (
-      this.meetingState.data &&
+      this.meetingState.data.meeting &&
       model.status === MeetingStatus.FOUND &&
-      this.meetingState.data.status === MeetingStatus.FOUND &&
-      model.meeting.id === this.meetingState.data.meeting.id
+      this.meetingState.data.meeting.status === MeetingStatus.FOUND &&
+      model.meeting.id === this.meetingState.data.meeting.meeting.id
     );
   }
 
   private async initializeChatWithExistingChatMessages(model: MeetingModel) {
-    const existingMessages = this.chatState.data.messages;
+    const existingMessages = this.meetingState.data.meeting.messages;
     const newMessages = model.messages.filter(message1 => {
       return (
         existingMessages.filter(message2 => {
@@ -177,13 +178,10 @@ export class MeetingService {
     });
 
     if (newMessages.length !== 20) {
-      const messages = [...this.chatState.data.messages, ...newMessages];
-
-      if (newMessages.length > 0) {
-        this.chatState.set({
-          messages,
-        });
-      }
+      const messages = [
+        ...this.meetingState.data.meeting.messages,
+        ...newMessages,
+      ];
 
       if (this.router.url !== '/app/chat') {
         const lastMessageDate = await this.storage.get(
@@ -193,20 +191,18 @@ export class MeetingService {
           return new Date(message.date) > new Date(lastMessageDate);
         });
 
-        this.globalState.setToRead(notRedMessages.length);
+        this.meetingState.setToRead(notRedMessages.length);
       } else {
         this.storage.set(
           storageKeys.lastMessageDate,
           messages[messages.length - 1].date,
         );
       }
-    } else {
-      this.chatState.set({
-        messages: newMessages,
-      });
 
+      return messages;
+    } else {
       if (this.router.url !== '/app/chat') {
-        this.globalState.setToRead(newMessages.length);
+        this.meetingState.setToRead(newMessages.length);
       } else {
         if (newMessages.length > 0) {
           this.storage.set(
@@ -214,6 +210,7 @@ export class MeetingService {
             newMessages[newMessages.length - 1].date,
           );
         }
+        return newMessages;
       }
     }
   }
@@ -221,12 +218,8 @@ export class MeetingService {
   private async initializeFreshChat(model: MeetingModel) {
     await this.storage.remove(storageKeys.lastMessageDate);
 
-    this.chatState.set({
-      messages: model.messages,
-    });
-
     if (this.router.url !== '/app/chat') {
-      this.globalState.setToRead(model.messages.length);
+      this.meetingState.setToRead(model.messages.length);
     } else {
       if (model.messages.length > 0) {
         this.storage.set(
@@ -235,32 +228,16 @@ export class MeetingService {
         );
       }
     }
+
+    return model.messages;
   }
 
-  private initializeMeetingWithMergedModel(model) {
-    if (
-      !isEqual(model.meeting, this.meetingState.data.meeting) ||
-      !isEqual(model.request, this.meetingState.data.request)
-    ) {
-      this.meetingState.set({
-        status: model.status,
-        meeting: model.meeting,
-        request: model.request,
-      });
-    }
-  }
-
-  private initializeFreshMeetingModel(model) {
-    this.meetingState.set({
+  private initializeMeetingModel(model, messages) {
+    this.meetingState.updateMeeting({
       status: model.status,
       meeting: model.meeting,
       request: model.request,
+      messages,
     });
-  }
-
-  private clearChat() {
-    this.chatState.set(null);
-    this.globalState.setToRead(0);
-    this.storage.remove(storageKeys.lastMessageDate);
   }
 }

@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ChatMessageDto } from '../chat/chat';
 import { _ } from '../../core/i18n/translate';
 import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
 import { Router } from '@angular/router';
-import { ChatState } from '../chat/store/chat-state';
 import { Storage } from '@ionic/storage';
 import { MeetingState } from './store/meeting-state';
 import { MeetingService } from './meeting.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
-import { GlobalState } from '../../core/state/global-state';
 import { storageKeys } from '../../core/storage/storage';
+import { ChatMessageDto } from './meeting';
 
 @Injectable({
   providedIn: 'root',
@@ -24,11 +22,9 @@ export class MeetingSocketService {
     private readonly toastService: ToastService,
     private readonly router: Router,
     private readonly routerNavigation: NavController,
-    private readonly chatState: ChatState,
     private readonly meetingState: MeetingState,
     private readonly meetingService: MeetingService,
     private readonly storage: Storage,
-    private readonly globalState: GlobalState,
   ) {}
 
   set socket(socket: HubConnection) {
@@ -48,10 +44,10 @@ export class MeetingSocketService {
     this.userSocket.on(
       'UserSentMeetingChatMessage',
       (message: ChatMessageDto) => {
-        this.chatState.addMessage(message);
+        this.meetingState.addMessage(message);
 
         if (this.router.url !== '/app/chat') {
-          this.globalState.addToRead(1);
+          this.meetingState.addToRead(1);
         } else {
           this.storage.set(storageKeys.lastMessageDate, message.date);
         }
@@ -94,7 +90,7 @@ export class MeetingSocketService {
 
   private onUserLeftMeeting() {
     this.userSocket.on('UserLeftMeeting', data => {
-      if (this.meetingState.data.meeting.users.length !== 2) {
+      if (this.meetingState.data.meeting.meeting.users.length !== 2) {
         this.meetingState.removeUser(data.userId);
       } else {
         this.meetingService.findMeeting().subscribe(

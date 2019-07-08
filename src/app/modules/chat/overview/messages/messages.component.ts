@@ -6,11 +6,13 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ChatMessageDto, ChatMessageState } from '../../chat';
-import { MeetingDto } from '../../../meeting/meeting';
+import {
+  ChatMessageDto,
+  ChatMessageState,
+  MeetingDto,
+} from '../../../meeting/meeting';
 import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
-import { ChatState } from '../../store/chat-state';
 import { ChatService } from '../../chat.service';
 import { Storage } from '@ionic/storage';
 import { ToastService } from '../../../../core/toast/toast.service';
@@ -21,6 +23,7 @@ import { MeetingService } from '../../../meeting/meeting.service';
 import { Modal } from '../../../../shared/modal/modal';
 import { ModalService } from '../../../../shared/modal/modal.service';
 import { storageKeys } from '../../../../core/storage/storage';
+import { MeetingState } from '../../../meeting/store/meeting-state';
 
 @Component({
   selector: 'app-messages',
@@ -46,12 +49,12 @@ export class MessagesComponent implements OnInit {
     private readonly storage: Storage,
     private readonly meetingService: MeetingService,
     private readonly chatService: ChatService,
-    private readonly chatState: ChatState,
+    private readonly meetingState: MeetingState,
     private readonly modalService: ModalService,
   ) {}
 
   ngOnInit() {
-    if (this.chatState.data.messages.length === 20) {
+    if (this.meetingState.data.meeting.messages.length === 20) {
       this.hasMoreMessages = true;
     }
 
@@ -73,12 +76,15 @@ export class MessagesComponent implements OnInit {
   loadMessages() {
     if (this.hasMoreMessages && !this.isLoading) {
       this.isLoading = true;
-      const firstMessage = this.chatState.data.messages[0];
+      const firstMessage = this.meetingState.data.meeting.messages[0];
 
       this.chatService.findMessages(firstMessage.date).subscribe(
         (messages: ChatMessageDto[]) => {
-          const mergedMessages = [...messages, ...this.chatState.data.messages];
-          this.chatState.setMessages(mergedMessages);
+          const mergedMessages = [
+            ...messages,
+            ...this.meetingState.data.meeting.messages,
+          ];
+          this.meetingState.updateMessages(mergedMessages);
 
           if (mergedMessages.length > 0) {
             this.storage.set(
@@ -118,12 +124,12 @@ export class MessagesComponent implements OnInit {
       sending: true,
     };
 
-    this.chatState.removeOldAndAddNew(oldMessage, newMessage);
+    this.meetingState.removeOldAndAddNewMessage(oldMessage, newMessage);
     this.modal.hide();
 
     this.chatService.sendMessage(newMessage).subscribe(
       () => {
-        this.chatState.markAsSent(newMessage);
+        this.meetingState.markMessageAsSent(newMessage);
         this.storage.set(storageKeys.lastMessageDate, newMessage.date);
       },
       (error: HttpErrorResponse) => {
@@ -139,14 +145,14 @@ export class MessagesComponent implements OnInit {
             _('A problem occurred while sending the message'),
           );
         } else {
-          this.chatState.markAsFailed(newMessage);
+          this.meetingState.markMessageAsFailed(newMessage);
         }
       },
     );
   }
 
   remove(message: ChatMessageState) {
-    this.chatState.removeMessage(message);
+    this.meetingState.removeMessage(message);
     this.modal.hide();
   }
 

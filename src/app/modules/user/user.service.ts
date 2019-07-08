@@ -5,7 +5,6 @@ import { Observable, throwError } from 'rxjs';
 import { ProfileRequest, UserDto } from './user';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { GlobalState } from '../../core/state/global-state';
 
 @Injectable({
   providedIn: 'root',
@@ -14,23 +13,22 @@ export class UserService {
   constructor(
     private readonly http: HttpClient,
     private readonly userState: UserState,
-    private readonly globalState: GlobalState,
   ) {}
 
   findUser(markedAsLoading: boolean = false): Observable<UserDto> {
     if (!markedAsLoading) {
-      this.globalState.markUserAsLoading();
+      this.userState.markAsLoading();
     }
 
     return this.http
       .get<UserDto>(environment.versionApiUrl + 'users/self')
       .pipe(
         tap(user => {
-          this.userState.set(user);
-          this.globalState.markUserAsLoaded();
+          this.userState.updateUser(user);
+          this.userState.markAsLoaded();
         }),
         catchError(error => {
-          this.globalState.markUserAsLoaded();
+          this.userState.markAsLoaded();
           return throwError(error);
         }),
       );

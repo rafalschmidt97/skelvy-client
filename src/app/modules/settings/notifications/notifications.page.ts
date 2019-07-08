@@ -29,7 +29,7 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
     userState: UserState,
     platform: Platform,
   ) {
-    this.userId = userState.data.id;
+    this.userId = userState.data.user.id;
     this.platform = platform.is('android') ? 'android' : 'ios';
 
     this.form = this.formBuilder.group({

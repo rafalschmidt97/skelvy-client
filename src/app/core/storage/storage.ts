@@ -3,7 +3,6 @@ export const storageKeys = {
   signInMethod: 'sign-in-method',
   userState: 'user-state',
   meetingState: 'meeting-state',
-  chatState: 'chat-state',
   settingsState: 'settings-state',
   push: 'push',
   pushTopicUser: 'push-topic-user',

@@ -23,7 +23,7 @@ export class SettingsService {
       .pipe(
         tap(users => {
           if (page === 1) {
-            this.settingsState.setBlockedUsers(users);
+            this.settingsState.updateBlockedUsers(users);
           } else {
             this.settingsState.addBlockedUsers(users);
           }

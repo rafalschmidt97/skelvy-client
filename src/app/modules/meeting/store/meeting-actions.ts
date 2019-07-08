@@ -1,5 +1,14 @@
 import { UserDto } from '../../user/user';
-import { MeetingStateModel } from './meeting-state';
+import { MeetingModelState } from './meeting-state';
+import { ChatMessageState } from '../meeting';
+
+export class MarkMeetingAsLoading {
+  static readonly type = '[Meeting] Mark meeting as loading';
+}
+
+export class MarkMeetingAsLoaded {
+  static readonly type = '[Meeting] Mark meeting as loaded';
+}
 
 export class AddMeetingUser {
   static readonly type = '[Meeting] Add user';
@@ -11,7 +20,50 @@ export class RemoveMeetingUser {
   constructor(public userId: number) {}
 }
 
-export class SetMeeting {
-  static readonly type = '[Meeting] Set meeting';
-  constructor(public model: MeetingStateModel) {}
+export class UpdateMeeting {
+  static readonly type = '[Meeting] Update meeting';
+  constructor(public model: MeetingModelState) {}
+}
+
+export class AddChatMessagesToRead {
+  static readonly type = '[Chat] Add chat messages to read';
+  constructor(public amount: number) {}
+}
+
+export class UpdateChatMessagesToRead {
+  static readonly type = '[Chat] Update chat messages to read';
+  constructor(public amount: number) {}
+}
+
+export class AddChatMessage {
+  static readonly type = '[Chat] Add message';
+  constructor(public message: ChatMessageState) {}
+}
+
+export class RemoveChatMessage {
+  static readonly type = '[Chat] Remove message';
+  constructor(public message: ChatMessageState) {}
+}
+
+export class RemoveOldAndAddNewChatMessage {
+  static readonly type = '[Chat] Remove old and add new message';
+  constructor(
+    public oldMessage: ChatMessageState,
+    public newMessage: ChatMessageState,
+  ) {}
+}
+
+export class MarkChatMessageAsSent {
+  static readonly type = '[Chat] Mark chat message as sent';
+  constructor(public message: ChatMessageState) {}
+}
+
+export class MarkChatMessageAsFailed {
+  static readonly type = '[Chat] Mark chat message as failed';
+  constructor(public message: ChatMessageState) {}
+}
+
+export class UpdateChatMessages {
+  static readonly type = '[Chat] Update chat messages';
+  constructor(public messages: ChatMessageState[]) {}
 }

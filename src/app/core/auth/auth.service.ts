@@ -1,20 +1,17 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { HttpClient } from '@angular/common/http';
-import { UserState } from '../../modules/user/store/user-state';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { MeetingState } from '../../modules/meeting/store/meeting-state';
 import { Storage } from '@ionic/storage';
-import { ChatState } from '../../modules/chat/store/chat-state';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthDto, TokenDto } from './auth';
 import { storageKeys } from '../storage/storage';
-import { GlobalState } from '../state/global-state';
-import { SettingsState } from '../../modules/settings/store/settings-state';
+import { Store } from '@ngxs/store';
+import { ClearState } from '../redux/redux';
 
 @Injectable({
   providedIn: 'root',
@@ -25,14 +22,10 @@ export class AuthService {
   constructor(
     private readonly http: HttpClient,
     private readonly sessionService: SessionService,
-    private readonly userState: UserState,
-    private readonly meetingState: MeetingState,
-    private readonly chatState: ChatState,
-    private readonly globalState: GlobalState,
-    private readonly settingsState: SettingsState,
     private readonly storage: Storage,
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
+    private readonly store: Store,
   ) {
     this.jwt = new JwtHelperService();
   }
@@ -137,12 +130,8 @@ export class AuthService {
   }
 
   async logoutWithoutRequest() {
+    this.store.dispatch(new ClearState());
     await this.sessionService.removeSession();
-    this.globalState.set(null);
-    this.userState.set(null);
-    this.meetingState.set(null);
-    this.chatState.set(null);
-    this.settingsState.set(null);
     await this.storage.remove(storageKeys.lastMessageDate);
 
     const method = await this.storage.get(storageKeys.signInMethod);
@@ -159,7 +148,7 @@ export class AuthService {
 
     await this.storage.remove(storageKeys.userState);
     await this.storage.remove(storageKeys.meetingState);
-    await this.storage.remove(storageKeys.chatState);
+    await this.storage.remove(storageKeys.settingsState);
   }
 
   private getToken(): Promise<TokenDto> {

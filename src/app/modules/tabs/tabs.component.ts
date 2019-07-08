@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ChatState } from '../chat/store/chat-state';
 import { UserState } from '../user/store/user-state';
 import { Storage } from '@ionic/storage';
 import { GlobalState } from '../../core/state/global-state';
@@ -21,7 +20,6 @@ export class TabsComponent implements OnInit {
 
   constructor(
     private readonly meetingState: MeetingState,
-    private readonly chatState: ChatState,
     private readonly userState: UserState,
     private readonly globalState: GlobalState,
     private readonly settingsState: SettingsState,
@@ -31,27 +29,16 @@ export class TabsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.globalState.data$.subscribe(state => {
-      if (state) {
-        this.messagesToRead = state.toRead;
-      }
-    });
-
     this.userState.data$.subscribe(async user => {
-      await this.storage.set(storageKeys.userState, user);
+      if (!user.loading) {
+        await this.storage.set(storageKeys.userState, user);
+      }
     });
 
     this.meetingState.data$.subscribe(async meeting => {
-      const state = this.globalState.data;
-      if (state && !state.loadingMeeting) {
+      this.messagesToRead = meeting.toRead;
+      if (!meeting.loading) {
         await this.storage.set(storageKeys.meetingState, meeting);
-      }
-    });
-
-    this.chatState.data$.subscribe(async chat => {
-      const state = this.globalState.data;
-      if (state && !state.loadingMeeting) {
-        await this.storage.set(storageKeys.meetingState, chat);
       }
     });
 

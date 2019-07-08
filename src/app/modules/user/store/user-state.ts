@@ -1,19 +1,45 @@
 import { Injectable } from '@angular/core';
-import { ProfileDto } from '../user';
+import { ProfileDto, UserDto } from '../user';
 import { Action, State, StateContext, Store } from '@ngxs/store';
-import { SetUser, UpdateProfile } from './user-actions';
 import { Observable } from 'rxjs';
+import {
+  MarkUserAsLoaded,
+  MarkUserAsLoading,
+  UpdateProfile,
+  UpdateUser,
+} from './user-actions';
 
 export interface UserStateModel {
-  id: number;
-  profile: ProfileDto;
+  loading: boolean;
+  user: UserDto;
 }
 
 @State<UserStateModel>({
   name: 'user',
-  defaults: null,
+  defaults: {
+    loading: false,
+    user: null,
+  },
 })
 export class UserStateRedux {
+  @Action(MarkUserAsLoading)
+  markUserAsLoading({ getState, setState }: StateContext<UserStateModel>) {
+    const state = getState();
+    setState({
+      ...state,
+      loading: true,
+    });
+  }
+
+  @Action(MarkUserAsLoaded)
+  markUserAsLoaded({ getState, setState }: StateContext<UserStateModel>) {
+    const state = getState();
+    setState({
+      ...state,
+      loading: false,
+    });
+  }
+
   @Action(UpdateProfile)
   updateProfile(
     { getState, setState }: StateContext<UserStateModel>,
@@ -22,13 +48,23 @@ export class UserStateRedux {
     const state = getState();
     setState({
       ...state,
-      profile,
+      user: {
+        ...state.user,
+        profile,
+      },
     });
   }
 
-  @Action(SetUser)
-  set({ setState }: StateContext<UserStateModel>, { model }: SetUser) {
-    setState(model);
+  @Action(UpdateUser)
+  updateUser(
+    { getState, setState }: StateContext<UserStateModel>,
+    { user }: UpdateUser,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      user,
+    });
   }
 }
 
@@ -38,12 +74,20 @@ export class UserStateRedux {
 export class UserState {
   constructor(private readonly store: Store) {}
 
+  markAsLoading() {
+    this.store.dispatch(new MarkUserAsLoading());
+  }
+
+  markAsLoaded() {
+    this.store.dispatch(new MarkUserAsLoaded());
+  }
+
   updateProfile(profile: ProfileDto) {
     this.store.dispatch(new UpdateProfile(profile));
   }
 
-  set(model: UserStateModel) {
-    this.store.dispatch(new SetUser(model));
+  updateUser(user: UserDto) {
+    this.store.dispatch(new UpdateUser(user));
   }
 
   get data(): UserStateModel {

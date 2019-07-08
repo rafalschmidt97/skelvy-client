@@ -6,8 +6,7 @@ import {
   AddBlockedUser,
   AddBlockedUsers,
   RemoveBlockedUser,
-  SetBlockedUsers,
-  SetSettings,
+  UpdateBlockedUsers,
 } from './settings-actions';
 
 export interface SettingsStateModel {
@@ -16,13 +15,15 @@ export interface SettingsStateModel {
 
 @State<SettingsStateModel>({
   name: 'settings',
-  defaults: null,
+  defaults: {
+    blockedUsers: null,
+  },
 })
 export class SettingsStateRedux {
-  @Action(SetBlockedUsers)
-  setBlockedUsers(
+  @Action(UpdateBlockedUsers)
+  updateBlockedUsers(
     { getState, setState }: StateContext<SettingsStateModel>,
-    { users }: SetBlockedUsers,
+    { users }: UpdateBlockedUsers,
   ) {
     const state = getState();
     setState({
@@ -66,11 +67,6 @@ export class SettingsStateRedux {
       blockedUsers: state.blockedUsers.filter(x => x.id !== userId),
     });
   }
-
-  @Action(SetSettings)
-  set({ setState }: StateContext<SettingsStateModel>, { model }: SetSettings) {
-    setState(model);
-  }
 }
 
 @Injectable({
@@ -79,8 +75,8 @@ export class SettingsStateRedux {
 export class SettingsState {
   constructor(private readonly store: Store) {}
 
-  setBlockedUsers(users: UserDto[]) {
-    this.store.dispatch(new SetBlockedUsers(users));
+  updateBlockedUsers(users: UserDto[]) {
+    this.store.dispatch(new UpdateBlockedUsers(users));
   }
 
   addBlockedUsers(users: UserDto[]) {
@@ -93,10 +89,6 @@ export class SettingsState {
 
   removeBlockedUser(userId: number) {
     this.store.dispatch(new RemoveBlockedUser(userId));
-  }
-
-  set(model: SettingsStateModel) {
-    this.store.dispatch(new SetSettings(model));
   }
 
   get data(): SettingsStateModel {

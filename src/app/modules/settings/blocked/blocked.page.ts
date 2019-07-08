@@ -38,9 +38,7 @@ export class BlockedPage implements OnInit {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
   ) {
-    this.blockedUsers$ = settingsState.data$.pipe(
-      map(x => (x && x.blockedUsers ? x.blockedUsers : null)),
-    );
+    this.blockedUsers$ = settingsState.data$.pipe(map(x => x.blockedUsers));
   }
 
   ngOnInit() {

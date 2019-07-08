@@ -23,7 +23,6 @@ import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MeetingState } from '../../store/meeting-state';
 import { Subscription } from 'rxjs';
-import { GlobalState } from '../../../../core/state/global-state';
 
 @Component({
   selector: 'app-searching',
@@ -47,19 +46,23 @@ export class SearchingComponent implements OnInit, OnDestroy {
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
     private readonly meetingState: MeetingState,
-    private readonly globalState: GlobalState,
   ) {}
 
   ngOnInit() {
-    this.statusSubscription = this.meetingState.data$.subscribe(model => {
-      if (
-        model &&
-        model.status === MeetingStatus.SEARCHING &&
-        !this.globalState.data.loadingMeeting
-      ) {
-        this.findSuggestions(model.request.latitude, model.request.longitude);
-      }
-    });
+    this.statusSubscription = this.meetingState.data$.subscribe(
+      meetingModel => {
+        if (
+          meetingModel.meeting &&
+          meetingModel.meeting.status === MeetingStatus.SEARCHING &&
+          !meetingModel.loading
+        ) {
+          this.findSuggestions(
+            meetingModel.meeting.request.latitude,
+            meetingModel.meeting.request.longitude,
+          );
+        }
+      },
+    );
   }
 
   ngOnDestroy() {

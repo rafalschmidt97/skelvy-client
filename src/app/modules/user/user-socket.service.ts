@@ -66,27 +66,20 @@ export class UserSocketService {
     if (this.socket.state === HubConnectionState.Connected) {
       this.disconnected = true;
 
-      this.socket
-        .stop()
-        .then(() => {
-          this.globalState.disconnect();
-        })
-        .catch(() => {
-          this.toastService.createError(
-            _('A problem occurred while disconnecting from the server'),
-          );
-        });
+      this.socket.stop().catch(() => {
+        this.toastService.createError(
+          _('A problem occurred while disconnecting from the server'),
+        );
+      });
     }
   }
 
   private onClose() {
     this.socket.onclose(() => {
       if (!this.disconnected) {
-        this.globalState.reconnect();
         this.reconnectToSocket();
       } else {
-        this.globalState.disconnect();
-        this.disconnected = true;
+        this.globalState.markConnectionAsDisconnected();
       }
     });
   }
@@ -118,15 +111,15 @@ export class UserSocketService {
   }
 
   private connectToSocket() {
+    this.globalState.markConnectionAsConnecting();
+
     this.socket
       .start()
       .then(() => {
-        this.globalState.connect();
+        this.globalState.markConnectionAsConnected();
         this.disconnected = false;
       })
       .catch(error => {
-        this.globalState.reconnect();
-
         if (error.statusCode === 401) {
           this.authService
             .refreshToken()
@@ -148,19 +141,17 @@ export class UserSocketService {
         .start()
         .then(() => {
           this.reconnectFailedAttempts = 0;
-          this.globalState.connect();
+          this.globalState.markConnectionAsConnected();
           this.disconnected = false;
           this.meetingService.findMeeting().subscribe();
         })
         .catch(error => {
-          if (this.reconnectFailedAttempts < 4) {
-            this.reconnectFailedAttempts++;
+          this.reconnectFailedAttempts++;
 
-            if (this.reconnectFailedAttempts === 1) {
-              this.globalState.reconnect();
-            }
-          } else {
-            this.globalState.waiting();
+          if (this.reconnectFailedAttempts === 1) {
+            this.globalState.markConnectionAsReconnecting();
+          } else if (this.reconnectFailedAttempts === 5) {
+            this.globalState.markConnectionAsWaiting();
           }
 
           if (error.statusCode === 401) {

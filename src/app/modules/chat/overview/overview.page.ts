@@ -4,7 +4,6 @@ import {
   MeetingStateModel,
 } from '../../meeting/store/meeting-state';
 import { Observable } from 'rxjs';
-import { ChatState, ChatStateModel } from '../store/chat-state';
 import { UserState, UserStateModel } from '../../user/store/user-state';
 import {
   GlobalState,
@@ -17,20 +16,17 @@ import {
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage {
-  chat$: Observable<ChatStateModel>;
   meeting$: Observable<MeetingStateModel>;
   user$: Observable<UserStateModel>;
-  state$: Observable<GlobalStateModel>;
+  global$: Observable<GlobalStateModel>;
 
   constructor(
     private readonly meetingState: MeetingState,
     private readonly userState: UserState,
-    private readonly chatState: ChatState,
     private readonly globalState: GlobalState,
   ) {
     this.meeting$ = meetingState.data$;
     this.user$ = userState.data$;
-    this.chat$ = chatState.data$;
-    this.state$ = globalState.data$;
+    this.global$ = globalState.data$;
   }
 }

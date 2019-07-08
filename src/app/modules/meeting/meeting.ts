@@ -1,5 +1,4 @@
 import { UserDto } from '../user/user';
-import { ChatMessageDto } from '../chat/chat';
 
 export interface MeetingModel {
   status: MeetingStatus;
@@ -57,4 +56,26 @@ export interface MeetingRequestRequest {
 
 export interface MeetingRequestDrinkTypeRequest {
   id: number;
+}
+
+export interface ChatMessageDto {
+  id: number;
+  date: string;
+  message: string;
+  userId: number;
+}
+
+export interface ChatMessageState {
+  id?: number;
+  date: string;
+  message: string;
+  userId: number;
+  sending?: boolean;
+  failed?: boolean;
+}
+
+export interface ChatMessageRequest {
+  date: string;
+  message: string;
+  userId: number;
 }

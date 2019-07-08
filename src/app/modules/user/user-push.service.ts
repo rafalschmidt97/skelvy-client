@@ -124,6 +124,6 @@ export class UserPushService {
   }
 
   private getUserId(): number {
-    return this.userState.data.id;
+    return this.userState.data.user.id;
   }
 }

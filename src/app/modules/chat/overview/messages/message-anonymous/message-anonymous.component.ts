@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ChatMessageState } from '../../../chat';
+import { ChatMessageState } from '../../../../meeting/meeting';
 
 @Component({
   selector: 'app-message-anonymous',

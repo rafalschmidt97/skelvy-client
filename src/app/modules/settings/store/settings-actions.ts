@@ -1,8 +1,7 @@
 import { UserDto } from '../../user/user';
-import { SettingsStateModel } from './settings-state';
 
-export class SetBlockedUsers {
-  static readonly type = '[Settings] Set blocked users';
+export class UpdateBlockedUsers {
+  static readonly type = '[Settings] Update blocked users';
   constructor(public users: UserDto[]) {}
 }
 
@@ -19,9 +18,4 @@ export class AddBlockedUser {
 export class RemoveBlockedUser {
   static readonly type = '[Settings] Remove blocked user';
   constructor(public userId: number) {}
-}
-
-export class SetSettings {
-  static readonly type = '[Settings] Set settings';
-  constructor(public model: SettingsStateModel) {}
 }

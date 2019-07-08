@@ -1,12 +1,19 @@
-import { ProfileDto } from '../user';
-import { UserStateModel } from './user-state';
+import { ProfileDto, UserDto } from '../user';
+
+export class MarkUserAsLoading {
+  static readonly type = '[User] Mark user as loading';
+}
+
+export class MarkUserAsLoaded {
+  static readonly type = '[User] Mark user as loaded';
+}
 
 export class UpdateProfile {
   static readonly type = '[User] Update profile';
   constructor(public profile: ProfileDto) {}
 }
 
-export class SetUser {
-  static readonly type = '[User] Set user';
-  constructor(public model: UserStateModel) {}
+export class UpdateUser {
+  static readonly type = '[User] Update user';
+  constructor(public user: UserDto) {}
 }

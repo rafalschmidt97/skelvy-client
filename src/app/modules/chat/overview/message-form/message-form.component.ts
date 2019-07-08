@@ -11,9 +11,9 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { MeetingService } from '../../../meeting/meeting.service';
 import { ChatService } from '../../chat.service';
-import { ChatState } from '../../store/chat-state';
-import { ChatMessageState } from '../../chat';
 import { storageKeys } from '../../../../core/storage/storage';
+import { ChatMessageState } from '../../../meeting/meeting';
+import { MeetingState } from '../../../meeting/store/meeting-state';
 
 @Component({
   selector: 'app-message-form',
@@ -34,7 +34,7 @@ export class MessageFormComponent implements Form, OnSubmit {
     private readonly storage: Storage,
     private readonly meetingService: MeetingService,
     private readonly chatService: ChatService,
-    private readonly chatState: ChatState,
+    private readonly meetingState: MeetingState,
   ) {
     this.form = this.formBuilder.group({
       message: [
@@ -65,7 +65,7 @@ export class MessageFormComponent implements Form, OnSubmit {
       this.sendMessage({
         message: this.form.get('message').value.trim(),
         date: new Date().toISOString(),
-        userId: this.userState.data.id,
+        userId: this.userState.data.user.id,
         sending: true,
       });
 
@@ -78,11 +78,11 @@ export class MessageFormComponent implements Form, OnSubmit {
   }
 
   sendMessage(message: ChatMessageState) {
-    this.chatState.addMessage(message);
+    this.meetingState.addMessage(message);
 
     this.chatService.sendMessage(message).subscribe(
       () => {
-        this.chatState.markAsSent(message);
+        this.meetingState.markMessageAsSent(message);
         this.storage.set(storageKeys.lastMessageDate, message.date);
       },
       (error: HttpErrorResponse) => {
@@ -98,7 +98,7 @@ export class MessageFormComponent implements Form, OnSubmit {
             _('A problem occurred while sending the message'),
           );
         } else {
-          this.chatState.markAsFailed(message);
+          this.meetingState.markMessageAsFailed(message);
         }
       },
     );
