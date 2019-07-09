@@ -205,7 +205,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
 
   private fillForm() {
     this.storage
-      .get('lastMeetingRequestForm')
+      .get(storageKeys.lastRequestForm)
       .then(requestForm => {
         if (!isNil(requestForm)) {
           const minDate = new Date(requestForm.date[0]);
