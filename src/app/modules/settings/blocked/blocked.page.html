@@ -19,11 +19,11 @@
           *ngIf="blockedUsers.length > 0; else emptyList"
           class="bg-white border-top"
         >
-          <app-profile
+          <app-profile-preview
             *ngFor="let user of blockedUsers"
             [user]="user"
             (openDetails)="openDetails($event)"
-          ></app-profile>
+          ></app-profile-preview>
           <div class="container">
             <button
               *ngIf="blockedUsers.length % 10 === 0 && !allBlockedLoaded"
@@ -64,17 +64,8 @@
 <ng-template #details>
   <app-modal (confirm)="confirmDetails()">
     <app-profile-details
-      [user]="userForModal"
-      (removeBlockedUser)="removeBlockedUser()"
+      [user]="detailsUser"
+      [blocked]="true"
     ></app-profile-details>
   </app-modal>
-</ng-template>
-
-<ng-template #alert>
-  <app-alert
-    (confirm)="confirmAlert()"
-    [confirmLoading]="loadingRemove"
-    (decline)="declineAlert()"
-    [title]="'Are you sure?' | translate"
-  ></app-alert>
 </ng-template>

@@ -23,14 +23,14 @@ import { UpdateChatMessagesToRead } from '../../store/meeting-actions';
 })
 export class FoundComponent {
   @ViewChild('details') detailsTemplate: TemplateRef<any>;
-  @ViewChild('alert') alertTemplate: TemplateRef<any>;
+  @ViewChild('leave') leaveTemplate: TemplateRef<any>;
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
   @Input() loadingMeeting: boolean;
   @Input() messagesToRead: number;
-  userForModal: UserDto;
-  modal: Modal;
-  alert: Alert;
+  detailsUser: UserDto;
+  detailsModal: Modal;
+  leaveAlert: Alert;
   loadingLeave = false;
 
   constructor(
@@ -61,25 +61,25 @@ export class FoundComponent {
   }
 
   openDetails(user: UserDto) {
-    this.userForModal = user;
-    this.modal = this.modalService.show(this.detailsTemplate, true);
+    this.detailsUser = user;
+    this.detailsModal = this.modalService.show(this.detailsTemplate, true);
   }
 
-  leaveGroup() {
+  openLeave() {
     this.loadingLeave = false;
-    this.alert = this.alertService.show(this.alertTemplate);
+    this.leaveAlert = this.alertService.show(this.leaveTemplate);
   }
 
   confirmDetails() {
-    this.modal.hide();
+    this.detailsModal.hide();
   }
 
-  confirmAlert() {
+  confirmLeave() {
     this.loadingLeave = true;
     this.loadingService.lock();
     this.meetingService.leaveMeeting().subscribe(
       () => {
-        this.alert.hide();
+        this.leaveAlert.hide();
         this.loadingService.unlock();
       },
       (error: HttpErrorResponse) => {
@@ -88,7 +88,7 @@ export class FoundComponent {
           this.meetingService.findMeeting().subscribe();
         }
 
-        this.alert.hide();
+        this.leaveAlert.hide();
         this.loadingService.unlock();
         this.toastService.createError(
           _('A problem occurred while leaving the meeting'),
@@ -97,8 +97,8 @@ export class FoundComponent {
     );
   }
 
-  declineAlert() {
-    this.alert.hide();
+  declineLeave() {
+    this.leaveAlert.hide();
   }
 
   showMessages() {

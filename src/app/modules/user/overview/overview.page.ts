@@ -11,17 +11,17 @@ import { Select } from '@ngxs/store';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage {
-  @ViewChild('details') details: TemplateRef<any>;
-  modal: Modal;
+  @ViewChild('details') detailsTemplate: TemplateRef<any>;
+  detailsModal: Modal;
   @Select(state => state.user.user) user$: Observable<UserDto>;
 
   constructor(private readonly modalService: ModalService) {}
 
-  open() {
-    this.modal = this.modalService.show(this.details, true);
+  openDetails() {
+    this.detailsModal = this.modalService.show(this.detailsTemplate, true);
   }
 
-  confirm() {
-    this.modal.hide();
+  confirmDetails() {
+    this.detailsModal.hide();
   }
 }

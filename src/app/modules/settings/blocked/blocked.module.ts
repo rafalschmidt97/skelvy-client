@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 import { BlockedPage } from './blocked.page';
-import { ProfileDetailsComponent } from './profile-details/profile-details.component';
-import { ProfileComponent } from './profile/profile.component';
+import { ProfilePreviewComponent } from './profile-preview/profile-preview.component';
 
 const routes: Routes = [
   {
@@ -14,6 +13,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
-  declarations: [BlockedPage, ProfileDetailsComponent, ProfileComponent],
+  declarations: [BlockedPage, ProfilePreviewComponent],
 })
 export class BlockedPageModule {}

@@ -11,7 +11,7 @@
   >
     <section class="container d-flex flex-grow-1 py-3 bg-ultra-light preview">
       <div class="m-auto text-center">
-        <div (click)="open()" class="pointer">
+        <div (click)="openDetails()" class="pointer">
           <div class="avatar d-inline-block">
             <div
               class="image"
@@ -73,10 +73,10 @@
 </ion-content>
 
 <ng-template #details>
-  <app-modal (confirm)="confirm()">
-    <app-details
-      *ngIf="(user$ | async)?.profile as profile"
-      [profile]="profile"
-    ></app-details>
+  <app-modal (confirm)="confirmDetails()">
+    <app-profile-details
+      [user]="user$ | async"
+      [mine]="true"
+    ></app-profile-details>
   </app-modal>
 </ng-template>

@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { _ } from '../../../../../core/i18n/translate';
+import { UserDto } from '../../../modules/user/user';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
-import { ToastService } from '../../../../../core/toast/toast.service';
+import { ToastService } from '../../../core/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
-import { UserDto } from '../../../../user/user';
-import { SettingsService } from '../../../../settings/settings.service';
+import { SettingsService } from '../../../modules/settings/settings.service';
+import { _ } from '../../../core/i18n/translate';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-profile-details',
@@ -13,7 +14,8 @@ import { SettingsService } from '../../../../settings/settings.service';
 })
 export class ProfileDetailsComponent {
   @Input() user: UserDto;
-  blocked = false;
+  @Input() mine: boolean;
+  @Input() blocked: boolean;
   loadingBlocking = false;
 
   constructor(
@@ -22,6 +24,34 @@ export class ProfileDetailsComponent {
     private readonly settingsService: SettingsService,
     private readonly translateService: TranslateService,
   ) {}
+
+  blockUser() {
+    this.loadingBlocking = true;
+    this.settingsService.addBlockedUser(this.user).subscribe(
+      () => {
+        this.blocked = true;
+        this.loadingBlocking = false;
+      },
+      () => {
+        this.blocked = true;
+        this.loadingBlocking = false;
+      },
+    );
+  }
+
+  removeBlockUser() {
+    this.loadingBlocking = true;
+    this.settingsService.removeBlockedUser(this.user.id).subscribe(
+      () => {
+        this.blocked = false;
+        this.loadingBlocking = false;
+      },
+      () => {
+        this.blocked = false;
+        this.loadingBlocking = false;
+      },
+    );
+  }
 
   async sendReport() {
     const subject = await this.translateService
@@ -41,37 +71,5 @@ export class ProfileDetailsComponent {
           10000,
         );
       });
-  }
-
-  blockUser() {
-    this.loadingBlocking = true;
-    this.settingsService.addBlockedUser(this.user).subscribe(
-      () => {
-        this.blocked = true;
-        this.loadingBlocking = false;
-      },
-      () => {
-        this.toastService.createError(
-          _('A problem occurred while adding blocked user'),
-        );
-        this.loadingBlocking = false;
-      },
-    );
-  }
-
-  removeBlockUser() {
-    this.loadingBlocking = true;
-    this.settingsService.removeBlockedUser(this.user.id).subscribe(
-      () => {
-        this.blocked = false;
-        this.loadingBlocking = false;
-      },
-      () => {
-        this.toastService.createError(
-          _('A problem occurred while removing blocked user'),
-        );
-        this.loadingBlocking = false;
-      },
-    );
   }
 }

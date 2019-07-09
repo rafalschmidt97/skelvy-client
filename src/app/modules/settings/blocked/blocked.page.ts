@@ -3,9 +3,7 @@ import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { UserDto } from '../../user/user';
 import { Modal } from '../../../shared/modal/modal';
-import { Alert } from '../../../shared/alert/alert';
 import { ModalService } from '../../../shared/modal/modal.service';
-import { AlertService } from '../../../shared/alert/alert.service';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
@@ -18,21 +16,17 @@ import { Select, Store } from '@ngxs/store';
 })
 export class BlockedPage implements OnInit {
   @ViewChild('details') detailsTemplate: TemplateRef<any>;
-  @ViewChild('alert') alertTemplate: TemplateRef<any>;
   @Select(x => x.settings.blockedUsers) blockedUsers$: Observable<UserDto[]>;
-  userForModal: UserDto;
-  modal: Modal;
-  alert: Alert;
+  detailsModal: Modal;
+  detailsUser: UserDto;
   loadingBlocked = true;
   loadingBlockedMore = false;
   allBlockedLoaded = false;
-  loadingRemove = false;
   page = 1;
 
   constructor(
     private readonly settingsService: SettingsService,
     private readonly modalService: ModalService,
-    private readonly alertService: AlertService,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly store: Store,
@@ -99,40 +93,11 @@ export class BlockedPage implements OnInit {
   }
 
   openDetails(user: UserDto) {
-    this.userForModal = user;
-    this.modal = this.modalService.show(this.detailsTemplate, true);
-  }
-
-  removeBlockedUser() {
-    this.modal.hide();
-    this.alert = this.alertService.show(this.alertTemplate);
+    this.detailsUser = user;
+    this.detailsModal = this.modalService.show(this.detailsTemplate, true);
   }
 
   confirmDetails() {
-    this.modal.hide();
-  }
-
-  confirmAlert() {
-    this.loadingRemove = true;
-    this.loadingService.lock();
-    this.settingsService.removeBlockedUser(this.userForModal.id).subscribe(
-      () => {
-        this.alert.hide();
-        this.loadingService.unlock();
-        this.loadingRemove = false;
-      },
-      () => {
-        this.alert.hide();
-        this.loadingService.unlock();
-        this.toastService.createError(
-          _('A problem occurred while removing blocked user'),
-        );
-        this.loadingRemove = false;
-      },
-    );
-  }
-
-  declineAlert() {
-    this.alert.hide();
+    this.detailsModal.hide();
   }
 }

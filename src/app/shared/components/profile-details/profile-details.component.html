@@ -20,37 +20,39 @@
   >
     {{ 'User did not fill his bio yet.' | translate }}
   </p>
-  <button
-    *ngIf="!blocked; else unblock"
-    type="button"
-    [disabled]="loadingBlocking"
-    (click)="blockUser()"
-    class="btn btn-block btn-danger"
-  >
-    <ng-container *ngIf="!loadingBlocking; else loading">{{
-      'Block user' | translate
-    }}</ng-container>
-  </button>
-  <ng-template #unblock>
+  <ng-container *ngIf="!mine">
     <button
+      *ngIf="!blocked; else unblock"
       type="button"
       [disabled]="loadingBlocking"
-      (click)="removeBlockUser()"
-      class="btn btn-block btn-dark"
+      (click)="blockUser()"
+      class="btn btn-block btn-danger"
     >
       <ng-container *ngIf="!loadingBlocking; else loading">{{
-        'Unblock user' | translate
+        'Block user' | translate
       }}</ng-container>
     </button>
-  </ng-template>
-  <ng-template #loading>
-    <ion-spinner></ion-spinner>
-  </ng-template>
-  <button
-    type="button"
-    (click)="sendReport()"
-    class="btn btn-block btn-outline-dark"
-  >
-    {{ 'Report user' | translate }}
-  </button>
+    <ng-template #unblock>
+      <button
+        type="button"
+        [disabled]="loadingBlocking"
+        (click)="removeBlockUser()"
+        class="btn btn-block btn-dark"
+      >
+        <ng-container *ngIf="!loadingBlocking; else loading">{{
+          'Unblock user' | translate
+        }}</ng-container>
+      </button>
+    </ng-template>
+    <ng-template #loading>
+      <ion-spinner></ion-spinner>
+    </ng-template>
+    <button
+      type="button"
+      (click)="sendReport()"
+      class="btn btn-block btn-outline-dark"
+    >
+      {{ 'Report user' | translate }}
+    </button>
+  </ng-container>
 </div>

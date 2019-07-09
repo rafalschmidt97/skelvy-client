@@ -18,11 +18,11 @@
     </div>
   </section>
   <section class="users">
-    <app-profile
+    <app-profile-preview
       *ngFor="let user of filteredMeetingUsers"
       [user]="user"
       (openDetails)="openDetails($event)"
-    ></app-profile>
+    ></app-profile-preview>
     <app-profile-missing
       *ngIf="!loadingMeeting; else loadingProfiles"
       [missing]="missingMeetingUsers"
@@ -48,7 +48,7 @@
           class="ml-1 chat-icon align-middle"
         ></ion-icon>
       </button>
-      <button (click)="leaveGroup()" class="btn btn-outline-primary btn-block">
+      <button (click)="openLeave()" class="btn btn-outline-primary btn-block">
         {{ 'Leave group' | translate }}
       </button>
     </div>
@@ -57,15 +57,15 @@
 
 <ng-template #details>
   <app-modal (confirm)="confirmDetails()">
-    <app-profile-details [user]="userForModal"></app-profile-details>
+    <app-profile-details [user]="detailsUser"></app-profile-details>
   </app-modal>
 </ng-template>
 
-<ng-template #alert>
+<ng-template #leave>
   <app-alert
-    (confirm)="confirmAlert()"
+    (confirm)="confirmLeave()"
     [confirmLoading]="loadingLeave"
-    (decline)="declineAlert()"
+    (decline)="declineLeave()"
     [title]="'Are you sure?' | translate"
   ></app-alert>
 </ng-template>
