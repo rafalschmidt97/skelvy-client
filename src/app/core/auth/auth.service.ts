@@ -41,6 +41,8 @@ export class AuthService {
           if (res && res.accessToken && res.refreshToken) {
             await this.sessionService.createSession(res);
           }
+
+          await this.storage.set(storageKeys.signInMethod, 'facebook');
         }),
       );
   }
@@ -56,6 +58,8 @@ export class AuthService {
           if (res && res.accessToken && res.refreshToken) {
             await this.sessionService.createSession(res);
           }
+
+          await this.storage.set(storageKeys.signInMethod, 'google');
         }),
       );
   }

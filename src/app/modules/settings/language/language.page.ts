@@ -47,12 +47,12 @@ export class LanguagePage implements Form, OnSubmit, OnInit {
   }
 
   ngOnInit() {
-    this.form.get(storageKeys.language).valueChanges.subscribe(value => {
+    this.form.get(storageKeys.language).valueChanges.subscribe(async value => {
       const language = value.match(LanguageConstants.LANGUAGES_REGEX)
         ? value
         : LanguageConstants.DEFAULT_LANGUAGE;
 
-      this.storage.set(storageKeys.language, language);
+      await this.storage.set(storageKeys.language, language);
       this.translateService.use(language);
       moment.locale(language);
     });

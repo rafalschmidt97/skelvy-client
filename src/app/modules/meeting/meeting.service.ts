@@ -18,7 +18,9 @@ import { storageKeys } from '../../core/storage/storage';
 import { UserDto } from '../user/user';
 import { Store } from '@ngxs/store';
 import {
+  AddMeetingUser,
   ChangeMeetingLoadingStatus,
+  RemoveMeetingUser,
   UpdateChatMessagesToRead,
   UpdateMeeting,
 } from './store/meeting-actions';
@@ -152,6 +154,18 @@ export class MeetingService {
     );
   }
 
+  addUser(userId: number): Observable<UserDto> {
+    return this.findUser(userId).pipe(
+      tap(user => {
+        this.store.dispatch(new AddMeetingUser(user));
+      }),
+    );
+  }
+
+  removeUser(userId: number) {
+    this.store.dispatch(new RemoveMeetingUser(userId));
+  }
+
   clearMeeting() {
     this.store.dispatch(new UpdateMeeting(null));
     this.store.dispatch(new UpdateChatMessagesToRead(0));
@@ -201,7 +215,7 @@ export class MeetingService {
           new UpdateChatMessagesToRead(notRedMessages.length),
         );
       } else {
-        this.storage.set(
+        await this.storage.set(
           storageKeys.lastMessageDate,
           messages[messages.length - 1].date,
         );
@@ -213,7 +227,7 @@ export class MeetingService {
         this.store.dispatch(new UpdateChatMessagesToRead(newMessages.length));
       } else {
         if (newMessages.length > 0) {
-          this.storage.set(
+          await this.storage.set(
             storageKeys.lastMessageDate,
             newMessages[newMessages.length - 1].date,
           );
@@ -232,7 +246,7 @@ export class MeetingService {
       this.store.dispatch(new UpdateChatMessagesToRead(model.messages.length));
     } else {
       if (model.messages.length > 0) {
-        this.storage.set(
+        await this.storage.set(
           storageKeys.lastMessageDate,
           model.messages[model.messages.length - 1].date,
         );

@@ -7,15 +7,9 @@ import { Storage } from '@ionic/storage';
 import { MeetingService } from './meeting.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
-import { storageKeys } from '../../core/storage/storage';
 import { ChatMessageDto } from './meeting';
 import { Store } from '@ngxs/store';
-import {
-  AddChatMessage,
-  AddChatMessagesToRead,
-  AddMeetingUser,
-  RemoveMeetingUser,
-} from './store/meeting-actions';
+import { ChatService } from '../chat/chat.service';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +25,7 @@ export class MeetingSocketService {
     private readonly meetingService: MeetingService,
     private readonly storage: Storage,
     private readonly store: Store,
+    private readonly chatService: ChatService,
   ) {}
 
   set socket(socket: HubConnection) {
@@ -49,23 +44,16 @@ export class MeetingSocketService {
   private onUserSentMeetingChatMessage() {
     this.userSocket.on(
       'UserSentMeetingChatMessage',
-      (message: ChatMessageDto) => {
-        this.store.dispatch(new AddChatMessage(message));
-
-        if (this.router.url !== '/app/chat') {
-          this.store.dispatch(new AddChatMessagesToRead(1));
-        } else {
-          this.storage.set(storageKeys.lastMessageDate, message.date);
-        }
+      async (message: ChatMessageDto) => {
+        await this.chatService.addMessage(message);
       },
     );
   }
 
   private onUserJoinedMeeting() {
     this.userSocket.on('UserJoinedMeeting', data => {
-      this.meetingService.findUser(data.userId).subscribe(
-        user => {
-          this.store.dispatch(new AddMeetingUser(user));
+      this.meetingService.addUser(data.userId).subscribe(
+        () => {
           this.toastService.createInformation(
             _('New user has been added to the group'),
           );
@@ -101,7 +89,7 @@ export class MeetingSocketService {
           state => state.meeting.meetingModel.meeting.users,
         ).length !== 2
       ) {
-        this.store.dispatch(new RemoveMeetingUser(data.userId));
+        this.meetingService.removeUser(data.userId);
       } else {
         this.meetingService.findMeeting().subscribe(
           () => {

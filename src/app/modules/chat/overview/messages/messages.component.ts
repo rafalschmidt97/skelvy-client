@@ -22,15 +22,7 @@ import { Router } from '@angular/router';
 import { MeetingService } from '../../../meeting/meeting.service';
 import { Modal } from '../../../../shared/modal/modal';
 import { ModalService } from '../../../../shared/modal/modal.service';
-import { storageKeys } from '../../../../core/storage/storage';
 import { Store } from '@ngxs/store';
-import {
-  AddChatMessages,
-  MarkChatMessageAsFailed,
-  MarkChatMessageAsSent,
-  RemoveChatMessage,
-  RemoveOldAndAddNewChatMessage,
-} from '../../../meeting/store/meeting-actions';
 
 @Component({
   selector: 'app-messages',
@@ -63,7 +55,7 @@ export class MessagesComponent implements OnInit {
   ngOnInit() {
     if (
       this.store.selectSnapshot(state => state.meeting.meetingModel.messages)
-        .length === 20
+        .length >= 20
     ) {
       this.hasMoreMessages = true;
     }
@@ -86,14 +78,8 @@ export class MessagesComponent implements OnInit {
   loadMessages() {
     if (this.hasMoreMessages && !this.isLoading) {
       this.isLoading = true;
-      const firstMessage = this.store.selectSnapshot(
-        state => state.meeting.meetingModel.messages,
-      )[0];
-
-      this.chatService.findMessages(firstMessage.date).subscribe(
+      this.chatService.findMoreMessages().subscribe(
         (messages: ChatMessageDto[]) => {
-          this.store.dispatch(new AddChatMessages(messages, false));
-
           if (messages.length < 20) {
             this.hasMoreMessages = false;
           }
@@ -117,24 +103,10 @@ export class MessagesComponent implements OnInit {
   }
 
   sendAgain(oldMessage: ChatMessageState) {
-    const newMessage: ChatMessageState = {
-      id: 0,
-      date: new Date().toISOString(),
-      message: oldMessage.message,
-      userId: oldMessage.userId,
-      sending: true,
-    };
-
-    this.store.dispatch(
-      new RemoveOldAndAddNewChatMessage(oldMessage, newMessage),
-    );
     this.modal.hide();
 
-    this.chatService.sendMessage(newMessage).subscribe(
-      () => {
-        this.store.dispatch(new MarkChatMessageAsSent(newMessage));
-        this.storage.set(storageKeys.lastMessageDate, newMessage.date);
-      },
+    this.chatService.sendAgainMessage(oldMessage).subscribe(
+      () => {},
       (error: HttpErrorResponse) => {
         // data is not relevant (connection lost and reconnected)
         if (error.status === 404 || error.status === 409) {
@@ -147,15 +119,13 @@ export class MessagesComponent implements OnInit {
           this.toastService.createError(
             _('A problem occurred while sending the message'),
           );
-        } else {
-          this.store.dispatch(new MarkChatMessageAsFailed(newMessage));
         }
       },
     );
   }
 
   remove(message: ChatMessageState) {
-    this.store.dispatch(new RemoveChatMessage(message));
+    this.chatService.removeMessage(message);
     this.modal.hide();
   }
 

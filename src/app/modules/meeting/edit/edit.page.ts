@@ -102,8 +102,8 @@ export class EditPage implements Form, OnSubmit, OnInit {
       };
 
       this.meetingService.createMeetingRequest(request).subscribe(
-        () => {
-          this.storage.set(storageKeys.lastRequestForm, form);
+        async () => {
+          await this.storage.set(storageKeys.lastRequestForm, form);
 
           this.meetingService.findMeeting().subscribe(
             () => {

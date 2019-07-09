@@ -103,13 +103,13 @@ export class FoundComponent {
 
   showMessages() {
     this.routerNavigation.navigateForward(['/app/chat']).then(() => {
-      setTimeout(() => {
+      setTimeout(async () => {
         this.store.dispatch(new UpdateChatMessagesToRead(0));
         const messages = this.store.selectSnapshot(
           state => state.meeting.meetingModel.messages,
         );
         if (messages.length > 0) {
-          this.storage.set(
+          await this.storage.set(
             storageKeys.lastMessageDate,
             messages[messages.length - 1].date,
           );

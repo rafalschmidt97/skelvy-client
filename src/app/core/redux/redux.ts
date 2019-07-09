@@ -1,16 +1,16 @@
-import { UserStateModel, UserState } from '../../modules/user/store/user-state';
+import { UserState, UserStateModel } from '../../modules/user/store/user-state';
 import {
-  MeetingStateModel,
   MeetingState,
+  MeetingStateModel,
 } from '../../modules/meeting/store/meeting-state';
 import {
   Connection,
-  GlobalStateModel,
   GlobalState,
+  GlobalStateModel,
 } from '../state/global-state';
 import {
-  SettingsStateModel,
   SettingsState,
+  SettingsStateModel,
 } from '../../modules/settings/store/settings-state';
 import { getActionTypeFromInstance } from '@ngxs/store';
 

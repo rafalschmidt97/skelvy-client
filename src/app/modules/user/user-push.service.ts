@@ -93,8 +93,8 @@ export class UserPushService {
 
   addTopic(topic: string, storageKey: string) {
     this.push$.subscribe(topic).then(
-      () => {
-        this.storage.set(storageKey, true);
+      async () => {
+        await this.storage.set(storageKey, true);
       },
       () => {
         this.toastService.createError(
@@ -106,8 +106,8 @@ export class UserPushService {
 
   removeTopic(topic: string, storageKey: string) {
     this.push$.unsubscribe(topic).then(
-      () => {
-        this.storage.set(storageKey, false);
+      async () => {
+        await this.storage.set(storageKey, false);
       },
       () => {
         this.toastService.createError(

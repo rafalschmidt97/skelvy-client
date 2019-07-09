@@ -10,14 +10,8 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { MeetingService } from '../../../meeting/meeting.service';
 import { ChatService } from '../../chat.service';
-import { storageKeys } from '../../../../core/storage/storage';
 import { ChatMessageState } from '../../../meeting/meeting';
 import { Store } from '@ngxs/store';
-import {
-  AddChatMessage,
-  MarkChatMessageAsFailed,
-  MarkChatMessageAsSent,
-} from '../../../meeting/store/meeting-actions';
 
 @Component({
   selector: 'app-message-form',
@@ -81,13 +75,8 @@ export class MessageFormComponent implements Form, OnSubmit {
   }
 
   sendMessage(message: ChatMessageState) {
-    this.store.dispatch(new AddChatMessage(message));
-
-    this.chatService.sendMessage(message).subscribe(
-      () => {
-        this.store.dispatch(new MarkChatMessageAsSent(message));
-        this.storage.set(storageKeys.lastMessageDate, message.date);
-      },
+    this.chatService.addAndSendMessage(message).subscribe(
+      () => {},
       (error: HttpErrorResponse) => {
         // data is not relevant (connection lost and reconnected)
         if (error.status === 404 || error.status === 409) {
@@ -100,8 +89,6 @@ export class MessageFormComponent implements Form, OnSubmit {
           this.toastService.createError(
             _('A problem occurred while sending the message'),
           );
-        } else {
-          this.store.dispatch(new MarkChatMessageAsFailed(message));
         }
       },
     );
