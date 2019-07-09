@@ -9,6 +9,7 @@ import { FormModule } from './form/form.module';
 import { AgePipe } from './pipes/age.pipe';
 import { ConnectionComponent } from './components/connection/connection.component';
 import { ProfileDetailsComponent } from './components/profile-details/profile-details.component';
+import { MeetingSuggestionsComponent } from './components/meeting-suggestions/meeting-suggestions.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,12 @@ import { ProfileDetailsComponent } from './components/profile-details/profile-de
     ModalModule,
     FormModule,
   ],
-  declarations: [AgePipe, ConnectionComponent, ProfileDetailsComponent],
+  declarations: [
+    AgePipe,
+    ConnectionComponent,
+    ProfileDetailsComponent,
+    MeetingSuggestionsComponent,
+  ],
   exports: [
     CommonModule,
     IonicModule,
@@ -32,6 +38,7 @@ import { ProfileDetailsComponent } from './components/profile-details/profile-de
     AgePipe,
     ConnectionComponent,
     ProfileDetailsComponent,
+    MeetingSuggestionsComponent,
   ],
 })
 export class SharedModule {}

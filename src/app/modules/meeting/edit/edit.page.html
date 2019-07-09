@@ -44,18 +44,13 @@
           [label]="'Address' | translate"
           [placeholder]="'Type in your city...' | translate"
         ></app-address>
-        <app-suggestions
-          *ngIf="
-            !loadingSuggestions &&
-            suggestions &&
-            (suggestions.meetingRequests.length > 0 ||
-              suggestions.meetings.length > 0)
-          "
+        <app-meeting-suggestions
           [suggestions]="suggestions"
-          (join)="join($event)"
+          [isLoading]="isLoading || loadingSuggestions"
+          [inForm]="true"
           (connect)="connect($event)"
-          [label]="'Suggestions' | translate"
-        ></app-suggestions>
+          (join)="join($event)"
+        ></app-meeting-suggestions>
         <app-range
           name="age"
           [min]="18"

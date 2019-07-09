@@ -6,7 +6,6 @@ import { UnspecifiedComponent } from './unspecified/unspecified.component';
 import { SearchingComponent } from './searching/searching.component';
 import { FoundComponent } from './found/found.component';
 import { ProfileLoadingComponent } from './found/profile-loading/profile-loading.component';
-import { SuggestionsComponent } from './searching/suggestions/suggestions.component';
 import { ProfileMissingComponent } from './found/profile-missing/profile-missing.component';
 import { ProfilePreviewComponent } from './found/profile-preview/profile-preview.component';
 
@@ -23,7 +22,6 @@ const routes: Routes = [
     OverviewPage,
     UnspecifiedComponent,
     SearchingComponent,
-    SuggestionsComponent,
     FoundComponent,
     ProfilePreviewComponent,
     ProfileLoadingComponent,

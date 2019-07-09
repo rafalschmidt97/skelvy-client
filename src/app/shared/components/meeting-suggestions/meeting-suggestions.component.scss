@@ -3,6 +3,11 @@
 .suggestions {
   padding: 8px 12px;
 
+  &.form {
+    border-radius: $input-border-radius;
+    margin: 0 -10px 16px -10px;
+  }
+
   &.disabled {
     background: gray('600') !important;
 

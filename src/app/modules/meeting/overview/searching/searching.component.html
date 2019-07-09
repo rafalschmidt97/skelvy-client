@@ -10,19 +10,13 @@
       }}
     </div>
   </section>
-  <app-suggestions
+  <app-meeting-suggestions
     class="border-top border-bottom mb-3"
-    *ngIf="
-      !loadingSuggestions &&
-      suggestions &&
-      (suggestions.meetingRequests.length > 0 ||
-        suggestions.meetings.length > 0)
-    "
     [suggestions]="suggestions"
-    (join)="join($event)"
+    [isLoading]="isLoading || loadingSuggestions"
     (connect)="connect($event)"
-    [isLoading]="isLoading"
-  ></app-suggestions>
+    (join)="join($event)"
+  ></app-meeting-suggestions>
   <section class="info border-top bg-white">
     <label [innerText]="'Current searching preferences' | translate"></label>
     <div class="d-flex align-items-center bg-white mb-1 item border">

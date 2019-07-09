@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BasicFieldComponent } from '../../../../shared/form/basic-field.component';
-import { MeetingSuggestionsModel } from '../../meeting';
 import * as moment from 'moment';
+import { MeetingSuggestionsModel } from '../../../modules/meeting/meeting';
 
 @Component({
-  selector: 'app-suggestions',
-  templateUrl: './suggestions.component.html',
-  styleUrls: ['./suggestions.component.scss'],
+  selector: 'app-meeting-suggestions',
+  templateUrl: './meeting-suggestions.component.html',
+  styleUrls: ['./meeting-suggestions.component.scss'],
 })
-export class SuggestionsComponent extends BasicFieldComponent {
+export class MeetingSuggestionsComponent {
   @Input() suggestions: MeetingSuggestionsModel;
+  @Input() inForm: boolean;
+  @Input() isLoading: boolean;
   @Output() join = new EventEmitter<number>();
   @Output() connect = new EventEmitter<number>();
-  @Input() label: string;
 
   getDate(minDate: string | Date, maxDate: string | Date): string {
     if (maxDate !== minDate) {
