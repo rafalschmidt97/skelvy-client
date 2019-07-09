@@ -34,13 +34,26 @@ export interface MeetingRequestDto {
   drinkTypes: MeetingDrinkTypeDto[];
 }
 
+export interface MeetingRequestWithUserDto {
+  id: number;
+  minDate: string;
+  maxDate: string;
+  minAge: number;
+  maxAge: number;
+  latitude: number;
+  longitude: number;
+  city: string;
+  drinkTypes: MeetingDrinkTypeDto[];
+  user: UserDto;
+}
+
 export interface MeetingDrinkTypeDto {
   id: number;
   name: string;
 }
 
 export interface MeetingSuggestionsModel {
-  meetingRequests: MeetingRequestDto[];
+  meetingRequests: MeetingRequestWithUserDto[];
   meetings: MeetingDto[];
 }
 

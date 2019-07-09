@@ -1,6 +1,19 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import * as moment from 'moment';
-import { MeetingSuggestionsModel } from '../../../modules/meeting/meeting';
+import {
+  MeetingDto,
+  MeetingRequestWithUserDto,
+  MeetingSuggestionsModel,
+} from '../../../modules/meeting/meeting';
+import { Modal } from '../../modal/modal';
+import { ModalService } from '../../modal/modal.service';
 
 @Component({
   selector: 'app-meeting-suggestions',
@@ -13,6 +26,13 @@ export class MeetingSuggestionsComponent {
   @Input() isLoading: boolean;
   @Output() join = new EventEmitter<number>();
   @Output() connect = new EventEmitter<number>();
+  @ViewChild('meetingPreview') meetingPreviewTemplate: TemplateRef<any>;
+  @ViewChild('requestPreview') requestPreviewTemplate: TemplateRef<any>;
+  previewMeeting: MeetingDto;
+  previewRequest: MeetingRequestWithUserDto;
+  previewModal: Modal;
+
+  constructor(private readonly modalService: ModalService) {}
 
   getDate(minDate: string | Date, maxDate: string | Date): string {
     if (maxDate !== minDate) {
@@ -22,5 +42,29 @@ export class MeetingSuggestionsComponent {
     }
 
     return moment(minDate).format('DD.MM.YYYY');
+  }
+
+  openMeetingDetails(previewMeeting: MeetingDto) {
+    this.previewMeeting = previewMeeting;
+    this.previewModal = this.modalService.show(this.meetingPreviewTemplate);
+  }
+
+  openRequestDetails(previewRequest: MeetingRequestWithUserDto) {
+    this.previewRequest = previewRequest;
+    this.previewModal = this.modalService.show(this.requestPreviewTemplate);
+  }
+
+  decline() {
+    this.previewModal.hide();
+  }
+
+  connectRequest(requestId: number) {
+    this.decline();
+    this.connect.emit(requestId);
+  }
+
+  joinMeeting(meetingId: number) {
+    this.decline();
+    this.join.emit(meetingId);
   }
 }
