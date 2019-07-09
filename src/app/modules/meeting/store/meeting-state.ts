@@ -67,7 +67,7 @@ export class MeetingState {
         ...state.meetingModel,
         meeting: {
           ...state.meetingModel.meeting,
-          user: [...state.meetingModel.meeting.users, user],
+          users: [...state.meetingModel.meeting.users, user],
         },
       },
     });
@@ -85,7 +85,7 @@ export class MeetingState {
         ...state.meetingModel,
         meeting: {
           ...state.meetingModel.meeting,
-          user: state.meetingModel.meeting.users.filter(x => x.id !== userId),
+          users: state.meetingModel.meeting.users.filter(x => x.id !== userId),
         },
       },
     });
