@@ -20,6 +20,9 @@ import { AlertService } from '../../../../shared/alert/alert.service';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Modal } from '../../../../shared/modal/modal';
 import { ModalService } from '../../../../shared/modal/modal.service';
+import { Crop } from '@ionic-native/crop/ngx';
+import { Platform } from '@ionic/angular';
+import { File } from '@ionic-native/file/ngx';
 
 @Component({
   selector: 'app-images',
@@ -48,6 +51,9 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly camera: Camera,
     private readonly modalService: ModalService,
+    private readonly platform: Platform,
+    private readonly crop: Crop,
+    private readonly file: File,
   ) {
     super(parent);
   }
@@ -91,30 +97,32 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
   async takeAndCrop() {
     if (!this.loadingUpload) {
-      const takenPhoto = await this.takePhoto();
-      // TODO: CROP
       this.modal.hide();
+      const takenPhotoUri = await this.takePhoto();
 
-      if (takenPhoto) {
-        this.loadingUpload = true;
-        this.dirty = true;
+      if (takenPhotoUri) {
+        const croppedPhotoUri = await this.cropPhoto(takenPhotoUri);
 
-        this.uploadPhoto(takenPhoto, this.modalPhotoName);
+        if (croppedPhotoUri) {
+          this.dirty = true;
+          await this.uploadPhoto(croppedPhotoUri, this.modalPhotoName);
+        }
       }
     }
   }
 
   async chooseAndCrop() {
     if (!this.loadingUpload) {
-      const chosenPhoto = await this.choosePhoto();
-      // TODO: CROP
       this.modal.hide();
+      const chosenPhotoUri = await this.choosePhoto();
 
-      if (chosenPhoto) {
-        this.loadingUpload = true;
-        this.dirty = true;
+      if (chosenPhotoUri) {
+        const croppedPhotoUri = await this.cropPhoto(chosenPhotoUri);
 
-        this.uploadPhoto(chosenPhoto, this.modalPhotoName);
+        if (croppedPhotoUri) {
+          this.dirty = true;
+          await this.uploadPhoto(croppedPhotoUri, this.modalPhotoName);
+        }
       }
     }
   }
@@ -163,7 +171,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
       quality: 100,
       sourceType: this.camera.PictureSourceType.CAMERA,
       mediaType: this.camera.MediaType.PICTURE,
-      destinationType: this.camera.DestinationType.DATA_URL,
+      destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       correctOrientation: true,
       cameraDirection: this.camera.Direction.FRONT,
@@ -182,7 +190,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
       quality: 100,
       sourceType: this.camera.PictureSourceType.SAVEDPHOTOALBUM,
       mediaType: this.camera.MediaType.PICTURE,
-      destinationType: this.camera.DestinationType.DATA_URL,
+      destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       correctOrientation: true,
       cameraDirection: this.camera.Direction.FRONT,
@@ -196,10 +204,34 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     }
   }
 
-  private uploadPhoto(photoData: string, name: string) {
+  private async cropPhoto(photo: string) {
+    try {
+      return await this.crop.crop(photo, {
+        quality: 100,
+        targetWidth: 1024,
+        targetHeight: 1024,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  private async uploadPhoto(photoUri: string, name: string) {
+    this.loadingUpload = true;
+    const fileName = photoUri.split('/').pop();
+    const path = photoUri.replace(fileName, '');
+    const fileData = await this.file.readAsDataURL(path, fileName);
+    const croppedImage = await this.cropImage(fileData, 1024, 1024);
     const data = new FormData();
-    const blob = base64StringToBlob(photoData, 'image/jpeg');
-    data.append('file', blob, 'file.jpeg');
+    const blob = base64StringToBlob(
+      croppedImage.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
+      'image/jpeg',
+    );
+    data.append('file', blob, fileName);
+
+    // const fileData = await this.file.readAsArrayBuffer(path, fileName);
+    // data.append('file', new Blob([fileData], { type: 'image/jpeg' }), fileName);
 
     this.uploadService.upload(data).subscribe(
       photo => {
@@ -221,5 +253,29 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
         this.loadingUpload = false;
       },
     );
+  }
+
+  private cropImage(
+    imageData: string,
+    width: number,
+    height: number,
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageData;
+      image.crossOrigin = 'Anonymous';
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = width;
+      canvas.height = height;
+      image.onload = () => {
+        context.drawImage(image, 0, 0, width, height);
+        const data = canvas.toDataURL('image/jpeg', 0.7);
+        resolve(data);
+      };
+      image.onerror = () => {
+        reject(new Error('Photo cropping failed'));
+      };
+    });
   }
 }

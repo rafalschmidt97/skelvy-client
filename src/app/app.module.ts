@@ -28,6 +28,9 @@ import { environment } from '../environments/environment';
 import { appState, clearState } from './core/redux/redux';
 import { registerReduxDevToolOnDevice } from './core/redux/remote-devtools-proxy';
 import { Camera } from '@ionic-native/camera/ngx';
+import { Crop } from '@ionic-native/crop/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 if (!environment.production) {
   registerReduxDevToolOnDevice();
@@ -67,6 +70,9 @@ if (!environment.production) {
     AppRate,
     SocialSharing,
     Camera,
+    Crop,
+    WebView,
+    File,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: NGXS_PLUGINS,
