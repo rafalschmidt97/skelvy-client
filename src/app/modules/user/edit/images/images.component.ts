@@ -15,9 +15,11 @@ import { get } from 'lodash';
 import { UploadService } from '../../../../core/upload/upload.service';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
-import { LoadingService } from '../../../../core/loading/loading.service';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { Modal } from '../../../../shared/modal/modal';
+import { ModalService } from '../../../../shared/modal/modal.service';
 
 @Component({
   selector: 'app-images',
@@ -26,22 +28,26 @@ import { AlertService } from '../../../../shared/alert/alert.service';
 })
 export class ImagesComponent extends ComplexFieldComponent implements OnInit {
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
+  @ViewChild('actions') modalTemplate: TemplateRef<any>;
   alert: Alert;
+  modal: Modal;
   inputForm: FormGroup;
   dirty = false;
   image1Name = 'image1';
   image2Name = 'image2';
   image3Name = 'image3';
   loadingUpload = false;
+  modalPhotoName: string;
   private removeIndex: number;
 
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
     private readonly uploadService: UploadService,
     private readonly alertService: AlertService,
-    private readonly loadingService: LoadingService,
     private readonly formBuilder: FormBuilder,
     private readonly toastService: ToastService,
+    private readonly camera: Camera,
+    private readonly modalService: ModalService,
   ) {
     super(parent);
   }
@@ -78,42 +84,27 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     });
   }
 
-  selectAndCrop(name: string) {
-    this.loadingUpload = true;
-    this.loadingService.lock();
-    this.dirty = true;
+  showActions(name: string) {
+    this.modalPhotoName = name;
+    this.modal = this.modalService.show(this.modalTemplate);
+  }
 
-    const croppedBase64 = ''; // TODO: get data
+  async takeAndCrop() {
+    if (!this.loadingUpload) {
+      const takenPhoto = await this.takePhoto();
+      // TODO: CROP
 
-    const data = new FormData();
-    const blob = base64StringToBlob(
-      croppedBase64.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
-      'image/png',
-    );
-    data.append('file', blob, 'file.png');
+      if (takenPhoto) {
+        this.loadingUpload = true;
+        this.dirty = true;
 
-    this.uploadService.upload(data).subscribe(
-      photo => {
-        this.inputForm.patchValue({
-          [this.name]: photo.url,
-        });
+        this.uploadPhoto(takenPhoto, this.modalPhotoName);
+      }
+    }
+  }
 
-        this.loadingUpload = false;
-        this.loadingService.unlock();
-      },
-      () => {
-        this.toastService.createError(
-          _('A problem occurred while uploading the photo'),
-        );
-
-        this.inputForm.patchValue({
-          [this.name]: '',
-        });
-
-        this.loadingUpload = false;
-        this.loadingService.unlock();
-      },
-    );
+  decline() {
+    this.modal.hide();
   }
 
   remove(index: number) {
@@ -149,5 +140,51 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
         [this.image3Name]: '',
       });
     }
+  }
+
+  private async takePhoto(): Promise<string> {
+    const options: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.CAMERA,
+      mediaType: this.camera.MediaType.PICTURE,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      correctOrientation: true,
+      cameraDirection: this.camera.Direction.FRONT,
+    };
+
+    try {
+      return await this.camera.getPicture(options);
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  private uploadPhoto(photoData: string, name: string) {
+    const data = new FormData();
+    const blob = base64StringToBlob(photoData, 'image/jpeg');
+    data.append('file', blob, 'file.jpeg');
+
+    this.uploadService.upload(data).subscribe(
+      photo => {
+        this.inputForm.patchValue({
+          [name]: photo.url,
+        });
+
+        this.loadingUpload = false;
+      },
+      () => {
+        this.toastService.createError(
+          _('A problem occurred while uploading the photo'),
+        );
+
+        this.inputForm.patchValue({
+          [name]: '',
+        });
+
+        this.loadingUpload = false;
+      },
+    );
   }
 }

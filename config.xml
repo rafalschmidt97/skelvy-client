@@ -71,7 +71,7 @@
             <string>To get pictures.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
-          <string>To get and add pictures.</string>
+            <string>To get and add pictures.</string>
         </edit-config>
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
         <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
@@ -136,4 +136,5 @@
     </plugin>
     <engine name="ios" spec="4.5.5" />
     <engine name="android" spec="7.1.4" />
+    <plugin name="cordova-plugin-camera" spec="4.0.3" />
 </widget>
