@@ -2,12 +2,19 @@
   [class.form-group]="label"
   [class.is-invalid]="isInvalid && isDirty && hasFeedback"
 >
-  <label *ngIf="label" [attr.for]="image1Name">{{ label }}</label>
+  <label *ngIf="label" class="d-flex align-items-center"
+    >{{ label }}
+    <ion-spinner
+      *ngIf="loadingUpload"
+      class="ml-auto small-spinner"
+    ></ion-spinner
+  ></label>
   <ng-container [formGroup]="inputForm">
     <div class="row">
       <div class="col-8">
         <div class="image-container" [class.is-disabled]="isLoading">
           <label
+            (click)="showActions(image1Name)"
             class="image"
             [style.background-image]="
               inputForm.get(image1Name).value !== ''
@@ -15,14 +22,6 @@
                 : 'none'
             "
           >
-            <input
-              type="file"
-              accept="image/*"
-              [formControlName]="newImageName"
-              (change)="fileChangeEvent($event, image1Name)"
-              class="d-none"
-              [attr.disabled]="isLoading ? '' : null"
-            />
             <span
               *ngIf="inputForm.get(image1Name).value === ''"
               class="add text-primary"
@@ -47,6 +46,7 @@
           "
         >
           <label
+            (click)="showActions(image2Name)"
             class="image"
             [style.background-image]="
               inputForm.get(image2Name).value !== ''
@@ -54,16 +54,6 @@
                 : 'none'
             "
           >
-            <input
-              type="file"
-              accept="image/*"
-              [formControlName]="newImageName"
-              (change)="fileChangeEvent($event, image2Name)"
-              class="d-none"
-              [attr.disabled]="
-                isLoading || inputForm.get(image1Name).value === '' ? '' : null
-              "
-            />
             <span
               *ngIf="inputForm.get(image2Name).value === ''"
               class="add text-primary"
@@ -87,6 +77,7 @@
           "
         >
           <label
+            (click)="showActions(image3Name)"
             class="image"
             [style.background-image]="
               inputForm.get(image3Name).value !== ''
@@ -94,16 +85,6 @@
                 : 'none'
             "
           >
-            <input
-              type="file"
-              accept="image/*"
-              [formControlName]="newImageName"
-              (change)="fileChangeEvent($event, image3Name)"
-              class="d-none"
-              [attr.disabled]="
-                isLoading || inputForm.get(image2Name).value === '' ? '' : null
-              "
-            />
             <span
               *ngIf="inputForm.get(image3Name).value === ''"
               class="add text-primary"
@@ -137,30 +118,32 @@
   </div>
 </div>
 
-<ng-template #cropper>
-  <app-modal
-    (confirm)="confirm()"
-    (decline)="decline()"
-    [confirmLoading]="loadingUpload"
-  >
-    <div class="p-3 d-flex h-100 bg-dark">
-      <ng-container *ngTemplateOutlet="cropperComponent"> </ng-container>
+<ng-template #actions>
+  <app-modal>
+    <div class="px-4 pb-4 pt-2">
+      <button
+        type="button"
+        class="btn btn-primary btn-block"
+        (click)="takeAndCrop()"
+      >
+        {{ 'Take a photo' | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-block"
+        (click)="chooseAndCrop()"
+      >
+        {{ 'Select from gallery' | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-light btn-block mt-4"
+        (click)="decline()"
+      >
+        {{ 'Cancel' | translate }}
+      </button>
     </div>
   </app-modal>
-</ng-template>
-
-<ng-template #cropperComponent>
-  <image-cropper
-    #cropperComponentContent
-    class="p-0 m-auto"
-    [style.max-height]="'90vh'"
-    outputType="base64"
-    [imageChangedEvent]="imageChangedEvent"
-    [aspectRatio]="1"
-    [resizeToWidth]="512"
-    [imageQuality]="100"
-    [autoCrop]="false"
-  ></image-cropper>
 </ng-template>
 
 <ng-template #alert>
