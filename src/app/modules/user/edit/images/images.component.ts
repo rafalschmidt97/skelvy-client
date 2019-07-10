@@ -7,12 +7,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormComponent } from '../../../../shared/form/form.component';
-import { ModalService } from '../../../../shared/modal/modal.service';
 import { ComplexFieldComponent } from '../../../../shared/form/complex-field.component';
-import { Modal } from '../../../../shared/modal/modal';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { base64StringToBlob } from 'blob-util';
-import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { ProfilePhotoDto } from '../../user';
 import { get } from 'lodash';
 import { UploadService } from '../../../../core/upload/upload.service';
@@ -28,16 +25,10 @@ import { AlertService } from '../../../../shared/alert/alert.service';
   styleUrls: ['./images.component.scss'],
 })
 export class ImagesComponent extends ComplexFieldComponent implements OnInit {
-  @ViewChild('cropper') cropper: TemplateRef<any>;
-  @ViewChild('cropperComponentContent') imageCropper: ImageCropperComponent;
   @ViewChild('alert') alertTemplate: TemplateRef<any>;
-  modal: Modal;
   alert: Alert;
   inputForm: FormGroup;
-  imageChangedEvent = '';
-  croppedName: string;
   dirty = false;
-  newImageName = 'image';
   image1Name = 'image1';
   image2Name = 'image2';
   image3Name = 'image3';
@@ -46,12 +37,11 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
-    private readonly modalService: ModalService,
-    private readonly alertService: AlertService,
-    private readonly formBuilder: FormBuilder,
     private readonly uploadService: UploadService,
-    private readonly toastService: ToastService,
+    private readonly alertService: AlertService,
     private readonly loadingService: LoadingService,
+    private readonly formBuilder: FormBuilder,
+    private readonly toastService: ToastService,
   ) {
     super(parent);
   }
@@ -88,25 +78,16 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     });
   }
 
-  fileChangeEvent(event: any, name: string) {
-    const filesSelected = event.srcElement.files.length !== 0;
-    if (filesSelected) {
-      this.imageChangedEvent = event;
-      this.croppedName = name;
-
-      this.modal = this.modalService.show(this.cropper, true);
-    }
-  }
-
-  confirm() {
+  selectAndCrop(name: string) {
     this.loadingUpload = true;
     this.loadingService.lock();
     this.dirty = true;
 
-    const crop = this.imageCropper.crop() as ImageCroppedEvent;
+    const croppedBase64 = ''; // TODO: get data
+
     const data = new FormData();
     const blob = base64StringToBlob(
-      crop.base64.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
+      croppedBase64.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
       'image/png',
     );
     data.append('file', blob, 'file.png');
@@ -114,11 +95,9 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     this.uploadService.upload(data).subscribe(
       photo => {
         this.inputForm.patchValue({
-          [this.croppedName]: photo.url,
-          [this.newImageName]: '',
+          [this.name]: photo.url,
         });
 
-        this.modal.hide();
         this.loadingUpload = false;
         this.loadingService.unlock();
       },
@@ -128,19 +107,13 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
         );
 
         this.inputForm.patchValue({
-          [this.croppedName]: '',
-          [this.newImageName]: '',
+          [this.name]: '',
         });
 
-        this.modal.hide();
         this.loadingUpload = false;
         this.loadingService.unlock();
       },
     );
-  }
-
-  decline() {
-    this.modal.hide();
   }
 
   remove(index: number) {

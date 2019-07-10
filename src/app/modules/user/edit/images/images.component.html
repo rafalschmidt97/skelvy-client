@@ -15,14 +15,6 @@
                 : 'none'
             "
           >
-            <input
-              type="file"
-              accept="image/*"
-              [formControlName]="newImageName"
-              (change)="fileChangeEvent($event, image1Name)"
-              class="d-none"
-              [attr.disabled]="isLoading ? '' : null"
-            />
             <span
               *ngIf="inputForm.get(image1Name).value === ''"
               class="add text-primary"
@@ -54,16 +46,6 @@
                 : 'none'
             "
           >
-            <input
-              type="file"
-              accept="image/*"
-              [formControlName]="newImageName"
-              (change)="fileChangeEvent($event, image2Name)"
-              class="d-none"
-              [attr.disabled]="
-                isLoading || inputForm.get(image1Name).value === '' ? '' : null
-              "
-            />
             <span
               *ngIf="inputForm.get(image2Name).value === ''"
               class="add text-primary"
@@ -94,16 +76,6 @@
                 : 'none'
             "
           >
-            <input
-              type="file"
-              accept="image/*"
-              [formControlName]="newImageName"
-              (change)="fileChangeEvent($event, image3Name)"
-              class="d-none"
-              [attr.disabled]="
-                isLoading || inputForm.get(image2Name).value === '' ? '' : null
-              "
-            />
             <span
               *ngIf="inputForm.get(image3Name).value === ''"
               class="add text-primary"
@@ -136,32 +108,6 @@
     </ng-container>
   </div>
 </div>
-
-<ng-template #cropper>
-  <app-modal
-    (confirm)="confirm()"
-    (decline)="decline()"
-    [confirmLoading]="loadingUpload"
-  >
-    <div class="p-3 d-flex h-100 bg-dark">
-      <ng-container *ngTemplateOutlet="cropperComponent"> </ng-container>
-    </div>
-  </app-modal>
-</ng-template>
-
-<ng-template #cropperComponent>
-  <image-cropper
-    #cropperComponentContent
-    class="p-0 m-auto"
-    [style.max-height]="'90vh'"
-    outputType="base64"
-    [imageChangedEvent]="imageChangedEvent"
-    [aspectRatio]="1"
-    [resizeToWidth]="512"
-    [imageQuality]="100"
-    [autoCrop]="false"
-  ></image-cropper>
-</ng-template>
 
 <ng-template #alert>
   <app-alert
