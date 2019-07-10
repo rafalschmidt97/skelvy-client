@@ -93,12 +93,28 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     if (!this.loadingUpload) {
       const takenPhoto = await this.takePhoto();
       // TODO: CROP
+      this.modal.hide();
 
       if (takenPhoto) {
         this.loadingUpload = true;
         this.dirty = true;
 
         this.uploadPhoto(takenPhoto, this.modalPhotoName);
+      }
+    }
+  }
+
+  async chooseAndCrop() {
+    if (!this.loadingUpload) {
+      const chosenPhoto = await this.choosePhoto();
+      // TODO: CROP
+      this.modal.hide();
+
+      if (chosenPhoto) {
+        this.loadingUpload = true;
+        this.dirty = true;
+
+        this.uploadPhoto(chosenPhoto, this.modalPhotoName);
       }
     }
   }
@@ -146,6 +162,25 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     const options: CameraOptions = {
       quality: 100,
       sourceType: this.camera.PictureSourceType.CAMERA,
+      mediaType: this.camera.MediaType.PICTURE,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      correctOrientation: true,
+      cameraDirection: this.camera.Direction.FRONT,
+    };
+
+    try {
+      return await this.camera.getPicture(options);
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  private async choosePhoto() {
+    const options: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.SAVEDPHOTOALBUM,
       mediaType: this.camera.MediaType.PICTURE,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
