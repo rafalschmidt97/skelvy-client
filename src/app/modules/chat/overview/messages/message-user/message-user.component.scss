@@ -15,7 +15,7 @@
     display: inline-block;
     white-space: pre-line;
 
-    &.sending {
+    &:not(.emoji).sending {
       animation-duration: 1.5s;
       animation-fill-mode: forwards;
       animation-iteration-count: infinite;
@@ -29,6 +29,23 @@
         lighten($primary, 10%) 33%
       ) !important;
       background-size: 1000px 1000px !important;
+    }
+
+    &.emoji {
+      background-color: transparent !important;
+      font-size: 35px;
+      padding: 2px 6px;
+      line-height: 38px;
+
+      &.sending {
+        opacity: 0.6;
+      }
+
+      .date {
+        padding: 0 6px;
+        margin-top: -10px;
+        color: $body-color;
+      }
     }
 
     .date {

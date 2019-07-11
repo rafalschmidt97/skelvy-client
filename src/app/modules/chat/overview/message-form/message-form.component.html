@@ -3,13 +3,22 @@
   (onSubmit)="onSubmit()"
   [isLoading]="isLoading"
   class="form-message"
+  [class.filled]="this.form.get('message').value"
 >
+  <button [disabled]="isLoading" class="btn-action camera">
+    <ion-icon name="camera" mode="md" class="text-primary d-block"></ion-icon>
+  </button>
+
+  <button [disabled]="isLoading" class="btn-action image">
+    <ion-icon name="image" mode="md" class="text-primary d-block"></ion-icon>
+  </button>
+
   <ng-container [formGroup]="form">
     <textarea
       #messageInput
       appDynamicHeight
       maxHeight="110px"
-      minHeight="40px"
+      minHeight="35px"
       formControlName="message"
       class="form-control input-message my-auto"
       [attr.disabled]="isLoading ? '' : null"
@@ -17,12 +26,19 @@
     ></textarea>
   </ng-container>
 
-  <button (click)="onSubmit()" [disabled]="isLoading" class="btn-send">
+  <button (click)="onSubmit()" [disabled]="isLoading" class="btn-action send">
     <ion-icon
-      name="arrow-dropup-circle"
+      name="send"
+      mode="md"
       class="text-primary d-block"
       [class.text-muted]="hasErrorRequired"
       [class.text-danger]="hasErrorMaxLength"
     ></ion-icon>
   </button>
+  <button
+    (click)="onSubmitIcon(submitIcon)"
+    [disabled]="isLoading"
+    class="btn-icon send-icon"
+    [innerText]="submitIcon"
+  ></button>
 </app-form>

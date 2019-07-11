@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/form/input/input.component';
@@ -18,10 +18,12 @@ import { Store } from '@ngxs/store';
   templateUrl: './message-form.component.html',
   styleUrls: ['./message-form.component.scss'],
 })
-export class MessageFormComponent implements Form, OnSubmit {
+export class MessageFormComponent implements Form, OnSubmit, OnInit {
   @ViewChild('messageInput') messageInput: ElementRef;
   form: FormGroup;
   isLoading = false;
+  submitIcon = '👍';
+  private drinkTypes = [_('soft drinks'), _('alcoholic drinks')];
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -53,14 +55,45 @@ export class MessageFormComponent implements Form, OnSubmit {
     return this.form.get('message').hasError('required');
   }
 
+  ngOnInit() {
+    const drinkType = this.store.selectSnapshot(
+      state => state.meeting.meetingModel.meeting.drinkType.name,
+    );
+
+    if (drinkType === this.drinkTypes[1]) {
+      this.submitIcon = '🍻';
+    }
+  }
+
   onSubmit() {
     this.messageInput.nativeElement.focus();
 
     if (this.form.valid && !this.isLoading) {
       this.isLoading = true;
 
+      console.log(this.form.get('message').value.trim().length);
+
       this.sendMessage({
         message: this.form.get('message').value.trim(),
+        date: new Date().toISOString(),
+        userId: this.store.selectSnapshot(state => state.user.user.id),
+        sending: true,
+      });
+
+      this.form.patchValue({
+        message: '',
+      });
+
+      this.isLoading = false;
+    }
+  }
+
+  onSubmitIcon(icon: string) {
+    if (!this.isLoading) {
+      this.isLoading = true;
+
+      this.sendMessage({
+        message: icon,
         date: new Date().toISOString(),
         userId: this.store.selectSnapshot(state => state.user.user.id),
         sending: true,

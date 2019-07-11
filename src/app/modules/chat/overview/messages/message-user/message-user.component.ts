@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UserDto } from '../../../../user/user';
 import { ChatMessageState } from '../../../../meeting/meeting';
+import isOnlyEmojis from 'is-only-emojis';
 
 @Component({
   selector: 'app-message-user',
@@ -18,6 +19,12 @@ export class MessageUserComponent {
 
   get isDateShown(): boolean {
     return this.message.date === this.dateToShow;
+  }
+
+  get isOnlyEmoji(): boolean {
+    return (
+      isOnlyEmojis(this.message.message) && this.message.message.length <= 60
+    );
   }
 
   toggleDate() {

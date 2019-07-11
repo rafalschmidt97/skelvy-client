@@ -13,8 +13,7 @@
       <div
         (click)="toggleDate()"
         class="text pointer"
-        [class.bg-danger]="message.failed"
-        [class.sending]="message.sending"
+        [class.emoji]="isOnlyEmoji"
       >
         <div>{{ message.message }}</div>
         <div

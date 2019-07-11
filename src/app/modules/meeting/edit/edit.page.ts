@@ -38,10 +38,6 @@ export class EditPage implements Form, OnSubmit, OnInit {
   loadingForm = true;
   loadingSuggestions = false;
   suggestions: MeetingSuggestionsModel;
-  private readonly drinkTypesTranslateMarker = [
-    _('soft drinkTypes'),
-    _('alcoholic drinkTypes'),
-  ];
 
   constructor(
     private readonly formBuilder: FormBuilder,
