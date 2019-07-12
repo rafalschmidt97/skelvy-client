@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Connection } from '../../../core/state/global-state';
 import {
@@ -36,6 +36,7 @@ import { Select } from '@ngxs/store';
   ],
 })
 export class ConnectionComponent {
+  @Input() hasBackground: boolean;
   @Select(x => x.global.connection) connection$: Observable<Connection>;
   connectedStatus = Connection;
 }

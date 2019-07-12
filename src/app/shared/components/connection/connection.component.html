@@ -1,6 +1,7 @@
 <ng-container *ngIf="connection$ | async as connection">
   <div
     class="connection"
+    [class.background]="hasBackground"
     [@fadeInOut]="
       connection === connectedStatus.RECONNECTING ||
       connection === connectedStatus.WAITING ||

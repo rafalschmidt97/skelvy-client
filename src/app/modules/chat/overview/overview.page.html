@@ -18,7 +18,7 @@
 <ion-content [scrollY]="false">
   <div class="d-flex flex-column h-100 safe-area-b">
     <ng-container *ngIf="meeting$ | async as meeting">
-      <app-connection></app-connection>
+      <app-connection [hasBackground]="true"></app-connection>
       <app-messages
         *ngIf="meeting.meetingModel?.messages.length > 0; else empty"
         [messages]="meeting.meetingModel.messages"
