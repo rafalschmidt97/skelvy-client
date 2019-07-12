@@ -17,12 +17,13 @@ import { ChatService } from '../../chat.service';
 import { Storage } from '@ionic/storage';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MeetingService } from '../../../meeting/meeting.service';
 import { Modal } from '../../../../shared/modal/modal';
 import { ModalService } from '../../../../shared/modal/modal.service';
 import { Store } from '@ngxs/store';
+import { ImageViewerComponent } from '../image-viewer/image-viewer.component';
 
 @Component({
   selector: 'app-messages',
@@ -50,6 +51,7 @@ export class MessagesComponent implements OnInit {
     private readonly chatService: ChatService,
     private readonly modalService: ModalService,
     private readonly store: Store,
+    private readonly modalController: ModalController,
   ) {}
 
   ngOnInit() {
@@ -102,6 +104,19 @@ export class MessagesComponent implements OnInit {
     this.modal = this.modalService.show(this.modalTemplate);
   }
 
+  async showPreview(src: string) {
+    const modal = await this.modalController.create({
+      component: ImageViewerComponent,
+      componentProps: {
+        src: src,
+      },
+      keyboardClose: true,
+      showBackdrop: false,
+    });
+
+    return await modal.present();
+  }
+
   sendAgain(oldMessage: ChatMessageState) {
     this.modal.hide();
 
@@ -136,6 +151,6 @@ export class MessagesComponent implements OnInit {
   private scrollToLastMessage() {
     setTimeout(() => {
       this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
-    }, 240);
+    }, 200);
   }
 }

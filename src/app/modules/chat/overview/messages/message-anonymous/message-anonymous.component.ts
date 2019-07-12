@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChatMessageState } from '../../../../meeting/meeting';
+import isOnlyEmojis from 'is-only-emojis';
 
 @Component({
   selector: 'app-message-anonymous',
@@ -12,12 +13,25 @@ export class MessageAnonymousComponent {
   @Input() isFirst: boolean;
   @Input() dateToShow: string;
   @Output() showDate = new EventEmitter<string>();
+  @Output() showPreview = new EventEmitter<string>();
 
   get isDateShown(): boolean {
     return this.message.date === this.dateToShow;
   }
 
+  get isOnlyEmoji(): boolean {
+    return (
+      this.message.message &&
+      isOnlyEmojis(this.message.message) &&
+      this.message.message.length <= 60
+    );
+  }
+
   toggleDate() {
     this.showDate.emit(this.message.date);
+  }
+
+  preview() {
+    this.showPreview.emit(this.message.attachmentUrl);
   }
 }

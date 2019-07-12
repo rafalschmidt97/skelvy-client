@@ -10,19 +10,25 @@
       {{ user.profile.name }}
     </div>
     <div class="message mr-auto">
+      <img
+        *ngIf="message.attachmentUrl"
+        (click)="preview()"
+        [src]="message.attachmentUrl"
+        class="photo mr-auto"
+        alt="photo"
+      />
       <div
+        *ngIf="message.message"
         (click)="toggleDate()"
         class="text pointer"
-        [class.bg-danger]="message.failed"
-        [class.sending]="message.sending"
-      >
-        <div>{{ message.message }}</div>
-        <div
-          *ngIf="isDateShown"
-          class="date"
-          [innerHTML]="message.date | date: 'HH:mm'"
-        ></div>
-      </div>
+        [class.emoji]="isOnlyEmoji"
+        [innerText]="message.message"
+      ></div>
+      <div
+        *ngIf="isDateShown"
+        class="date"
+        [innerHTML]="message.date | date: 'HH:mm'"
+      ></div>
     </div>
   </div>
 </div>

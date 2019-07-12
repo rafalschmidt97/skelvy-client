@@ -236,6 +236,7 @@ export class MeetingState {
           if (new Date(x.date).getTime() === new Date(message.date).getTime()) {
             return {
               ...x,
+              attachmentUrl: message.attachmentUrl,
               sending: false,
               failed: false,
             };
@@ -261,6 +262,7 @@ export class MeetingState {
           if (new Date(x.date).getTime() === new Date(message.date).getTime()) {
             return {
               ...x,
+              attachmentUrl: message.attachmentUrl,
               sending: false,
               failed: true,
             };
