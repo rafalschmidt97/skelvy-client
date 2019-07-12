@@ -1,0 +1,12 @@
+<ion-content [forceOverscroll]="false" fullscreen="true">
+  <ion-slides [options]="slideOptions">
+    <ion-slide>
+      <div class="swiper-zoom-container">
+        <img [src]="src" height="100vh" alt="photo" />
+      </div>
+    </ion-slide>
+  </ion-slides>
+  <div class="close" (click)="closeModal()">
+    <ion-icon name="close"></ion-icon>
+  </div>
+</ion-content>

@@ -25,6 +25,7 @@
         [dateToShow]="dateToShow"
         (showDate)="showDate($event)"
         (showActions)="showActions($event)"
+        (showPreview)="showPreview($event)"
       ></app-message-user>
       <ng-template #notMine>
         <app-message
@@ -40,6 +41,7 @@
           "
           [dateToShow]="dateToShow"
           (showDate)="showDate($event)"
+          (showPreview)="showPreview($event)"
         ></app-message>
       </ng-template>
     </ng-container>
@@ -56,6 +58,7 @@
         "
         [dateToShow]="dateToShow"
         (showDate)="showDate($event)"
+        (showPreview)="showPreview($event)"
       ></app-message-anonymous>
     </ng-template>
   </ng-container>

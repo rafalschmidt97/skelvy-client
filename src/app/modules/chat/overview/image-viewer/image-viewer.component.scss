@@ -1,0 +1,20 @@
+@import '~src/theme/bootstrap/variables';
+
+ion-content {
+  --background: $black;
+  background: $black;
+}
+
+ion-slides {
+  height: 100%;
+}
+
+.close {
+  position: absolute;
+  top: var(--ion-safe-area-top);
+  left: var(--ion-safe-area-left);
+  font-size: 50px;
+  z-index: 1;
+  color: white !important;
+  text-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+}

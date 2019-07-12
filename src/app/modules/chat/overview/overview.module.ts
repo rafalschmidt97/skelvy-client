@@ -10,6 +10,7 @@ import { MessageComponent } from './messages/message/message.component';
 import { AutoScrollDirective } from './auto-scroll.directive';
 import { MessageAnonymousComponent } from './messages/message-anonymous/message-anonymous.component';
 import { MessageUserComponent } from './messages/message-user/message-user.component';
+import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 
 const routes: Routes = [
   {
@@ -20,9 +21,11 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
+  entryComponents: [ImageViewerComponent],
   declarations: [
     OverviewPage,
     EmptyComponent,
+    ImageViewerComponent,
     MessagesComponent,
     MessageFormComponent,
     MessageComponent,

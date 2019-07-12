@@ -16,6 +16,7 @@ export class MessageUserComponent {
   @Input() dateToShow: string;
   @Output() showDate = new EventEmitter<string>();
   @Output() showActions = new EventEmitter<ChatMessageState>();
+  @Output() showPreview = new EventEmitter<string>();
 
   get isDateShown(): boolean {
     return this.message.date === this.dateToShow;
@@ -35,5 +36,9 @@ export class MessageUserComponent {
 
   actions() {
     this.showActions.emit(this.message);
+  }
+
+  preview() {
+    this.showPreview.emit(this.message.attachmentUrl);
   }
 }

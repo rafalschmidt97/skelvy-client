@@ -13,6 +13,7 @@ export class MessageAnonymousComponent {
   @Input() isFirst: boolean;
   @Input() dateToShow: string;
   @Output() showDate = new EventEmitter<string>();
+  @Output() showPreview = new EventEmitter<string>();
 
   get isDateShown(): boolean {
     return this.message.date === this.dateToShow;
@@ -28,5 +29,9 @@ export class MessageAnonymousComponent {
 
   toggleDate() {
     this.showDate.emit(this.message.date);
+  }
+
+  preview() {
+    this.showPreview.emit(this.message.attachmentUrl);
   }
 }
