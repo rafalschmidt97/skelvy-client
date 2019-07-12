@@ -14,7 +14,6 @@ import { ChatMessageState } from '../../../meeting/meeting';
 import { Store } from '@ngxs/store';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { base64StringToBlob } from 'blob-util';
-import { Crop } from '@ionic-native/crop/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { UploadService } from '../../../../core/upload/upload.service';
 import { catchError, switchMap } from 'rxjs/operators';
@@ -45,7 +44,6 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     private readonly chatService: ChatService,
     private readonly store: Store,
     private readonly camera: Camera,
-    private readonly crop: Crop,
     private readonly file: File,
     private readonly uploadService: UploadService,
     private readonly webview: WebView,
@@ -123,21 +121,17 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
       const takenPhotoUri = await this.takePhoto();
 
       if (takenPhotoUri) {
-        const croppedPhotoUri = await this.cropPhoto(takenPhotoUri);
+        this.isLoading = true;
 
-        if (croppedPhotoUri) {
-          this.isLoading = true;
+        this.sendAttachmentMessage({
+          date: new Date().toISOString(),
+          message: null,
+          attachmentUrl: takenPhotoUri,
+          userId: this.store.selectSnapshot(state => state.user.user.id),
+          sending: true,
+        });
 
-          this.sendAttachmentMessage({
-            date: new Date().toISOString(),
-            message: null,
-            attachmentUrl: croppedPhotoUri,
-            userId: this.store.selectSnapshot(state => state.user.user.id),
-            sending: true,
-          });
-
-          this.isLoading = false;
-        }
+        this.isLoading = false;
       }
     }
   }
@@ -147,21 +141,17 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
       const chosenPhotoUri = await this.choosePhoto();
 
       if (chosenPhotoUri) {
-        const croppedPhotoUri = await this.cropPhoto(chosenPhotoUri);
+        this.isLoading = true;
 
-        if (croppedPhotoUri) {
-          this.isLoading = true;
+        this.sendAttachmentMessage({
+          date: new Date().toISOString(),
+          message: null,
+          attachmentUrl: chosenPhotoUri,
+          userId: this.store.selectSnapshot(state => state.user.user.id),
+          sending: true,
+        });
 
-          this.sendAttachmentMessage({
-            date: new Date().toISOString(),
-            message: null,
-            attachmentUrl: croppedPhotoUri,
-            userId: this.store.selectSnapshot(state => state.user.user.id),
-            sending: true,
-          });
-
-          this.isLoading = false;
-        }
+        this.isLoading = false;
       }
     }
   }
@@ -267,25 +257,12 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     }
   }
 
-  private async cropPhoto(photo: string) {
-    try {
-      return await this.crop.crop(photo, {
-        quality: 100,
-        targetWidth: 1024,
-        targetHeight: 1024,
-      });
-    } catch (e) {
-      console.log(e);
-      return null;
-    }
-  }
-
   private async uploadPhoto(message: ChatMessageState): Promise<PhotoDto> {
     const photoUri = message.attachmentUrl;
     const fileName = photoUri.split('/').pop();
     const path = photoUri.replace(fileName, '');
     const fileData = await this.file.readAsDataURL(path, fileName);
-    const croppedImage = await this.cropImage(fileData, 1024, 1024);
+    const croppedImage = await this.scaleImage(fileData, 1024, 1024);
     const data = new FormData();
     const blob = base64StringToBlob(
       croppedImage.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
@@ -309,20 +286,38 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
       .toPromise();
   }
 
-  private cropImage(
+  private scaleImage(
     imageData: string,
-    width: number,
-    height: number,
+    maxWidth: number,
+    maxHeight: number,
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.src = imageData;
       image.crossOrigin = 'Anonymous';
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      canvas.width = width;
-      canvas.height = height;
       image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        let width = image.width;
+        let height = image.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else if (width < height) {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        } else {
+          width = maxWidth;
+          height = maxHeight;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
         context.drawImage(image, 0, 0, width, height);
         const data = canvas.toDataURL('image/jpeg', 0.7);
         resolve(data);

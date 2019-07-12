@@ -220,7 +220,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     const fileName = photoUri.split('/').pop();
     const path = photoUri.replace(fileName, '');
     const fileData = await this.file.readAsDataURL(path, fileName);
-    const croppedImage = await this.cropImage(fileData, 1024, 1024);
+    const croppedImage = await this.scaleImage(fileData, 1024, 1024);
     const data = new FormData();
     const blob = base64StringToBlob(
       croppedImage.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
@@ -250,7 +250,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     );
   }
 
-  private cropImage(
+  private scaleImage(
     imageData: string,
     width: number,
     height: number,
