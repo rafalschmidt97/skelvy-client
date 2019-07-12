@@ -3,7 +3,7 @@
   (onSubmit)="onSubmit()"
   [isLoading]="isLoading"
   class="form-message"
-  [class.filled]="this.form.get('message').value"
+  [class.filled]="this.form.get('message').value.trim()"
 >
   <button
     (click)="onSubmitTakeAndCrop()"
