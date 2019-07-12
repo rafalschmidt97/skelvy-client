@@ -194,7 +194,8 @@ export class MeetingService {
             new Date(message1.date).getTime() ===
               new Date(message2.date).getTime() &&
             message1.userId === message2.userId &&
-            message1.message === message2.message
+            (message1.message === message2.message ||
+              message1.attachmentUrl === message2.attachmentUrl)
           );
         }).length === 0
       );

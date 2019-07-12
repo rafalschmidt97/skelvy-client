@@ -21,7 +21,6 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Modal } from '../../../../shared/modal/modal';
 import { ModalService } from '../../../../shared/modal/modal.service';
 import { Crop } from '@ionic-native/crop/ngx';
-import { Platform } from '@ionic/angular';
 import { File } from '@ionic-native/file/ngx';
 
 @Component({
@@ -49,9 +48,8 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     private readonly alertService: AlertService,
     private readonly formBuilder: FormBuilder,
     private readonly toastService: ToastService,
-    private readonly camera: Camera,
     private readonly modalService: ModalService,
-    private readonly platform: Platform,
+    private readonly camera: Camera,
     private readonly crop: Crop,
     private readonly file: File,
   ) {
@@ -229,9 +227,6 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
       'image/jpeg',
     );
     data.append('file', blob, fileName);
-
-    // const fileData = await this.file.readAsArrayBuffer(path, fileName);
-    // data.append('file', new Blob([fileData], { type: 'image/jpeg' }), fileName);
 
     this.uploadService.upload(data).subscribe(
       photo => {

@@ -6,16 +6,45 @@
 
 .message {
   max-width: 80%;
+  user-select: none;
 
   .text {
-    user-select: auto;
     background-color: gray('100');
     border-radius: 1rem;
     padding: 5px 12px;
     display: inline-block;
     white-space: pre-line;
 
-    &:not(.emoji).sending {
+    &.emoji {
+      background-color: transparent !important;
+      font-size: 35px;
+      padding: 2px 6px;
+      line-height: 38px;
+
+      .date {
+        margin-top: -10px;
+      }
+    }
+  }
+
+  .photo {
+    border-radius: 8px;
+    width: auto;
+    height: auto;
+    max-height: 200px;
+  }
+
+  .date {
+    padding: 0 6px;
+    font-size: 12px;
+  }
+
+  .action {
+    font-size: 10px;
+  }
+
+  &.sending {
+    .text:not(.emoji).sending {
       animation-duration: 1.5s;
       animation-fill-mode: forwards;
       animation-iteration-count: infinite;
@@ -31,30 +60,13 @@
       background-size: 1000px 1000px !important;
     }
 
-    &.emoji {
-      background-color: transparent !important;
-      font-size: 35px;
-      padding: 2px 6px;
-      line-height: 38px;
-
-      &.sending {
-        opacity: 0.6;
-      }
-
-      .date {
-        padding: 0 6px;
-        margin-top: -10px;
-        color: $body-color;
-      }
+    .text.emoji {
+      opacity: 0.6;
     }
 
-    .date {
-      font-size: 12px;
+    .photo {
+      opacity: 0.6;
     }
-  }
-
-  .action {
-    font-size: 10px;
   }
 }
 

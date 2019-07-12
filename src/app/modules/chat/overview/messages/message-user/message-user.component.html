@@ -1,20 +1,29 @@
 <div class="message-container d-flex">
   <div class="flex-fill">
-    <div class="message d-flex flex-column ml-auto">
+    <div
+      class="message d-flex flex-column ml-auto"
+      [class.sending]="message.sending"
+    >
+      <img
+        *ngIf="message.attachmentUrl"
+        (click)="toggleDate()"
+        [src]="message.attachmentUrl"
+        class="photo ml-auto"
+        alt="photo"
+      />
       <div
+        *ngIf="message.message"
         (click)="toggleDate()"
         class="text pointer bg-primary text-white ml-auto"
         [class.bg-danger]="message.failed"
-        [class.sending]="message.sending"
         [class.emoji]="isOnlyEmoji"
-      >
-        <div>{{ message.message }}</div>
-        <div
-          *ngIf="isDateShown"
-          class="date text-right"
-          [innerHTML]="message.date | date: 'HH:mm'"
-        ></div>
-      </div>
+        [innerText]="message.message"
+      ></div>
+      <div
+        *ngIf="isDateShown"
+        class="date text-right"
+        [innerHTML]="message.date | date: 'HH:mm'"
+      ></div>
       <div *ngIf="message.failed" class="ml-auto d-flex">
         <div
           (click)="actions()"

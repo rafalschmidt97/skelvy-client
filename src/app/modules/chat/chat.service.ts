@@ -77,9 +77,9 @@ export class ChatService {
 
   sendAgainMessage(oldMessage: ChatMessageRequest): Observable<void> {
     const newMessage: ChatMessageState = {
-      id: 0,
-      date: new Date().toISOString(),
       message: oldMessage.message,
+      attachmentUrl: oldMessage.attachmentUrl,
+      date: new Date().toISOString(),
       userId: oldMessage.userId,
       sending: true,
     };
@@ -99,14 +99,6 @@ export class ChatService {
     } else {
       await this.storage.set(storageKeys.lastMessageDate, message.date);
     }
-  }
-
-  addAndSendMessage(message: ChatMessageState): Observable<void> {
-    return from(this.addMessage(message)).pipe(
-      switchMap(() => {
-        return this.sendMessage(message);
-      }),
-    );
   }
 
   removeMessage(message: ChatMessageState) {

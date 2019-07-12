@@ -5,11 +5,19 @@
   class="form-message"
   [class.filled]="this.form.get('message').value"
 >
-  <button [disabled]="isLoading" class="btn-action camera">
+  <button
+    (click)="onSubmitTakeAndCrop()"
+    [disabled]="isLoading"
+    class="btn-action camera"
+  >
     <ion-icon name="camera" mode="md" class="text-primary d-block"></ion-icon>
   </button>
 
-  <button [disabled]="isLoading" class="btn-action image">
+  <button
+    (click)="onSubmitChooseAndCrop()"
+    [disabled]="isLoading"
+    class="btn-action image"
+  >
     <ion-icon name="image" mode="md" class="text-primary d-block"></ion-icon>
   </button>
 

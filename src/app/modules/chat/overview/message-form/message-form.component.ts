@@ -12,6 +12,16 @@ import { MeetingService } from '../../../meeting/meeting.service';
 import { ChatService } from '../../chat.service';
 import { ChatMessageState } from '../../../meeting/meeting';
 import { Store } from '@ngxs/store';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { base64StringToBlob } from 'blob-util';
+import { Crop } from '@ionic-native/crop/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { UploadService } from '../../../../core/upload/upload.service';
+import { catchError, switchMap } from 'rxjs/operators';
+import { from, throwError } from 'rxjs';
+import { PhotoDto } from '../../../../core/upload/upload';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { RemoveChatMessage } from '../../../meeting/store/meeting-actions';
 
 @Component({
   selector: 'app-message-form',
@@ -34,6 +44,11 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     private readonly meetingService: MeetingService,
     private readonly chatService: ChatService,
     private readonly store: Store,
+    private readonly camera: Camera,
+    private readonly crop: Crop,
+    private readonly file: File,
+    private readonly uploadService: UploadService,
+    private readonly webview: WebView,
   ) {
     this.form = this.formBuilder.group({
       message: [
@@ -71,10 +86,9 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     if (this.form.valid && !this.isLoading) {
       this.isLoading = true;
 
-      console.log(this.form.get('message').value.trim().length);
-
-      this.sendMessage({
+      this.sendTextMessage({
         message: this.form.get('message').value.trim(),
+        attachmentUrl: null,
         date: new Date().toISOString(),
         userId: this.store.selectSnapshot(state => state.user.user.id),
         sending: true,
@@ -92,38 +106,230 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     if (!this.isLoading) {
       this.isLoading = true;
 
-      this.sendMessage({
+      this.sendTextMessage({
         message: icon,
+        attachmentUrl: null,
         date: new Date().toISOString(),
         userId: this.store.selectSnapshot(state => state.user.user.id),
         sending: true,
-      });
-
-      this.form.patchValue({
-        message: '',
       });
 
       this.isLoading = false;
     }
   }
 
-  sendMessage(message: ChatMessageState) {
-    this.chatService.addAndSendMessage(message).subscribe(
-      () => {},
-      (error: HttpErrorResponse) => {
-        // data is not relevant (connection lost and reconnected)
-        if (error.status === 404 || error.status === 409) {
-          this.meetingService.findMeeting().subscribe();
+  async onSubmitTakeAndCrop() {
+    if (!this.isLoading) {
+      const takenPhotoUri = await this.takePhoto();
 
-          if (this.router.url === '/app/chat') {
-            this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-          }
+      if (takenPhotoUri) {
+        const croppedPhotoUri = await this.cropPhoto(takenPhotoUri);
 
-          this.toastService.createError(
-            _('A problem occurred while sending the message'),
-          );
+        if (croppedPhotoUri) {
+          this.isLoading = true;
+
+          this.sendAttachmentMessage({
+            date: new Date().toISOString(),
+            message: null,
+            attachmentUrl: croppedPhotoUri,
+            userId: this.store.selectSnapshot(state => state.user.user.id),
+            sending: true,
+          });
+
+          this.isLoading = false;
         }
-      },
+      }
+    }
+  }
+
+  async onSubmitChooseAndCrop() {
+    if (!this.isLoading) {
+      const chosenPhotoUri = await this.choosePhoto();
+
+      if (chosenPhotoUri) {
+        const croppedPhotoUri = await this.cropPhoto(chosenPhotoUri);
+
+        if (croppedPhotoUri) {
+          this.isLoading = true;
+
+          this.sendAttachmentMessage({
+            date: new Date().toISOString(),
+            message: null,
+            attachmentUrl: croppedPhotoUri,
+            userId: this.store.selectSnapshot(state => state.user.user.id),
+            sending: true,
+          });
+
+          this.isLoading = false;
+        }
+      }
+    }
+  }
+
+  private sendTextMessage(message: ChatMessageState) {
+    return from(this.chatService.addMessage(message))
+      .pipe(
+        switchMap(() => {
+          return this.chatService.sendMessage(message);
+        }),
+      )
+      .subscribe(
+        () => {},
+        (error: HttpErrorResponse) => {
+          // data is not relevant (connection lost and reconnected)
+          if (error.status === 404 || error.status === 409) {
+            this.meetingService.findMeeting().subscribe();
+
+            if (this.router.url === '/app/chat') {
+              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+            }
+
+            this.toastService.createError(
+              _('A problem occurred while sending the message'),
+            );
+          }
+        },
+      );
+  }
+
+  private sendAttachmentMessage(message: ChatMessageState) {
+    return from(
+      this.chatService.addMessage({
+        ...message,
+        attachmentUrl: this.webview.convertFileSrc(message.attachmentUrl),
+      }),
+    )
+      .pipe(
+        switchMap(() => {
+          return from(this.uploadPhoto(message));
+        }),
+        switchMap(photo => {
+          return this.chatService.sendMessage({
+            ...message,
+            attachmentUrl: photo.url,
+          });
+        }),
+      )
+      .subscribe(
+        () => {},
+        (error: HttpErrorResponse) => {
+          // data is not relevant (connection lost and reconnected)
+          if (error.status === 404 || error.status === 409) {
+            this.meetingService.findMeeting().subscribe();
+
+            if (this.router.url === '/app/chat') {
+              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+            }
+
+            this.toastService.createError(
+              _('A problem occurred while sending the message'),
+            );
+          }
+        },
+      );
+  }
+
+  private async takePhoto(): Promise<string> {
+    const options: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.CAMERA,
+      mediaType: this.camera.MediaType.PICTURE,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      correctOrientation: true,
+      cameraDirection: this.camera.Direction.FRONT,
+    };
+
+    try {
+      return await this.camera.getPicture(options);
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  private async choosePhoto() {
+    const options: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.SAVEDPHOTOALBUM,
+      mediaType: this.camera.MediaType.PICTURE,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      correctOrientation: true,
+      cameraDirection: this.camera.Direction.FRONT,
+    };
+
+    try {
+      return await this.camera.getPicture(options);
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  private async cropPhoto(photo: string) {
+    try {
+      return await this.crop.crop(photo, {
+        quality: 100,
+        targetWidth: 1024,
+        targetHeight: 1024,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  private async uploadPhoto(message: ChatMessageState): Promise<PhotoDto> {
+    const photoUri = message.attachmentUrl;
+    const fileName = photoUri.split('/').pop();
+    const path = photoUri.replace(fileName, '');
+    const fileData = await this.file.readAsDataURL(path, fileName);
+    const croppedImage = await this.cropImage(fileData, 1024, 1024);
+    const data = new FormData();
+    const blob = base64StringToBlob(
+      croppedImage.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
+      'image/jpeg',
     );
+    data.append('file', blob, fileName);
+
+    return this.uploadService
+      .upload(data)
+      .pipe(
+        catchError(err => {
+          this.toastService.createError(
+            _('A problem occurred while uploading the photo'),
+          );
+
+          this.store.dispatch(new RemoveChatMessage(message));
+
+          return throwError(err);
+        }),
+      )
+      .toPromise();
+  }
+
+  private cropImage(
+    imageData: string,
+    width: number,
+    height: number,
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageData;
+      image.crossOrigin = 'Anonymous';
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = width;
+      canvas.height = height;
+      image.onload = () => {
+        context.drawImage(image, 0, 0, width, height);
+        const data = canvas.toDataURL('image/jpeg', 0.7);
+        resolve(data);
+      };
+      image.onerror = () => {
+        reject(new Error('Photo cropping failed'));
+      };
+    });
   }
 }

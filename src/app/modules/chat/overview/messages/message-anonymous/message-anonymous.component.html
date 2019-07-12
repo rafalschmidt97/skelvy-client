@@ -6,18 +6,25 @@
   ></div>
   <div class="flex-fill" [class.message-continuation]="!isLast">
     <div class="message mr-auto">
+      <img
+        *ngIf="message.attachmentUrl"
+        (click)="toggleDate()"
+        [src]="message.attachmentUrl"
+        class="photo ml-auto"
+        alt="photo"
+      />
       <div
+        *ngIf="message.message"
         (click)="toggleDate()"
         class="text pointer"
         [class.emoji]="isOnlyEmoji"
-      >
-        <div>{{ message.message }}</div>
-        <div
-          *ngIf="isDateShown"
-          class="date"
-          [innerHTML]="message.date | date: 'HH:mm'"
-        ></div>
-      </div>
+        [innerText]="message.message"
+      ></div>
+      <div
+        *ngIf="isDateShown"
+        class="date"
+        [innerHTML]="message.date | date: 'HH:mm'"
+      ></div>
     </div>
   </div>
 </div>

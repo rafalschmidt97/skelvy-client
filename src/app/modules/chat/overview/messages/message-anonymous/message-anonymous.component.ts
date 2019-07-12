@@ -20,7 +20,9 @@ export class MessageAnonymousComponent {
 
   get isOnlyEmoji(): boolean {
     return (
-      isOnlyEmojis(this.message.message) && this.message.message.length <= 60
+      this.message.message &&
+      isOnlyEmojis(this.message.message) &&
+      this.message.message.length <= 60
     );
   }
 
