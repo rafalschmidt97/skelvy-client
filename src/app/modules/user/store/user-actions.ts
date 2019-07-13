@@ -1,4 +1,4 @@
-import { ProfileDto, UserDto } from '../user';
+import { SelfProfileDto, SelfUserDto } from '../user';
 
 export class ChangeUserLoadingStatus {
   static readonly type = '[User] Change user loading status';
@@ -7,10 +7,10 @@ export class ChangeUserLoadingStatus {
 
 export class UpdateProfile {
   static readonly type = '[User] Update profile';
-  constructor(public profile: ProfileDto) {}
+  constructor(public profile: SelfProfileDto) {}
 }
 
 export class UpdateUser {
   static readonly type = '[User] Update user';
-  constructor(public user: UserDto) {}
+  constructor(public user: SelfUserDto) {}
 }

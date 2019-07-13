@@ -5,7 +5,7 @@ import { Select } from '../../../shared/form/select/select';
 import { _ } from '../../../core/i18n/translate';
 import { InputComponent } from '../../../shared/form/input/input.component';
 import * as moment from 'moment';
-import { Gender, ProfileDto } from '../user';
+import { Gender, ProfileRequest } from '../user';
 import { UserService } from '../user.service';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
@@ -94,7 +94,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
       this.isLoading = true;
       const form = this.form.value;
 
-      const profile: ProfileDto = {
+      const profile: ProfileRequest = {
         name: form.name.trim(),
         description: form.description.trim(),
         birthday: form.birthday,

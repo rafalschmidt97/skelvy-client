@@ -75,7 +75,7 @@
 <ng-template #details>
   <app-modal (confirm)="confirmDetails()">
     <app-profile-details
-      [user]="user$ | async"
+      [user]="detailsUser"
       [mine]="true"
     ></app-profile-details>
   </app-modal>

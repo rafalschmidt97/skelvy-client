@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { ProfileRequest, UserDto } from './user';
+import { ProfileRequest, SelfUserDto } from './user';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Store } from '@ngxs/store';
@@ -20,13 +20,13 @@ export class UserService {
     private readonly store: Store,
   ) {}
 
-  findUser(markedAsLoading: boolean = false): Observable<UserDto> {
+  findUser(markedAsLoading: boolean = false): Observable<SelfUserDto> {
     if (!markedAsLoading) {
       this.store.dispatch(new ChangeUserLoadingStatus(false));
     }
 
     return this.http
-      .get<UserDto>(environment.versionApiUrl + 'users/self')
+      .get<SelfUserDto>(environment.versionApiUrl + 'users/self')
       .pipe(
         tap(user => {
           this.store.dispatch(new UpdateUser(user));

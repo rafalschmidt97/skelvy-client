@@ -231,11 +231,8 @@ export class EditPage implements Form, OnSubmit, OnInit {
             drinkTypes: [this.drinkTypes[0].value, this.drinkTypes[1].value],
           });
 
-          const userAge = moment().diff(
-            this.store.selectSnapshot(
-              state => state.user.user.profile.birthday,
-            ),
-            'years',
+          const userAge = this.store.selectSnapshot(
+            state => state.user.user.profile.age,
           );
 
           if (userAge >= 21 && userAge < 52) {

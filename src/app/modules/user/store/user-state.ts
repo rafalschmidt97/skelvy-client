@@ -1,4 +1,4 @@
-import { UserDto } from '../user';
+import { SelfUserDto } from '../user';
 import { Action, State, StateContext } from '@ngxs/store';
 import {
   ChangeUserLoadingStatus,
@@ -8,7 +8,7 @@ import {
 
 export interface UserStateModel {
   loading: boolean;
-  user: UserDto;
+  user: SelfUserDto;
 }
 
 @State<UserStateModel>({

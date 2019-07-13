@@ -5,6 +5,19 @@ export interface UserDto {
 
 export interface ProfileDto {
   name: string;
+  age: number;
+  gender: Gender;
+  photos: ProfilePhotoDto[];
+  description: string;
+}
+
+export interface SelfUserDto {
+  id: number;
+  profile: SelfProfileDto;
+}
+
+export interface SelfProfileDto {
+  name: string;
   birthday: string;
   gender: Gender;
   photos: ProfilePhotoDto[];
