@@ -5,7 +5,6 @@ import { ToastService } from '../../../core/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from '../../../modules/settings/settings.service';
 import { _ } from '../../../core/i18n/translate';
-import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-profile-details',
