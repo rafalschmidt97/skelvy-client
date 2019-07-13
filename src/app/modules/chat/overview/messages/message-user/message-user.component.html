@@ -1,8 +1,9 @@
 <div class="message-container d-flex">
   <div class="flex-fill">
     <div
-      class="message d-flex flex-column ml-auto"
+      class="message mine d-flex flex-column ml-auto"
       [class.sending]="message.sending"
+      [class.photo-with-text]="message.message && message.attachmentUrl"
     >
       <img
         *ngIf="message.attachmentUrl"

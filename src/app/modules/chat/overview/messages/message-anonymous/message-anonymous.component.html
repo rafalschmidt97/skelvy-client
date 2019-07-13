@@ -5,7 +5,10 @@
     [class.image-first-last]="isLast && isFirst"
   ></div>
   <div class="flex-fill" [class.message-continuation]="!isLast">
-    <div class="message mr-auto">
+    <div
+      class="message mr-auto"
+      [class.photo-with-text]="message.message && message.attachmentUrl"
+    >
       <img
         *ngIf="message.attachmentUrl"
         (click)="preview()"

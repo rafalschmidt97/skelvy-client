@@ -36,6 +36,32 @@
     overflow: hidden;
   }
 
+  &.photo-with-text {
+    .photo {
+      padding-bottom: 2px;
+    }
+
+    &.mine {
+      .text {
+        border-top-right-radius: 0;
+      }
+
+      .photo {
+        border-bottom-right-radius: 0;
+      }
+    }
+
+    &:not(.mine) {
+      .text {
+        border-top-left-radius: 0;
+      }
+
+      .photo {
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
+
   .date {
     padding: 0 6px;
     font-size: 12px;
