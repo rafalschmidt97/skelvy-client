@@ -90,7 +90,6 @@ export interface ChatMessageState {
 }
 
 export interface ChatMessageRequest {
-  date: string;
   message: string;
   attachmentUrl: string;
   userId: number;

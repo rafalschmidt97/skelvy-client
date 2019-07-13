@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import {
-  ChatMessageDto,
-  ChatMessageRequest,
-  ChatMessageState,
-} from '../meeting/meeting';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { ChatMessageDto, ChatMessageState } from '../meeting/meeting';
+import { catchError, tap } from 'rxjs/operators';
 import {
   AddChatMessage,
   AddChatMessages,
@@ -58,13 +54,16 @@ export class ChatService {
     );
   }
 
-  sendMessage(message: ChatMessageRequest): Observable<void> {
+  sendMessage(message: ChatMessageState): Observable<ChatMessageDto> {
     return this.http
-      .post<void>(environment.versionApiUrl + 'meetings/self/chat', message)
+      .post<ChatMessageDto>(
+        environment.versionApiUrl + 'meetings/self/chat',
+        message,
+      )
       .pipe(
-        tap(async () => {
-          this.store.dispatch(new MarkChatMessageAsSent(message));
-          await this.storage.set(storageKeys.lastMessageDate, message.date);
+        tap(async apiMessage => {
+          this.store.dispatch(new MarkChatMessageAsSent(message, apiMessage));
+          await this.storage.set(storageKeys.lastMessageDate, apiMessage.date);
         }),
         catchError(error => {
           if (error.status !== 404 && error.status === 409) {
@@ -75,7 +74,7 @@ export class ChatService {
       );
   }
 
-  sendAgainMessage(oldMessage: ChatMessageRequest): Observable<void> {
+  sendAgainMessage(oldMessage: ChatMessageState): Observable<ChatMessageDto> {
     const newMessage: ChatMessageState = {
       message: oldMessage.message,
       attachmentUrl: oldMessage.attachmentUrl,

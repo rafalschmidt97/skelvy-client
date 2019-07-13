@@ -225,7 +225,7 @@ export class MeetingState {
   @Action(MarkChatMessageAsSent)
   markAsSent(
     { getState, setState }: StateContext<MeetingStateModel>,
-    { message }: MarkChatMessageAsSent,
+    { message, apiMessage }: MarkChatMessageAsSent,
   ) {
     const state = getState();
     setState({
@@ -236,6 +236,8 @@ export class MeetingState {
           if (new Date(x.date).getTime() === new Date(message.date).getTime()) {
             return {
               ...x,
+              id: apiMessage.id,
+              date: apiMessage.date,
               attachmentUrl: message.attachmentUrl,
               sending: false,
               failed: false,

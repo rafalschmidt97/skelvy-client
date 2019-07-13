@@ -1,6 +1,6 @@
 import { UserDto } from '../../user/user';
 import { MeetingModelState } from './meeting-state';
-import { ChatMessageState } from '../meeting';
+import { ChatMessageDto, ChatMessageState } from '../meeting';
 
 export class ChangeMeetingLoadingStatus {
   static readonly type = '[Meeting] Change meeting loading status';
@@ -57,7 +57,10 @@ export class RemoveOldAndAddNewChatMessage {
 
 export class MarkChatMessageAsSent {
   static readonly type = '[Chat] Mark chat message as sent';
-  constructor(public message: ChatMessageState) {}
+  constructor(
+    public message: ChatMessageState,
+    public apiMessage: ChatMessageDto,
+  ) {}
 }
 
 export class MarkChatMessageAsFailed {
