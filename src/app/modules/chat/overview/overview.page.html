@@ -1,10 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        defaultHref="/app/tabs/meeting"
-        [text]="'Back' | translate"
-      ></ion-back-button>
+      <ion-back-button defaultHref="/app/tabs/meeting"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'Chat' | translate }}</ion-title>
     <ion-buttons *ngIf="(meeting$ | async).loading" slot="end">
