@@ -32,7 +32,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
   submitIcon = '👍';
-  private drinkTypes = [_('soft drinks'), _('alcoholic drinks')];
+  private readonly drinkTypes = [_('soft drinks'), _('alcoholic drinks')];
 
   constructor(
     private readonly formBuilder: FormBuilder,

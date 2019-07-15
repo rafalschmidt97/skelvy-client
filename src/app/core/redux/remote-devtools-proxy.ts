@@ -9,17 +9,29 @@ import { Subscription } from 'rxjs';
 import { connect } from 'remotedev/lib/devTools';
 import { environment } from '../../../environments/environment';
 
-export function registerReduxDevToolOnDevice() {
-  if (!window['devToolsExtension'] && !window['__REDUX_DEVTOOLS_EXTENSION__']) {
-    const remoteDevToolsProxy = new RemoteDevToolsProxy({
-      connectTimeout: 300000,
-      ackTimeout: 120000,
-      secure: false,
-    });
+class RemoteDevToolsConnectionProxy implements NgxsDevtoolsExtension {
+  constructor(public remoteDev: any, public instanceId: string) {}
+  init() {}
+  error() {}
 
-    // support both the legacy and new keys, for now
-    window['devToolsExtension'] = remoteDevToolsProxy;
-    window['__REDUX_DEVTOOLS_EXTENSION__'] = remoteDevToolsProxy;
+  subscribe(listener: (change: any) => void): any {
+    const listenerWrapper = (change: any) => {
+      listener(change);
+    };
+
+    this.remoteDev.subscribe(listenerWrapper);
+    // Fix for commit/time-travelling etc. if the devtools are already open
+    setTimeout(() => listenerWrapper({ type: 'START' }));
+  }
+
+  unsubscribe(): any {
+    // Fix bug in @ngrx/store-devtools that calls this instead of returning
+    // a lambda that calls it when their Observable wrapper is unsubscribed.
+    return () => this.remoteDev.unsubscribe(this.instanceId);
+  }
+
+  send(action: any, state: any): any {
+    this.remoteDev.send(action, state);
   }
 }
 
@@ -63,28 +75,16 @@ class RemoteDevToolsProxy implements NgxsDevtoolsExtension {
   }
 }
 
-class RemoteDevToolsConnectionProxy implements NgxsDevtoolsExtension {
-  constructor(public remoteDev: any, public instanceId: string) {}
-  init() {}
-  error() {}
+export function registerReduxDevToolOnDevice() {
+  if (!window['devToolsExtension'] && !window['__REDUX_DEVTOOLS_EXTENSION__']) {
+    const remoteDevToolsProxy = new RemoteDevToolsProxy({
+      connectTimeout: 300000,
+      ackTimeout: 120000,
+      secure: false,
+    });
 
-  subscribe(listener: (change: any) => void): any {
-    const listenerWrapper = (change: any) => {
-      listener(change);
-    };
-
-    this.remoteDev.subscribe(listenerWrapper);
-    // Fix for commit/time-travelling etc. if the devtools are already open
-    setTimeout(() => listenerWrapper({ type: 'START' }));
-  }
-
-  unsubscribe(): any {
-    // Fix bug in @ngrx/store-devtools that calls this instead of returning
-    // a lambda that calls it when their Observable wrapper is unsubscribed.
-    return () => this.remoteDev.unsubscribe(this.instanceId);
-  }
-
-  send(action: any, state: any): any {
-    this.remoteDev.send(action, state);
+    // support both the legacy and new keys, for now
+    window['devToolsExtension'] = remoteDevToolsProxy;
+    window['__REDUX_DEVTOOLS_EXTENSION__'] = remoteDevToolsProxy;
   }
 }

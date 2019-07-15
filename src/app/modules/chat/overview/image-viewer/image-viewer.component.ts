@@ -12,7 +12,7 @@ export class ImageViewerComponent {
     centeredSlides: 'true',
   };
 
-  constructor(private modalController: ModalController) {}
+  constructor(private readonly modalController: ModalController) {}
 
   closeModal() {
     this.modalController.dismiss();
