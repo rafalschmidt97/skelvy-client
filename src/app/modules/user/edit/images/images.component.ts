@@ -217,16 +217,25 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
   private async uploadPhoto(photoUri: string, name: string) {
     this.loadingUpload = true;
-    const fileName = photoUri.split('/').pop();
-    const path = photoUri.replace(fileName, '');
-    const fileData = await this.file.readAsDataURL(path, fileName);
-    const croppedImage = await this.scaleImage(fileData, 1024, 1024);
     const data = new FormData();
-    const blob = base64StringToBlob(
-      croppedImage.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
-      'image/jpeg',
-    );
-    data.append('file', blob, fileName);
+    try {
+      const fileName = photoUri.split('/').pop();
+      const fileNameFixed = fileName.split('?')[0];
+      const path = photoUri.replace(fileName, '');
+      const fileData = await this.file.readAsDataURL(path, fileNameFixed);
+      const croppedImage = await this.scaleImage(fileData, 1024, 1024);
+      const blob = base64StringToBlob(
+        croppedImage.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
+        'image/jpeg',
+      );
+      data.append('file', blob, fileNameFixed);
+    } catch (e) {
+      console.error(e);
+      this.toastService.createError(
+        _('A problem occurred while uploading the photo'),
+      );
+      this.loadingUpload = false;
+    }
 
     this.uploadService.upload(data).subscribe(
       photo => {

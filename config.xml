@@ -28,6 +28,7 @@
             <application android:usesCleartextTraffic="true" />
             <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
         </custom-config-file>
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
         <preference name="loadUrlTimeoutValue" value="1000000" />
         <resource-file src="resources/android/google-services.json" target="app/google-services.json" />
         <resource-file src="resources/android/notification_icon/drawable-mdpi/notification_icon.png" target="app/src/main/res/drawable-mdpi/notification_icon.png" />
@@ -134,9 +135,9 @@
     <plugin name="cordova-plugin-x-socialsharing" spec="5.4.4">
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
     </plugin>
-    <engine name="ios" spec="4.5.5" />
-    <engine name="android" spec="7.1.4" />
     <plugin name="cordova-plugin-camera" spec="4.0.3" />
     <plugin name="cordova-plugin-crop" spec="0.4.0" />
     <plugin name="cordova-plugin-file" spec="6.0.1" />
+    <engine name="ios" spec="4.5.5" />
+    <engine name="android" spec="7.1.4" />
 </widget>

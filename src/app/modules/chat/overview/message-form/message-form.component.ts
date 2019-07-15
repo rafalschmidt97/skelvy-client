@@ -258,17 +258,25 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
   }
 
   private async uploadPhoto(message: ChatMessageState): Promise<PhotoDto> {
-    const photoUri = message.attachmentUrl;
-    const fileName = photoUri.split('/').pop();
-    const path = photoUri.replace(fileName, '');
-    const fileData = await this.file.readAsDataURL(path, fileName);
-    const croppedImage = await this.scaleImage(fileData, 1024, 1024);
     const data = new FormData();
-    const blob = base64StringToBlob(
-      croppedImage.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
-      'image/jpeg',
-    );
-    data.append('file', blob, fileName);
+    try {
+      const photoUri = message.attachmentUrl;
+      const fileName = photoUri.split('/').pop();
+      const fileNameFixed = fileName.split('?')[0];
+      const path = photoUri.replace(fileName, '');
+      const fileData = await this.file.readAsDataURL(path, fileNameFixed);
+      const croppedImage = await this.scaleImage(fileData, 1024, 1024);
+      const blob = base64StringToBlob(
+        croppedImage.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
+        'image/jpeg',
+      );
+      data.append('file', blob, fileNameFixed);
+    } catch (e) {
+      console.error(e);
+      this.toastService.createError(
+        _('A problem occurred while uploading the photo'),
+      );
+    }
 
     return this.uploadService
       .upload(data)
