@@ -29,10 +29,10 @@ export class AppComponent {
     await this.setLanguage();
 
     return this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-
-      if (this.platform.is('android')) {
-        this.statusBar.backgroundColorByHexString('#fff');
+      if (this.platform.is('ios')) {
+        this.statusBar.styleDefault();
+      } else {
+        this.statusBar.styleLightContent();
       }
 
       this.splashScreen.hide();
