@@ -184,6 +184,7 @@ $ npm run ios:prepare
 $ ~/Library/Android/sdk/tools/bin/sdkmanager --licenses
 # add debug keystore
 # change ip address in environment
+# internet on emulator/device is required. Use dns zone 8.8.8.8/8.8.4.4
 ```
 
 ### Publishing Android version
