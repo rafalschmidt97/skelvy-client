@@ -31,6 +31,7 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { Crop } from '@ionic-native/crop/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 if (!environment.production) {
   registerReduxDevToolOnDevice();
@@ -73,6 +74,7 @@ if (!environment.production) {
     Crop,
     WebView,
     File,
+    LocalNotifications,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: NGXS_PLUGINS,
