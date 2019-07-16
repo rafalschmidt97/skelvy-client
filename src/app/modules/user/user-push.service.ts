@@ -7,6 +7,10 @@ import { Storage } from '@ionic/storage';
 import { NavController, Platform } from '@ionic/angular';
 import { storageKeys } from '../../core/storage/storage';
 import { Store } from '@ngxs/store';
+import {
+  ILocalNotification,
+  LocalNotifications,
+} from '@ionic-native/local-notifications/ngx';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +26,7 @@ export class UserPushService {
     private readonly platform: Platform,
     private readonly routerNavigation: NavController,
     private readonly store: Store,
+    private readonly localNotifications: LocalNotifications,
   ) {
     this.push$ = this.push.init({});
   }
@@ -73,6 +78,26 @@ export class UserPushService {
         }
       }
     });
+
+    this.localNotifications.on('click').subscribe(notification => {
+      if (notification.data && !notification.data.foreground) {
+        const { redirect_to } = notification.data;
+        if (redirect_to === 'meeting') {
+          this.routerNavigation.navigateRoot(['/app/tabs/meeting']);
+        } else if (redirect_to === 'chat') {
+          this.routerNavigation.navigateForward(['/app/chat']);
+        }
+      }
+    });
+
+    const localDefaults: ILocalNotification = {
+      sound: 'default',
+      smallIcon: 'res://notification_icon',
+      foreground: false,
+      data: { foreground: false },
+    };
+
+    this.localNotifications.setDefaults(localDefaults);
 
     this.storage.get(storageKeys.pushTopicUser).then((exists: boolean) => {
       if (!exists) {

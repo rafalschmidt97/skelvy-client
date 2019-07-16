@@ -10,6 +10,7 @@ import { NavController } from '@ionic/angular';
 import { ChatMessageDto } from './meeting';
 import { Store } from '@ngxs/store';
 import { ChatService } from '../chat/chat.service';
+import { BackgroundService } from '../../core/background/background.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,7 @@ export class MeetingSocketService {
     private readonly storage: Storage,
     private readonly store: Store,
     private readonly chatService: ChatService,
+    private readonly backgroundService: BackgroundService,
   ) {}
 
   set socket(socket: HubConnection) {
@@ -45,6 +47,33 @@ export class MeetingSocketService {
     this.userSocket.on(
       'UserSentMeetingChatMessage',
       async (message: ChatMessageDto) => {
+        if (this.backgroundService.inBackground) {
+          if (message.message) {
+            this.backgroundService.create(
+              this.getProfileName(message.userId),
+              message.message,
+              { foreground: false, redirect_to: 'chat' },
+              false,
+              false,
+            );
+          } else if (message.attachmentUrl) {
+            this.backgroundService.create(
+              this.getProfileName(message.userId),
+              _('USER_SENT_PHOTO'),
+              { foreground: false, redirect_to: 'chat' },
+              false,
+              true,
+            );
+          } else {
+            this.backgroundService.create(
+              this.getProfileName(message.userId),
+              _('USER_SENT_MESSAGE'),
+              { foreground: false, redirect_to: 'chat' },
+              false,
+            );
+          }
+        }
+
         await this.chatService.addMessage(message);
       },
     );
@@ -52,6 +81,13 @@ export class MeetingSocketService {
 
   private onUserJoinedMeeting() {
     this.userSocket.on('UserJoinedMeeting', data => {
+      if (this.backgroundService.inBackground) {
+        this.backgroundService.create(_('MEETING'), _('USER_JOINED_MEETING'), {
+          foreground: false,
+          redirect_to: 'meeting',
+        });
+      }
+
       this.meetingService.addUser(data.userId).subscribe(
         () => {
           this.toastService.createInformation(
@@ -69,6 +105,13 @@ export class MeetingSocketService {
 
   private onUserFoundMeeting() {
     this.userSocket.on('UserFoundMeeting', () => {
+      if (this.backgroundService.inBackground) {
+        this.backgroundService.create(_('MEETING'), _('USER_FOUND_MEETING'), {
+          foreground: false,
+          redirect_to: 'meeting',
+        });
+      }
+
       this.meetingService.findMeeting().subscribe(
         () => {
           this.toastService.createInformation(_('New meeting has been found'));
@@ -84,6 +127,13 @@ export class MeetingSocketService {
 
   private onUserLeftMeeting() {
     this.userSocket.on('UserLeftMeeting', data => {
+      if (this.backgroundService.inBackground) {
+        this.backgroundService.create(_('MEETING'), _('USER_LEFT_MEETING'), {
+          foreground: false,
+          redirect_to: 'meeting',
+        });
+      }
+
       if (
         this.store.selectSnapshot(
           state => state.meeting.meetingModel.meeting.users,
@@ -113,6 +163,17 @@ export class MeetingSocketService {
 
   private onMeetingRequestExpired() {
     this.userSocket.on('MeetingRequestExpired', () => {
+      if (this.backgroundService.inBackground) {
+        this.backgroundService.create(
+          _('MEETING_REQUEST'),
+          _('MEETING_REQUEST_EXPIRED'),
+          {
+            foreground: false,
+            redirect_to: 'meeting',
+          },
+        );
+      }
+
       this.toastService.createInformation(_('Meeting request has expired'));
       this.meetingService.clearMeeting();
     });
@@ -120,6 +181,13 @@ export class MeetingSocketService {
 
   private onMeetingExpired() {
     this.userSocket.on('MeetingExpired', () => {
+      if (this.backgroundService.inBackground) {
+        this.backgroundService.create(_('MEETING'), _('MEETING_EXPIRED'), {
+          foreground: false,
+          redirect_to: 'meeting',
+        });
+      }
+
       this.toastService.createInformation(_('The meeting has expired'));
 
       if (this.router.url === '/app/chat') {
@@ -128,5 +196,11 @@ export class MeetingSocketService {
 
       this.meetingService.clearMeeting();
     });
+  }
+
+  private getProfileName(userId: number): string {
+    return this.store
+      .selectSnapshot(state => state.meeting.meetingModel.meeting.users)
+      .find(x => x.id === userId).profile.name;
   }
 }

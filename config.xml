@@ -74,6 +74,7 @@
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
             <string>To get and add pictures.</string>
         </edit-config>
+        <preference name="WKSuspendInBackground" value="false" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
         <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
         <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
@@ -140,4 +141,5 @@
     <plugin name="cordova-plugin-file" spec="6.0.1" />
     <engine name="ios" spec="4.5.5" />
     <engine name="android" spec="7.1.4" />
+    <plugin name="cordova-plugin-local-notification" spec="0.9.0-beta.2" />
 </widget>
