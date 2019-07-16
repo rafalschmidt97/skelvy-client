@@ -66,9 +66,7 @@ export class ChatService {
           await this.storage.set(storageKeys.lastMessageDate, apiMessage.date);
         }),
         catchError(error => {
-          if (error.status !== 404 && error.status === 409) {
-            this.store.dispatch(new MarkChatMessageAsFailed(message));
-          }
+          this.store.dispatch(new MarkChatMessageAsFailed(message));
           return throwError(error);
         }),
       );
