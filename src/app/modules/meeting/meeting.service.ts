@@ -233,8 +233,9 @@ export class MeetingService {
             newMessages[newMessages.length - 1].date,
           );
         }
-        return newMessages;
       }
+
+      return newMessages;
     }
   }
 
@@ -266,7 +267,7 @@ export class MeetingService {
         status: model.status,
         meeting: model.meeting,
         request: model.request,
-        messages,
+        messages: messages,
       }),
     );
   }
