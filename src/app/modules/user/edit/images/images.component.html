@@ -118,34 +118,6 @@
   </div>
 </div>
 
-<ng-template #actions>
-  <app-modal>
-    <div class="px-4 pb-4 pt-2">
-      <button
-        type="button"
-        class="btn btn-primary btn-block"
-        (click)="takeAndCrop()"
-      >
-        {{ 'Take a photo' | translate }}
-      </button>
-      <button
-        type="button"
-        class="btn btn-outline-primary btn-block"
-        (click)="chooseAndCrop()"
-      >
-        {{ 'Select from gallery' | translate }}
-      </button>
-      <button
-        type="button"
-        class="btn btn-light btn-block mt-4"
-        (click)="decline()"
-      >
-        {{ 'Cancel' | translate }}
-      </button>
-    </div>
-  </app-modal>
-</ng-template>
-
 <ng-template #alert>
   <app-alert
     (confirm)="confirmAlert()"

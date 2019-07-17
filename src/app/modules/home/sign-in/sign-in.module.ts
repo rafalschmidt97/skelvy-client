@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { SignInPage } from './sign-in.page';
 import { SharedModule } from '../../../shared/shared.module';
+import { LegalLinksModalComponent } from './legal-links-modal/legal-links-modal.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
-  declarations: [SignInPage],
+  entryComponents: [LegalLinksModalComponent],
+  declarations: [LegalLinksModalComponent, SignInPage],
 })
 export class SignInPageModule {}

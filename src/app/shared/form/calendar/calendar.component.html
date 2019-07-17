@@ -1,9 +1,9 @@
 <div [class.form-group]="label">
-  <label (click)="open(date)" *ngIf="label" [attr.for]="name">
+  <label (click)="open()" *ngIf="label" [attr.for]="name">
     {{ label }}
   </label>
   <div
-    (click)="open(date)"
+    (click)="open()"
     [className]="
       'form-control form-control-placeholder ' +
       (isInvalid && (isDirty || isTouched) ? 'is-invalid ' : '') +
@@ -26,28 +26,3 @@
     </ng-container>
   </div>
 </div>
-
-<ng-template #date>
-  <app-modal (confirm)="confirm()" (decline)="decline()">
-    <ng-container [formGroup]="inputForm">
-      <p-calendar
-        [formControlName]="name"
-        [styleClass]="
-          (isInvalid && (isDirty || isTouched) ? 'is-invalid ' : '') +
-          (isLoading ? 'is-disabled' : '')
-        "
-        [locale]="locale"
-        [readonlyInput]="isLoading"
-        [inputStyleClass]="
-          isInvalid && isTouched && hasFeedback
-            ? 'form-control is-invalid'
-            : 'form-control'
-        "
-        [minDate]="min || today"
-        dateFormat="dd.mm.yy"
-        selectionMode="range"
-        [inline]="true"
-      ></p-calendar>
-    </ng-container>
-  </app-modal>
-</ng-template>

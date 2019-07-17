@@ -1,0 +1,46 @@
+<app-modal>
+  <div
+    class="profile py-4 d-flex align-items-center justify-content-center"
+    *ngIf="request.user as user"
+  >
+    <div
+      class="flex-shrink-0 image rounded-circle"
+      [style.background-image]="'url(' + user.profile.photos[0].url + ')'"
+    ></div>
+    <div class="min-width mx-3">
+      <h3 class="mb-0 text-primary">
+        {{ user.profile.name }}, {{ user.profile.age }}
+      </h3>
+    </div>
+  </div>
+  <div class="px-4 pb-4">
+    <div class="border-top py-4">
+      <div>
+        <span class="font-weight-bold">{{ 'Date' | translate }}</span
+        >: {{ getDate(request.minDate, request.maxDate) }}
+      </div>
+      <div>
+        <span class="font-weight-bold">{{ 'City' | translate }}</span
+        >: {{ request.city }}
+      </div>
+      <div>
+        <span class="font-weight-bold">{{ 'Drinks' | translate }}</span
+        >:
+        <ng-container *ngFor="let drink of request.drinkTypes; let i = index">
+          <span class="d-inline-block">{{ drink.name | translate }}</span>
+          <span *ngIf="i !== request.drinkTypes.length - 1">, </span>
+        </ng-container>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="connectRequest(request.id)"
+    >
+      {{ 'Connect request' | translate }}
+    </button>
+    <button type="button" class="btn btn-light btn-block" (click)="decline()">
+      {{ 'Cancel' | translate }}
+    </button>
+  </div>
+</app-modal>

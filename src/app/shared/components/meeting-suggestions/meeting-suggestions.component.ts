@@ -1,19 +1,13 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import * as moment from 'moment';
 import {
   MeetingDto,
   MeetingRequestWithUserDto,
   MeetingSuggestionsModel,
 } from '../../../modules/meeting/meeting';
-import { Modal } from '../../modal/modal';
-import { ModalService } from '../../modal/modal.service';
+import { RequestSuggestionsModalComponent } from './request-suggestions-modal/request-suggestions-modal.component';
+import { MeetingSuggestionsModalComponent } from './meeting-suggestions-modal/meeting-suggestions-modal.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-meeting-suggestions',
@@ -26,13 +20,8 @@ export class MeetingSuggestionsComponent {
   @Input() isLoading: boolean;
   @Output() join = new EventEmitter<number>();
   @Output() connect = new EventEmitter<number>();
-  @ViewChild('meetingPreview') meetingPreviewTemplate: TemplateRef<any>;
-  @ViewChild('requestPreview') requestPreviewTemplate: TemplateRef<any>;
-  previewMeeting: MeetingDto;
-  previewRequest: MeetingRequestWithUserDto;
-  previewModal: Modal;
 
-  constructor(private readonly modalService: ModalService) {}
+  constructor(private readonly modalController: ModalController) {}
 
   getDate(minDate: string | Date, maxDate: string | Date): string {
     if (maxDate !== minDate) {
@@ -44,27 +33,37 @@ export class MeetingSuggestionsComponent {
     return moment(minDate).format('DD.MM.YYYY');
   }
 
-  openMeetingDetails(previewMeeting: MeetingDto) {
-    this.previewMeeting = previewMeeting;
-    this.previewModal = this.modalService.show(this.meetingPreviewTemplate);
+  async openMeetingDetails(previewMeeting: MeetingDto) {
+    const modal = await this.modalController.create({
+      component: MeetingSuggestionsModalComponent,
+      componentProps: {
+        meeting: previewMeeting,
+      },
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (data.meetingId) {
+      this.join.emit(data.meetingId);
+    }
   }
 
-  openRequestDetails(previewRequest: MeetingRequestWithUserDto) {
-    this.previewRequest = previewRequest;
-    this.previewModal = this.modalService.show(this.requestPreviewTemplate);
-  }
+  async openRequestDetails(previewRequest: MeetingRequestWithUserDto) {
+    const modal = await this.modalController.create({
+      component: RequestSuggestionsModalComponent,
+      componentProps: {
+        request: previewRequest,
+      },
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
 
-  decline() {
-    this.previewModal.hide();
-  }
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
 
-  connectRequest(requestId: number) {
-    this.decline();
-    this.connect.emit(requestId);
-  }
-
-  joinMeeting(meetingId: number) {
-    this.decline();
-    this.join.emit(meetingId);
+    if (data.requestId) {
+      this.connect.emit(data.requestId);
+    }
   }
 }

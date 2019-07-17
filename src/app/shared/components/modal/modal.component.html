@@ -1,5 +1,8 @@
-<div class="modal-body safe-area-b d-flex flex-column">
-  <div class="header d-flex align-items-center py-2 px-3">
+<div class="ionic-modal-content d-flex flex-column">
+  <div
+    *ngIf="hasConfirm || hasDecline"
+    class="header d-flex align-items-center py-2 px-3"
+  >
     <span class="title font-weight-medium">{{ title }}</span>
     <span
       *ngIf="hasDecline && !confirmLoading"

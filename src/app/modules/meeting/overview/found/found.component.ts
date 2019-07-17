@@ -1,20 +1,19 @@
 import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MeetingDto } from '../../meeting';
-import { ModalService } from '../../../../shared/modal/modal.service';
 import { UserDto } from '../../../user/user';
-import { Modal } from '../../../../shared/modal/modal';
 import { Alert } from '../../../../shared/alert/alert';
 import { AlertService } from '../../../../shared/alert/alert.service';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
 import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { HttpErrorResponse } from '@angular/common/http';
 import { storageKeys } from '../../../../core/storage/storage';
 import { Store } from '@ngxs/store';
 import { UpdateChatMessagesToRead } from '../../store/meeting-actions';
+import { ProfileDetailsModalComponent } from '../../../../shared/components/profile-details-modal/profile-details-modal.component';
 
 @Component({
   selector: 'app-found',
@@ -22,19 +21,16 @@ import { UpdateChatMessagesToRead } from '../../store/meeting-actions';
   styleUrls: ['./found.component.scss'],
 })
 export class FoundComponent {
-  @ViewChild('details') detailsTemplate: TemplateRef<any>;
   @ViewChild('leave') leaveTemplate: TemplateRef<any>;
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
   @Input() loadingMeeting: boolean;
   @Input() messagesToRead: number;
-  detailsUser: UserDto;
-  detailsModal: Modal;
   leaveAlert: Alert;
   loadingLeave = false;
 
   constructor(
-    private readonly modalService: ModalService,
+    private readonly modalController: ModalController,
     private readonly alertService: AlertService,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
@@ -60,18 +56,21 @@ export class FoundComponent {
     return data;
   }
 
-  openDetails(user: UserDto) {
-    this.detailsUser = user;
-    this.detailsModal = this.modalService.show(this.detailsTemplate, true);
+  async openDetails(user: UserDto) {
+    const modal = await this.modalController.create({
+      component: ProfileDetailsModalComponent,
+      componentProps: {
+        user,
+      },
+      cssClass: 'ionic-modal ionic-full-modal',
+    });
+
+    await modal.present();
   }
 
   openLeave() {
     this.loadingLeave = false;
     this.leaveAlert = this.alertService.show(this.leaveTemplate);
-  }
-
-  confirmDetails() {
-    this.detailsModal.hide();
   }
 
   confirmLeave() {

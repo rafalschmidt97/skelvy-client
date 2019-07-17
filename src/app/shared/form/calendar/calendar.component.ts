@@ -1,46 +1,23 @@
-import {
-  Component,
-  forwardRef,
-  Inject,
-  Input,
-  OnInit,
-  TemplateRef,
-} from '@angular/core';
+import { Component, forwardRef, Inject, Input } from '@angular/core';
 import { ComplexFieldComponent } from '../complex-field.component';
-import { LocaleSettings } from 'primeng/primeng';
 import * as moment from 'moment';
 import { FormComponent } from '../form.component';
-import { Modal } from '../../modal/modal';
-import { ModalService } from '../../modal/modal.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { CalendarModalComponent } from './calendar-modal/calendar-modal.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent extends ComplexFieldComponent implements OnInit {
+export class CalendarComponent extends ComplexFieldComponent {
   @Input() range: boolean;
   @Input() min: Date;
   @Input() max: Date;
-  inputForm: FormGroup;
-  locale: LocaleSettings = {
-    firstDayOfWeek: moment.localeData().firstDayOfWeek(),
-    dayNames: moment.weekdays(),
-    dayNamesShort: moment.weekdaysShort(),
-    dayNamesMin: moment.weekdaysMin(),
-    monthNames: moment.months('MMMM'),
-    monthNamesShort: moment.weekdaysShort(),
-    today: '',
-    clear: '',
-  };
-  today = new Date();
-  modal: Modal;
 
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
-    private readonly modalService: ModalService,
-    private readonly formBuilder: FormBuilder,
+    private readonly modalController: ModalController,
   ) {
     super(parent);
   }
@@ -58,36 +35,32 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
     return moment(start).format('DD.MM.YYYY');
   }
 
-  ngOnInit() {
-    this.inputForm = this.formBuilder.group({
-      [this.name]: [],
-    });
-
-    this.inputForm.get(this.name).valueChanges.subscribe(value => {
-      if (value[1] && value[0] === value[1]) {
-        this.inputForm.patchValue({
-          [this.name]: [value[0], null],
-        });
-      }
-    });
-  }
-
-  open(template: TemplateRef<any>) {
-    const value = this.form.get(this.name).value;
-
-    this.inputForm.patchValue({
-      [this.name]: value,
-    });
-
+  async open() {
     if (!this.isLoading) {
-      this.modal = this.modalService.show(template);
+      const value = this.form.get(this.name).value;
+
+      const modal = await this.modalController.create({
+        component: CalendarModalComponent,
+        componentProps: {
+          value,
+          min: this.min,
+          max: this.max,
+        },
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data && data.value) {
+        this.confirm(data.value);
+      }
     }
   }
 
-  confirm() {
+  confirm(value) {
     this.form.markAsDirty();
     this.form.markAsTouched();
-    const value = this.inputForm.get(this.name).value;
     value[0].setHours(0, 0, 0, 0);
 
     if (value[1]) {
@@ -99,11 +72,5 @@ export class CalendarComponent extends ComplexFieldComponent implements OnInit {
         [this.name]: [value[0]],
       });
     }
-
-    this.modal.hide();
-  }
-
-  decline() {
-    this.modal.hide();
   }
 }

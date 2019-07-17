@@ -55,12 +55,6 @@
   </section>
 </div>
 
-<ng-template #details>
-  <app-modal (confirm)="confirmDetails()">
-    <app-profile-details [user]="detailsUser"></app-profile-details>
-  </app-modal>
-</ng-template>
-
 <ng-template #leave>
   <app-alert
     (confirm)="confirmLeave()"

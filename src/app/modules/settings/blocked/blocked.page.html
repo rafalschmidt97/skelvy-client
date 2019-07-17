@@ -57,12 +57,3 @@
     </ng-template>
   </div>
 </ion-content>
-
-<ng-template #details>
-  <app-modal (confirm)="confirmDetails()">
-    <app-profile-details
-      [user]="detailsUser"
-      [blocked]="true"
-    ></app-profile-details>
-  </app-modal>
-</ng-template>
