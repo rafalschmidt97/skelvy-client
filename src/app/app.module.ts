@@ -11,7 +11,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { IonicStorageModule } from '@ionic/storage';
 import { i18nConfiguration } from './core/i18n/translate';
 import { CoreModule } from './core/core.module';
-import { ModalModule } from 'ngx-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { Facebook } from '@ionic-native/facebook/ngx';
@@ -56,7 +55,6 @@ if (!environment.production) {
       name: 'skelvy',
       disabled: environment.production,
     }),
-    ModalModule.forRoot(),
   ],
   providers: [
     StatusBar,
