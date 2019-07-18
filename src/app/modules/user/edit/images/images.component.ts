@@ -1,11 +1,4 @@
-import {
-  Component,
-  forwardRef,
-  Inject,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, forwardRef, Inject, OnInit } from '@angular/core';
 import { FormComponent } from '../../../../shared/form/form.component';
 import { ComplexFieldComponent } from '../../../../shared/form/complex-field.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -15,13 +8,13 @@ import { get } from 'lodash';
 import { UploadService } from '../../../../core/upload/upload.service';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
-import { Alert } from '../../../../shared/alert/alert';
-import { AlertService } from '../../../../shared/alert/alert.service';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Crop } from '@ionic-native/crop/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { ImageActionsModalComponent } from './image-actions-modal/image-actions-modal.component';
 import { ModalController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { AlertModalComponent } from '../../../../shared/components/alert/alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-images',
@@ -29,26 +22,23 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./images.component.scss'],
 })
 export class ImagesComponent extends ComplexFieldComponent implements OnInit {
-  @ViewChild('alert') alertTemplate: TemplateRef<any>;
-  alert: Alert;
   inputForm: FormGroup;
   dirty = false;
   image1Name = 'image1';
   image2Name = 'image2';
   image3Name = 'image3';
   loadingUpload = false;
-  private removeIndex: number;
 
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
     private readonly uploadService: UploadService,
-    private readonly alertService: AlertService,
     private readonly formBuilder: FormBuilder,
     private readonly toastService: ToastService,
     private readonly modalController: ModalController,
     private readonly camera: Camera,
     private readonly crop: Crop,
     private readonly file: File,
+    private readonly translateService: TranslateService,
   ) {
     super(parent);
   }
@@ -133,18 +123,21 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     }
   }
 
-  remove(index: number) {
-    this.removeIndex = index;
-    this.alert = this.alertService.show(this.alertTemplate);
-  }
+  async remove(index: number) {
+    const modal = await this.modalController.create({
+      component: AlertModalComponent,
+      componentProps: {
+        title: this.translateService.instant('Are you sure?'),
+      },
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
 
-  confirmAlert() {
-    this.removeFromInput(this.removeIndex);
-    this.alert.hide();
-  }
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
 
-  declineAlert() {
-    this.alert.hide();
+    if (data && data.response) {
+      this.removeFromInput(index);
+    }
   }
 
   private removeFromInput(index: number) {

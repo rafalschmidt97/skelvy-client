@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { AlertModule } from './alert/alert.module';
+import { AlertModule } from './components/alert/alert.module';
 import { FormModule } from './form/form.module';
 import { AgePipe } from './pipes/age.pipe';
 import { ConnectionComponent } from './components/connection/connection.component';

@@ -49,17 +49,12 @@
         ></ion-icon>
       </button>
       <button (click)="openLeave()" class="btn btn-outline-primary btn-block">
-        {{ 'Leave group' | translate }}
+        <span
+          [hidden]="loadingLeave"
+          [innerText]="'Leave group' | translate"
+        ></span>
+        <ion-spinner [hidden]="!loadingLeave"></ion-spinner>
       </button>
     </div>
   </section>
 </div>
-
-<ng-template #leave>
-  <app-alert
-    (confirm)="confirmLeave()"
-    [confirmLoading]="loadingLeave"
-    (decline)="declineLeave()"
-    [title]="'Are you sure?' | translate"
-  ></app-alert>
-</ng-template>

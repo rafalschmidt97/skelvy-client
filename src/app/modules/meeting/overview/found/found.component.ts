@@ -1,8 +1,6 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MeetingDto } from '../../meeting';
 import { UserDto } from '../../../user/user';
-import { Alert } from '../../../../shared/alert/alert';
-import { AlertService } from '../../../../shared/alert/alert.service';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
 import { LoadingService } from '../../../../core/loading/loading.service';
@@ -14,6 +12,8 @@ import { storageKeys } from '../../../../core/storage/storage';
 import { Store } from '@ngxs/store';
 import { UpdateChatMessagesToRead } from '../../store/meeting-actions';
 import { ProfileDetailsModalComponent } from '../../../../shared/components/profile-details-modal/profile-details-modal.component';
+import { AlertModalComponent } from '../../../../shared/components/alert/alert-modal/alert-modal.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-found',
@@ -21,23 +21,21 @@ import { ProfileDetailsModalComponent } from '../../../../shared/components/prof
   styleUrls: ['./found.component.scss'],
 })
 export class FoundComponent {
-  @ViewChild('leave') leaveTemplate: TemplateRef<any>;
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
   @Input() loadingMeeting: boolean;
   @Input() messagesToRead: number;
-  leaveAlert: Alert;
   loadingLeave = false;
 
   constructor(
     private readonly modalController: ModalController,
-    private readonly alertService: AlertService,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
     private readonly routerNavigation: NavController,
     private readonly storage: Storage,
     private readonly store: Store,
+    private readonly translateService: TranslateService,
   ) {}
 
   get filteredMeetingUsers(): UserDto[] {
@@ -68,9 +66,23 @@ export class FoundComponent {
     await modal.present();
   }
 
-  openLeave() {
-    this.loadingLeave = false;
-    this.leaveAlert = this.alertService.show(this.leaveTemplate);
+  async openLeave() {
+    if (!this.loadingLeave) {
+      const modal = await this.modalController.create({
+        component: AlertModalComponent,
+        componentProps: {
+          title: this.translateService.instant('Are you sure?'),
+        },
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data && data.response) {
+        this.confirmLeave();
+      }
+    }
   }
 
   confirmLeave() {
@@ -78,7 +90,7 @@ export class FoundComponent {
     this.loadingService.lock();
     this.meetingService.leaveMeeting().subscribe(
       () => {
-        this.leaveAlert.hide();
+        this.loadingLeave = false;
         this.loadingService.unlock();
       },
       (error: HttpErrorResponse) => {
@@ -87,17 +99,13 @@ export class FoundComponent {
           this.meetingService.findMeeting().subscribe();
         }
 
-        this.leaveAlert.hide();
+        this.loadingLeave = false;
         this.loadingService.unlock();
         this.toastService.createError(
           _('A problem occurred while leaving the meeting'),
         );
       },
     );
-  }
-
-  declineLeave() {
-    this.leaveAlert.hide();
   }
 
   showMessages() {

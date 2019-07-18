@@ -1,9 +1,7 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
-import { AlertService } from '../../../shared/alert/alert.service';
 import { LoadingService } from '../../../core/loading/loading.service';
-import { Alert } from '../../../shared/alert/alert';
 import { UserService } from '../../user/user.service';
 import { MeetingService } from '../../meeting/meeting.service';
 import { SelfService } from '../../user/self.service';
@@ -16,6 +14,9 @@ import { ClearState } from '../../../core/redux/redux';
 import { tap } from 'rxjs/operators';
 import { Connection } from '../../../core/state/global-state';
 import { ChangeConnectionStatus } from '../../../core/state/global-actions';
+import { AlertModalComponent } from '../../../shared/components/alert/alert-modal/alert-modal.component';
+import { ModalController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-data',
@@ -23,16 +24,12 @@ import { ChangeConnectionStatus } from '../../../core/state/global-actions';
   styleUrls: ['../overview/overview.page.scss'],
 })
 export class DataPage {
-  @ViewChild('alertRefreshUser') alertUser: TemplateRef<any>;
-  @ViewChild('alertRefreshMeeting') alertMeeting: TemplateRef<any>;
-  @ViewChild('alertClearAll') alertAll: TemplateRef<any>;
-  @ViewChild('alertBlockedUsers') alertBlockedUsers: TemplateRef<any>;
-  alert: Alert;
-  loadingData = false;
+  isLoading = false;
 
   constructor(
     private readonly toastService: ToastService,
-    private readonly alertService: AlertService,
+    private readonly modalController: ModalController,
+    private readonly translateService: TranslateService,
     private readonly loadingService: LoadingService,
     private readonly userService: UserService,
     private readonly meetingService: MeetingService,
@@ -43,108 +40,164 @@ export class DataPage {
     private readonly store: Store,
   ) {}
 
-  refreshUser() {
-    this.loadingData = false;
-    this.alert = this.alertService.show(this.alertUser);
+  async refreshUser() {
+    if (!this.isLoading) {
+      const modal = await this.modalController.create({
+        component: AlertModalComponent,
+        componentProps: {
+          title: this.translateService.instant(
+            'Are you sure you want to force to reload user data?',
+          ),
+        },
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data && data.response) {
+        this.confirmRefreshUser();
+      }
+    }
   }
 
   confirmRefreshUser() {
-    if (!this.loadingData) {
-      this.loadingData = true;
-      this.loadingService.lock();
-      this.userService.findUser().subscribe(
-        () => {
-          this.alert.hide();
-          this.loadingService.unlock();
-        },
-        () => {
-          this.alert.hide();
-          this.loadingService.unlock();
-          this.toastService.createError(
-            _('A problem occurred while finding the user'),
-          );
-        },
-      );
-    }
+    this.isLoading = true;
+    this.loadingService.lock();
+    this.userService.findUser().subscribe(
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+      },
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+        this.toastService.createError(
+          _('A problem occurred while finding the user'),
+        );
+      },
+    );
   }
 
-  refreshMeeting() {
-    this.loadingData = false;
-    this.alert = this.alertService.show(this.alertMeeting);
+  async refreshMeeting() {
+    if (!this.isLoading) {
+      const modal = await this.modalController.create({
+        component: AlertModalComponent,
+        componentProps: {
+          title: this.translateService.instant(
+            'Are you sure you want to force to reload meeting data?',
+          ),
+        },
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data && data.response) {
+        this.confirmRefreshMeeting();
+      }
+    }
   }
 
   confirmRefreshMeeting() {
-    if (!this.loadingData) {
-      this.loadingData = true;
-      this.loadingService.lock();
-      this.meetingService.findMeeting(false, false).subscribe(
-        () => {
-          this.alert.hide();
-          this.loadingService.unlock();
-        },
-        () => {
-          this.alert.hide();
-          this.loadingService.unlock();
-          this.toastService.createError(
-            _('A problem occurred while finding the meeting'),
-          );
-        },
-      );
-    }
+    this.isLoading = true;
+    this.loadingService.lock();
+    this.meetingService.findMeeting(false, false).subscribe(
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+      },
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+        this.toastService.createError(
+          _('A problem occurred while finding the meeting'),
+        );
+      },
+    );
   }
 
-  refreshBlockedUsers() {
-    this.loadingData = false;
-    this.alert = this.alertService.show(this.alertBlockedUsers);
+  async refreshBlockedUsers() {
+    if (!this.isLoading) {
+      const modal = await this.modalController.create({
+        component: AlertModalComponent,
+        componentProps: {
+          title: this.translateService.instant(
+            'Are you sure you want to force to reload blocked users data?',
+          ),
+        },
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data && data.response) {
+        this.confirmRefreshBlockedUsers();
+      }
+    }
   }
 
   confirmRefreshBlockedUsers() {
-    if (!this.loadingData) {
-      this.loadingData = true;
-      this.loadingService.lock();
-      this.settingsService.findBlockedUsers().subscribe(
-        () => {
-          this.alert.hide();
-          this.loadingService.unlock();
-        },
-        () => {
-          this.alert.hide();
-          this.loadingService.unlock();
-          this.toastService.createError(
-            _('A problem occurred while finding the user'),
-          );
-        },
-      );
-    }
+    this.isLoading = true;
+    this.loadingService.lock();
+    this.settingsService.findBlockedUsers().subscribe(
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+      },
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+        this.toastService.createError(
+          _('A problem occurred while finding the user'),
+        );
+      },
+    );
   }
 
-  refreshAll() {
-    this.loadingData = false;
-    this.alert = this.alertService.show(this.alertAll);
+  async refreshAll() {
+    if (!this.isLoading) {
+      const modal = await this.modalController.create({
+        component: AlertModalComponent,
+        componentProps: {
+          title: this.translateService.instant(
+            'Are you sure you want to remove all stored data and reload everything?',
+          ),
+        },
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data && data.response) {
+        await this.confirmRefreshAll();
+      }
+    }
   }
 
   async confirmRefreshAll() {
-    if (!this.loadingData) {
-      this.loadingData = true;
-      this.loadingService.lock();
+    this.isLoading = true;
+    this.loadingService.lock();
 
-      this.clearState();
-      await this.clearStorage();
+    this.clearState();
+    await this.clearStorage();
 
-      this.selfService.findSelf().subscribe(
-        () => {
-          this.alert.hide();
-          this.loadingService.unlock();
-        },
-        () => {
-          this.alert.hide();
-          this.loadingService.unlock();
-          this.toastService.createError(
-            _('A problem occurred while retrieving new data'),
-          );
-        },
-      );
-    }
+    this.selfService.findSelf().subscribe(
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+      },
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+        this.toastService.createError(
+          _('A problem occurred while retrieving new data'),
+        );
+      },
+    );
   }
 
   private clearState() {
@@ -174,9 +227,5 @@ export class DataPage {
     await this.storage.set(storageKeys.pushTopicAll, pushAll);
     await this.storage.set(storageKeys.pushTopicPlatform, pushPlatform);
     await this.storage.set(storageKeys.pushTopicUser, pushUser);
-  }
-
-  declineAlert() {
-    this.alert.hide();
   }
 }

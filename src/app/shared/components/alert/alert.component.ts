@@ -21,4 +21,10 @@ export class AlertComponent {
   get hasDecline(): boolean {
     return this.decline.observers.length > 0;
   }
+
+  confirmEmit() {
+    if (!this.confirmLoading) {
+      this.confirm.emit();
+    }
+  }
 }

@@ -50,12 +50,3 @@
     </div>
   </section>
 </div>
-
-<ng-template #alert>
-  <app-alert
-    (confirm)="confirmAlert()"
-    [confirmLoading]="isLoading"
-    (decline)="declineAlert()"
-    [title]="'Are you sure?' | translate"
-  ></app-alert>
-</ng-template>
