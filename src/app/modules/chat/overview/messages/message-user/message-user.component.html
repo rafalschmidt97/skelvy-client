@@ -15,7 +15,7 @@
       <div
         *ngIf="message.message"
         (click)="toggleDate()"
-        class="text pointer bg-primary text-white ml-auto"
+        class="text bg-primary text-white ml-auto"
         [class.bg-danger]="message.failed"
         [class.emoji]="isOnlyEmoji"
         [innerText]="message.message"

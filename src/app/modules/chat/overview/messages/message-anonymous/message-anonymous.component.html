@@ -1,7 +1,7 @@
 <div class="message-container d-flex" [class.mb-3]="isLast">
   <div
     *ngIf="isLast"
-    class="image rounded-circle flex-shrink-0 pointer"
+    class="image rounded-circle flex-shrink-0"
     [class.image-first-last]="isLast && isFirst"
   ></div>
   <div class="flex-fill" [class.message-continuation]="!isLast">
@@ -19,7 +19,7 @@
       <div
         *ngIf="message.message"
         (click)="toggleDate()"
-        class="text pointer"
+        class="text"
         [class.emoji]="isOnlyEmoji"
         [innerText]="message.message"
       ></div>

@@ -71,8 +71,6 @@
 
 .btn-done,
 .btn-cancel {
-  cursor: pointer;
-
   &.disabled {
     color: $gray-600 !important;
   }
