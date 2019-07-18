@@ -1,10 +1,10 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { SelfUserDto, UserDto } from '../user';
-import { ModalService } from '../../../shared/modal/modal.service';
-import { Modal } from '../../../shared/modal/modal';
+import { Component } from '@angular/core';
+import { SelfUserDto } from '../user';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import * as moment from 'moment';
+import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-overview',
@@ -12,31 +12,35 @@ import * as moment from 'moment';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage {
-  @ViewChild('details') detailsTemplate: TemplateRef<any>;
-  detailsModal: Modal;
   @Select(state => state.user.user) user$: Observable<SelfUserDto>;
-  detailsUser: UserDto;
 
   constructor(
-    private readonly modalService: ModalService,
+    private readonly modalController: ModalController,
     private readonly store: Store,
   ) {}
 
-  openDetails() {
+  async openDetails() {
     const user: SelfUserDto = this.store.selectSnapshot(
       state => state.user.user,
     );
-    this.detailsUser = {
+
+    const detailsUser = {
       ...user,
       profile: {
         ...user.profile,
         age: moment().diff(moment(user.profile.birthday), 'years'),
       },
     };
-    this.detailsModal = this.modalService.show(this.detailsTemplate, true);
-  }
 
-  confirmDetails() {
-    this.detailsModal.hide();
+    const modal = await this.modalController.create({
+      component: ProfileDetailsModalComponent,
+      componentProps: {
+        user: detailsUser,
+        mine: true,
+      },
+      cssClass: 'ionic-modal ionic-full-modal',
+    });
+
+    await modal.present();
   }
 }

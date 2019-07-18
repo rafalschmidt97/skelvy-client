@@ -1,5 +1,11 @@
 @import 'variables';
 
+.backdrop-no-scroll {
+  ion-content {
+    --overflow: hidden;
+  }
+}
+
 .picker-wrapper {
   border-top-left-radius: 1rem !important;
   border-top-right-radius: 1rem !important;
@@ -30,5 +36,33 @@ html.ios {
 
   ion-tab-bar {
     border-top: 1px solid #{$border-color} !important;
+  }
+}
+
+.ionic-modal {
+  .modal-wrapper {
+    background: transparent !important;
+    align-self: flex-end;
+
+    & > * {
+      padding: var(--ion-safe-area-top) var(--ion-safe-area-right) 0
+        var(--ion-safe-area-left);
+
+      .md & {
+        padding: calc(var(--ion-safe-area-top) + 8px) var(--ion-safe-area-right)
+          0 var(--ion-safe-area-left);
+      }
+    }
+  }
+
+  &.ionic-action-modal {
+    .modal-wrapper {
+      height: auto !important;
+
+      & > * {
+        position: static;
+        contain: inherit;
+      }
+    }
   }
 }

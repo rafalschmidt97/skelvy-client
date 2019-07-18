@@ -43,24 +43,3 @@
     padding-top: 2px;
   }
 }
-
-.profile {
-  .image {
-    background-size: cover;
-    background-color: theme-color('light');
-    width: 50px;
-    height: 50px;
-  }
-}
-
-::ng-deep .swiper-wrapper {
-  align-items: center;
-}
-
-::ng-deep .swiper-pagination-bullets {
-  bottom: 0 !important;
-}
-
-.slider {
-  padding-bottom: 2rem;
-}

@@ -1,7 +1,5 @@
-import { Component, TemplateRef } from '@angular/core';
-import { Alert } from '../../../shared/alert/alert';
-import { AlertService } from '../../../shared/alert/alert.service';
-import { NavController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { ModalController, NavController } from '@ionic/angular';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -15,6 +13,7 @@ import { AppRate } from '@ionic-native/app-rate/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { TranslateService } from '@ngx-translate/core';
 import { LoadingService } from '../../../core/loading/loading.service';
+import { AlertModalComponent } from '../../../shared/components/alert/alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-overview',
@@ -22,12 +21,10 @@ import { LoadingService } from '../../../core/loading/loading.service';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage {
-  alert: Alert;
   version: string;
   loadingLogout = false;
 
   constructor(
-    private readonly alertService: AlertService,
     private readonly routerNavigation: NavController,
     private readonly emailComposer: EmailComposer,
     private readonly authService: AuthService,
@@ -40,12 +37,30 @@ export class OverviewPage {
     private readonly share: SocialSharing,
     private readonly translateService: TranslateService,
     private readonly loadingService: LoadingService,
+    private readonly modalController: ModalController,
   ) {
     this.version = environment.version;
   }
 
-  open(template: TemplateRef<any>) {
-    this.alert = this.alertService.show(template);
+  async logout() {
+    if (!this.loadingLogout) {
+      const modal = await this.modalController.create({
+        component: AlertModalComponent,
+        componentProps: {
+          title: this.translateService.instant(
+            'Are you sure you want to log out from your account?',
+          ),
+        },
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data && data.response) {
+        this.confirmLogout();
+      }
+    }
   }
 
   confirmLogout() {
@@ -56,7 +71,7 @@ export class OverviewPage {
 
     this.authService.logout().subscribe(
       () => {
-        this.alert.hide();
+        this.loadingLogout = false;
         this.loadingService.unlock();
         this.routerNavigation.navigateBack(['/home']);
         setTimeout(() => {
@@ -65,8 +80,8 @@ export class OverviewPage {
       },
       () => {
         this.authService.logoutWithoutRequest().then(() => {
+          this.loadingLogout = false;
           this.loadingService.unlock();
-          this.alert.hide();
           this.routerNavigation.navigateBack(['/home']);
           setTimeout(() => {
             this.toastService.createError(
@@ -76,10 +91,6 @@ export class OverviewPage {
         });
       },
     );
-  }
-
-  decline() {
-    this.alert.hide();
   }
 
   async sendReport() {

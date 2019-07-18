@@ -8,7 +8,6 @@ import { TextareaComponent } from './textarea/textarea.component';
 import { DynamicHeightDirective } from './textarea/dynamic-height.directive';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarModule, SliderModule } from 'primeng/primeng';
-import { ModalModule } from '../modal/modal.module';
 import { DateComponent } from './date/date.component';
 import { IonicModule } from '@ionic/angular';
 import { RangeComponent } from './range/range.component';
@@ -16,6 +15,8 @@ import { SelectComponent } from './select/select.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { RadioComponent } from './radio/radio.component';
 import { SwitchComponent } from './switch/switch.component';
+import { CalendarModalComponent } from './calendar/calendar-modal/calendar-modal.component';
+import { ModalModule } from '../components/modal/modal.module';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,9 @@ import { SwitchComponent } from './switch/switch.component';
     CheckboxComponent,
     RadioComponent,
     SwitchComponent,
+    CalendarModalComponent,
   ],
+  entryComponents: [CalendarModalComponent],
   imports: [
     CommonModule,
     FormsModule,

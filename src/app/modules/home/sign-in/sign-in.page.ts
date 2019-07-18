@@ -1,17 +1,15 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { AuthService } from '../../../core/auth/auth.service';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { UserPushService } from '../../user/user-push.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { ModalService } from '../../../shared/modal/modal.service';
-import { Modal } from '../../../shared/modal/modal';
+import { LegalLinksModalComponent } from './legal-links-modal/legal-links-modal.component';
 
 @Component({
   selector: 'app-sign-in',
@@ -19,9 +17,6 @@ import { Modal } from '../../../shared/modal/modal';
   styleUrls: ['./sign-in.page.scss'],
 })
 export class SignInPage implements OnInit {
-  @ViewChild('links') details: TemplateRef<any>;
-  modal: Modal;
-
   constructor(
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
@@ -32,24 +27,20 @@ export class SignInPage implements OnInit {
     private readonly userPush: UserPushService,
     private readonly translateService: TranslateService,
     private readonly storage: Storage,
-    private readonly browser: InAppBrowser,
-    private readonly modalService: ModalService,
+    private readonly modalController: ModalController,
   ) {}
 
   ngOnInit() {
     this.userPush.initialize();
   }
 
-  openLink(url: string) {
-    this.browser.create(url, '_system');
-  }
+  async openLinks() {
+    const modal = await this.modalController.create({
+      component: LegalLinksModalComponent,
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
 
-  open() {
-    this.modal = this.modalService.show(this.details);
-  }
-
-  confirm() {
-    this.modal.hide();
+    await modal.present();
   }
 
   async signInWithFacebook() {

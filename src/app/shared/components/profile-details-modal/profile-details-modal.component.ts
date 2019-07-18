@@ -5,13 +5,14 @@ import { ToastService } from '../../../core/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from '../../../modules/settings/settings.service';
 import { _ } from '../../../core/i18n/translate';
+import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-profile-details',
-  templateUrl: './profile-details.component.html',
-  styleUrls: ['./profile-details.component.scss'],
+  selector: 'app-profile-details-modal',
+  templateUrl: './profile-details-modal.component.html',
+  styleUrls: ['./profile-details-modal.component.scss'],
 })
-export class ProfileDetailsComponent {
+export class ProfileDetailsModalComponent {
   @Input() user: UserDto;
   @Input() mine: boolean;
   @Input() blocked: boolean;
@@ -22,6 +23,7 @@ export class ProfileDetailsComponent {
     private readonly toastService: ToastService,
     private readonly settingsService: SettingsService,
     private readonly translateService: TranslateService,
+    private readonly modalController: ModalController,
   ) {}
 
   blockUser() {
@@ -70,5 +72,9 @@ export class ProfileDetailsComponent {
           10000,
         );
       });
+  }
+
+  confirm() {
+    this.modalController.dismiss();
   }
 }

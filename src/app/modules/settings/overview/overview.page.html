@@ -36,7 +36,7 @@
       </a>
       <button
         type="button"
-        (click)="open(logout)"
+        (click)="logout(logout)"
         class="btn btn-settings mt-3"
       >
         {{ 'Log out' | translate }}
@@ -86,12 +86,3 @@
     </div>
   </div>
 </ion-content>
-
-<ng-template #logout>
-  <app-alert
-    (confirm)="confirmLogout()"
-    [confirmLoading]="loadingLogout"
-    (decline)="decline()"
-    [title]="'Are you sure you want to log out from your account?' | translate"
-  ></app-alert>
-</ng-template>

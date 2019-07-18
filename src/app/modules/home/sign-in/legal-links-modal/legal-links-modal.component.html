@@ -1,0 +1,25 @@
+<app-modal (confirm)="confirm()">
+  <div class="container py-3">
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="openLink('https://skelvy.com/legal/terms-of-service/')"
+    >
+      {{ 'Terms of service' | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="openLink('https://skelvy.com/legal/privacy-policy/')"
+    >
+      {{ 'Privacy policy' | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="openLink('https://skelvy.com/legal/cookie-policy/')"
+    >
+      {{ 'Cookie policy' | translate }}
+    </button>
+  </div>
+</app-modal>

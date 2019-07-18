@@ -1,5 +1,5 @@
-<div class="modal-body safe-area-b d-flex flex-column">
-  <div class="header text-center pt-4 px-4">
+<div class="ionic-modal-content d-flex flex-column">
+  <div *ngIf="title || description" class="header text-center pt-4 px-4">
     <div class="font-weight-medium">{{ title }}</div>
     <div *ngIf="description">{{ description }}</div>
   </div>
@@ -10,14 +10,13 @@
       [disabled]="confirmLoading"
       class="btn btn-primary btn-block"
       *ngIf="hasConfirm"
-      (click)="confirm.emit()"
+      (click)="confirmEmit()"
     >
-      <ng-container *ngIf="!confirmLoading; else loading">
-        {{ confirmText || 'Confirm' | translate }}
-      </ng-container>
-      <ng-template #loading>
-        <ion-spinner></ion-spinner>
-      </ng-template>
+      <span
+        [hidden]="confirmLoading"
+        [innerText]="confirmText || 'Confirm' | translate"
+      ></span>
+      <ion-spinner [hidden]="!confirmLoading"></ion-spinner>
     </button>
     <button
       type="button"

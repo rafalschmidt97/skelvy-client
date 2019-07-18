@@ -6,6 +6,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { AddressComponent } from './address/address.component';
 import { AutofocusDirective } from './address/autofocus.directive';
 import { AddressItemComponent } from './address/address-item/address-item.component';
+import { AddressSearchModalComponent } from './address/address-search-modal/address-search-modal.component';
 
 const routes: Routes = [
   {
@@ -17,10 +18,12 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
   declarations: [
+    AddressSearchModalComponent,
     EditPage,
     AddressComponent,
     AutofocusDirective,
     AddressItemComponent,
   ],
+  entryComponents: [AddressSearchModalComponent],
 })
 export class EditMeetingPageModule {}

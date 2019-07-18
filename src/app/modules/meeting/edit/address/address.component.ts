@@ -1,24 +1,13 @@
-import {
-  Component,
-  forwardRef,
-  Inject,
-  Input,
-  OnInit,
-  TemplateRef,
-} from '@angular/core';
+import { Component, forwardRef, Inject, Input, OnInit } from '@angular/core';
 import { ComplexFieldComponent } from '../../../../shared/form/complex-field.component';
-import { Modal } from '../../../../shared/modal/modal';
 import { FormComponent } from '../../../../shared/form/form.component';
-import { ModalService } from '../../../../shared/modal/modal.service';
-import { of, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MapsService } from '../../../../core/maps/maps.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MapsResponse, MapsResponseType } from '../../../../core/maps/maps';
-import { _ } from '../../../../core/i18n/translate';
-import { ToastService } from '../../../../core/toast/toast.service';
+import { MapsResponse } from '../../../../core/maps/maps';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { isNil } from 'lodash';
+import { AddressSearchModalComponent } from './address-search-modal/address-search-modal.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-address',
@@ -26,49 +15,19 @@ import { isNil } from 'lodash';
   styleUrls: ['./address.component.scss'],
 })
 export class AddressComponent extends ComplexFieldComponent implements OnInit {
-  @Input() range: boolean;
   @Input() placeholder = '';
-  @Input() min: number;
-  @Input() max: number;
-  modal: Modal;
-  search$ = new Subject<string>();
   results: MapsResponse[];
-  resultLoading = false;
-  resultSearched = false;
   loadingLocation = false;
-  search = '';
-  private lastSearch = '';
+  lastSearch = '';
 
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
-    private readonly modalService: ModalService,
+    private readonly modalController: ModalController,
     private readonly mapsService: MapsService,
     private readonly translateService: TranslateService,
-    private readonly toastService: ToastService,
     private readonly geolocation: Geolocation,
   ) {
     super(parent);
-
-    this.search$
-      .pipe(
-        debounceTime(2500),
-        distinctUntilChanged(),
-        switchMap((text: string) => {
-          return this.searchLocation(text);
-        }),
-      )
-      .subscribe(
-        results => {
-          this.resultSearched = true;
-          this.results = results;
-          this.resultLoading = false;
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while searching for locations'),
-          );
-        },
-      );
   }
 
   get dateLabel(): string {
@@ -117,30 +76,26 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
     }
   }
 
-  open(template: TemplateRef<any>) {
+  async open() {
     if (!this.isLoading && !this.loadingLocation) {
-      this.modal = this.modalService.show(template, true);
-    }
-  }
+      const modal = await this.modalController.create({
+        component: AddressSearchModalComponent,
+        componentProps: {
+          results: this.results,
+          lastSearch: this.lastSearch,
+          placeholder: this.placeholder,
+        },
+        cssClass: 'ionic-modal ionic-full-modal',
+      });
 
-  onSubmit() {
-    if (
-      this.search.toLowerCase() !== this.lastSearch.toLowerCase() &&
-      !this.isLoading &&
-      !this.loadingLocation
-    ) {
-      this.searchLocation(this.search).subscribe(
-        results => {
-          this.resultSearched = true;
-          this.results = results;
-          this.resultLoading = false;
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while searching for locations'),
-          );
-        },
-      );
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data) {
+        this.results = data.results;
+        this.lastSearch = data.lastSearch;
+        this.select(data.result);
+      }
     }
   }
 
@@ -151,32 +106,5 @@ export class AddressComponent extends ComplexFieldComponent implements OnInit {
     this.form.patchValue({
       [this.name]: result,
     });
-
-    if (this.modal) {
-      this.modal.hide();
-    }
-  }
-
-  confirm() {
-    this.modal.hide();
-  }
-
-  filterCities(response: MapsResponse[]): MapsResponse[] {
-    return response.filter(x => x.type === MapsResponseType.LOCALITY);
-  }
-
-  filterVillages(response: MapsResponse[]): MapsResponse[] {
-    return response.filter(x => x.type !== MapsResponseType.LOCALITY);
-  }
-
-  private searchLocation(text: string) {
-    this.lastSearch = text;
-    if (text.trim().length > 0) {
-      this.resultLoading = true;
-
-      return this.mapsService.search(text, this.translateService.currentLang);
-    } else {
-      return of(this.results);
-    }
   }
 }

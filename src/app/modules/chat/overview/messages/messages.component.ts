@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
   ChatMessageDto,
   ChatMessageState,
@@ -16,14 +9,12 @@ import { _ } from '../../../../core/i18n/translate';
 import { ChatService } from '../../chat.service';
 import { Storage } from '@ionic/storage';
 import { ToastService } from '../../../../core/toast/toast.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ModalController, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MeetingService } from '../../../meeting/meeting.service';
-import { Modal } from '../../../../shared/modal/modal';
-import { ModalService } from '../../../../shared/modal/modal.service';
 import { Store } from '@ngxs/store';
 import { ImageViewerComponent } from '../image-viewer/image-viewer.component';
+import { MessageActionModalComponent } from './message-action-modal/message-action-modal.component';
 
 @Component({
   selector: 'app-messages',
@@ -32,15 +23,12 @@ import { ImageViewerComponent } from '../image-viewer/image-viewer.component';
 })
 export class MessagesComponent implements OnInit {
   @ViewChild('content') content: ElementRef;
-  @ViewChild('actions') modalTemplate: TemplateRef<any>;
   @Input() messages: ChatMessageState[];
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
   dateToShow: string;
   isLoading = false;
   hasMoreMessages = false;
-  modal: Modal;
-  modalMessage: ChatMessageState;
 
   constructor(
     private readonly routerNavigation: NavController,
@@ -49,9 +37,8 @@ export class MessagesComponent implements OnInit {
     private readonly storage: Storage,
     private readonly meetingService: MeetingService,
     private readonly chatService: ChatService,
-    private readonly modalService: ModalService,
-    private readonly store: Store,
     private readonly modalController: ModalController,
+    private readonly store: Store,
   ) {}
 
   ngOnInit() {
@@ -99,53 +86,27 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  showActions(message: ChatMessageState) {
-    this.modalMessage = message;
-    this.modal = this.modalService.show(this.modalTemplate);
+  async showActions(message: ChatMessageState) {
+    const modal = await this.modalController.create({
+      component: MessageActionModalComponent,
+      componentProps: {
+        message,
+      },
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
+
+    await modal.present();
   }
 
   async showPreview(src: string) {
     const modal = await this.modalController.create({
       component: ImageViewerComponent,
       componentProps: {
-        src: src,
+        src,
       },
-      keyboardClose: true,
-      showBackdrop: false,
     });
 
-    return await modal.present();
-  }
-
-  sendAgain(oldMessage: ChatMessageState) {
-    this.modal.hide();
-
-    this.chatService.sendAgainMessage(oldMessage).subscribe(
-      () => {},
-      (error: HttpErrorResponse) => {
-        // data is not relevant (connection lost and reconnected)
-        if (error.status === 404 || error.status === 409) {
-          this.meetingService.findMeeting().subscribe();
-
-          if (this.router.url === '/app/chat') {
-            this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-          }
-
-          this.toastService.createError(
-            _('A problem occurred while sending the message'),
-          );
-        }
-      },
-    );
-  }
-
-  remove(message: ChatMessageState) {
-    this.chatService.removeMessage(message);
-    this.modal.hide();
-  }
-
-  decline() {
-    this.modal.hide();
+    await modal.present();
   }
 
   private scrollToLastMessage() {

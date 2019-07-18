@@ -1,18 +1,9 @@
-import {
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   MeetingRequestDto,
   MeetingStatus,
   MeetingSuggestionsModel,
 } from '../../meeting';
-import { Alert } from '../../../../shared/alert/alert';
-import { AlertService } from '../../../../shared/alert/alert.service';
 import { MapsService } from '../../../../core/maps/maps.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/toast/toast.service';
@@ -23,6 +14,8 @@ import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
+import { AlertModalComponent } from '../../../../shared/components/alert/alert-modal/alert-modal.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-searching',
@@ -30,16 +23,14 @@ import { Store } from '@ngxs/store';
   styleUrls: ['./searching.component.scss'],
 })
 export class SearchingComponent implements OnInit, OnDestroy {
-  @ViewChild('alert') alertTemplate: TemplateRef<any>;
   @Input() request: MeetingRequestDto;
-  alert: Alert;
   isLoading = false;
   loadingSuggestions = false;
   suggestions: MeetingSuggestionsModel;
   statusSubscription: Subscription;
 
   constructor(
-    private readonly alertService: AlertService,
+    private readonly modalController: ModalController,
     private readonly mapsService: MapsService,
     private readonly translateService: TranslateService,
     private readonly toastService: ToastService,
@@ -148,17 +139,31 @@ export class SearchingComponent implements OnInit, OnDestroy {
     }
   }
 
-  stop() {
-    this.isLoading = false;
-    this.alert = this.alertService.show(this.alertTemplate);
+  async stop() {
+    if (!this.isLoading) {
+      const modal = await this.modalController.create({
+        component: AlertModalComponent,
+        componentProps: {
+          title: this.translateService.instant('Are you sure?'),
+        },
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data && data.response) {
+        this.confirmStop();
+      }
+    }
   }
 
-  confirmAlert() {
+  confirmStop() {
     this.isLoading = true;
     this.loadingService.lock();
     this.meetingService.removeMeetingRequest().subscribe(
       () => {
-        this.alert.hide();
+        this.isLoading = false;
         this.loadingService.unlock();
       },
       (error: HttpErrorResponse) => {
@@ -167,16 +172,12 @@ export class SearchingComponent implements OnInit, OnDestroy {
           this.meetingService.findMeeting().subscribe();
         }
 
-        this.alert.hide();
+        this.isLoading = false;
         this.loadingService.unlock();
         this.toastService.createError(
           _('A problem occurred while removing the request'),
         );
       },
     );
-  }
-
-  declineAlert() {
-    this.alert.hide();
   }
 }

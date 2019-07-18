@@ -1,0 +1,29 @@
+<app-modal>
+  <div class="p-4">
+    <div
+      class="pb-4 text-center font-weight-medium"
+      [innerText]="'What you want to do with this message?' | translate"
+    ></div>
+    <button
+      type="button"
+      class="btn btn-primary btn-block"
+      (click)="sendAgain(message)"
+    >
+      {{ 'Send again' | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger btn-block"
+      (click)="remove(message)"
+    >
+      {{ 'Remove' | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-light btn-block mt-4"
+      (click)="dismiss()"
+    >
+      {{ 'Cancel' | translate }}
+    </button>
+  </div>
+</app-modal>

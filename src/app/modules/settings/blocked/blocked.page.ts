@@ -1,13 +1,13 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { UserDto } from '../../user/user';
-import { Modal } from '../../../shared/modal/modal';
-import { ModalService } from '../../../shared/modal/modal.service';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
+import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-blocked',
@@ -15,10 +15,7 @@ import { Select, Store } from '@ngxs/store';
   styleUrls: ['../overview/overview.page.scss'],
 })
 export class BlockedPage implements OnInit {
-  @ViewChild('details') detailsTemplate: TemplateRef<any>;
   @Select(x => x.settings.blockedUsers) blockedUsers$: Observable<UserDto[]>;
-  detailsModal: Modal;
-  detailsUser: UserDto;
   loadingBlocked = true;
   loadingBlockedMore = false;
   allBlockedLoaded = false;
@@ -26,7 +23,7 @@ export class BlockedPage implements OnInit {
 
   constructor(
     private readonly settingsService: SettingsService,
-    private readonly modalService: ModalService,
+    private readonly modalController: ModalController,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly store: Store,
@@ -92,12 +89,16 @@ export class BlockedPage implements OnInit {
     );
   }
 
-  openDetails(user: UserDto) {
-    this.detailsUser = user;
-    this.detailsModal = this.modalService.show(this.detailsTemplate, true);
-  }
+  async openDetails(user: UserDto) {
+    const modal = await this.modalController.create({
+      component: ProfileDetailsModalComponent,
+      componentProps: {
+        user,
+        blocked: true,
+      },
+      cssClass: 'ionic-modal ionic-full-modal',
+    });
 
-  confirmDetails() {
-    this.detailsModal.hide();
+    await modal.present();
   }
 }

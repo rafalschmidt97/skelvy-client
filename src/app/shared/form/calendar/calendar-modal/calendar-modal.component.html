@@ -1,0 +1,12 @@
+<app-modal (confirm)="confirm()" (decline)="decline()">
+  <ng-container [formGroup]="inputForm">
+    <p-calendar
+      [formControlName]="name"
+      [locale]="locale"
+      [minDate]="min || today"
+      dateFormat="dd.mm.yy"
+      selectionMode="range"
+      [inline]="true"
+    ></p-calendar>
+  </ng-container>
+</app-modal>

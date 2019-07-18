@@ -1,11 +1,4 @@
-import {
-  Component,
-  forwardRef,
-  Inject,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, forwardRef, Inject, OnInit } from '@angular/core';
 import { FormComponent } from '../../../../shared/form/form.component';
 import { ComplexFieldComponent } from '../../../../shared/form/complex-field.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -15,13 +8,13 @@ import { get } from 'lodash';
 import { UploadService } from '../../../../core/upload/upload.service';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
-import { Alert } from '../../../../shared/alert/alert';
-import { AlertService } from '../../../../shared/alert/alert.service';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { Modal } from '../../../../shared/modal/modal';
-import { ModalService } from '../../../../shared/modal/modal.service';
 import { Crop } from '@ionic-native/crop/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { ImageActionsModalComponent } from './image-actions-modal/image-actions-modal.component';
+import { ModalController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { AlertModalComponent } from '../../../../shared/components/alert/alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-images',
@@ -29,29 +22,23 @@ import { File } from '@ionic-native/file/ngx';
   styleUrls: ['./images.component.scss'],
 })
 export class ImagesComponent extends ComplexFieldComponent implements OnInit {
-  @ViewChild('alert') alertTemplate: TemplateRef<any>;
-  @ViewChild('actions') modalTemplate: TemplateRef<any>;
-  alert: Alert;
-  modal: Modal;
   inputForm: FormGroup;
   dirty = false;
   image1Name = 'image1';
   image2Name = 'image2';
   image3Name = 'image3';
   loadingUpload = false;
-  modalPhotoName: string;
-  private removeIndex: number;
 
   constructor(
     @Inject(forwardRef(() => FormComponent)) readonly parent: FormComponent,
     private readonly uploadService: UploadService,
-    private readonly alertService: AlertService,
     private readonly formBuilder: FormBuilder,
     private readonly toastService: ToastService,
-    private readonly modalService: ModalService,
+    private readonly modalController: ModalController,
     private readonly camera: Camera,
     private readonly crop: Crop,
     private readonly file: File,
+    private readonly translateService: TranslateService,
   ) {
     super(parent);
   }
@@ -88,14 +75,26 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     });
   }
 
-  showActions(name: string) {
-    this.modalPhotoName = name;
-    this.modal = this.modalService.show(this.modalTemplate);
+  async showActions(name: string) {
+    const modal = await this.modalController.create({
+      component: ImageActionsModalComponent,
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (data) {
+      if (data.take) {
+        await this.takeAndCrop(name);
+      } else if (data.choose) {
+        await this.chooseAndCrop(name);
+      }
+    }
   }
 
-  async takeAndCrop() {
+  async takeAndCrop(name: string) {
     if (!this.loadingUpload) {
-      this.modal.hide();
       const takenPhotoUri = await this.takePhoto();
 
       if (takenPhotoUri) {
@@ -103,15 +102,14 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
         if (croppedPhotoUri) {
           this.dirty = true;
-          await this.uploadPhoto(croppedPhotoUri, this.modalPhotoName);
+          await this.uploadPhoto(croppedPhotoUri, name);
         }
       }
     }
   }
 
-  async chooseAndCrop() {
+  async chooseAndCrop(name: string) {
     if (!this.loadingUpload) {
-      this.modal.hide();
       const chosenPhotoUri = await this.choosePhoto();
 
       if (chosenPhotoUri) {
@@ -119,28 +117,27 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
         if (croppedPhotoUri) {
           this.dirty = true;
-          await this.uploadPhoto(croppedPhotoUri, this.modalPhotoName);
+          await this.uploadPhoto(croppedPhotoUri, name);
         }
       }
     }
   }
 
-  decline() {
-    this.modal.hide();
-  }
+  async remove(index: number) {
+    const modal = await this.modalController.create({
+      component: AlertModalComponent,
+      componentProps: {
+        title: this.translateService.instant('Are you sure?'),
+      },
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
 
-  remove(index: number) {
-    this.removeIndex = index;
-    this.alert = this.alertService.show(this.alertTemplate);
-  }
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
 
-  confirmAlert() {
-    this.removeFromInput(this.removeIndex);
-    this.alert.hide();
-  }
-
-  declineAlert() {
-    this.alert.hide();
+    if (data && data.response) {
+      this.removeFromInput(index);
+    }
   }
 
   private removeFromInput(index: number) {

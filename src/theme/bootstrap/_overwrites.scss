@@ -6,56 +6,6 @@ a {
   cursor: pointer;
 }
 
-.modal-open {
-  ion-content {
-    --overflow: hidden;
-  }
-}
-
-.modal {
-  .modal-dialog {
-    margin: 0;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding: var(--ion-safe-area-top) var(--ion-safe-area-right) 0
-      var(--ion-safe-area-left);
-
-    .md & {
-      padding: calc(var(--ion-safe-area-top) + 8px) var(--ion-safe-area-right) 0
-        var(--ion-safe-area-left);
-    }
-
-    @include media-breakpoint-up(sm) {
-      margin: 0 auto;
-    }
-
-    .modal-content {
-      border: 0;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      max-height: 100%;
-    }
-
-    &.modal-dialog-full {
-      .modal-content {
-        height: 100%;
-      }
-    }
-  }
-
-  &.fade {
-    opacity: 1 !important;
-    transform: translate3d(0, 100%, 0);
-    transition: transform 0.25s ease-out;
-  }
-
-  &.show {
-    transform: translateY(0);
-  }
-}
-
 .font-weight-medium {
   font-weight: $font-weight-medium !important;
 }
