@@ -101,7 +101,7 @@ export class UserPushService {
 
     this.storage.get(storageKeys.pushTopicUser).then((exists: boolean) => {
       if (!exists) {
-        this.addTopic('user-' + this.getUserId(), 'pushTopicUser');
+        this.addTopic('user-' + this.getUserId(), storageKeys.pushTopicUser);
       }
     });
 
@@ -113,7 +113,7 @@ export class UserPushService {
   }
 
   disconnect() {
-    this.removeTopic('user-' + this.getUserId(), 'pushTopicUser');
+    this.removeTopic('user-' + this.getUserId(), storageKeys.pushTopicUser);
   }
 
   addTopic(topic: string, storageKey: string) {

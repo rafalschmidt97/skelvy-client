@@ -6,7 +6,6 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { UserSocketService } from '../../user/user-socket.service';
-import { UserPushService } from '../../user/user-push.service';
 import { Device } from '@ionic-native/device/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppRate } from '@ionic-native/app-rate/ngx';
@@ -30,7 +29,6 @@ export class OverviewPage {
     private readonly authService: AuthService,
     private readonly toastService: ToastService,
     private readonly userSocket: UserSocketService,
-    private readonly userPush: UserPushService,
     private readonly device: Device,
     private readonly browser: InAppBrowser,
     private readonly rate: AppRate,
@@ -67,7 +65,6 @@ export class OverviewPage {
     this.loadingLogout = true;
     this.loadingService.lock();
     this.userSocket.disconnect();
-    this.userPush.disconnect();
 
     this.authService.logout().subscribe(
       () => {

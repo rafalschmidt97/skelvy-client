@@ -12,6 +12,7 @@ import { AuthDto, TokenDto } from './auth';
 import { storageKeys } from '../storage/storage';
 import { Store } from '@ngxs/store';
 import { ClearState } from '../redux/redux';
+import { UserPushService } from '../../modules/user/user-push.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,7 @@ export class AuthService {
     private readonly facebook: Facebook,
     private readonly google: GooglePlus,
     private readonly store: Store,
+    private readonly userPush: UserPushService,
   ) {
     this.jwt = new JwtHelperService();
   }
@@ -134,6 +136,8 @@ export class AuthService {
   }
 
   async logoutWithoutRequest() {
+    this.userPush.disconnect();
+
     this.store.dispatch(new ClearState());
     await this.sessionService.removeSession();
     await this.storage.remove(storageKeys.lastMessageDate);
@@ -147,7 +151,6 @@ export class AuthService {
     }
 
     await this.storage.remove(storageKeys.signInMethod);
-    await this.storage.remove(storageKeys.pushTopicUser);
     await this.storage.remove(storageKeys.lastRequestForm);
 
     await this.storage.remove(storageKeys.userState);
