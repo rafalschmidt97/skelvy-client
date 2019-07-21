@@ -2,18 +2,22 @@ import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { TranslateService } from '@ngx-translate/core';
+import { Storage } from '@ionic/storage';
+import { storageKeys } from '../storage/storage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BackgroundService {
   inBackground: boolean;
+  allowPush: boolean;
   private generatedId = 0;
 
   constructor(
     private readonly translateService: TranslateService,
     private readonly localNotifications: LocalNotifications,
     platform: Platform,
+    storage: Storage,
   ) {
     platform.pause.subscribe(() => {
       this.inBackground = true;
@@ -21,6 +25,10 @@ export class BackgroundService {
 
     platform.resume.subscribe(() => {
       this.inBackground = false;
+    });
+
+    storage.get(storageKeys.pushTopicUser).then((push: boolean) => {
+      this.allowPush = push;
     });
   }
 

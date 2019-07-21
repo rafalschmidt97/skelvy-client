@@ -1,6 +1,7 @@
 {
 	"A problem occurred loading meeting user": "Wystąpił problem podczas wyszukiwania użytkownika",
 	"A problem occurred while adding push notification topic": "Wystąpił problem podczas dodawania tematu powiadomień push",
+	"A problem occurred while asking for a permission": "Wystąpił problem podczas pytania o pozwolenie",
 	"A problem occurred while connecting the request": "Wystąpił problem podczas łaczenia z preferencjami spotkania",
 	"A problem occurred while creating the request": "Wystąpił problem podczas tworzenia żądania",
 	"A problem occurred while disconnecting from the server": "Wystąpił problem podczas rozłączania się z serwerem",
@@ -123,6 +124,7 @@
 	"Remove data": "Usuń dane",
 	"Report a bug": "Zgłoś błąd",
 	"Report user": "Zgłoś użytkownika",
+	"Request permission": "Poproś o pozwolenie",
 	"Safety tips": "Wskazówki bezpieczeństwa",
 	"Say Hello!": "Przywitaj się!",
 	"Select": "Wybierz",
@@ -173,6 +175,7 @@
 	"What you want to do with this message?": "Co chcesz zrobić z tą wiadomością?",
 	"Why wouldn't you just meet them?": "Dlaczego po prostu się nie spotkasz?",
 	"You agree to the Skelvy Terms of Service, Privacy Policy and Cookie Policy.": "Zgadzasz się na Warunki umowy, Politykę prywatności i Politykę plików cookie.",
+	"You have to allow to send you notifications first. Go to system preferences and change your preferences.": "Musisz najpierw pozwolić aplikacji na wysyłanie powiadomień. Przejdź do ustawień systemowych i zaktualizuj swoje preferencje.",
 	"Your account has been disabled. If you have any questions, don't hesitate to contact us by using our website": "Twoje konto zostało zablokowane. Jeśli masz dodatkowe pytania, skontaktuj się z nami poprzez naszą stroną internetową.",
 	"Your account has been removed. If you have any questions, don't hesitate to contact us by using our website": "Twoje konto zostało usunięte. Jeśli masz dodatkowe pytania, skontaktuj się z nami poprzez naszą stroną internetową.",
 	"Your blocked users list is empty.": "Lista zablokowanych użytkowników jest pusta.",

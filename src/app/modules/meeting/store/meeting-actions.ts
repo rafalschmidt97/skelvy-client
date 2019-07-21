@@ -67,8 +67,3 @@ export class MarkChatMessageAsFailed {
   static readonly type = '[Chat] Mark chat message as failed';
   constructor(public message: ChatMessageState) {}
 }
-
-export class UpdateChatMessages {
-  static readonly type = '[Chat] Update chat messages';
-  constructor(public messages: ChatMessageState[]) {}
-}

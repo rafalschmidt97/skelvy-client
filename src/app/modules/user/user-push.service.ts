@@ -11,6 +11,7 @@ import {
   ILocalNotification,
   LocalNotifications,
 } from '@ionic-native/local-notifications/ngx';
+import { isNil } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -27,19 +28,15 @@ export class UserPushService {
     private readonly routerNavigation: NavController,
     private readonly store: Store,
     private readonly localNotifications: LocalNotifications,
-  ) {
-    this.push$ = this.push.init({});
-  }
+  ) {}
 
-  initialize() {
-    this.storage.get(storageKeys.push).then(async (exists: boolean) => {
-      if (!exists) {
-        await this.push.createChannel({
-          id: 'push',
-          description: 'Push Channel',
-          importance: 3,
-        });
+  async initialize(force: boolean = false) {
+    const push = await this.storage.get(storageKeys.push);
 
+    if (isNil(push) || force) {
+      const permission = await this.push.hasPermission();
+
+      if (permission.isEnabled) {
         this.push$ = this.push.init({
           android: {
             topics: ['all', 'android'],
@@ -63,11 +60,18 @@ export class UserPushService {
             _('A problem occurred while registering the device'),
           );
         });
+      } else {
+        await this.storage.set(storageKeys.push, false);
+        throw new Error('Push initialize failed');
       }
-    });
+    }
   }
 
-  connect() {
+  async connect() {
+    if (!this.push$) {
+      this.push$ = this.push.init({});
+    }
+
     this.push$.on('notification').subscribe(notification => {
       if (!notification.additionalData.foreground) {
         const { redirect_to } = notification.additionalData;
@@ -97,13 +101,18 @@ export class UserPushService {
       data: { foreground: false },
     };
 
-    this.localNotifications.setDefaults(localDefaults);
+    await this.localNotifications.setDefaults(localDefaults);
 
-    this.storage.get(storageKeys.pushTopicUser).then((exists: boolean) => {
-      if (!exists) {
-        this.addTopic('user-' + this.getUserId(), storageKeys.pushTopicUser);
-      }
-    });
+    this.storage
+      .get(storageKeys.pushTopicUser)
+      .then(async (pushTopicUser: boolean) => {
+        if (isNil(pushTopicUser)) {
+          await this.addTopic(
+            'user-' + this.getUserId(),
+            storageKeys.pushTopicUser,
+          );
+        }
+      });
 
     this.clear().then(() => {});
 
@@ -112,12 +121,15 @@ export class UserPushService {
     });
   }
 
-  disconnect() {
-    this.removeTopic('user-' + this.getUserId(), storageKeys.pushTopicUser);
+  async disconnect() {
+    await this.removeTopic(
+      'user-' + this.getUserId(),
+      storageKeys.pushTopicUser,
+    );
   }
 
-  addTopic(topic: string, storageKey: string) {
-    this.push$.subscribe(topic).then(
+  addTopic(topic: string, storageKey: string): Promise<any> {
+    return this.push$.subscribe(topic).then(
       async () => {
         await this.storage.set(storageKey, true);
       },
@@ -129,8 +141,8 @@ export class UserPushService {
     );
   }
 
-  removeTopic(topic: string, storageKey: string) {
-    this.push$.unsubscribe(topic).then(
+  removeTopic(topic: string, storageKey: string): Promise<any> {
+    return this.push$.unsubscribe(topic).then(
       async () => {
         await this.storage.set(storageKey, false);
       },

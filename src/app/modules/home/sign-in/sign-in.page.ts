@@ -30,8 +30,8 @@ export class SignInPage implements OnInit {
     private readonly modalController: ModalController,
   ) {}
 
-  ngOnInit() {
-    this.userPush.initialize();
+  async ngOnInit() {
+    await this.userPush.initialize();
   }
 
   async openLinks() {

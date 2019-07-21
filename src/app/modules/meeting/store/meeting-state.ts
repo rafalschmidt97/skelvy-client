@@ -16,7 +16,6 @@ import {
   RemoveChatMessage,
   RemoveMeetingUser,
   RemoveOldAndAddNewChatMessage,
-  UpdateChatMessages,
   UpdateChatMessagesToRead,
   UpdateMeeting,
 } from './meeting-actions';
@@ -181,21 +180,6 @@ export class MeetingState {
         messages: state.meetingModel.messages.filter(
           x => new Date(x.date).getTime() !== new Date(message.date).getTime(),
         ),
-      },
-    });
-  }
-
-  @Action(UpdateChatMessages)
-  updateMessages(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { messages }: UpdateChatMessages,
-  ) {
-    const state = getState();
-    setState({
-      ...state,
-      meetingModel: {
-        ...state.meetingModel,
-        messages,
       },
     });
   }

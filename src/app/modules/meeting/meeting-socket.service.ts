@@ -47,7 +47,10 @@ export class MeetingSocketService {
     this.userSocket.on(
       'UserSentMeetingChatMessage',
       async (message: ChatMessageDto) => {
-        if (this.backgroundService.inBackground) {
+        if (
+          this.backgroundService.inBackground &&
+          this.backgroundService.allowPush
+        ) {
           if (message.message) {
             this.backgroundService.create(
               this.getProfileName(message.userId),
@@ -81,7 +84,10 @@ export class MeetingSocketService {
 
   private onUserJoinedMeeting() {
     this.userSocket.on('UserJoinedMeeting', data => {
-      if (this.backgroundService.inBackground) {
+      if (
+        this.backgroundService.inBackground &&
+        this.backgroundService.allowPush
+      ) {
         this.backgroundService.create(_('MEETING'), _('USER_JOINED_MEETING'), {
           foreground: false,
           redirect_to: 'meeting',
@@ -105,7 +111,10 @@ export class MeetingSocketService {
 
   private onUserFoundMeeting() {
     this.userSocket.on('UserFoundMeeting', () => {
-      if (this.backgroundService.inBackground) {
+      if (
+        this.backgroundService.inBackground &&
+        this.backgroundService.allowPush
+      ) {
         this.backgroundService.create(_('MEETING'), _('USER_FOUND_MEETING'), {
           foreground: false,
           redirect_to: 'meeting',
@@ -127,7 +136,10 @@ export class MeetingSocketService {
 
   private onUserLeftMeeting() {
     this.userSocket.on('UserLeftMeeting', data => {
-      if (this.backgroundService.inBackground) {
+      if (
+        this.backgroundService.inBackground &&
+        this.backgroundService.allowPush
+      ) {
         this.backgroundService.create(_('MEETING'), _('USER_LEFT_MEETING'), {
           foreground: false,
           redirect_to: 'meeting',
@@ -163,7 +175,10 @@ export class MeetingSocketService {
 
   private onMeetingRequestExpired() {
     this.userSocket.on('MeetingRequestExpired', () => {
-      if (this.backgroundService.inBackground) {
+      if (
+        this.backgroundService.inBackground &&
+        this.backgroundService.allowPush
+      ) {
         this.backgroundService.create(
           _('MEETING_REQUEST'),
           _('MEETING_REQUEST_EXPIRED'),
@@ -181,7 +196,10 @@ export class MeetingSocketService {
 
   private onMeetingExpired() {
     this.userSocket.on('MeetingExpired', () => {
-      if (this.backgroundService.inBackground) {
+      if (
+        this.backgroundService.inBackground &&
+        this.backgroundService.allowPush
+      ) {
         this.backgroundService.create(_('MEETING'), _('MEETING_EXPIRED'), {
           foreground: false,
           redirect_to: 'meeting',
