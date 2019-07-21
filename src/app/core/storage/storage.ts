@@ -1,9 +1,9 @@
 export const storageKeys = {
   language: 'language',
   signInMethod: 'sign-in-method',
-  userState: 'user-state',
-  meetingState: 'meeting-state',
-  settingsState: 'settings-state',
+  user: 'user',
+  meeting: 'meeting',
+  blockedUsers: 'blocked-users',
   push: 'push',
   pushTopicUser: 'push-topic-user',
   pushTopicAll: 'push-topic-all',

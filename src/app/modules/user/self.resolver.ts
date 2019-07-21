@@ -11,6 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { SelfModel } from './self';
 import { SelfService } from './self.service';
 import { AuthService } from '../../core/auth/auth.service';
+import { StateTrackerService } from '../../core/state/state-tracker.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +24,13 @@ export class SelfResolver implements Resolve<SelfModel> {
     private readonly toastService: ToastService,
     private readonly userSocket: UserSocketService,
     private readonly userPush: UserPushService,
+    private readonly stateTracker: StateTrackerService,
   ) {}
 
   resolve(): Observable<SelfModel> {
     return this.selfService.findSelf().pipe(
       tap(() => {
+        this.stateTracker.track();
         this.userSocket.connect();
         this.userPush.connect();
       }),

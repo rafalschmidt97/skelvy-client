@@ -22,7 +22,7 @@ export class UserService {
 
   findUser(markedAsLoading: boolean = false): Observable<SelfUserDto> {
     if (!markedAsLoading) {
-      this.store.dispatch(new ChangeUserLoadingStatus(false));
+      this.store.dispatch(new ChangeUserLoadingStatus(true));
     }
 
     return this.http
@@ -30,10 +30,10 @@ export class UserService {
       .pipe(
         tap(user => {
           this.store.dispatch(new UpdateUser(user));
-          this.store.dispatch(new ChangeUserLoadingStatus(true));
+          this.store.dispatch(new ChangeUserLoadingStatus(false));
         }),
         catchError(error => {
-          this.store.dispatch(new ChangeUserLoadingStatus(true));
+          this.store.dispatch(new ChangeUserLoadingStatus(false));
           return throwError(error);
         }),
       );

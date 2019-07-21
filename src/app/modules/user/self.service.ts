@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserStateModel } from './store/user-state';
 import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { SelfModel } from './self';
-import { MeetingStateModel } from '../meeting/store/meeting-state';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingService } from '../meeting/meeting.service';
-import { ChatMessageDto, MeetingStatus } from '../meeting/meeting';
+import {
+  ChatMessageDto,
+  MeetingModel,
+  MeetingStatus,
+} from '../meeting/meeting';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { storageKeys } from '../../core/storage/storage';
-import { SettingsStateModel } from '../settings/store/settings-state';
 import { Store } from '@ngxs/store';
 import { UpdateUser } from './store/user-actions';
 import {
@@ -20,6 +21,7 @@ import {
   UpdateMeeting,
 } from '../meeting/store/meeting-actions';
 import { UpdateBlockedUsers } from '../settings/store/settings-actions';
+import { SelfUserDto, UserDto } from './user';
 
 @Injectable({
   providedIn: 'root',
@@ -36,15 +38,15 @@ export class SelfService {
 
   findSelf(): Observable<SelfModel> {
     return forkJoin([
-      this.storage.get(storageKeys.userState),
-      this.storage.get(storageKeys.meetingState),
-      this.storage.get(storageKeys.settingsState),
+      this.storage.get(storageKeys.user),
+      this.storage.get(storageKeys.meeting),
+      this.storage.get(storageKeys.blockedUsers),
     ]).pipe(
-      mergeMap(([user, meeting, settings]) => {
+      mergeMap(([user, meeting, blockedUsers]) => {
         if (user) {
           return this.fakeSelfRequestFromStorage(user, meeting).pipe(
             map(model => {
-              return { model, settings, fromStorage: true };
+              return { model, blockedUsers, fromStorage: true };
             }),
           );
         } else {
@@ -54,13 +56,13 @@ export class SelfService {
             )
             .pipe(
               map(model => {
-                return { model, settings, fromStorage: false };
+                return { model, blockedUsers, fromStorage: false };
               }),
             );
         }
       }),
-      switchMap(async ({ model, settings, fromStorage }) => {
-        await this.initializeState(model, settings, fromStorage);
+      switchMap(async ({ model, blockedUsers, fromStorage }) => {
+        await this.initializeState(model, blockedUsers, fromStorage);
         await this.authService.refreshTokenIfExpired().toPromise();
         return { model, fromStorage };
       }),
@@ -74,22 +76,22 @@ export class SelfService {
   }
 
   private fakeSelfRequestFromStorage(
-    user: UserStateModel,
-    meeting: MeetingStateModel,
+    user: SelfUserDto,
+    meetingModel: MeetingModel,
   ): Observable<SelfModel> {
-    if (meeting && meeting.meetingModel) {
+    if (meetingModel) {
       return of({
-        user: user.user,
+        user: user,
         meetingModel: {
-          status: meeting.meetingModel.status,
-          meeting: meeting.meetingModel.meeting,
-          request: meeting.meetingModel.request,
-          messages: <ChatMessageDto[]>meeting.meetingModel.messages,
+          status: meetingModel.status,
+          meeting: meetingModel.meeting,
+          request: meetingModel.request,
+          messages: <ChatMessageDto[]>meetingModel.messages,
         },
       });
     } else {
       return of({
-        user: user.user,
+        user: user,
         meetingModel: null,
       });
     }
@@ -97,7 +99,7 @@ export class SelfService {
 
   private async initializeState(
     model: SelfModel,
-    settings: SettingsStateModel,
+    blockedUsers: UserDto[],
     fromStorage: boolean,
   ) {
     this.store.dispatch(new UpdateUser(model.user));
@@ -106,8 +108,8 @@ export class SelfService {
       this.store.dispatch(new UpdateMeeting(model.meetingModel));
     }
 
-    if (settings && settings.blockedUsers) {
-      this.store.dispatch(new UpdateBlockedUsers(settings.blockedUsers));
+    if (blockedUsers) {
+      this.store.dispatch(new UpdateBlockedUsers(blockedUsers));
     }
 
     if (fromStorage) {

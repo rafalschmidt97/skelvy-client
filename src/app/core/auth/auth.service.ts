@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { HttpClient } from '@angular/common/http';
 import { from, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Storage } from '@ionic/storage';
 import { Facebook } from '@ionic-native/facebook/ngx';
@@ -13,6 +13,7 @@ import { storageKeys } from '../storage/storage';
 import { Store } from '@ngxs/store';
 import { ClearState } from '../redux/redux';
 import { UserPushService } from '../../modules/user/user-push.service';
+import { StateTrackerService } from '../state/state-tracker.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,7 @@ export class AuthService {
     private readonly google: GooglePlus,
     private readonly store: Store,
     private readonly userPush: UserPushService,
+    private readonly stateTracker: StateTrackerService,
   ) {
     this.jwt = new JwtHelperService();
   }
@@ -39,12 +41,14 @@ export class AuthService {
         language,
       })
       .pipe(
-        tap(async res => {
+        switchMap(async res => {
           if (res && res.accessToken && res.refreshToken) {
             await this.sessionService.createSession(res);
           }
 
           await this.storage.set(storageKeys.signInMethod, 'facebook');
+
+          return res;
         }),
       );
   }
@@ -56,12 +60,14 @@ export class AuthService {
         language,
       })
       .pipe(
-        tap(async res => {
+        switchMap(async res => {
           if (res && res.accessToken && res.refreshToken) {
             await this.sessionService.createSession(res);
           }
 
           await this.storage.set(storageKeys.signInMethod, 'google');
+
+          return res;
         }),
       );
   }
@@ -122,25 +128,21 @@ export class AuthService {
   logout(): Observable<void> {
     return from(this.getRefreshToken()).pipe(
       switchMap(refreshToken => {
-        return this.http
-          .post<void>(environment.versionApiUrl + 'auth/logout', {
-            refreshToken,
-          })
-          .pipe(
-            tap(async () => {
-              await this.logoutWithoutRequest();
-            }),
-          );
+        return this.http.post<void>(environment.versionApiUrl + 'auth/logout', {
+          refreshToken,
+        });
+      }),
+      switchMap(async res => {
+        await this.logoutWithoutRequest();
+        return res;
       }),
     );
   }
 
   async logoutWithoutRequest() {
-    this.userPush.disconnect();
-
-    this.store.dispatch(new ClearState());
+    this.stateTracker.stop();
     await this.sessionService.removeSession();
-    await this.storage.remove(storageKeys.lastMessageDate);
+    await this.userPush.disconnect();
 
     const method = await this.storage.get(storageKeys.signInMethod);
 
@@ -151,11 +153,14 @@ export class AuthService {
     }
 
     await this.storage.remove(storageKeys.signInMethod);
-    await this.storage.remove(storageKeys.lastRequestForm);
 
-    await this.storage.remove(storageKeys.userState);
-    await this.storage.remove(storageKeys.meetingState);
-    await this.storage.remove(storageKeys.settingsState);
+    await this.storage.remove(storageKeys.user);
+    await this.storage.remove(storageKeys.meeting);
+    await this.storage.remove(storageKeys.blockedUsers);
+
+    this.store.dispatch(new ClearState());
+    await this.storage.remove(storageKeys.lastMessageDate);
+    await this.storage.remove(storageKeys.lastRequestForm);
   }
 
   private getToken(): Promise<TokenDto> {

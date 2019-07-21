@@ -1,7 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button [disabled]="isLoading || form.invalid" (click)="onSubmit()">
+      <ion-button
+        [disabled]="isLoading || loadingSettings || form.invalid"
+        (click)="onSubmit()"
+      >
         {{ 'Done' | translate }}
       </ion-button>
     </ion-buttons>
@@ -11,20 +14,51 @@
 
 <ion-content>
   <div class="content minh-100 bg-ultra-light">
-    <app-form [form]="form" [isLoading]="isLoading" class="py-3">
-      <div class="label text-muted">{{ 'Push notifications' | translate }}</div>
-      <div class="btn btn-settings btn-icon">
-        {{ 'Global' | translate }}
-        <app-switch class="ml-auto" name="all"></app-switch>
+    <div class="label text-muted">{{ 'Push notifications' | translate }}</div>
+    <ng-container *ngIf="!loadingSettings; else loading">
+      <app-form
+        *ngIf="hasPermission; else noPermission"
+        [form]="form"
+        [isLoading]="isLoading"
+        class="py-3"
+      >
+        <div class="btn btn-settings btn-icon">
+          {{ 'Global' | translate }}
+          <app-switch class="ml-auto" name="all"></app-switch>
+        </div>
+        <div class="btn btn-settings btn-icon">
+          {{ 'Platform related' | translate }}
+          <app-switch class="ml-auto" name="platform"></app-switch>
+        </div>
+        <div class="btn btn-settings btn-icon">
+          {{ 'User related' | translate }}
+          <app-switch class="ml-auto" name="user"></app-switch>
+        </div>
+      </app-form>
+      <ng-template #noPermission>
+        <div class="mb-3 text-center">
+          <div class="border-top border-bottom text-center p-3 bg-white">
+            <p>
+              {{
+                'You have to allow to send you notifications first. Go to system preferences and change your preferences.'
+                  | translate
+              }}
+            </p>
+            <button
+              type="button"
+              (click)="getPermission()"
+              class="btn btn-primary btn-block"
+            >
+              {{ 'Request permission' | translate }}
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-template #loading>
+      <div class="text-center py-3">
+        <ion-spinner></ion-spinner>
       </div>
-      <div class="btn btn-settings btn-icon">
-        {{ 'Platform related' | translate }}
-        <app-switch class="ml-auto" name="platform"></app-switch>
-      </div>
-      <div class="btn btn-settings btn-icon">
-        {{ 'User related' | translate }}
-        <app-switch class="ml-auto" name="user"></app-switch>
-      </div>
-    </app-form>
+    </ng-template>
   </div>
 </ion-content>
