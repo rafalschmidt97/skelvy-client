@@ -84,8 +84,16 @@ export class StateTrackerService {
   }
 
   stop() {
-    this.userActions.unsubscribe();
-    this.meetingActions.unsubscribe();
-    this.blockedUsersActions.unsubscribe();
+    if (this.userActions) {
+      this.userActions.unsubscribe();
+    }
+
+    if (this.meetingActions) {
+      this.meetingActions.unsubscribe();
+    }
+
+    if (this.blockedUsersActions) {
+      this.blockedUsersActions.unsubscribe();
+    }
   }
 }
