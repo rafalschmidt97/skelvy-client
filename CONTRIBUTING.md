@@ -134,6 +134,9 @@ $ npm i # (or yarn install)
 3. In order to prepare your environment run `prepare.sh` shell script:
 
 ```bash
+$ npm i -g ionic cordova@8
+$ npm i -g native-run // not necessary
+$ npm install
 # read preparing environment
 $ sh scripts/prepare.sh // TODO: script is not ready yet
 ```
@@ -159,10 +162,15 @@ $ npm run translate
 ### Preparing iOS environment
 
 ```bash
-$ npm install
+# install cocoapods
 $ npm run ios:prepare
 # add developer account
+$ npm install -g ios-sim
+$ npm install -g --unsafe-perm ios-deploy
+# xcode sdk has to match device ios version
 ```
+
+More: [iOS Setup](https://ionicframework.com/docs/installation/ios)
 
 ### Publishing iOS version
 
@@ -177,15 +185,18 @@ $ npm run ios:build
 ### Preparing Android environment
 
 ```bash
-$ npm install
-$ npm run ios:prepare
+# java + gradle
+# set sdk environment variables
+$ npm run android:prepare
 # copy custom config
 # accept sdk licenses
 $ ~/Library/Android/sdk/tools/bin/sdkmanager --licenses
-# add debug keystore
+# add debug keystore to .android
 # change ip address in environment
 # internet on emulator/device is required. Use dns zone 8.8.8.8/8.8.4.4
 ```
+
+More: [Android Setup](https://ionicframework.com/docs/installation/android)
 
 ### Publishing Android version
 
@@ -198,7 +209,6 @@ $ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore release.keyst
 $ rm app-release.apk # remove previous apk
 $ ~/Library/Android/sdk/build-tools/28.0.3/zipalign -v 4 app-release-unsigned.apk app-release.apk 
 ```
-
 
 ### Hashes and Keystores
 
