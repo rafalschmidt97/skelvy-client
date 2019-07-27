@@ -5,6 +5,7 @@
   "USER_SENT_PHOTO": "Sent a photo",
   "USER_SENT_MESSAGE": "Sent a message",
   "MEETING_REQUEST_EXPIRED": "Your request has expired",
+  "MEETING_ABORTED": "Your meeting has been aborted",
   "MEETING_EXPIRED": "Your meeting has expired",
   "MEETING": "Meeting",
   "MEETING_REQUEST": "Meeting request"

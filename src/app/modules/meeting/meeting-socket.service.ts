@@ -39,6 +39,7 @@ export class MeetingSocketService {
     this.onUserJoinedMeeting();
     this.onUserFoundMeeting();
     this.onUserLeftMeeting();
+    this.onMeetingAborted();
     this.onMeetingRequestExpired();
     this.onMeetingExpired();
   }
@@ -146,30 +147,38 @@ export class MeetingSocketService {
         });
       }
 
-      if (
-        this.store.selectSnapshot(
-          state => state.meeting.meetingModel.meeting.users,
-        ).length !== 2
-      ) {
-        this.meetingService.removeUser(data.userId);
-      } else {
-        this.meetingService.findMeeting().subscribe(
-          () => {
-            this.toastService.createInformation(
-              _('All users have left the group'),
-            );
+      this.meetingService.removeUser(data.userId);
+    });
+  }
 
-            if (this.router.url === '/app/chat') {
-              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-            }
-          },
-          () => {
-            this.toastService.createError(
-              _('A problem occurred while finding the meeting'),
-            );
-          },
-        );
+  private onMeetingAborted() {
+    this.userSocket.on('MeetingAborted', () => {
+      if (
+        this.backgroundService.inBackground &&
+        this.backgroundService.allowPush
+      ) {
+        this.backgroundService.create(_('MEETING'), _('MEETING_ABORTED'), {
+          foreground: false,
+          redirect_to: 'meeting',
+        });
       }
+
+      this.meetingService.findMeeting().subscribe(
+        () => {
+          this.toastService.createInformation(
+            _('All users have left the group'),
+          );
+
+          if (this.router.url === '/app/chat') {
+            this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+          }
+        },
+        () => {
+          this.toastService.createError(
+            _('A problem occurred while finding the meeting'),
+          );
+        },
+      );
     });
   }
 
