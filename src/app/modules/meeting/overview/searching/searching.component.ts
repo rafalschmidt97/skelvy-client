@@ -13,9 +13,20 @@ import { MeetingService } from '../../meeting.service';
 import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import { Store } from '@ngxs/store';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { AlertModalComponent } from '../../../../shared/components/alert/alert-modal/alert-modal.component';
 import { ModalController } from '@ionic/angular';
+import {
+  AddChatMessages,
+  AddMeetingUser,
+  MarkChatMessageAsFailed,
+  MarkChatMessageAsSent,
+  RemoveChatMessage,
+  RemoveMeetingUser,
+  UpdateMeeting,
+} from '../../store/meeting-actions';
+import { concatMap } from 'rxjs/operators';
+import { MeetingStateModel } from '../../store/meeting-state';
 
 @Component({
   selector: 'app-searching',
@@ -27,7 +38,7 @@ export class SearchingComponent implements OnInit, OnDestroy {
   isLoading = false;
   loadingSuggestions = false;
   suggestions: MeetingSuggestionsModel;
-  statusSubscription: Subscription;
+  meetingSubscription: Subscription;
 
   constructor(
     private readonly modalController: ModalController,
@@ -37,16 +48,19 @@ export class SearchingComponent implements OnInit, OnDestroy {
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
     private readonly store: Store,
+    private readonly actions: Actions,
   ) {}
 
   ngOnInit() {
-    this.statusSubscription = this.store
-      .select(state => state.meeting)
-      .subscribe(meeting => {
+    this.meetingSubscription = this.actions
+      .pipe(
+        ofActionSuccessful(UpdateMeeting),
+        concatMap(() => this.store.selectOnce(state => state.meeting)),
+      )
+      .subscribe(async (meeting: MeetingStateModel) => {
         if (
           meeting.meetingModel &&
-          meeting.meetingModel.status === MeetingStatus.SEARCHING &&
-          !meeting.loading
+          meeting.meetingModel.status === MeetingStatus.SEARCHING
         ) {
           this.findSuggestions(
             meeting.meetingModel.request.latitude,
@@ -57,8 +71,8 @@ export class SearchingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.statusSubscription) {
-      this.statusSubscription.unsubscribe();
+    if (this.meetingSubscription) {
+      this.meetingSubscription.unsubscribe();
     }
   }
 
