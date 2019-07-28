@@ -9,8 +9,8 @@ import { AgePipe } from './pipes/age.pipe';
 import { ConnectionComponent } from './components/connection/connection.component';
 import { ProfileDetailsModalComponent } from './components/profile-details-modal/profile-details-modal.component';
 import { MeetingSuggestionsComponent } from './components/meeting-suggestions/meeting-suggestions.component';
-import { RequestSuggestionsModalComponent } from './components/meeting-suggestions/request-suggestions-modal/request-suggestions-modal.component';
-import { MeetingSuggestionsModalComponent } from './components/meeting-suggestions/meeting-suggestions-modal/meeting-suggestions-modal.component';
+import { RequestSuggestionsModalComponent } from './components/meeting-suggestions/request/request-suggestions-modal.component';
+import { MeetingSuggestionsModalComponent } from './components/meeting-suggestions/meeting/meeting-suggestions-modal.component';
 import { ModalModule } from './components/modal/modal.module';
 
 @NgModule({

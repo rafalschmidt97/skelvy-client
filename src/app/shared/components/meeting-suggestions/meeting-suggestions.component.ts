@@ -5,8 +5,8 @@ import {
   MeetingRequestWithUserDto,
   MeetingSuggestionsModel,
 } from '../../../modules/meeting/meeting';
-import { RequestSuggestionsModalComponent } from './request-suggestions-modal/request-suggestions-modal.component';
-import { MeetingSuggestionsModalComponent } from './meeting-suggestions-modal/meeting-suggestions-modal.component';
+import { RequestSuggestionsModalComponent } from './request/request-suggestions-modal.component';
+import { MeetingSuggestionsModalComponent } from './meeting/meeting-suggestions-modal.component';
 import { ModalController } from '@ionic/angular';
 
 @Component({
