@@ -52,7 +52,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
 
     this.inputForm = this.formBuilder.group({
       image: '',
-      image1: get(photos, '[0].url'),
+      image1: get(photos, '[0].url', ''),
       image2: get(photos, '[1].url', ''),
       image3: get(photos, '[2].url', ''),
     });
