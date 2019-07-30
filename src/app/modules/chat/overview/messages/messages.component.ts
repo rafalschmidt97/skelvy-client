@@ -1,9 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import {
-  ChatMessageDto,
-  ChatMessageState,
-  MeetingDto,
-} from '../../../meeting/meeting';
+import { MessageDto, MessageState, MeetingDto } from '../../../meeting/meeting';
 import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
 import { ChatService } from '../../chat.service';
@@ -23,7 +19,7 @@ import { MessageActionModalComponent } from './message-action-modal/message-acti
 })
 export class MessagesComponent implements OnInit {
   @ViewChild('content') content: ElementRef;
-  @Input() messages: ChatMessageState[];
+  @Input() messages: MessageState[];
   @Input() meeting: MeetingDto;
   @Input() user: UserDto;
   dateToShow: string;
@@ -68,7 +64,7 @@ export class MessagesComponent implements OnInit {
     if (this.hasMoreMessages && !this.isLoading) {
       this.isLoading = true;
       this.chatService.findMoreMessages().subscribe(
-        (messages: ChatMessageDto[]) => {
+        (messages: MessageDto[]) => {
           if (messages.length < 20) {
             this.hasMoreMessages = false;
           }
@@ -86,7 +82,7 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  async showActions(message: ChatMessageState) {
+  async showActions(message: MessageState) {
     const modal = await this.modalController.create({
       component: MessageActionModalComponent,
       componentProps: {

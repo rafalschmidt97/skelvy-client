@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
-import { ChatMessageState } from '../../../../meeting/meeting';
+import { MessageState } from '../../../../meeting/meeting';
 import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../../../core/i18n/translate';
 import { ChatService } from '../../../chat.service';
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   templateUrl: './message-action-modal.component.html',
 })
 export class MessageActionModalComponent {
-  @Input() message: ChatMessageState;
+  @Input() message: MessageState;
 
   constructor(
     private readonly modalController: ModalController,
@@ -28,7 +28,7 @@ export class MessageActionModalComponent {
     this.modalController.dismiss();
   }
 
-  sendAgain(oldMessage: ChatMessageState) {
+  sendAgain(oldMessage: MessageState) {
     this.dismiss();
     this.chatService.sendAgainMessage(oldMessage).subscribe(
       () => {},
@@ -49,7 +49,7 @@ export class MessageActionModalComponent {
     );
   }
 
-  remove(message: ChatMessageState) {
+  remove(message: MessageState) {
     this.dismiss();
     this.chatService.removeMessage(message);
   }

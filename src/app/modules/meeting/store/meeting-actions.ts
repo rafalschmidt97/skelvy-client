@@ -1,6 +1,6 @@
 import { UserDto } from '../../user/user';
 import { MeetingModelState } from './meeting-state';
-import { ChatMessageDto, ChatMessageState } from '../meeting';
+import { MessageDto, MessageState } from '../meeting';
 
 export class ChangeMeetingLoadingStatus {
   static readonly type = '[Meeting] Change meeting loading status';
@@ -34,36 +34,33 @@ export class UpdateChatMessagesToRead {
 
 export class AddChatMessage {
   static readonly type = '[Chat] Add message';
-  constructor(public message: ChatMessageState) {}
+  constructor(public message: MessageState) {}
 }
 
 export class AddChatMessages {
   static readonly type = '[Chat] Add messages';
-  constructor(public messages: ChatMessageState[], public end = true) {}
+  constructor(public messages: MessageState[], public end = true) {}
 }
 
 export class RemoveChatMessage {
   static readonly type = '[Chat] Remove message';
-  constructor(public message: ChatMessageState) {}
+  constructor(public message: MessageState) {}
 }
 
 export class RemoveOldAndAddNewChatMessage {
   static readonly type = '[Chat] Remove old and add new message';
   constructor(
-    public oldMessage: ChatMessageState,
-    public newMessage: ChatMessageState,
+    public oldMessage: MessageState,
+    public newMessage: MessageState,
   ) {}
 }
 
 export class MarkChatMessageAsSent {
   static readonly type = '[Chat] Mark chat message as sent';
-  constructor(
-    public message: ChatMessageState,
-    public apiMessage: ChatMessageDto,
-  ) {}
+  constructor(public message: MessageState, public apiMessage: MessageDto) {}
 }
 
 export class MarkChatMessageAsFailed {
   static readonly type = '[Chat] Mark chat message as failed';
-  constructor(public message: ChatMessageState) {}
+  constructor(public message: MessageState) {}
 }

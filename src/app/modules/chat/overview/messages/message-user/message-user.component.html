@@ -3,7 +3,7 @@
     <div
       class="message mine d-flex flex-column ml-auto"
       [class.sending]="message.sending"
-      [class.photo-with-text]="message.message && message.attachmentUrl"
+      [class.photo-with-text]="message.text && message.attachmentUrl"
     >
       <img
         *ngIf="message.attachmentUrl"
@@ -13,12 +13,12 @@
         alt="photo"
       />
       <div
-        *ngIf="message.message"
+        *ngIf="message.text"
         (click)="toggleDate()"
         class="text bg-primary text-white ml-auto"
         [class.bg-danger]="message.failed"
         [class.emoji]="isOnlyEmoji"
-        [innerText]="message.message"
+        [innerText]="message.text"
       ></div>
       <div
         *ngIf="isDateShown"

@@ -1,5 +1,5 @@
 import {
-  ChatMessageState,
+  MessageState,
   MeetingDto,
   MeetingRequestDto,
   MeetingStatus,
@@ -29,7 +29,7 @@ export interface MeetingStateModel {
 export interface MeetingModelState {
   status: MeetingStatus;
   meeting: MeetingDto;
-  messages: ChatMessageState[];
+  messages: MessageState[];
   request: MeetingRequestDto;
 }
 

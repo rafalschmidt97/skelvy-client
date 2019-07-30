@@ -3,7 +3,7 @@ import { UserDto } from '../user/user';
 export interface MeetingModel {
   status: MeetingStatus;
   meeting: MeetingDto;
-  messages: ChatMessageDto[];
+  messages: MessageDto[];
   request: MeetingRequestDto;
 }
 
@@ -18,6 +18,7 @@ export interface MeetingDto {
   latitude: number;
   longitude: number;
   city: string;
+  groupId: number;
   drinkType: MeetingDrinkTypeDto;
   users: UserDto[];
 }
@@ -71,26 +72,29 @@ export interface MeetingRequestDrinkTypeRequest {
   id: number;
 }
 
-export interface ChatMessageDto {
+export interface MessageDto {
   id: number;
   date: string;
-  message: string;
+  text: string;
   attachmentUrl: string;
   userId: number;
+  groupId: number;
 }
 
-export interface ChatMessageState {
+export interface MessageState {
   id?: number;
   date: string;
-  message: string;
+  text: string;
   attachmentUrl: string;
   userId: number;
+  groupId: number;
   sending?: boolean;
   failed?: boolean;
 }
 
-export interface ChatMessageRequest {
-  message: string;
+export interface MessageRequest {
+  text: string;
   attachmentUrl: string;
   userId: number;
+  groupId: number;
 }

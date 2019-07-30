@@ -6,11 +6,7 @@ import { SelfModel } from './self';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingService } from '../meeting/meeting.service';
-import {
-  ChatMessageDto,
-  MeetingModel,
-  MeetingStatus,
-} from '../meeting/meeting';
+import { MessageDto, MeetingModel, MeetingStatus } from '../meeting/meeting';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { storageKeys } from '../../core/storage/storage';
@@ -86,7 +82,7 @@ export class SelfService {
           status: meetingModel.status,
           meeting: meetingModel.meeting,
           request: meetingModel.request,
-          messages: <ChatMessageDto[]>meetingModel.messages,
+          messages: <MessageDto[]>meetingModel.messages,
         },
       });
     } else {

@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage';
 import { MeetingService } from './meeting.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
-import { ChatMessageDto } from './meeting';
+import { MessageDto } from './meeting';
 import { Store } from '@ngxs/store';
 import { ChatService } from '../chat/chat.service';
 import { BackgroundService } from '../../core/background/background.service';
@@ -35,7 +35,7 @@ export class MeetingSocketService {
   }
 
   onMeetingActions() {
-    this.onUserSentMeetingChatMessage();
+    this.onUserSentMessage();
     this.onUserJoinedMeeting();
     this.onUserFoundMeeting();
     this.onUserLeftMeeting();
@@ -44,43 +44,40 @@ export class MeetingSocketService {
     this.onMeetingExpired();
   }
 
-  private onUserSentMeetingChatMessage() {
-    this.userSocket.on(
-      'UserSentMeetingChatMessage',
-      async (message: ChatMessageDto) => {
-        if (
-          this.backgroundService.inBackground &&
-          this.backgroundService.allowPush
-        ) {
-          if (message.message) {
-            this.backgroundService.create(
-              this.getProfileName(message.userId),
-              message.message,
-              { foreground: false, redirect_to: 'chat' },
-              false,
-              false,
-            );
-          } else if (message.attachmentUrl) {
-            this.backgroundService.create(
-              this.getProfileName(message.userId),
-              _('USER_SENT_PHOTO'),
-              { foreground: false, redirect_to: 'chat' },
-              false,
-              true,
-            );
-          } else {
-            this.backgroundService.create(
-              this.getProfileName(message.userId),
-              _('USER_SENT_MESSAGE'),
-              { foreground: false, redirect_to: 'chat' },
-              false,
-            );
-          }
+  private onUserSentMessage() {
+    this.userSocket.on('UserSentMessage', async (message: MessageDto) => {
+      if (
+        this.backgroundService.inBackground &&
+        this.backgroundService.allowPush
+      ) {
+        if (message.text) {
+          this.backgroundService.create(
+            this.getProfileName(message.userId),
+            message.text,
+            { foreground: false, redirect_to: 'chat' },
+            false,
+            false,
+          );
+        } else if (message.attachmentUrl) {
+          this.backgroundService.create(
+            this.getProfileName(message.userId),
+            _('USER_SENT_PHOTO'),
+            { foreground: false, redirect_to: 'chat' },
+            false,
+            true,
+          );
+        } else {
+          this.backgroundService.create(
+            this.getProfileName(message.userId),
+            _('USER_SENT_MESSAGE'),
+            { foreground: false, redirect_to: 'chat' },
+            false,
+          );
         }
+      }
 
-        await this.chatService.addMessage(message);
-      },
-    );
+      await this.chatService.addMessage(message);
+    });
   }
 
   private onUserJoinedMeeting() {

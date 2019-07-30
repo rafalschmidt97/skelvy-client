@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UserDto } from '../../../../user/user';
-import { ChatMessageState } from '../../../../meeting/meeting';
+import { MessageState } from '../../../../meeting/meeting';
 import isOnlyEmojis from 'is-only-emojis';
 
 @Component({
@@ -10,12 +10,12 @@ import isOnlyEmojis from 'is-only-emojis';
 })
 export class MessageUserComponent {
   @Input() user: UserDto;
-  @Input() message: ChatMessageState;
+  @Input() message: MessageState;
   @Input() isLast: boolean;
   @Input() isFirst: boolean;
   @Input() dateToShow: string;
   @Output() showDate = new EventEmitter<string>();
-  @Output() showActions = new EventEmitter<ChatMessageState>();
+  @Output() showActions = new EventEmitter<MessageState>();
   @Output() showPreview = new EventEmitter<string>();
 
   get isDateShown(): boolean {
@@ -24,9 +24,9 @@ export class MessageUserComponent {
 
   get isOnlyEmoji(): boolean {
     return (
-      this.message.message &&
-      isOnlyEmojis(this.message.message) &&
-      this.message.message.length <= 60
+      this.message.text &&
+      isOnlyEmojis(this.message.text) &&
+      this.message.text.length <= 60
     );
   }
 

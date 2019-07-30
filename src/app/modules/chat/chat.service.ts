@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { ChatMessageDto, ChatMessageState } from '../meeting/meeting';
+import { MessageDto, MessageState } from '../meeting/meeting';
 import { catchError, tap } from 'rxjs/operators';
 import {
   AddChatMessage,
@@ -29,10 +29,12 @@ export class ChatService {
     private readonly router: Router,
   ) {}
 
-  findMessages(beforeDate: string): Observable<ChatMessageDto[]> {
+  findMessages(groupId: number, beforeDate: string): Observable<MessageDto[]> {
     return this.http
-      .get<ChatMessageDto[]>(
-        `${environment.versionApiUrl}meetings/self/chat?beforeDate=${new Date(
+      .get<MessageDto[]>(
+        `${
+          environment.versionApiUrl
+        }messages/self?groupId=${groupId}&beforeDate=${new Date(
           beforeDate,
         ).toISOString()}`,
       )
@@ -43,23 +45,20 @@ export class ChatService {
       );
   }
 
-  findMoreMessages(): Observable<ChatMessageDto[]> {
+  findMoreMessages(): Observable<MessageDto[]> {
     const firstMessage = this.store.selectSnapshot(
       state => state.meeting.meetingModel.messages,
     )[0];
-    return this.findMessages(firstMessage.date).pipe(
+    return this.findMessages(firstMessage.groupId, firstMessage.date).pipe(
       tap(messages => {
         this.store.dispatch(new AddChatMessages(messages, false));
       }),
     );
   }
 
-  sendMessage(message: ChatMessageState): Observable<ChatMessageDto> {
+  sendMessage(message: MessageState): Observable<MessageDto> {
     return this.http
-      .post<ChatMessageDto>(
-        environment.versionApiUrl + 'meetings/self/chat',
-        message,
-      )
+      .post<MessageDto>(environment.versionApiUrl + 'messages/self', message)
       .pipe(
         tap(async apiMessage => {
           this.store.dispatch(new MarkChatMessageAsSent(message, apiMessage));
@@ -72,12 +71,13 @@ export class ChatService {
       );
   }
 
-  sendAgainMessage(oldMessage: ChatMessageState): Observable<ChatMessageDto> {
-    const newMessage: ChatMessageState = {
-      message: oldMessage.message,
+  sendAgainMessage(oldMessage: MessageState): Observable<MessageDto> {
+    const newMessage: MessageState = {
+      text: oldMessage.text,
       attachmentUrl: oldMessage.attachmentUrl,
       date: new Date().toISOString(),
       userId: oldMessage.userId,
+      groupId: oldMessage.groupId,
       sending: true,
     };
 
@@ -88,7 +88,7 @@ export class ChatService {
     return this.sendMessage(newMessage);
   }
 
-  async addMessage(message: ChatMessageState) {
+  async addMessage(message: MessageState) {
     this.store.dispatch(new AddChatMessage(message));
 
     if (this.router.url !== '/app/chat') {
@@ -98,7 +98,7 @@ export class ChatService {
     }
   }
 
-  removeMessage(message: ChatMessageState) {
+  removeMessage(message: MessageState) {
     this.store.dispatch(new RemoveChatMessage(message));
   }
 }

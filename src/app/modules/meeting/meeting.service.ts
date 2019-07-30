@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import {
-  ChatMessageState,
+  MessageState,
   MeetingDrinkTypeDto,
   MeetingModel,
   MeetingRequestRequest,
@@ -183,7 +183,7 @@ export class MeetingService {
 
   private async initializeChatWithExistingChatMessages(
     model: MeetingModel,
-  ): Promise<ChatMessageState[]> {
+  ): Promise<MessageState[]> {
     const existingMessages = this.store.selectSnapshot(
       x => x.meeting.meetingModel.messages,
     );
@@ -194,7 +194,7 @@ export class MeetingService {
             new Date(message1.date).getTime() ===
               new Date(message2.date).getTime() &&
             message1.userId === message2.userId &&
-            (message1.message === message2.message ||
+            (message1.text === message2.text ||
               message1.attachmentUrl === message2.attachmentUrl)
           );
         }).length === 0
@@ -241,7 +241,7 @@ export class MeetingService {
 
   private async initializeFreshChat(
     model: MeetingModel,
-  ): Promise<ChatMessageState[]> {
+  ): Promise<MessageState[]> {
     await this.storage.remove(storageKeys.lastMessageDate);
 
     if (this.router.url !== '/app/chat') {
@@ -255,12 +255,12 @@ export class MeetingService {
       }
     }
 
-    return <ChatMessageState[]>model.messages;
+    return <MessageState[]>model.messages;
   }
 
   private initializeMeetingModel(
     model: MeetingModel,
-    messages: ChatMessageState[],
+    messages: MessageState[],
   ) {
     this.store.dispatch(
       new UpdateMeeting({

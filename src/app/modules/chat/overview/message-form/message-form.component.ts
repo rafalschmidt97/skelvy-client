@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { MeetingService } from '../../../meeting/meeting.service';
 import { ChatService } from '../../chat.service';
-import { ChatMessageState } from '../../../meeting/meeting';
+import { MessageState } from '../../../meeting/meeting';
 import { Store } from '@ngxs/store';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { base64StringToBlob } from 'blob-util';
@@ -85,10 +85,13 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
       this.isLoading = true;
 
       this.sendTextMessage({
-        message: this.form.get('message').value.trim(),
+        text: this.form.get('message').value.trim(),
         attachmentUrl: null,
         date: new Date().toISOString(),
         userId: this.store.selectSnapshot(state => state.user.user.id),
+        groupId: this.store.selectSnapshot(
+          state => state.meeting.meetingModel.meeting.groupId,
+        ),
         sending: true,
       });
 
@@ -105,10 +108,13 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
       this.isLoading = true;
 
       this.sendTextMessage({
-        message: icon,
+        text: icon,
         attachmentUrl: null,
         date: new Date().toISOString(),
         userId: this.store.selectSnapshot(state => state.user.user.id),
+        groupId: this.store.selectSnapshot(
+          state => state.meeting.meetingModel.meeting.groupId,
+        ),
         sending: true,
       });
 
@@ -125,9 +131,12 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
 
         this.sendAttachmentMessage({
           date: new Date().toISOString(),
-          message: null,
+          text: null,
           attachmentUrl: takenPhotoUri,
           userId: this.store.selectSnapshot(state => state.user.user.id),
+          groupId: this.store.selectSnapshot(
+            state => state.meeting.meetingModel.meeting.groupId,
+          ),
           sending: true,
         });
 
@@ -145,9 +154,12 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
 
         this.sendAttachmentMessage({
           date: new Date().toISOString(),
-          message: null,
+          text: null,
           attachmentUrl: chosenPhotoUri,
           userId: this.store.selectSnapshot(state => state.user.user.id),
+          groupId: this.store.selectSnapshot(
+            state => state.meeting.meetingModel.meeting.groupId,
+          ),
           sending: true,
         });
 
@@ -156,7 +168,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     }
   }
 
-  private sendTextMessage(message: ChatMessageState) {
+  private sendTextMessage(message: MessageState) {
     return from(this.chatService.addMessage(message))
       .pipe(
         switchMap(() => {
@@ -182,7 +194,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
       );
   }
 
-  private sendAttachmentMessage(message: ChatMessageState) {
+  private sendAttachmentMessage(message: MessageState) {
     return from(
       this.chatService.addMessage({
         ...message,
@@ -257,7 +269,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     }
   }
 
-  private async uploadPhoto(message: ChatMessageState): Promise<PhotoDto> {
+  private async uploadPhoto(message: MessageState): Promise<PhotoDto> {
     const data = new FormData();
     try {
       const photoUri = message.attachmentUrl;
