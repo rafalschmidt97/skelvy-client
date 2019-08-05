@@ -7,10 +7,14 @@ import { Storage } from '@ionic/storage';
 import { MeetingService } from './meeting.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
-import { MessageDto } from './meeting';
+import { MessageActionType, MessageDto, MessageType } from './meeting';
 import { Store } from '@ngxs/store';
 import { ChatService } from '../chat/chat.service';
 import { BackgroundService } from '../../core/background/background.service';
+import {
+  SocketNotificationMessage,
+  SocketNotificationType,
+} from '../../core/background/background';
 
 @Injectable({
   providedIn: 'root',
@@ -45,186 +49,164 @@ export class MeetingSocketService {
   }
 
   private onUserSentMessage() {
-    this.userSocket.on('UserSentMessage', async (message: MessageDto) => {
-      if (
-        this.backgroundService.inBackground &&
-        this.backgroundService.allowPush
-      ) {
-        if (message.text) {
-          this.backgroundService.create(
-            this.getProfileName(message.userId),
-            message.text,
-            { foreground: false, redirect_to: 'chat' },
-            false,
-            false,
+    this.userSocket.on(
+      'UserSentMessage',
+      async (notification: SocketNotificationMessage<MessageDto[]>) => {
+        this.showNotificationIfBackground(notification);
+
+        const messages = notification.data.data;
+        const persistenceMessages = messages.filter(x => {
+          return (
+            x.type === MessageType.RESPONSE ||
+            (x.type === MessageType.ACTION &&
+              x.action === MessageActionType.SEEN)
           );
-        } else if (message.attachmentUrl) {
-          this.backgroundService.create(
-            this.getProfileName(message.userId),
-            _('USER_SENT_PHOTO'),
-            { foreground: false, redirect_to: 'chat' },
-            false,
-            true,
-          );
-        } else {
-          this.backgroundService.create(
-            this.getProfileName(message.userId),
-            _('USER_SENT_MESSAGE'),
-            { foreground: false, redirect_to: 'chat' },
-            false,
+        });
+        const nonPersistenceMessages = messages.filter(
+          x => !persistenceMessages.includes(x),
+        );
+
+        if (persistenceMessages.length > 0) {
+          await this.chatService.addSentMessagesWithReading(
+            persistenceMessages,
+            this.store.selectSnapshot(state => state.user.user.id),
           );
         }
-      }
 
-      await this.chatService.addMessage(message);
-    });
+        if (nonPersistenceMessages.length > 0) {
+          nonPersistenceMessages.forEach(x => {
+            if (x.action === MessageActionType.TYPINGON) {
+              // TODO: add new action
+            } else if (x.action === MessageActionType.TYPINGOFF) {
+              // TODO: add new action
+            }
+          });
+        }
+      },
+    );
   }
 
   private onUserJoinedMeeting() {
-    this.userSocket.on('UserJoinedMeeting', data => {
-      if (
-        this.backgroundService.inBackground &&
-        this.backgroundService.allowPush
-      ) {
-        this.backgroundService.create(_('MEETING'), _('USER_JOINED_MEETING'), {
-          foreground: false,
-          redirect_to: 'meeting',
-        });
-      }
+    this.userSocket.on(
+      'UserJoinedMeeting',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
 
-      this.meetingService.addUser(data.userId).subscribe(
-        () => {
-          this.toastService.createInformation(
-            _('New user has been added to the group'),
-          );
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred loading meeting user'),
-          );
-        },
-      );
-    });
+        const { userId } = notification.data.data;
+        this.meetingService.addUser(userId).subscribe(
+          () => {
+            this.toastService.createInformation(
+              _('New user has been added to the group'),
+            );
+          },
+          () => {
+            this.toastService.createError(
+              _('A problem occurred loading meeting user'),
+            );
+          },
+        );
+      },
+    );
   }
 
   private onUserFoundMeeting() {
-    this.userSocket.on('UserFoundMeeting', () => {
-      if (
-        this.backgroundService.inBackground &&
-        this.backgroundService.allowPush
-      ) {
-        this.backgroundService.create(_('MEETING'), _('USER_FOUND_MEETING'), {
-          foreground: false,
-          redirect_to: 'meeting',
-        });
-      }
+    this.userSocket.on(
+      'UserFoundMeeting',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
 
-      this.meetingService.findMeeting().subscribe(
-        () => {
-          this.toastService.createInformation(_('New meeting has been found'));
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while finding the meeting'),
-          );
-        },
-      );
-    });
+        this.meetingService.findMeeting().subscribe(
+          () => {
+            this.toastService.createInformation(
+              _('New meeting has been found'),
+            );
+          },
+          () => {
+            this.toastService.createError(
+              _('A problem occurred while finding the meeting'),
+            );
+          },
+        );
+      },
+    );
   }
 
   private onUserLeftMeeting() {
-    this.userSocket.on('UserLeftMeeting', data => {
-      if (
-        this.backgroundService.inBackground &&
-        this.backgroundService.allowPush
-      ) {
-        this.backgroundService.create(_('MEETING'), _('USER_LEFT_MEETING'), {
-          foreground: false,
-          redirect_to: 'meeting',
-        });
-      }
+    this.userSocket.on(
+      'UserLeftMeeting',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
 
-      this.meetingService.removeUser(data.userId);
-    });
+        const { userId } = notification.data.data;
+        this.meetingService.removeUser(userId);
+      },
+    );
   }
 
   private onMeetingAborted() {
-    this.userSocket.on('MeetingAborted', () => {
-      if (
-        this.backgroundService.inBackground &&
-        this.backgroundService.allowPush
-      ) {
-        this.backgroundService.create(_('MEETING'), _('MEETING_ABORTED'), {
-          foreground: false,
-          redirect_to: 'meeting',
-        });
-      }
+    this.userSocket.on(
+      'MeetingAborted',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
 
-      this.meetingService.findMeeting().subscribe(
-        () => {
-          this.toastService.createInformation(
-            _('All users have left the group'),
-          );
+        this.meetingService.findMeeting().subscribe(
+          () => {
+            this.toastService.createInformation(
+              _('All users have left the group'),
+            );
 
-          if (this.router.url === '/app/chat') {
-            this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-          }
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while finding the meeting'),
-          );
-        },
-      );
-    });
+            if (this.router.url === '/app/chat') {
+              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+            }
+          },
+          () => {
+            this.toastService.createError(
+              _('A problem occurred while finding the meeting'),
+            );
+          },
+        );
+      },
+    );
   }
 
   private onMeetingRequestExpired() {
-    this.userSocket.on('MeetingRequestExpired', () => {
-      if (
-        this.backgroundService.inBackground &&
-        this.backgroundService.allowPush
-      ) {
-        this.backgroundService.create(
-          _('MEETING_REQUEST'),
-          _('MEETING_REQUEST_EXPIRED'),
-          {
-            foreground: false,
-            redirect_to: 'meeting',
-          },
-        );
-      }
+    this.userSocket.on(
+      'MeetingRequestExpired',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
 
-      this.toastService.createInformation(_('Meeting request has expired'));
-      this.meetingService.clearMeeting();
-    });
+        this.toastService.createInformation(_('Meeting request has expired'));
+        this.meetingService.clearMeeting();
+      },
+    );
   }
 
   private onMeetingExpired() {
-    this.userSocket.on('MeetingExpired', () => {
-      if (
-        this.backgroundService.inBackground &&
-        this.backgroundService.allowPush
-      ) {
-        this.backgroundService.create(_('MEETING'), _('MEETING_EXPIRED'), {
-          foreground: false,
-          redirect_to: 'meeting',
-        });
-      }
+    this.userSocket.on(
+      'MeetingExpired',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
 
-      this.toastService.createInformation(_('The meeting has expired'));
+        this.toastService.createInformation(_('The meeting has expired'));
 
-      if (this.router.url === '/app/chat') {
-        this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-      }
+        if (this.router.url === '/app/chat') {
+          this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+        }
 
-      this.meetingService.clearMeeting();
-    });
+        this.meetingService.clearMeeting();
+      },
+    );
   }
 
-  private getProfileName(userId: number): string {
-    return this.store
-      .selectSnapshot(state => state.meeting.meetingModel.meeting.users)
-      .find(x => x.id === userId).profile.name;
+  private showNotificationIfBackground(
+    notification: SocketNotificationMessage,
+  ) {
+    if (
+      this.backgroundService.inBackground &&
+      this.backgroundService.allowPush &&
+      notification.type === SocketNotificationType.REGULAR
+    ) {
+      this.backgroundService.createFromNotification(notification);
+    }
   }
 }

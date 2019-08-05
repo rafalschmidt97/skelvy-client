@@ -6,7 +6,7 @@ import { SelfModel } from './self';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingService } from '../meeting/meeting.service';
-import { MessageDto, MeetingModel, MeetingStatus } from '../meeting/meeting';
+import { MeetingModel, MeetingStatus, MessageDto } from '../meeting/meeting';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { storageKeys } from '../../core/storage/storage';

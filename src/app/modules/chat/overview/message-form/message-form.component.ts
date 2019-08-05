@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { MeetingService } from '../../../meeting/meeting.service';
 import { ChatService } from '../../chat.service';
-import { MessageState } from '../../../meeting/meeting';
+import { MessageState, MessageType } from '../../../meeting/meeting';
 import { Store } from '@ngxs/store';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { base64StringToBlob } from 'blob-util';
@@ -20,7 +20,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { from, throwError } from 'rxjs';
 import { PhotoDto } from '../../../../core/upload/upload';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { RemoveChatMessage } from '../../../meeting/store/meeting-actions';
+import { RemoveResponseChatMessage } from '../../../meeting/store/meeting-actions';
 
 @Component({
   selector: 'app-message-form',
@@ -85,9 +85,12 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
       this.isLoading = true;
 
       this.sendTextMessage({
+        id: 0,
+        type: MessageType.RESPONSE,
         text: this.form.get('message').value.trim(),
         attachmentUrl: null,
         date: new Date().toISOString(),
+        action: null,
         userId: this.store.selectSnapshot(state => state.user.user.id),
         groupId: this.store.selectSnapshot(
           state => state.meeting.meetingModel.meeting.groupId,
@@ -108,9 +111,12 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
       this.isLoading = true;
 
       this.sendTextMessage({
+        id: 0,
+        type: MessageType.RESPONSE,
         text: icon,
         attachmentUrl: null,
         date: new Date().toISOString(),
+        action: null,
         userId: this.store.selectSnapshot(state => state.user.user.id),
         groupId: this.store.selectSnapshot(
           state => state.meeting.meetingModel.meeting.groupId,
@@ -130,9 +136,12 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
         this.isLoading = true;
 
         this.sendAttachmentMessage({
+          id: 0,
+          type: MessageType.RESPONSE,
           date: new Date().toISOString(),
           text: null,
           attachmentUrl: takenPhotoUri,
+          action: null,
           userId: this.store.selectSnapshot(state => state.user.user.id),
           groupId: this.store.selectSnapshot(
             state => state.meeting.meetingModel.meeting.groupId,
@@ -153,9 +162,12 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
         this.isLoading = true;
 
         this.sendAttachmentMessage({
+          id: 0,
+          type: MessageType.RESPONSE,
           date: new Date().toISOString(),
           text: null,
           attachmentUrl: chosenPhotoUri,
+          action: null,
           userId: this.store.selectSnapshot(state => state.user.user.id),
           groupId: this.store.selectSnapshot(
             state => state.meeting.meetingModel.meeting.groupId,
@@ -298,7 +310,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
             _('A problem occurred while uploading the photo'),
           );
 
-          this.store.dispatch(new RemoveChatMessage(message));
+          this.store.dispatch(new RemoveResponseChatMessage(message));
 
           return throwError(err);
         }),

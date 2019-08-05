@@ -13,10 +13,10 @@ import { MeetingStateModel } from '../../modules/meeting/store/meeting-state';
 import {
   AddChatMessages,
   AddMeetingUser,
-  MarkChatMessageAsFailed,
-  MarkChatMessageAsSent,
-  RemoveChatMessage,
+  MarkResponseChatMessageAsFailed,
+  MarkResponseChatMessageAsSent,
   RemoveMeetingUser,
+  RemoveResponseChatMessage,
   UpdateMeeting,
 } from '../../modules/meeting/store/meeting-actions';
 import {
@@ -58,9 +58,9 @@ export class StateTrackerService {
           AddMeetingUser,
           RemoveMeetingUser,
           AddChatMessages,
-          MarkChatMessageAsSent,
-          MarkChatMessageAsFailed,
-          RemoveChatMessage,
+          MarkResponseChatMessageAsSent,
+          MarkResponseChatMessageAsFailed,
+          RemoveResponseChatMessage,
         ),
         concatMap(() => this.store.selectOnce(state => state.meeting)),
       )

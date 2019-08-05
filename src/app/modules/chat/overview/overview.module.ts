@@ -12,6 +12,7 @@ import { MessageAnonymousComponent } from './messages/message-anonymous/message-
 import { MessageUserComponent } from './messages/message-user/message-user.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 import { MessageActionModalComponent } from './messages/message-action-modal/message-action-modal.component';
+import { MessageActionsComponent } from './messages/message-actions/message-actions.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,7 @@ const routes: Routes = [
     MessageUserComponent,
     MessageAnonymousComponent,
     AutoScrollDirective,
+    MessageActionsComponent,
   ],
 })
 export class OverviewPageModule {}

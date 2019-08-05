@@ -74,27 +74,44 @@ export interface MeetingRequestDrinkTypeRequest {
 
 export interface MessageDto {
   id: number;
+  type: MessageType;
   date: string;
   text: string;
+  action: MessageActionType;
   attachmentUrl: string;
   userId: number;
   groupId: number;
 }
 
-export interface MessageState {
-  id?: number;
+export interface MessageRequest {
+  type: MessageType;
+  text: string;
+  attachmentUrl: string;
+  action: MessageActionType;
+  userId: number;
+  groupId: number;
+}
+
+export interface MessageState extends MessageRequest {
+  id: number;
+  type: MessageType;
   date: string;
   text: string;
   attachmentUrl: string;
+  action: MessageActionType;
   userId: number;
   groupId: number;
   sending?: boolean;
   failed?: boolean;
 }
 
-export interface MessageRequest {
-  text: string;
-  attachmentUrl: string;
-  userId: number;
-  groupId: number;
+export enum MessageType {
+  RESPONSE = 'response',
+  ACTION = 'action',
+}
+
+export enum MessageActionType {
+  SEEN = 'seen',
+  TYPINGON = 'typing_on',
+  TYPINGOFF = 'typing_off',
 }

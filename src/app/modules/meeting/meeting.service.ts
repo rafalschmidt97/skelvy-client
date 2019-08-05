@@ -4,12 +4,12 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import {
-  MessageState,
   MeetingDrinkTypeDto,
   MeetingModel,
   MeetingRequestRequest,
   MeetingStatus,
   MeetingSuggestionsModel,
+  MessageState,
 } from './meeting';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
@@ -24,6 +24,7 @@ import {
   UpdateChatMessagesToRead,
   UpdateMeeting,
 } from './store/meeting-actions';
+import { isSameSeenInMessages } from './store/meeting-state';
 
 @Injectable({
   providedIn: 'root',
@@ -189,20 +190,16 @@ export class MeetingService {
     );
     const newMessages = model.messages.filter(message1 => {
       return (
-        existingMessages.filter(message2 => {
-          return (
-            new Date(message1.date).getTime() ===
-              new Date(message2.date).getTime() &&
-            message1.userId === message2.userId &&
-            (message1.text === message2.text ||
-              message1.attachmentUrl === message2.attachmentUrl)
-          );
-        }).length === 0
+        existingMessages.filter(message2 => message1.id === message2.id)
+          .length === 0
       );
     });
 
     if (newMessages.length !== 20) {
-      const messages = [...existingMessages, ...newMessages];
+      const messages = [
+        ...existingMessages.filter(x => !isSameSeenInMessages(x, newMessages)),
+        ...newMessages,
+      ];
 
       if (this.router.url !== '/app/chat') {
         const lastMessageDate = await this.storage.get(

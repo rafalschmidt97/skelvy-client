@@ -42,25 +42,25 @@ export class AddChatMessages {
   constructor(public messages: MessageState[], public end = true) {}
 }
 
-export class RemoveChatMessage {
-  static readonly type = '[Chat] Remove message';
+export class RemoveResponseChatMessage {
+  static readonly type = '[Chat] Remove response message';
   constructor(public message: MessageState) {}
 }
 
-export class RemoveOldAndAddNewChatMessage {
-  static readonly type = '[Chat] Remove old and add new message';
+export class RemoveOldAndAddNewResponseChatMessage {
+  static readonly type = '[Chat] Remove old and add new response message';
   constructor(
     public oldMessage: MessageState,
     public newMessage: MessageState,
   ) {}
 }
 
-export class MarkChatMessageAsSent {
-  static readonly type = '[Chat] Mark chat message as sent';
-  constructor(public message: MessageState, public apiMessage: MessageDto) {}
+export class MarkResponseChatMessageAsSent {
+  static readonly type = '[Chat] Mark response chat message as sent';
+  constructor(public message: MessageState, public apiMessages: MessageDto[]) {}
 }
 
-export class MarkChatMessageAsFailed {
-  static readonly type = '[Chat] Mark chat message as failed';
+export class MarkResponseChatMessageAsFailed {
+  static readonly type = '[Chat] Mark response chat message as failed';
   constructor(public message: MessageState) {}
 }

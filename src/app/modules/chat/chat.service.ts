@@ -2,21 +2,29 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { MessageDto, MessageState } from '../meeting/meeting';
+import {
+  MessageActionType,
+  MessageDto,
+  MessageState,
+  MessageType,
+} from '../meeting/meeting';
 import { catchError, tap } from 'rxjs/operators';
 import {
   AddChatMessage,
   AddChatMessages,
   AddChatMessagesToRead,
-  MarkChatMessageAsFailed,
-  MarkChatMessageAsSent,
-  RemoveChatMessage,
-  RemoveOldAndAddNewChatMessage,
+  MarkResponseChatMessageAsFailed,
+  MarkResponseChatMessageAsSent,
+  RemoveOldAndAddNewResponseChatMessage,
+  RemoveResponseChatMessage,
+  UpdateChatMessagesToRead,
 } from '../meeting/store/meeting-actions';
 import { Store } from '@ngxs/store';
 import { storageKeys } from '../../core/storage/storage';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
+import { isSeenMessage } from '../meeting/store/meeting-state';
+import { BackgroundService } from '../../core/background/background.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +35,7 @@ export class ChatService {
     private readonly store: Store,
     private readonly storage: Storage,
     private readonly router: Router,
+    private readonly backgroundService: BackgroundService,
   ) {}
 
   findMessages(groupId: number, beforeDate: string): Observable<MessageDto[]> {
@@ -56,33 +65,41 @@ export class ChatService {
     );
   }
 
-  sendMessage(message: MessageState): Observable<MessageDto> {
+  sendMessage(message: MessageState): Observable<MessageDto[]> {
     return this.http
-      .post<MessageDto>(environment.versionApiUrl + 'messages/self', message)
+      .post<MessageDto[]>(environment.versionApiUrl + 'messages/self', message)
       .pipe(
-        tap(async apiMessage => {
-          this.store.dispatch(new MarkChatMessageAsSent(message, apiMessage));
-          await this.storage.set(storageKeys.lastMessageDate, apiMessage.date);
+        tap(async apiMessages => {
+          this.store.dispatch(
+            new MarkResponseChatMessageAsSent(message, apiMessages),
+          );
+          await this.storage.set(
+            storageKeys.lastMessageDate,
+            apiMessages[1].date,
+          );
         }),
         catchError(error => {
-          this.store.dispatch(new MarkChatMessageAsFailed(message));
+          this.store.dispatch(new MarkResponseChatMessageAsFailed(message));
           return throwError(error);
         }),
       );
   }
 
-  sendAgainMessage(oldMessage: MessageState): Observable<MessageDto> {
+  sendAgainMessage(oldMessage: MessageState): Observable<MessageDto[]> {
     const newMessage: MessageState = {
+      id: 0,
+      type: MessageType.RESPONSE,
       text: oldMessage.text,
       attachmentUrl: oldMessage.attachmentUrl,
       date: new Date().toISOString(),
+      action: null,
       userId: oldMessage.userId,
       groupId: oldMessage.groupId,
       sending: true,
     };
 
     this.store.dispatch(
-      new RemoveOldAndAddNewChatMessage(oldMessage, newMessage),
+      new RemoveOldAndAddNewResponseChatMessage(oldMessage, newMessage),
     );
 
     return this.sendMessage(newMessage);
@@ -90,15 +107,82 @@ export class ChatService {
 
   async addMessage(message: MessageState) {
     this.store.dispatch(new AddChatMessage(message));
+    await this.storage.set(storageKeys.lastMessageDate, message.date);
+  }
 
-    if (this.router.url !== '/app/chat') {
+  async addSentMessagesWithReading(messages: MessageState[], userId: number) {
+    this.store.dispatch(new AddChatMessages(messages));
+
+    if (
+      this.router.url !== '/app/chat' ||
+      this.backgroundService.inBackground
+    ) {
       this.store.dispatch(new AddChatMessagesToRead(1));
     } else {
-      await this.storage.set(storageKeys.lastMessageDate, message.date);
+      const responseMessages = messages.filter(
+        x => x.type === MessageType.RESPONSE,
+      );
+
+      if (responseMessages.length > 0) {
+        await this.readMessage(
+          userId,
+          responseMessages[responseMessages.length - 1].groupId,
+        ).toPromise();
+      }
+    }
+  }
+
+  async readMessagesFromState(groupId: number) {
+    const messages = this.store.selectSnapshot(
+      state => state.meeting.meetingModel.messages,
+    );
+
+    if (messages.length > 0) {
+      const lastMessageDate = await this.storage.get(
+        storageKeys.lastMessageDate,
+      );
+
+      const lastNonSeenMessageDateState = [...messages]
+        .reverse()
+        .find((x: MessageState) => !isSeenMessage(x)).date;
+
+      if (
+        lastNonSeenMessageDateState &&
+        new Date(lastMessageDate).getTime() <
+          new Date(lastNonSeenMessageDateState).getTime()
+      ) {
+        this.readMessage(
+          this.store.selectSnapshot(state => state.user.user.id),
+          groupId,
+        ).subscribe();
+      }
     }
   }
 
   removeMessage(message: MessageState) {
-    this.store.dispatch(new RemoveChatMessage(message));
+    this.store.dispatch(new RemoveResponseChatMessage(message));
+  }
+
+  readMessage(userId: number, groupId: number): Observable<MessageDto[]> {
+    const message: MessageState = {
+      id: 0,
+      type: MessageType.ACTION,
+      text: null,
+      attachmentUrl: null,
+      date: new Date().toISOString(),
+      action: MessageActionType.SEEN,
+      userId: userId,
+      groupId: groupId,
+    };
+
+    return this.http
+      .post<MessageDto[]>(environment.versionApiUrl + 'messages/self', message)
+      .pipe(
+        tap(async ([seenMessage]) => {
+          this.store.dispatch(new AddChatMessage(seenMessage));
+          this.store.dispatch(new UpdateChatMessagesToRead(0));
+          await this.storage.set(storageKeys.lastMessageDate, seenMessage.date);
+        }),
+      );
   }
 }

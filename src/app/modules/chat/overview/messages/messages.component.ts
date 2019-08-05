@@ -1,5 +1,11 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { MessageDto, MessageState, MeetingDto } from '../../../meeting/meeting';
+import {
+  MeetingDto,
+  MessageActionType,
+  MessageDto,
+  MessageState,
+  MessageType,
+} from '../../../meeting/meeting';
 import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
 import { ChatService } from '../../chat.service';
@@ -25,6 +31,8 @@ export class MessagesComponent implements OnInit {
   dateToShow: string;
   isLoading = false;
   hasMoreMessages = false;
+  messageType = MessageType;
+  messageActionType = MessageActionType;
 
   constructor(
     private readonly routerNavigation: NavController,
@@ -36,6 +44,18 @@ export class MessagesComponent implements OnInit {
     private readonly modalController: ModalController,
     private readonly store: Store,
   ) {}
+
+  get messagesWithoutSelfSeen(): MessageState[] {
+    return this.messages.filter(
+      x =>
+        !(
+          x.type === MessageType.ACTION &&
+          x.action === MessageActionType.SEEN &&
+          x.userId === this.user.id &&
+          x.groupId === this.meeting.groupId
+        ),
+    );
+  }
 
   ngOnInit() {
     if (
