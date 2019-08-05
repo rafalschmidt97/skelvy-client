@@ -21,6 +21,18 @@ import {
 })
 export class MeetingSocketService {
   private userSocket: HubConnection;
+  private readonly meetingNotifications = [
+    _('USER_SENT_PHOTO'),
+    _('USER_SENT_MESSAGE'),
+    _('MEETING'),
+    _('USER_JOINED_MEETING'),
+    _('USER_FOUND_MEETING'),
+    _('USER_LEFT_MEETING'),
+    _('MEETING_ABORTED'),
+    _('MEETING_REQUEST_EXPIRED'),
+    _('MEETING_REQUEST'),
+    _('MEETING_EXPIRED'),
+  ];
 
   constructor(
     private readonly sessionService: SessionService,
