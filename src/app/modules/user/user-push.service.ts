@@ -82,11 +82,20 @@ export class UserPushService {
       .on('notification')
       .subscribe((notification: PushNotificationMessage) => {
         if (!notification.additionalData.foreground) {
-          const { redirect_to } = notification.additionalData;
+          const { redirect_to, action, data } = notification.additionalData;
+          const dataJson = JSON.parse(data);
           if (redirect_to === 'meeting') {
             this.routerNavigation.navigateRoot(['/app/tabs/meeting']);
           } else if (redirect_to === 'chat') {
-            this.routerNavigation.navigateForward(['/app/chat']);
+            this.routerNavigation
+              .navigateForward(['/app/chat'])
+              .then(async () => {
+                if (action === 'UserSentMessage') {
+                  await this.chatService.readMessagesFromState(
+                    dataJson[0].group_id,
+                  );
+                }
+              });
           }
         }
       });

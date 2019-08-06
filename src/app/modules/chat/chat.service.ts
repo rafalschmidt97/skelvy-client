@@ -132,30 +132,32 @@ export class ChatService {
     }
   }
 
+  async readMessages(groupId: number, messages: (MessageState | MessageDto)[]) {
+    const lastMessageDate = await this.storage.get(storageKeys.lastMessageDate);
+
+    const lastNonSeenMessageDateState = [...messages]
+      .reverse()
+      .find((x: MessageState) => !isSeenMessage(x)).date;
+
+    if (
+      lastNonSeenMessageDateState &&
+      new Date(lastMessageDate).getTime() <
+        new Date(lastNonSeenMessageDateState).getTime()
+    ) {
+      this.readMessage(
+        this.store.selectSnapshot(state => state.user.user.id),
+        groupId,
+      ).subscribe();
+    }
+  }
+
   async readMessagesFromState(groupId: number) {
     const messages = this.store.selectSnapshot(
       state => state.meeting.meetingModel.messages,
     );
 
     if (messages.length > 0) {
-      const lastMessageDate = await this.storage.get(
-        storageKeys.lastMessageDate,
-      );
-
-      const lastNonSeenMessageDateState = [...messages]
-        .reverse()
-        .find((x: MessageState) => !isSeenMessage(x)).date;
-
-      if (
-        lastNonSeenMessageDateState &&
-        new Date(lastMessageDate).getTime() <
-          new Date(lastNonSeenMessageDateState).getTime()
-      ) {
-        this.readMessage(
-          this.store.selectSnapshot(state => state.user.user.id),
-          groupId,
-        ).subscribe();
-      }
+      await this.readMessages(groupId, messages);
     }
   }
 
@@ -184,5 +186,27 @@ export class ChatService {
           await this.storage.set(storageKeys.lastMessageDate, seenMessage.date);
         }),
       );
+  }
+
+  sendAction(
+    userId: number,
+    groupId: number,
+    action: MessageActionType,
+  ): Observable<MessageDto[]> {
+    const message: MessageState = {
+      id: 0,
+      type: MessageType.ACTION,
+      text: null,
+      attachmentUrl: null,
+      date: new Date().toISOString(),
+      action: action,
+      userId: userId,
+      groupId: groupId,
+    };
+
+    return this.http.post<MessageDto[]>(
+      environment.versionApiUrl + 'messages/self',
+      message,
+    );
   }
 }

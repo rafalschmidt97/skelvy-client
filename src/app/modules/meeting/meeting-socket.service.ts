@@ -74,25 +74,12 @@ export class MeetingSocketService {
               x.action === MessageActionType.SEEN)
           );
         });
-        const nonPersistenceMessages = messages.filter(
-          x => !persistenceMessages.includes(x),
-        );
 
         if (persistenceMessages.length > 0) {
           await this.chatService.addSentMessagesWithReading(
             persistenceMessages,
             this.store.selectSnapshot(state => state.user.user.id),
           );
-        }
-
-        if (nonPersistenceMessages.length > 0) {
-          nonPersistenceMessages.forEach(x => {
-            if (x.action === MessageActionType.TYPINGON) {
-              // TODO: add new action
-            } else if (x.action === MessageActionType.TYPINGOFF) {
-              // TODO: add new action
-            }
-          });
         }
       },
     );
