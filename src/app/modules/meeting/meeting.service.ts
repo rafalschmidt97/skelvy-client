@@ -4,12 +4,12 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import {
-  MessageState,
   MeetingDrinkTypeDto,
   MeetingModel,
   MeetingRequestRequest,
   MeetingStatus,
   MeetingSuggestionsModel,
+  MessageState,
 } from './meeting';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
@@ -24,6 +24,7 @@ import {
   UpdateChatMessagesToRead,
   UpdateMeeting,
 } from './store/meeting-actions';
+import { ChatService } from '../chat/chat.service';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ export class MeetingService {
     private readonly translateService: TranslateService,
     private readonly router: Router,
     private readonly store: Store,
+    private readonly chatService: ChatService,
   ) {}
 
   findMeeting(
@@ -56,7 +58,7 @@ export class MeetingService {
               this.store.dispatch(new ChangeMeetingLoadingStatus(false));
               this.initializeMeetingModel(
                 model,
-                await this.initializeChatWithExistingChatMessages(model),
+                await this.initializeChat(model),
               );
             } else {
               this.store.dispatch(new ChangeMeetingLoadingStatus(false));
@@ -181,62 +183,31 @@ export class MeetingService {
     );
   }
 
-  private async initializeChatWithExistingChatMessages(
-    model: MeetingModel,
-  ): Promise<MessageState[]> {
+  private async initializeChat(model: MeetingModel): Promise<MessageState[]> {
     const existingMessages = this.store.selectSnapshot(
       x => x.meeting.meetingModel.messages,
     );
     const newMessages = model.messages.filter(message1 => {
       return (
-        existingMessages.filter(message2 => {
-          return (
-            new Date(message1.date).getTime() ===
-              new Date(message2.date).getTime() &&
-            message1.userId === message2.userId &&
-            (message1.text === message2.text ||
-              message1.attachmentUrl === message2.attachmentUrl)
-          );
-        }).length === 0
+        existingMessages.filter(message2 => message1.id === message2.id)
+          .length === 0
       );
     });
 
-    if (newMessages.length !== 20) {
-      const messages = [...existingMessages, ...newMessages];
-
-      if (this.router.url !== '/app/chat') {
-        const lastMessageDate = await this.storage.get(
-          storageKeys.lastMessageDate,
-        );
-        const notRedMessages = messages.filter(message => {
-          return new Date(message.date) > new Date(lastMessageDate);
-        });
-
-        this.store.dispatch(
-          new UpdateChatMessagesToRead(notRedMessages.length),
-        );
-      } else {
-        await this.storage.set(
-          storageKeys.lastMessageDate,
-          messages[messages.length - 1].date,
-        );
-      }
-
-      return messages;
-    } else {
-      if (this.router.url !== '/app/chat') {
+    if (this.router.url !== '/app/chat') {
+      if (newMessages.length > 0) {
         this.store.dispatch(new UpdateChatMessagesToRead(newMessages.length));
-      } else {
-        if (newMessages.length > 0) {
-          await this.storage.set(
-            storageKeys.lastMessageDate,
-            newMessages[newMessages.length - 1].date,
-          );
-        }
       }
-
-      return newMessages;
+    } else {
+      if (newMessages.length > 0) {
+        await this.chatService.readMessages(
+          model.meeting.groupId,
+          model.messages,
+        );
+      }
     }
+
+    return <MessageState[]>model.messages;
   }
 
   private async initializeFreshChat(
@@ -248,9 +219,9 @@ export class MeetingService {
       this.store.dispatch(new UpdateChatMessagesToRead(model.messages.length));
     } else {
       if (model.messages.length > 0) {
-        await this.storage.set(
-          storageKeys.lastMessageDate,
-          model.messages[model.messages.length - 1].date,
+        await this.chatService.readMessages(
+          model.meeting.groupId,
+          model.messages,
         );
       }
     }

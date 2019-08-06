@@ -6,35 +6,67 @@
   >
     {{ 'Load more messages' | translate }}
   </div>
-  <ng-container *ngFor="let message of messages; let i = index">
+  <ng-container *ngFor="let message of messagesWithoutSelfSeen; let i = index">
     <ng-container
       *ngIf="findUser(message.userId) as meetingUser; else anonymous"
     >
-      <app-message-user
-        *ngIf="user.id === message.userId; else notMine"
-        [message]="message"
-        [user]="meetingUser"
-        [isLast]="
-          i === messages.length - 1
-            ? true
-            : messages[i].userId !== messages[i + 1].userId
-        "
-        [isFirst]="
-          i === 0 ? true : messages[i].userId !== messages[i - 1].userId
-        "
-        [dateToShow]="dateToShow"
-        (showDate)="showDate($event)"
-        (showActions)="showActions($event)"
-        (showPreview)="showPreview($event)"
-      ></app-message-user>
-      <ng-template #notMine>
-        <app-message
+      <ng-container *ngIf="message.type === messageType.RESPONSE; else action">
+        <app-message-user
+          *ngIf="user.id === message.userId; else notMine"
           [message]="message"
           [user]="meetingUser"
           [isLast]="
             i === messages.length - 1
               ? true
-              : messages[i].userId !== messages[i + 1].userId
+              : messages[i].userId !== messages[i + 1].userId ||
+                (messages[i + 1].type === messageType.ACTION &&
+                  messages[i + 1].action === messageActionType.SEEN)
+          "
+          [isFirst]="
+            i === 0 ? true : messages[i].userId !== messages[i - 1].userId
+          "
+          [dateToShow]="dateToShow"
+          (showDate)="showDate($event)"
+          (showActions)="showActions($event)"
+          (showPreview)="showPreview($event)"
+        ></app-message-user>
+        <ng-template #notMine>
+          <app-message
+            [message]="message"
+            [user]="meetingUser"
+            [isLast]="
+              i === messages.length - 1
+                ? true
+                : messages[i].userId !== messages[i + 1].userId ||
+                  (messages[i + 1].type === messageType.ACTION &&
+                    messages[i + 1].action === messageActionType.SEEN)
+            "
+            [isFirst]="
+              i === 0 ? true : messages[i].userId !== messages[i - 1].userId
+            "
+            [dateToShow]="dateToShow"
+            (showDate)="showDate($event)"
+            (showPreview)="showPreview($event)"
+          ></app-message>
+        </ng-template>
+      </ng-container>
+      <ng-template #action>
+        <app-message-actions
+          [message]="message"
+          [user]="meetingUser"
+        ></app-message-actions>
+      </ng-template>
+    </ng-container>
+    <ng-template #anonymous>
+      <ng-container *ngIf="message.type === messageType.RESPONSE">
+        <app-message-anonymous
+          [message]="message"
+          [isLast]="
+            i === messages.length - 1
+              ? true
+              : messages[i].userId !== messages[i + 1].userId ||
+                (messages[i + 1].type === messageType.ACTION &&
+                  messages[i + 1].action === messageActionType.SEEN)
           "
           [isFirst]="
             i === 0 ? true : messages[i].userId !== messages[i - 1].userId
@@ -42,24 +74,8 @@
           [dateToShow]="dateToShow"
           (showDate)="showDate($event)"
           (showPreview)="showPreview($event)"
-        ></app-message>
-      </ng-template>
-    </ng-container>
-    <ng-template #anonymous>
-      <app-message-anonymous
-        [message]="message"
-        [isLast]="
-          i === messages.length - 1
-            ? true
-            : messages[i].userId !== messages[i + 1].userId
-        "
-        [isFirst]="
-          i === 0 ? true : messages[i].userId !== messages[i - 1].userId
-        "
-        [dateToShow]="dateToShow"
-        (showDate)="showDate($event)"
-        (showPreview)="showPreview($event)"
-      ></app-message-anonymous>
+        ></app-message-anonymous>
+      </ng-container>
     </ng-template>
   </ng-container>
 </div>

@@ -1,8 +1,11 @@
 import {
-  MessageState,
   MeetingDto,
   MeetingRequestDto,
   MeetingStatus,
+  MessageActionType,
+  MessageDto,
+  MessageState,
+  MessageType,
 } from '../meeting';
 import { Action, State, StateContext } from '@ngxs/store';
 import {
@@ -11,11 +14,11 @@ import {
   AddChatMessagesToRead,
   AddMeetingUser,
   ChangeMeetingLoadingStatus,
-  MarkChatMessageAsFailed,
-  MarkChatMessageAsSent,
-  RemoveChatMessage,
+  MarkResponseChatMessageAsFailed,
+  MarkResponseChatMessageAsSent,
   RemoveMeetingUser,
-  RemoveOldAndAddNewChatMessage,
+  RemoveOldAndAddNewResponseChatMessage,
+  RemoveResponseChatMessage,
   UpdateChatMessagesToRead,
   UpdateMeeting,
 } from './meeting-actions';
@@ -132,11 +135,19 @@ export class MeetingState {
     { message }: AddChatMessage,
   ) {
     const state = getState();
+
     setState({
       ...state,
       meetingModel: {
         ...state.meetingModel,
-        messages: [...state.meetingModel.messages, message],
+        messages: isSeenMessage(message)
+          ? [
+              ...state.meetingModel.messages.filter(
+                x => !isSameSeenMessage(x, message),
+              ),
+              message,
+            ]
+          : [...state.meetingModel.messages, message],
       },
     });
   }
@@ -146,31 +157,29 @@ export class MeetingState {
     { getState, setState }: StateContext<MeetingStateModel>,
     { messages, end }: AddChatMessages,
   ) {
+    const seenMessages = messages.filter(x => isSeenMessage(x));
     const state = getState();
 
-    if (end) {
-      setState({
-        ...state,
-        meetingModel: {
-          ...state.meetingModel,
-          messages: [...state.meetingModel.messages, ...messages],
-        },
-      });
-    } else {
-      setState({
-        ...state,
-        meetingModel: {
-          ...state.meetingModel,
-          messages: [...messages, ...state.meetingModel.messages],
-        },
-      });
-    }
+    setState({
+      ...state,
+      meetingModel: {
+        ...state.meetingModel,
+        messages: end
+          ? [
+              ...state.meetingModel.messages.filter(
+                x => !isSameSeenInMessages(x, seenMessages),
+              ),
+              ...messages,
+            ]
+          : [...messages, ...state.meetingModel.messages],
+      },
+    });
   }
 
-  @Action(RemoveChatMessage)
+  @Action(RemoveResponseChatMessage)
   removeMessage(
     { getState, setState }: StateContext<MeetingStateModel>,
-    { message }: RemoveChatMessage,
+    { message }: RemoveResponseChatMessage,
   ) {
     const state = getState();
     setState({
@@ -178,16 +187,16 @@ export class MeetingState {
       meetingModel: {
         ...state.meetingModel,
         messages: state.meetingModel.messages.filter(
-          x => new Date(x.date).getTime() !== new Date(message.date).getTime(),
+          x => !isSameMessageByDate(x, message),
         ),
       },
     });
   }
 
-  @Action(RemoveOldAndAddNewChatMessage)
+  @Action(RemoveOldAndAddNewResponseChatMessage)
   removeOldAndAddNew(
     { getState, setState }: StateContext<MeetingStateModel>,
-    { oldMessage, newMessage }: RemoveOldAndAddNewChatMessage,
+    { oldMessage, newMessage }: RemoveOldAndAddNewResponseChatMessage,
   ) {
     const state = getState();
     setState({
@@ -196,9 +205,7 @@ export class MeetingState {
         ...state.meetingModel,
         messages: [
           ...state.meetingModel.messages.filter(
-            x =>
-              new Date(x.date).getTime() !==
-              new Date(oldMessage.date).getTime(),
+            x => !isSameMessageByDate(x, oldMessage),
           ),
           newMessage,
         ],
@@ -206,38 +213,48 @@ export class MeetingState {
     });
   }
 
-  @Action(MarkChatMessageAsSent)
+  @Action(MarkResponseChatMessageAsSent)
   markAsSent(
     { getState, setState }: StateContext<MeetingStateModel>,
-    { message, apiMessage }: MarkChatMessageAsSent,
+    { message, apiMessages }: MarkResponseChatMessageAsSent,
   ) {
     const state = getState();
+    const apiMessage = apiMessages.find(x => isSameMessageByFields(x, message));
+    const otherMessages = apiMessages.filter(
+      x => !isSameMessageByDate(x, apiMessage),
+    );
+
     setState({
       ...state,
       meetingModel: {
         ...state.meetingModel,
-        messages: state.meetingModel.messages.map(x => {
-          if (new Date(x.date).getTime() === new Date(message.date).getTime()) {
-            return {
-              ...x,
-              id: apiMessage.id,
-              date: apiMessage.date,
-              attachmentUrl: message.attachmentUrl,
-              sending: false,
-              failed: false,
-            };
-          }
+        messages: [
+          ...state.meetingModel.messages
+            .map(x => {
+              if (isSameMessageByDate(x, message)) {
+                return {
+                  ...x,
+                  id: apiMessage.id,
+                  date: apiMessage.date,
+                  attachmentUrl: message.attachmentUrl,
+                  sending: false,
+                  failed: false,
+                };
+              }
 
-          return x;
-        }),
+              return x;
+            })
+            .filter(x => !isSameSeenMessage(x, apiMessage)),
+          ...otherMessages,
+        ],
       },
     });
   }
 
-  @Action(MarkChatMessageAsFailed)
+  @Action(MarkResponseChatMessageAsFailed)
   markAsFailed(
     { getState, setState }: StateContext<MeetingStateModel>,
-    { message }: MarkChatMessageAsFailed,
+    { message }: MarkResponseChatMessageAsFailed,
   ) {
     const state = getState();
     setState({
@@ -245,7 +262,7 @@ export class MeetingState {
       meetingModel: {
         ...state.meetingModel,
         messages: state.meetingModel.messages.map(x => {
-          if (new Date(x.date).getTime() === new Date(message.date).getTime()) {
+          if (isSameMessageByDate(x, message)) {
             return {
               ...x,
               attachmentUrl: message.attachmentUrl,
@@ -259,4 +276,50 @@ export class MeetingState {
       },
     });
   }
+}
+
+export function isSameMessageByDate(
+  x: MessageState,
+  message: MessageState | MessageDto,
+): boolean {
+  return new Date(x.date).getTime() === new Date(message.date).getTime();
+}
+
+export function isSameMessageByFields(
+  x: MessageState,
+  message: MessageState | MessageDto,
+): boolean {
+  return (
+    x.type === message.type &&
+    x.text === message.text &&
+    x.action === message.action &&
+    x.attachmentUrl === message.attachmentUrl &&
+    x.userId === message.userId &&
+    x.groupId === message.groupId
+  );
+}
+
+export function isSameSeenMessage(
+  x: MessageState,
+  message: MessageState | MessageDto,
+): boolean {
+  return (
+    isSeenMessage(x) &&
+    x.userId === message.userId &&
+    x.groupId === message.groupId
+  );
+}
+
+export function isSeenMessage(x: MessageState): boolean {
+  return x.type === MessageType.ACTION && x.action === MessageActionType.SEEN;
+}
+
+export function isSameSeenInMessages(
+  x: MessageState,
+  messages: MessageState[],
+): boolean {
+  return (
+    messages.filter(y => isSeenMessage(x) && isSameSeenMessage(x, y)).length !==
+    0
+  );
 }

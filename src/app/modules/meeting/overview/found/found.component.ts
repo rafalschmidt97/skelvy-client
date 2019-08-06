@@ -8,12 +8,11 @@ import { MeetingService } from '../../meeting.service';
 import { ModalController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { HttpErrorResponse } from '@angular/common/http';
-import { storageKeys } from '../../../../core/storage/storage';
 import { Store } from '@ngxs/store';
-import { UpdateChatMessagesToRead } from '../../store/meeting-actions';
 import { ProfileDetailsModalComponent } from '../../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { AlertModalComponent } from '../../../../shared/components/alert/alert-modal/alert-modal.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ChatService } from '../../../chat/chat.service';
 
 @Component({
   selector: 'app-found',
@@ -36,6 +35,7 @@ export class FoundComponent {
     private readonly storage: Storage,
     private readonly store: Store,
     private readonly translateService: TranslateService,
+    private readonly chatService: ChatService,
   ) {}
 
   get filteredMeetingUsers(): UserDto[] {
@@ -109,19 +109,8 @@ export class FoundComponent {
   }
 
   showMessages() {
-    this.routerNavigation.navigateForward(['/app/chat']).then(() => {
-      setTimeout(async () => {
-        this.store.dispatch(new UpdateChatMessagesToRead(0));
-        const messages = this.store.selectSnapshot(
-          state => state.meeting.meetingModel.messages,
-        );
-        if (messages.length > 0) {
-          await this.storage.set(
-            storageKeys.lastMessageDate,
-            messages[messages.length - 1].date,
-          );
-        }
-      }, 1000);
+    this.routerNavigation.navigateForward(['/app/chat']).then(async () => {
+      await this.chatService.readMessagesFromState(this.meeting.groupId);
     });
   }
 }

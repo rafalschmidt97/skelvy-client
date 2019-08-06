@@ -1,0 +1,13 @@
+@import '~src/theme/bootstrap/variables';
+
+.message-actions-container {
+  display: inline-block;
+  padding: 2px;
+}
+
+.image {
+  background-size: cover;
+  background-color: theme-color('light');
+  width: 12px;
+  height: 12px;
+}

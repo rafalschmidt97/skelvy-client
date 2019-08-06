@@ -12,6 +12,11 @@ import {
   LocalNotifications,
 } from '@ionic-native/local-notifications/ngx';
 import { isNil } from 'lodash';
+import {
+  PushNotificationMessage,
+  SocketNotificationMessage,
+} from '../../core/background/background';
+import { ChatService } from '../chat/chat.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +33,7 @@ export class UserPushService {
     private readonly routerNavigation: NavController,
     private readonly store: Store,
     private readonly localNotifications: LocalNotifications,
+    private readonly chatService: ChatService,
   ) {}
 
   async initialize(force: boolean = false) {
@@ -72,27 +78,46 @@ export class UserPushService {
       this.push$ = this.push.init({});
     }
 
-    this.push$.on('notification').subscribe(notification => {
-      if (!notification.additionalData.foreground) {
-        const { redirect_to } = notification.additionalData;
-        if (redirect_to === 'meeting') {
-          this.routerNavigation.navigateRoot(['/app/tabs/meeting']);
-        } else if (redirect_to === 'chat') {
-          this.routerNavigation.navigateForward(['/app/chat']);
+    this.push$
+      .on('notification')
+      .subscribe((notification: PushNotificationMessage) => {
+        if (!notification.additionalData.foreground) {
+          const { redirect_to, action, data } = notification.additionalData;
+          const dataJson = JSON.parse(data);
+          if (redirect_to === 'meeting') {
+            this.routerNavigation.navigateRoot(['/app/tabs/meeting']);
+          } else if (redirect_to === 'chat') {
+            this.routerNavigation
+              .navigateForward(['/app/chat'])
+              .then(async () => {
+                if (action === 'UserSentMessage') {
+                  await this.chatService.readMessagesFromState(
+                    dataJson[0].group_id,
+                  );
+                }
+              });
+          }
         }
-      }
-    });
+      });
 
-    this.localNotifications.on('click').subscribe(notification => {
-      if (notification.data && !notification.data.foreground) {
-        const { redirect_to } = notification.data;
-        if (redirect_to === 'meeting') {
-          this.routerNavigation.navigateRoot(['/app/tabs/meeting']);
-        } else if (redirect_to === 'chat') {
-          this.routerNavigation.navigateForward(['/app/chat']);
+    this.localNotifications
+      .on('click')
+      .subscribe((notification: SocketNotificationMessage) => {
+        if (notification.data) {
+          const { redirectTo, action, data } = notification.data;
+          if (redirectTo === 'meeting') {
+            this.routerNavigation.navigateRoot(['/app/tabs/meeting']);
+          } else if (redirectTo === 'chat') {
+            this.routerNavigation
+              .navigateForward(['/app/chat'])
+              .then(async () => {
+                if (action === 'UserSentMessage') {
+                  await this.chatService.readMessagesFromState(data[0].groupId);
+                }
+              });
+          }
         }
-      }
-    });
+      });
 
     const localDefaults: ILocalNotification = {
       sound: 'default',
