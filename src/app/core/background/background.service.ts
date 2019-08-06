@@ -72,7 +72,7 @@ export class BackgroundService {
     this.create(
       translateTitle
         ? message.notification.titleLocKey
-        : message.notification.titleLocKey,
+        : message.notification.title,
       translateBody
         ? message.notification.bodyLocKey
         : message.notification.body,
