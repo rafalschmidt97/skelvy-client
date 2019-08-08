@@ -175,7 +175,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     try {
       return await this.camera.getPicture(options);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return null;
     }
   }
@@ -194,7 +194,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     try {
       return await this.camera.getPicture(options);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return null;
     }
   }
@@ -207,7 +207,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
         targetHeight: 1024,
       });
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return null;
     }
   }

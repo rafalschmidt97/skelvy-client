@@ -257,7 +257,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     try {
       return await this.camera.getPicture(options);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return null;
     }
   }
@@ -276,7 +276,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     try {
       return await this.camera.getPicture(options);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return null;
     }
   }

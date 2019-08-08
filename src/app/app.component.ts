@@ -23,7 +23,7 @@ export class AppComponent {
     private readonly config: Config,
   ) {
     this.initializeApp().then(() => {
-      console.log('Skelvy has been initialized');
+      console.warn('Skelvy has been initialized');
     });
   }
 
