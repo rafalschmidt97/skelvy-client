@@ -94,7 +94,7 @@ export class MeetingService {
 
   leaveMeeting(): Observable<void> {
     return this.http
-      .delete<void>(environment.versionApiUrl + 'meetings/self')
+      .post<void>(environment.versionApiUrl + 'meetings/self/leave', null)
       .pipe(
         tap(() => {
           this.store.dispatch(new UpdateMeeting(null));
@@ -105,14 +105,14 @@ export class MeetingService {
 
   createMeetingRequest(request: MeetingRequestRequest): Observable<void> {
     return this.http.post<void>(
-      environment.versionApiUrl + 'users/self/request',
+      environment.versionApiUrl + 'meetings/self/requests',
       request,
     );
   }
 
   removeMeetingRequest(): Observable<void> {
     return this.http
-      .delete<void>(environment.versionApiUrl + 'users/self/request')
+      .delete<void>(environment.versionApiUrl + 'meetings/self/requests')
       .pipe(
         tap(() => {
           this.store.dispatch(new UpdateMeeting(null));
@@ -131,21 +131,21 @@ export class MeetingService {
     longitude: number,
   ): Observable<MeetingSuggestionsModel> {
     return this.http.get<MeetingSuggestionsModel>(
-      `${environment.versionApiUrl}users/self/meeting-suggestions` +
+      `${environment.versionApiUrl}meetings/self/suggestions` +
         `?latitude=${latitude}&longitude=${longitude}&language=${this.translateService.currentLang}`,
     );
   }
 
   joinMeeting(meetingId: number): Observable<void> {
     return this.http.post<void>(
-      `${environment.versionApiUrl}users/self/join-meeting/${meetingId}`,
+      `${environment.versionApiUrl}meetings/${meetingId}/join`,
       null,
     );
   }
 
   connectMeetingRequest(requestId: number): Observable<void> {
     return this.http.post<void>(
-      `${environment.versionApiUrl}users/self/connect-request/${requestId}`,
+      `${environment.versionApiUrl}self/requests/${requestId}/connect`,
       null,
     );
   }
