@@ -32,7 +32,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
   submitIcon = '👍';
-  private readonly drinkTypes = [_('soft drinks'), _('alcoholic drinks')];
+  private readonly activities = [_('soft drinks'), _('alcoholic drinks')];
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -69,11 +69,11 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
   }
 
   ngOnInit() {
-    const drinkType = this.store.selectSnapshot(
-      state => state.meeting.meetingModel.meeting.drinkType.name,
+    const activity = this.store.selectSnapshot(
+      state => state.meeting.meetingModel.meeting.activity.name,
     );
 
-    if (drinkType === this.drinkTypes[1]) {
+    if (activity === this.activities[1]) {
       this.submitIcon = '🍻';
     }
   }

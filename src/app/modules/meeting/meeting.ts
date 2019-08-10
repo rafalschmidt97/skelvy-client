@@ -19,7 +19,7 @@ export interface MeetingDto {
   longitude: number;
   city: string;
   groupId: number;
-  drinkType: MeetingDrinkTypeDto;
+  activity: ActivityDto;
   users: UserDto[];
 }
 
@@ -32,7 +32,7 @@ export interface MeetingRequestDto {
   latitude: number;
   longitude: number;
   city: string;
-  drinkTypes: MeetingDrinkTypeDto[];
+  activities: ActivityDto[];
 }
 
 export interface MeetingRequestWithUserDto {
@@ -44,11 +44,11 @@ export interface MeetingRequestWithUserDto {
   latitude: number;
   longitude: number;
   city: string;
-  drinkTypes: MeetingDrinkTypeDto[];
+  activities: ActivityDto[];
   user: UserDto;
 }
 
-export interface MeetingDrinkTypeDto {
+export interface ActivityDto {
   id: number;
   name: string;
 }
@@ -65,10 +65,10 @@ export interface MeetingRequestRequest {
   maxAge: number;
   latitude: number;
   longitude: number;
-  drinkTypes: MeetingRequestDrinkTypeRequest[];
+  activities: MeetingRequestActivityRequest[];
 }
 
-export interface MeetingRequestDrinkTypeRequest {
+export interface MeetingRequestActivityRequest {
   id: number;
 }
 

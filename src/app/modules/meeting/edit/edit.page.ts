@@ -7,7 +7,7 @@ import { Checkbox } from '../../../shared/form/checkbox/checkbox';
 import { RangeComponent } from '../../../shared/form/range/range.component';
 import { MeetingService } from '../meeting.service';
 import {
-  MeetingDrinkTypeDto,
+  ActivityDto,
   MeetingRequestRequest,
   MeetingSuggestionsModel,
 } from '../meeting';
@@ -27,7 +27,7 @@ import { Store } from '@ngxs/store';
 export class EditPage implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
-  drinkTypes: Checkbox[];
+  activities: Checkbox[];
   today = moment()
     .startOf('day')
     .toDate();
@@ -52,14 +52,14 @@ export class EditPage implements Form, OnSubmit, OnInit {
       date: [[this.today, this.tomorrow], Validators.required],
       address: [null, Validators.required],
       age: [[18, 25], RangeComponent.minimumRangeValidator(4)],
-      drinkTypes: [[], Validators.required],
+      activities: [[], Validators.required],
     });
   }
 
   ngOnInit() {
-    this.meetingService.findDrinks().subscribe(
-      (drinkTypes: MeetingDrinkTypeDto[]) => {
-        this.drinkTypes = drinkTypes.map(type => {
+    this.meetingService.findActivities().subscribe(
+      (activities: ActivityDto[]) => {
+        this.activities = activities.map(type => {
           return {
             label: type.name,
             value: type.id.toString(),
@@ -71,7 +71,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
       () => {
         this.loadingForm = false;
         this.toastService.createError(
-          _('A problem occurred while finding drinks'),
+          _('A problem occurred while finding activities'),
         );
       },
     );
@@ -92,8 +92,8 @@ export class EditPage implements Form, OnSubmit, OnInit {
         maxAge: form.age[1],
         latitude: form.address.latitude,
         longitude: form.address.longitude,
-        drinkTypes: form.drinkTypes.map(drink => {
-          return { id: drink };
+        activities: form.activities.map(activityId => {
+          return { id: activityId };
         }),
       };
 
@@ -224,11 +224,11 @@ export class EditPage implements Form, OnSubmit, OnInit {
               : [minDateValidated],
             address: requestForm.address,
             age: requestForm.age,
-            drinkTypes: requestForm.drinkTypes,
+            activities: requestForm.activities,
           });
         } else {
           this.form.patchValue({
-            drinkTypes: [this.drinkTypes[0].value, this.drinkTypes[1].value],
+            activities: [this.activities[0].value, this.activities[1].value],
           });
 
           const userAge = this.store.selectSnapshot(
