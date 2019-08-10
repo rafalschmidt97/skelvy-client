@@ -38,8 +38,8 @@
             >: {{ meeting.users.length }}
           </div>
           <div>
-            <span class="font-weight-bold">{{ 'Drink' | translate }}</span
-            >: {{ meeting.drinkType.name | translate }}
+            <span class="font-weight-bold">{{ 'Activity' | translate }}</span
+            >: {{ meeting.activity.name | translate }}
           </div>
         </div>
         <div
@@ -68,13 +68,15 @@
             >: {{ request.city }}
           </div>
           <div>
-            <span class="font-weight-bold">{{ 'Drinks' | translate }}</span
+            <span class="font-weight-bold">{{ 'Activities' | translate }}</span
             >:
             <ng-container
-              *ngFor="let drink of request.drinkTypes; let i = index"
+              *ngFor="let activity of request.activities; let i = index"
             >
-              <span class="d-inline-block">{{ drink.name | translate }}</span>
-              <span *ngIf="i !== request.drinkTypes.length - 1">, </span>
+              <span class="d-inline-block">{{
+                activity.name | translate
+              }}</span>
+              <span *ngIf="i !== request.activities.length - 1">, </span>
             </ng-container>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import {
-  MeetingDrinkTypeDto,
+  ActivityDto,
   MeetingModel,
   MeetingRequestRequest,
   MeetingStatus,
@@ -120,9 +120,9 @@ export class MeetingService {
       );
   }
 
-  findDrinks(): Observable<MeetingDrinkTypeDto[]> {
-    return this.http.get<MeetingDrinkTypeDto[]>(
-      environment.versionApiUrl + 'drinks/types',
+  findActivities(): Observable<ActivityDto[]> {
+    return this.http.get<ActivityDto[]>(
+      environment.versionApiUrl + 'activities',
     );
   }
 
