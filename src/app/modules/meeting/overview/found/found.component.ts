@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MeetingDto } from '../../meeting';
+import { GroupState, MeetingDto } from '../../meeting';
 import { UserDto } from '../../../user/user';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
@@ -21,6 +21,7 @@ import { ChatService } from '../../../chat/chat.service';
 })
 export class FoundComponent {
   @Input() meeting: MeetingDto;
+  @Input() group: GroupState;
   @Input() user: UserDto;
   @Input() loadingMeeting: boolean;
   @Input() messagesToRead: number;
@@ -39,11 +40,11 @@ export class FoundComponent {
   ) {}
 
   get filteredMeetingUsers(): UserDto[] {
-    return this.meeting.users.filter(user => user.id !== this.user.id);
+    return this.group.users.filter(user => user.id !== this.user.id);
   }
 
   get missingMeetingUsers(): any[] {
-    const amount = this.meeting.users.length;
+    const amount = this.group.users.length;
     const missingAmount = 4 - amount; // 4 is max size of group
     const data = [];
 
@@ -88,24 +89,26 @@ export class FoundComponent {
   confirmLeave() {
     this.loadingLeave = true;
     this.loadingService.lock();
-    this.meetingService.leaveMeeting().subscribe(
-      () => {
-        this.loadingLeave = false;
-        this.loadingService.unlock();
-      },
-      (error: HttpErrorResponse) => {
-        // data is not relevant (connection lost and reconnected)
-        if (error.status === 404) {
-          this.meetingService.findMeeting().subscribe();
-        }
+    this.meetingService
+      .leaveMeeting(this.meeting.id, this.meeting.groupId)
+      .subscribe(
+        () => {
+          this.loadingLeave = false;
+          this.loadingService.unlock();
+        },
+        (error: HttpErrorResponse) => {
+          // data is not relevant (connection lost and reconnected)
+          if (error.status === 404) {
+            this.meetingService.findMeeting().subscribe();
+          }
 
-        this.loadingLeave = false;
-        this.loadingService.unlock();
-        this.toastService.createError(
-          _('A problem occurred while leaving the meeting'),
-        );
-      },
-    );
+          this.loadingLeave = false;
+          this.loadingService.unlock();
+          this.toastService.createError(
+            _('A problem occurred while leaving the meeting'),
+          );
+        },
+      );
   }
 
   showMessages() {

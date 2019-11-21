@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MeetingStateModel } from '../../meeting/store/meeting-state';
+import { MeetingsStateModel } from '../../meeting/store/meeting-state';
 import { Observable } from 'rxjs';
 import { UserStateModel } from '../../user/store/user-state';
 import { GlobalStateModel } from '../../../core/state/global-state';
@@ -11,7 +11,7 @@ import { Select } from '@ngxs/store';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage {
-  @Select(state => state.meeting) meeting$: Observable<MeetingStateModel>;
+  @Select(state => state.meeting) meeting$: Observable<MeetingsStateModel>;
   @Select(state => state.user) user$: Observable<UserStateModel>;
   @Select(state => state.global) global$: Observable<GlobalStateModel>;
 }

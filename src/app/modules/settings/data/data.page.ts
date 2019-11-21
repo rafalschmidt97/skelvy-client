@@ -185,7 +185,7 @@ export class DataPage {
     this.clearState();
     await this.clearStorage();
 
-    this.selfService.findSelf().subscribe(
+    this.selfService.sync().subscribe(
       () => {
         this.isLoading = false;
         this.loadingService.unlock();

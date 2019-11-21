@@ -1,3 +1,5 @@
+import { MeetingWithUsersDto } from '../meeting/meeting';
+
 export interface UserDto {
   id: number;
   profile: ProfileDto;
@@ -40,4 +42,17 @@ export interface ProfileRequest {
   gender: Gender;
   photos: ProfilePhotoDto[];
   description: string;
+}
+
+export interface FriendInvitation {
+  id: number;
+  invitingUser: UserDto;
+  createdAt: string;
+}
+
+export interface MeetingInvitation {
+  id: number;
+  invitingUserId: number;
+  meeting: MeetingWithUsersDto;
+  createdAt: string;
 }

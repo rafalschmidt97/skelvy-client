@@ -1,7 +1,7 @@
 import {
+  GroupState,
   MeetingDto,
   MeetingRequestDto,
-  MeetingStatus,
   MessageActionType,
   MessageDto,
   MessageState,
@@ -9,45 +9,41 @@ import {
 } from '../meeting';
 import { Action, State, StateContext } from '@ngxs/store';
 import {
-  AddChatMessage,
-  AddChatMessages,
-  AddChatMessagesToRead,
-  AddMeetingUser,
+  AddGroupMessage,
+  AddGroupMessages,
+  AddGroupUser,
   ChangeMeetingLoadingStatus,
-  MarkResponseChatMessageAsFailed,
-  MarkResponseChatMessageAsSent,
-  RemoveMeetingUser,
-  RemoveOldAndAddNewResponseChatMessage,
-  RemoveResponseChatMessage,
-  UpdateChatMessagesToRead,
-  UpdateMeeting,
+  MarkResponseGroupMessageAsFailed,
+  MarkResponseGroupMessageAsSent,
+  RemoveGroup,
+  RemoveGroupUser,
+  RemoveMeeting,
+  RemoveOldAndAddNewResponseGroupMessage,
+  RemoveRequest,
+  RemoveResponseGroupMessage,
+  UpdateMeetingsState,
 } from './meeting-actions';
 
-export interface MeetingStateModel {
+export interface MeetingsStateModel {
   loading: boolean;
-  toRead: number;
-  meetingModel: MeetingModelState;
+  meetings: MeetingDto[];
+  requests: MeetingRequestDto[];
+  groups: GroupState[];
 }
 
-export interface MeetingModelState {
-  status: MeetingStatus;
-  meeting: MeetingDto;
-  messages: MessageState[];
-  request: MeetingRequestDto;
-}
-
-@State<MeetingStateModel>({
+@State<MeetingsStateModel>({
   name: 'meeting',
   defaults: {
     loading: false,
-    toRead: 0,
-    meetingModel: null,
+    meetings: [],
+    requests: [],
+    groups: [],
   },
 })
 export class MeetingState {
   @Action(ChangeMeetingLoadingStatus)
   changeMeetingLoadingStatus(
-    { getState, setState }: StateContext<MeetingStateModel>,
+    { getState, setState }: StateContext<MeetingsStateModel>,
     { status }: ChangeMeetingLoadingStatus,
   ) {
     const state = getState();
@@ -57,166 +53,147 @@ export class MeetingState {
     });
   }
 
-  @Action(AddMeetingUser)
+  @Action(AddGroupUser)
   addUser(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { user }: AddMeetingUser,
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, user }: AddGroupUser,
   ) {
     const state = getState();
     setState({
       ...state,
-      meetingModel: {
-        ...state.meetingModel,
-        meeting: {
-          ...state.meetingModel.meeting,
-          users: [...state.meetingModel.meeting.users, user],
-        },
-      },
+      groups: state.groups.map(group => {
+        if (group.id === groupId) {
+          group.users = [...group.users, user];
+        }
+
+        return group;
+      }),
     });
   }
 
-  @Action(RemoveMeetingUser)
+  @Action(RemoveGroupUser)
   removeUser(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { userId }: RemoveMeetingUser,
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, userId }: RemoveGroupUser,
   ) {
     const state = getState();
     setState({
       ...state,
-      meetingModel: {
-        ...state.meetingModel,
-        meeting: {
-          ...state.meetingModel.meeting,
-          users: state.meetingModel.meeting.users.filter(x => x.id !== userId),
-        },
-      },
+      groups: state.groups.map(group => {
+        if (group.id === groupId) {
+          group.users = group.users.filter(x => x.id !== userId);
+        }
+
+        return group;
+      }),
     });
   }
 
-  @Action(UpdateMeeting)
+  @Action(UpdateMeetingsState)
   updateMeeting(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { model }: UpdateMeeting,
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { meetings, requests, groups }: UpdateMeetingsState,
   ) {
     const state = getState();
-    setState({
-      ...state,
-      meetingModel: model,
-    });
+    setState({ ...state, meetings, requests, groups });
   }
 
-  @Action(AddChatMessagesToRead)
-  addChatMessagesToRead(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { amount }: AddChatMessagesToRead,
-  ) {
-    const state = getState();
-    setState({
-      ...state,
-      toRead: state.toRead + amount,
-    });
-  }
-
-  @Action(UpdateChatMessagesToRead)
-  setChatMessagesToRead(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { amount }: UpdateChatMessagesToRead,
-  ) {
-    const state = getState();
-    setState({
-      ...state,
-      toRead: amount,
-    });
-  }
-
-  @Action(AddChatMessage)
+  @Action(AddGroupMessage)
   addMessage(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { message }: AddChatMessage,
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, message }: AddGroupMessage,
   ) {
     const state = getState();
 
     setState({
       ...state,
-      meetingModel: {
-        ...state.meetingModel,
-        messages: isSeenMessage(message)
-          ? [
-              ...state.meetingModel.messages.filter(
-                x => !isSameSeenMessage(x, message),
-              ),
-              message,
-            ]
-          : [...state.meetingModel.messages, message],
-      },
+      groups: state.groups.map(group => {
+        if (group.id === groupId) {
+          group.messages = isSeenMessage(message)
+            ? [
+                ...group.messages.filter(x => !isSameSeenMessage(x, message)),
+                message,
+              ]
+            : [...group.messages, message];
+        }
+
+        return group;
+      }),
     });
   }
 
-  @Action(AddChatMessages)
+  @Action(AddGroupMessages)
   addMessages(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { messages, end }: AddChatMessages,
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, messages, end }: AddGroupMessages,
   ) {
     const seenMessages = messages.filter(x => isSeenMessage(x));
     const state = getState();
 
     setState({
       ...state,
-      meetingModel: {
-        ...state.meetingModel,
-        messages: end
-          ? [
-              ...state.meetingModel.messages.filter(
-                x => !isSameSeenInMessages(x, seenMessages),
-              ),
-              ...messages,
-            ]
-          : [...messages, ...state.meetingModel.messages],
-      },
+      groups: state.groups.map(group => {
+        if (group.id === groupId) {
+          group.messages = end
+            ? [
+                ...group.messages.filter(
+                  x => !isSameSeenInMessages(x, seenMessages),
+                ),
+                ...messages,
+              ]
+            : [...messages, ...group.messages];
+        }
+
+        return group;
+      }),
     });
   }
 
-  @Action(RemoveResponseChatMessage)
+  @Action(RemoveResponseGroupMessage)
   removeMessage(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { message }: RemoveResponseChatMessage,
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, message }: RemoveResponseGroupMessage,
   ) {
     const state = getState();
     setState({
       ...state,
-      meetingModel: {
-        ...state.meetingModel,
-        messages: state.meetingModel.messages.filter(
-          x => !isSameMessageByDate(x, message),
-        ),
-      },
+      groups: state.groups.map(group => {
+        if (group.id === groupId) {
+          group.messages = group.messages.filter(
+            x => !isSameMessageByDate(x, message),
+          );
+        }
+
+        return group;
+      }),
     });
   }
 
-  @Action(RemoveOldAndAddNewResponseChatMessage)
+  @Action(RemoveOldAndAddNewResponseGroupMessage)
   removeOldAndAddNew(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { oldMessage, newMessage }: RemoveOldAndAddNewResponseChatMessage,
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, oldMessage, newMessage }: RemoveOldAndAddNewResponseGroupMessage,
   ) {
     const state = getState();
     setState({
       ...state,
-      meetingModel: {
-        ...state.meetingModel,
-        messages: [
-          ...state.meetingModel.messages.filter(
-            x => !isSameMessageByDate(x, oldMessage),
-          ),
-          newMessage,
-        ],
-      },
+      groups: state.groups.map(group => {
+        if (group.id === groupId) {
+          group.messages = [
+            ...group.messages.filter(x => !isSameMessageByDate(x, oldMessage)),
+            newMessage,
+          ];
+        }
+
+        return group;
+      }),
     });
   }
 
-  @Action(MarkResponseChatMessageAsSent)
+  @Action(MarkResponseGroupMessageAsSent)
   markAsSent(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { message, apiMessages }: MarkResponseChatMessageAsSent,
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, message, apiMessages }: MarkResponseGroupMessageAsSent,
   ) {
     const state = getState();
     const apiMessage = apiMessages.find(x => isSameMessageByFields(x, message));
@@ -226,54 +203,96 @@ export class MeetingState {
 
     setState({
       ...state,
-      meetingModel: {
-        ...state.meetingModel,
-        messages: [
-          ...state.meetingModel.messages
-            .map(x => {
-              if (isSameMessageByDate(x, message)) {
-                return {
-                  ...x,
-                  id: apiMessage.id,
-                  date: apiMessage.date,
-                  attachmentUrl: message.attachmentUrl,
-                  sending: false,
-                  failed: false,
-                };
-              }
+      groups: state.groups.map(group => {
+        if (group.id === groupId) {
+          group.messages = [
+            ...group.messages
+              .map(x => {
+                if (isSameMessageByDate(x, message)) {
+                  return {
+                    ...x,
+                    id: apiMessage.id,
+                    date: apiMessage.date,
+                    attachmentUrl: message.attachmentUrl,
+                    sending: false,
+                    failed: false,
+                  };
+                }
 
-              return x;
-            })
-            .filter(x => !isSameSeenMessage(x, apiMessage)),
-          ...otherMessages,
-        ],
-      },
+                return x;
+              })
+              .filter(x => !isSameSeenMessage(x, apiMessage)),
+            ...otherMessages,
+          ];
+        }
+
+        return group;
+      }),
     });
   }
 
-  @Action(MarkResponseChatMessageAsFailed)
+  @Action(MarkResponseGroupMessageAsFailed)
   markAsFailed(
-    { getState, setState }: StateContext<MeetingStateModel>,
-    { message }: MarkResponseChatMessageAsFailed,
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, message }: MarkResponseGroupMessageAsFailed,
   ) {
     const state = getState();
     setState({
       ...state,
-      meetingModel: {
-        ...state.meetingModel,
-        messages: state.meetingModel.messages.map(x => {
-          if (isSameMessageByDate(x, message)) {
-            return {
-              ...x,
-              attachmentUrl: message.attachmentUrl,
-              sending: false,
-              failed: true,
-            };
-          }
+      groups: state.groups.map(group => {
+        if (group.id === groupId) {
+          group.messages = group.messages.map(x => {
+            if (isSameMessageByDate(x, message)) {
+              return {
+                ...x,
+                attachmentUrl: message.attachmentUrl,
+                sending: false,
+                failed: true,
+              };
+            }
 
-          return x;
-        }),
-      },
+            return x;
+          });
+        }
+
+        return group;
+      }),
+    });
+  }
+
+  @Action(RemoveMeeting)
+  removeMeeting(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { meetingId }: RemoveMeeting,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetings: state.meetings.filter(x => x.id !== meetingId),
+    });
+  }
+
+  @Action(RemoveRequest)
+  removeRequest(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { requestId }: RemoveRequest,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      requests: state.requests.filter(x => x.id !== requestId),
+    });
+  }
+
+  @Action(RemoveGroup)
+  removeGroup(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId }: RemoveGroup,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      groups: state.groups.filter(x => x.id !== groupId),
     });
   }
 }

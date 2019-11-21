@@ -1,7 +1,7 @@
 import { UserState, UserStateModel } from '../../modules/user/store/user-state';
 import {
   MeetingState,
-  MeetingStateModel,
+  MeetingsStateModel,
 } from '../../modules/meeting/store/meeting-state';
 import {
   Connection,
@@ -17,7 +17,7 @@ import { getActionTypeFromInstance } from '@ngxs/store';
 export interface AppStateModel {
   global: GlobalStateModel;
   user: UserStateModel;
-  meeting: MeetingStateModel;
+  meetings: MeetingsStateModel;
   settings: SettingsStateModel;
 }
 
@@ -37,13 +37,16 @@ export function clearState(state: AppStateModel, action, next) {
         loading: false,
         user: null,
       },
-      meeting: {
+      meetings: {
         loading: false,
-        toRead: 0,
-        meetingModel: null,
+        meetings: [],
+        requests: [],
+        groups: [],
       },
       settings: {
-        blockedUsers: null,
+        friends: [],
+        friendInvitations: [],
+        meetingInvitations: [],
       },
     };
   }

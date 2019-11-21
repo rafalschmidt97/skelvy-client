@@ -20,7 +20,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { from, throwError } from 'rxjs';
 import { PhotoDto } from '../../../../core/upload/upload';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { RemoveResponseChatMessage } from '../../../meeting/store/meeting-actions';
+import { RemoveResponseGroupMessage } from '../../../meeting/store/meeting-actions';
 
 @Component({
   selector: 'app-message-form',
@@ -310,7 +310,9 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
             _('A problem occurred while uploading the photo'),
           );
 
-          this.store.dispatch(new RemoveResponseChatMessage(message));
+          this.store.dispatch(
+            new RemoveResponseGroupMessage(message.groupId, message),
+          );
 
           return throwError(err);
         }),

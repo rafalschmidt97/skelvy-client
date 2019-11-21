@@ -6,10 +6,10 @@ import { UserDto } from '../user/user';
 import { tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import {
-  AddBlockedUser,
-  AddBlockedUsers,
-  RemoveBlockedUser,
-  UpdateBlockedUsers,
+  AddFriend,
+  AddFriends,
+  RemoveFriend,
+  UpdateFriends,
 } from './store/settings-actions';
 
 @Injectable({
@@ -29,9 +29,9 @@ export class SettingsService {
       .pipe(
         tap(users => {
           if (page === 1) {
-            this.store.dispatch(new UpdateBlockedUsers(users));
+            this.store.dispatch(new UpdateFriends(users));
           } else {
-            this.store.dispatch(new AddBlockedUsers(users));
+            this.store.dispatch(new AddFriends(users));
           }
         }),
       );
@@ -44,7 +44,7 @@ export class SettingsService {
       })
       .pipe(
         tap(() => {
-          this.store.dispatch(new AddBlockedUser(user));
+          this.store.dispatch(new AddFriend(user));
         }),
       );
   }
@@ -54,7 +54,7 @@ export class SettingsService {
       .delete<void>(`${environment.versionApiUrl}users/self/blocked/${userId}`)
       .pipe(
         tap(() => {
-          this.store.dispatch(new RemoveBlockedUser(userId));
+          this.store.dispatch(new RemoveFriend(userId));
         }),
       );
   }

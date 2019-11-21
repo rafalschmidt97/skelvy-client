@@ -10,20 +10,16 @@ import {
 } from '../meeting/meeting';
 import { catchError, tap } from 'rxjs/operators';
 import {
-  AddChatMessage,
-  AddChatMessages,
-  AddChatMessagesToRead,
-  MarkResponseChatMessageAsFailed,
-  MarkResponseChatMessageAsSent,
-  RemoveOldAndAddNewResponseChatMessage,
-  RemoveResponseChatMessage,
-  UpdateChatMessagesToRead,
+  AddGroupMessage,
+  AddGroupMessages,
+  MarkResponseGroupMessageAsFailed,
+  MarkResponseGroupMessageAsSent,
+  RemoveOldAndAddNewResponseGroupMessage,
+  RemoveResponseGroupMessage,
 } from '../meeting/store/meeting-actions';
 import { Store } from '@ngxs/store';
-import { storageKeys } from '../../core/storage/storage';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
-import { isSeenMessage } from '../meeting/store/meeting-state';
 import { BackgroundService } from '../../core/background/background.service';
 
 @Injectable({
@@ -49,7 +45,9 @@ export class ChatService {
       )
       .pipe(
         tap(messages => {
-          this.store.dispatch(new AddChatMessages(messages, false));
+          this.store.dispatch(
+            new AddGroupMessages(messages[0].groupId, messages, false),
+          );
         }),
       );
   }
@@ -60,7 +58,9 @@ export class ChatService {
     )[0];
     return this.findMessages(firstMessage.groupId, firstMessage.date).pipe(
       tap(messages => {
-        this.store.dispatch(new AddChatMessages(messages, false));
+        this.store.dispatch(
+          new AddGroupMessages(messages[0].groupId, messages, false),
+        );
       }),
     );
   }
@@ -71,15 +71,18 @@ export class ChatService {
       .pipe(
         tap(async apiMessages => {
           this.store.dispatch(
-            new MarkResponseChatMessageAsSent(message, apiMessages),
+            new MarkResponseGroupMessageAsSent(
+              message.groupId,
+              message,
+              apiMessages,
+            ),
           );
-          await this.storage.set(
-            storageKeys.lastMessageDate,
-            apiMessages[1].date,
-          );
+          // TODO: set not red messages
         }),
         catchError(error => {
-          this.store.dispatch(new MarkResponseChatMessageAsFailed(message));
+          this.store.dispatch(
+            new MarkResponseGroupMessageAsFailed(message.groupId, message),
+          );
           return throwError(error);
         }),
       );
@@ -99,25 +102,29 @@ export class ChatService {
     };
 
     this.store.dispatch(
-      new RemoveOldAndAddNewResponseChatMessage(oldMessage, newMessage),
+      new RemoveOldAndAddNewResponseGroupMessage(
+        oldMessage.groupId,
+        oldMessage,
+        newMessage,
+      ),
     );
 
     return this.sendMessage(newMessage);
   }
 
   async addMessage(message: MessageState) {
-    this.store.dispatch(new AddChatMessage(message));
-    await this.storage.set(storageKeys.lastMessageDate, message.date);
+    this.store.dispatch(new AddGroupMessage(message.groupId, message));
+    // TODO: set not red messages
   }
 
   async addSentMessagesWithReading(messages: MessageState[], userId: number) {
-    this.store.dispatch(new AddChatMessages(messages));
+    this.store.dispatch(new AddGroupMessages(messages[0].groupId, messages));
 
     if (
       this.router.url !== '/app/chat' ||
       this.backgroundService.inBackground
     ) {
-      this.store.dispatch(new AddChatMessagesToRead(1));
+      // TODO: set not red messages
     } else {
       const responseMessages = messages.filter(
         x => x.type === MessageType.RESPONSE,
@@ -133,22 +140,21 @@ export class ChatService {
   }
 
   async readMessages(groupId: number, messages: (MessageState | MessageDto)[]) {
-    const lastMessageDate = await this.storage.get(storageKeys.lastMessageDate);
-
-    const lastNonSeenMessageDateState = [...messages]
-      .reverse()
-      .find((x: MessageState) => !isSeenMessage(x)).date;
-
-    if (
-      lastNonSeenMessageDateState &&
-      new Date(lastMessageDate).getTime() <
-        new Date(lastNonSeenMessageDateState).getTime()
-    ) {
-      this.readMessage(
-        this.store.selectSnapshot(state => state.user.user.id),
-        groupId,
-      ).subscribe();
-    }
+    // TODO: get not red messages
+    // const lastNonSeenMessageDateState = [...messages]
+    //   .reverse()
+    //   .find((x: MessageState) => !isSeenMessage(x)).date;
+    //
+    // if (
+    //   lastNonSeenMessageDateState &&
+    //   new Date(lastMessageDate).getTime() <
+    //     new Date(lastNonSeenMessageDateState).getTime()
+    // ) {
+    //   this.readMessage(
+    //     this.store.selectSnapshot(state => state.user.user.id),
+    //     groupId,
+    //   ).subscribe();
+    // }
   }
 
   async readMessagesFromState(groupId: number) {
@@ -162,7 +168,9 @@ export class ChatService {
   }
 
   removeMessage(message: MessageState) {
-    this.store.dispatch(new RemoveResponseChatMessage(message));
+    this.store.dispatch(
+      new RemoveResponseGroupMessage(message.groupId, message),
+    );
   }
 
   readMessage(userId: number, groupId: number): Observable<MessageDto[]> {
@@ -181,9 +189,10 @@ export class ChatService {
       .post<MessageDto[]>(environment.versionApiUrl + 'messages/self', message)
       .pipe(
         tap(async ([seenMessage]) => {
-          this.store.dispatch(new AddChatMessage(seenMessage));
-          this.store.dispatch(new UpdateChatMessagesToRead(0));
-          await this.storage.set(storageKeys.lastMessageDate, seenMessage.date);
+          this.store.dispatch(
+            new AddGroupMessage(seenMessage.groupId, seenMessage),
+          );
+          // TODO: set not red messages
         }),
       );
   }

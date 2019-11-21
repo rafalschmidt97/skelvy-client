@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
@@ -7,24 +7,22 @@ import {
   ActivityDto,
   MeetingModel,
   MeetingRequestRequest,
-  MeetingStatus,
   MeetingSuggestionsModel,
-  MessageState,
 } from './meeting';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { storageKeys } from '../../core/storage/storage';
 import { UserDto } from '../user/user';
 import { Store } from '@ngxs/store';
 import {
-  AddMeetingUser,
+  AddGroupUser,
   ChangeMeetingLoadingStatus,
-  RemoveMeetingUser,
-  UpdateChatMessagesToRead,
-  UpdateMeeting,
+  RemoveGroup,
+  RemoveGroupUser,
+  RemoveMeeting,
+  RemoveRequest,
+  UpdateMeetingsFromModel,
 } from './store/meeting-actions';
-import { ChatService } from '../chat/chat.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,13 +34,9 @@ export class MeetingService {
     private readonly translateService: TranslateService,
     private readonly router: Router,
     private readonly store: Store,
-    private readonly chatService: ChatService,
   ) {}
 
-  findMeeting(
-    markedAsLoading: boolean = false,
-    mergeExisting: boolean = true,
-  ): Observable<MeetingModel> {
+  findMeeting(markedAsLoading: boolean = false): Observable<MeetingModel> {
     if (!markedAsLoading) {
       this.store.dispatch(new ChangeMeetingLoadingStatus(true));
     }
@@ -52,53 +46,28 @@ export class MeetingService {
         `${environment.versionApiUrl}meetings/self?language=${this.translateService.currentLang}`,
       )
       .pipe(
-        tap(async model => {
-          if (this.isSameMeeting(model)) {
-            if (mergeExisting) {
-              this.store.dispatch(new ChangeMeetingLoadingStatus(false));
-              this.initializeMeetingModel(
-                model,
-                await this.initializeChat(model),
-              );
-            } else {
-              this.store.dispatch(new ChangeMeetingLoadingStatus(false));
-              this.initializeMeetingModel(
-                model,
-                await this.initializeFreshChat(model),
-              );
-            }
-          } else {
-            if (model.status === MeetingStatus.FOUND) {
-              this.store.dispatch(new ChangeMeetingLoadingStatus(false));
-              this.initializeMeetingModel(
-                model,
-                await this.initializeFreshChat(model),
-              );
-            } else {
-              this.store.dispatch(new ChangeMeetingLoadingStatus(false));
-              this.initializeMeetingModel(model, null);
-            }
-          }
+        tap(model => {
+          this.store.dispatch(
+            new UpdateMeetingsFromModel(model.meetings, model.groups),
+          );
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+          // TODO: set not red messages
         }),
         catchError(error => {
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
-
-          if (error instanceof HttpErrorResponse && error.status === 404) {
-            this.clearMeeting();
-          }
-
           return throwError(error);
         }),
       );
   }
 
-  leaveMeeting(): Observable<void> {
+  leaveMeeting(meetingId: number, groupId: number): Observable<void> {
     return this.http
       .post<void>(environment.versionApiUrl + 'meetings/self/leave', null)
       .pipe(
         tap(() => {
-          this.store.dispatch(new UpdateMeeting(null));
-          this.storage.remove(storageKeys.lastMessageDate);
+          this.store.dispatch(new RemoveMeeting(meetingId));
+          this.store.dispatch(new RemoveGroup(groupId));
+          // TODO: remove red messages date
         }),
       );
   }
@@ -110,12 +79,12 @@ export class MeetingService {
     );
   }
 
-  removeMeetingRequest(): Observable<void> {
+  removeMeetingRequest(requestId: number): Observable<void> {
     return this.http
       .delete<void>(environment.versionApiUrl + 'meetings/self/requests')
       .pipe(
         tap(() => {
-          this.store.dispatch(new UpdateMeeting(null));
+          this.store.dispatch(new RemoveRequest(requestId));
         }),
       );
   }
@@ -156,90 +125,21 @@ export class MeetingService {
     );
   }
 
-  addUser(userId: number): Observable<UserDto> {
+  addUser(userId: number, groupId: number, role: string): Observable<UserDto> {
     return this.findUser(userId).pipe(
       tap(user => {
-        this.store.dispatch(new AddMeetingUser(user));
+        this.store.dispatch(new AddGroupUser(groupId, { ...user, role }));
       }),
     );
   }
 
-  removeUser(userId: number) {
-    this.store.dispatch(new RemoveMeetingUser(userId));
+  removeUser(userId: number, groupId: number) {
+    this.store.dispatch(new RemoveGroupUser(userId, groupId));
   }
 
-  clearMeeting() {
-    this.store.dispatch(new UpdateMeeting(null));
-    this.store.dispatch(new UpdateChatMessagesToRead(0));
-  }
-
-  private isSameMeeting(model): boolean {
-    const storedModel = this.store.selectSnapshot(x => x.meeting.meetingModel);
-    return (
-      storedModel &&
-      model.status === MeetingStatus.FOUND &&
-      storedModel.status === MeetingStatus.FOUND &&
-      model.meeting.id === storedModel.meeting.id
-    );
-  }
-
-  private async initializeChat(model: MeetingModel): Promise<MessageState[]> {
-    const existingMessages = this.store.selectSnapshot(
-      x => x.meeting.meetingModel.messages,
-    );
-    const newMessages = model.messages.filter(message1 => {
-      return (
-        existingMessages.filter(message2 => message1.id === message2.id)
-          .length === 0
-      );
-    });
-
-    if (this.router.url !== '/app/chat') {
-      if (newMessages.length > 0) {
-        this.store.dispatch(new UpdateChatMessagesToRead(newMessages.length));
-      }
-    } else {
-      if (newMessages.length > 0) {
-        await this.chatService.readMessages(
-          model.meeting.groupId,
-          model.messages,
-        );
-      }
-    }
-
-    return <MessageState[]>model.messages;
-  }
-
-  private async initializeFreshChat(
-    model: MeetingModel,
-  ): Promise<MessageState[]> {
-    await this.storage.remove(storageKeys.lastMessageDate);
-
-    if (this.router.url !== '/app/chat') {
-      this.store.dispatch(new UpdateChatMessagesToRead(model.messages.length));
-    } else {
-      if (model.messages.length > 0) {
-        await this.chatService.readMessages(
-          model.meeting.groupId,
-          model.messages,
-        );
-      }
-    }
-
-    return <MessageState[]>model.messages;
-  }
-
-  private initializeMeetingModel(
-    model: MeetingModel,
-    messages: MessageState[],
-  ) {
-    this.store.dispatch(
-      new UpdateMeeting({
-        status: model.status,
-        meeting: model.meeting,
-        request: model.request,
-        messages: messages,
-      }),
-    );
+  clearMeeting(meetingId: number, groupId: number) {
+    this.store.dispatch(new RemoveMeeting(meetingId));
+    this.store.dispatch(new RemoveGroup(groupId));
+    // TODO: set not red messages
   }
 }

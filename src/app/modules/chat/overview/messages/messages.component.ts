@@ -1,5 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
+  GroupDto,
+  GroupState,
   MeetingDto,
   MessageActionType,
   MessageDto,
@@ -25,8 +27,8 @@ import { MessageActionModalComponent } from './message-action-modal/message-acti
 })
 export class MessagesComponent implements OnInit {
   @ViewChild('content') content: ElementRef;
-  @Input() messages: MessageState[];
   @Input() meeting: MeetingDto;
+  @Input() group: GroupState;
   @Input() user: UserDto;
   dateToShow: string;
   isLoading = false;
@@ -46,7 +48,7 @@ export class MessagesComponent implements OnInit {
   ) {}
 
   get messagesWithoutSelfSeen(): MessageState[] {
-    return this.messages.filter(
+    return this.group.messages.filter(
       x =>
         !(
           x.type === MessageType.ACTION &&
@@ -69,7 +71,7 @@ export class MessagesComponent implements OnInit {
   }
 
   findUser(userId: number): UserDto {
-    return this.meeting.users.find(user => user.id === userId);
+    return this.group.users.find(user => user.id === userId);
   }
 
   showDate(date) {

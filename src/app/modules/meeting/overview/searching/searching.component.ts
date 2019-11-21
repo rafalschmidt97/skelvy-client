@@ -1,9 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  MeetingRequestDto,
-  MeetingStatus,
-  MeetingSuggestionsModel,
-} from '../../meeting';
+import { Component, Input } from '@angular/core';
+import { MeetingRequestDto } from '../../meeting';
 import { MapsService } from '../../../../core/maps/maps.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/toast/toast.service';
@@ -12,25 +8,17 @@ import { LoadingService } from '../../../../core/loading/loading.service';
 import { MeetingService } from '../../meeting.service';
 import * as moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { AlertModalComponent } from '../../../../shared/components/alert/alert-modal/alert-modal.component';
 import { ModalController } from '@ionic/angular';
-import { UpdateMeeting } from '../../store/meeting-actions';
-import { concatMap } from 'rxjs/operators';
-import { MeetingStateModel } from '../../store/meeting-state';
 
 @Component({
   selector: 'app-searching',
   templateUrl: './searching.component.html',
   styleUrls: ['./searching.component.scss'],
 })
-export class SearchingComponent implements OnInit, OnDestroy {
+export class SearchingComponent {
   @Input() request: MeetingRequestDto;
   isLoading = false;
-  loadingSuggestions = false;
-  suggestions: MeetingSuggestionsModel;
-  meetingSubscription: Subscription;
 
   constructor(
     private readonly modalController: ModalController,
@@ -39,34 +27,7 @@ export class SearchingComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly meetingService: MeetingService,
-    private readonly store: Store,
-    private readonly actions: Actions,
   ) {}
-
-  ngOnInit() {
-    this.meetingSubscription = this.actions
-      .pipe(
-        ofActionSuccessful(UpdateMeeting),
-        concatMap(() => this.store.selectOnce(state => state.meeting)),
-      )
-      .subscribe(async (meeting: MeetingStateModel) => {
-        if (
-          meeting.meetingModel &&
-          meeting.meetingModel.status === MeetingStatus.SEARCHING
-        ) {
-          this.findSuggestions(
-            meeting.meetingModel.request.latitude,
-            meeting.meetingModel.request.longitude,
-          );
-        }
-      });
-  }
-
-  ngOnDestroy() {
-    if (this.meetingSubscription) {
-      this.meetingSubscription.unsubscribe();
-    }
-  }
 
   getDate(minDate: string | Date, maxDate: string | Date): string {
     if (maxDate !== minDate) {
@@ -76,21 +37,6 @@ export class SearchingComponent implements OnInit, OnDestroy {
     }
 
     return moment(minDate).format('DD.MM.YYYY');
-  }
-
-  findSuggestions(latitude: number, longitude: number) {
-    if (!this.loadingSuggestions) {
-      this.loadingSuggestions = true;
-      this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
-        suggestions => {
-          this.suggestions = suggestions;
-          this.loadingSuggestions = false;
-        },
-        () => {
-          this.loadingSuggestions = false;
-        },
-      );
-    }
   }
 
   join(meetingId: number) {
@@ -113,7 +59,6 @@ export class SearchingComponent implements OnInit, OnDestroy {
           this.toastService.createError(
             _('A problem occurred while joining the meeting'),
           );
-          this.findSuggestions(this.request.latitude, this.request.longitude);
         },
       );
     }
@@ -139,7 +84,6 @@ export class SearchingComponent implements OnInit, OnDestroy {
           this.toastService.createError(
             _('A problem occurred while connecting the request'),
           );
-          this.findSuggestions(this.request.latitude, this.request.longitude);
         },
       );
     }
@@ -167,7 +111,7 @@ export class SearchingComponent implements OnInit, OnDestroy {
   confirmStop() {
     this.isLoading = true;
     this.loadingService.lock();
-    this.meetingService.removeMeetingRequest().subscribe(
+    this.meetingService.removeMeetingRequest(this.request.id).subscribe(
       () => {
         this.isLoading = false;
         this.loadingService.unlock();

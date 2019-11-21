@@ -1,15 +1,8 @@
-import { UserDto } from '../user/user';
+import { ProfileDto, UserDto } from '../user/user';
 
 export interface MeetingModel {
-  status: MeetingStatus;
-  meeting: MeetingDto;
-  messages: MessageDto[];
-  request: MeetingRequestDto;
-}
-
-export enum MeetingStatus {
-  FOUND = 'found',
-  SEARCHING = 'searching',
+  meetings: MeetingDto[];
+  groups: GroupDto[];
 }
 
 export interface MeetingDto {
@@ -17,6 +10,40 @@ export interface MeetingDto {
   date: string;
   latitude: number;
   longitude: number;
+  size: number;
+  isPrivate: boolean;
+  isHidden: boolean;
+  city: string;
+  groupId: number;
+  activity: ActivityDto;
+}
+
+export interface GroupDto {
+  id: number;
+  users: GroupUserDto[];
+  messages: MessageDto[];
+}
+
+export interface GroupState {
+  id: number;
+  users: GroupUserDto[];
+  messages: MessageState[];
+}
+
+export interface GroupUserDto {
+  id: number;
+  role: string;
+  profile: ProfileDto;
+}
+
+export interface MeetingWithUsersDto {
+  id: number;
+  date: string;
+  latitude: number;
+  longitude: number;
+  size: number;
+  isPrivate: boolean;
+  isHidden: boolean;
   city: string;
   groupId: number;
   activity: ActivityDto;
@@ -55,7 +82,7 @@ export interface ActivityDto {
 
 export interface MeetingSuggestionsModel {
   meetingRequests: MeetingRequestWithUserDto[];
-  meetings: MeetingDto[];
+  meetings: MeetingWithUsersDto[];
 }
 
 export interface MeetingRequestRequest {

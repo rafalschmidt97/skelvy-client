@@ -10,12 +10,6 @@
       }}
     </div>
   </section>
-  <app-meeting-suggestions
-    [suggestions]="suggestions"
-    [isLoading]="isLoading || loadingSuggestions"
-    (connect)="connect($event)"
-    (join)="join($event)"
-  ></app-meeting-suggestions>
   <section class="info border-top bg-white">
     <label [innerText]="'Current searching preferences' | translate"></label>
     <div class="d-flex align-items-center bg-white mb-1 item border">

@@ -1,66 +1,94 @@
-import { UserDto } from '../../user/user';
-import { MeetingModelState } from './meeting-state';
-import { MessageDto, MessageState } from '../meeting';
+import {
+  GroupDto,
+  GroupUserDto,
+  MeetingDto,
+  MeetingRequestDto,
+  MessageDto,
+  MessageState,
+} from '../meeting';
 
 export class ChangeMeetingLoadingStatus {
-  static readonly type = '[Meeting] Change meeting loading status';
+  static readonly type = '[Meetings] Change meeting loading status';
   constructor(public status: boolean) {}
 }
 
-export class AddMeetingUser {
-  static readonly type = '[Meeting] Add user';
-  constructor(public user: UserDto) {}
+export class AddGroupUser {
+  static readonly type = '[Groups] Add user';
+  constructor(public groupId: number, public user: GroupUserDto) {}
 }
 
-export class RemoveMeetingUser {
-  static readonly type = '[Meeting] Remove user';
-  constructor(public userId: number) {}
+export class RemoveGroupUser {
+  static readonly type = '[Groups] Remove user';
+  constructor(public groupId: number, public userId: number) {}
 }
 
-export class UpdateMeeting {
-  static readonly type = '[Meeting] Update meeting';
-  constructor(public model: MeetingModelState) {}
-}
-
-export class AddChatMessagesToRead {
-  static readonly type = '[Chat] Add chat messages to read';
-  constructor(public amount: number) {}
-}
-
-export class UpdateChatMessagesToRead {
-  static readonly type = '[Chat] Update chat messages to read';
-  constructor(public amount: number) {}
-}
-
-export class AddChatMessage {
-  static readonly type = '[Chat] Add message';
-  constructor(public message: MessageState) {}
-}
-
-export class AddChatMessages {
-  static readonly type = '[Chat] Add messages';
-  constructor(public messages: MessageState[], public end = true) {}
-}
-
-export class RemoveResponseChatMessage {
-  static readonly type = '[Chat] Remove response message';
-  constructor(public message: MessageState) {}
-}
-
-export class RemoveOldAndAddNewResponseChatMessage {
-  static readonly type = '[Chat] Remove old and add new response message';
+export class UpdateMeetingsState {
+  static readonly type = '[Meetings] Update meetings';
   constructor(
+    public meetings: MeetingDto[],
+    public requests: MeetingRequestDto[],
+    public groups: GroupDto[],
+  ) {}
+}
+
+export class UpdateMeetingsFromModel {
+  static readonly type = '[Meetings] Update meetings from model';
+  constructor(public meetings: MeetingDto[], public groups: GroupDto[]) {}
+}
+
+export class AddGroupMessage {
+  static readonly type = '[Groups] Add message';
+  constructor(public groupId: number, public message: MessageState) {}
+}
+
+export class AddGroupMessages {
+  static readonly type = '[Groups] Add messages';
+  constructor(
+    public groupId: number,
+    public messages: MessageState[],
+    public end = true,
+  ) {}
+}
+
+export class RemoveResponseGroupMessage {
+  static readonly type = '[Groups] Remove response message';
+  constructor(public groupId: number, public message: MessageState) {}
+}
+
+export class RemoveOldAndAddNewResponseGroupMessage {
+  static readonly type = '[Groups] Remove old and add new response message';
+  constructor(
+    public groupId: number,
     public oldMessage: MessageState,
     public newMessage: MessageState,
   ) {}
 }
 
-export class MarkResponseChatMessageAsSent {
-  static readonly type = '[Chat] Mark response chat message as sent';
-  constructor(public message: MessageState, public apiMessages: MessageDto[]) {}
+export class MarkResponseGroupMessageAsSent {
+  static readonly type = '[Groups] Mark response chat message as sent';
+  constructor(
+    public groupId: number,
+    public message: MessageState,
+    public apiMessages: MessageDto[],
+  ) {}
 }
 
-export class MarkResponseChatMessageAsFailed {
-  static readonly type = '[Chat] Mark response chat message as failed';
-  constructor(public message: MessageState) {}
+export class MarkResponseGroupMessageAsFailed {
+  static readonly type = '[Groups] Mark response chat message as failed';
+  constructor(public groupId: number, public message: MessageState) {}
+}
+
+export class RemoveMeeting {
+  static readonly type = '[Meetings] Remove meeting';
+  constructor(public meetingId: number) {}
+}
+
+export class RemoveRequest {
+  static readonly type = '[Requests] Remove request';
+  constructor(public requestId: number) {}
+}
+
+export class RemoveGroup {
+  static readonly type = '[Groups] Remove group';
+  constructor(public groupId: number) {}
 }

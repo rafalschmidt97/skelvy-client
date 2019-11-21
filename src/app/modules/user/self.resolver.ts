@@ -8,7 +8,7 @@ import { _ } from '../../core/i18n/translate';
 import { UserSocketService } from './user-socket.service';
 import { UserPushService } from './user-push.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SelfModel } from './self';
+import { SyncModel } from './sync';
 import { SelfService } from './self.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { StateTrackerService } from '../../core/state/state-tracker.service';
@@ -16,7 +16,7 @@ import { StateTrackerService } from '../../core/state/state-tracker.service';
 @Injectable({
   providedIn: 'root',
 })
-export class SelfResolver implements Resolve<SelfModel> {
+export class SelfResolver implements Resolve<SyncModel> {
   constructor(
     private readonly selfService: SelfService,
     private readonly authService: AuthService,
@@ -27,8 +27,8 @@ export class SelfResolver implements Resolve<SelfModel> {
     private readonly stateTracker: StateTrackerService,
   ) {}
 
-  resolve(): Observable<SelfModel> {
-    return this.selfService.findSelf().pipe(
+  resolve(): Observable<SyncModel> {
+    return this.selfService.self().pipe(
       tap(() => {
         this.stateTracker.track();
         this.userSocket.connect();
