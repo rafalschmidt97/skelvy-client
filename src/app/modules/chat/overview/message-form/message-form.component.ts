@@ -70,7 +70,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
 
   ngOnInit() {
     const activity = this.store.selectSnapshot(
-      state => state.meeting.meetingModel.meeting.activity.name,
+      state => state.meetings.meetingModel.meeting.activity.name,
     );
 
     if (activity === this.activities[1]) {
@@ -93,7 +93,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
         action: null,
         userId: this.store.selectSnapshot(state => state.user.user.id),
         groupId: this.store.selectSnapshot(
-          state => state.meeting.meetingModel.meeting.groupId,
+          state => state.meetings.meetingModel.meeting.groupId,
         ),
         sending: true,
       });
@@ -119,7 +119,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
         action: null,
         userId: this.store.selectSnapshot(state => state.user.user.id),
         groupId: this.store.selectSnapshot(
-          state => state.meeting.meetingModel.meeting.groupId,
+          state => state.meetings.meetingModel.meeting.groupId,
         ),
         sending: true,
       });
@@ -144,7 +144,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
           action: null,
           userId: this.store.selectSnapshot(state => state.user.user.id),
           groupId: this.store.selectSnapshot(
-            state => state.meeting.meetingModel.meeting.groupId,
+            state => state.meetings.meetingModel.meeting.groupId,
           ),
           sending: true,
         });
@@ -170,7 +170,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
           action: null,
           userId: this.store.selectSnapshot(state => state.user.user.id),
           groupId: this.store.selectSnapshot(
-            state => state.meeting.meetingModel.meeting.groupId,
+            state => state.meetings.meetingModel.meeting.groupId,
           ),
           sending: true,
         });

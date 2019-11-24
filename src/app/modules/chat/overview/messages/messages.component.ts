@@ -61,7 +61,7 @@ export class MessagesComponent implements OnInit {
 
   ngOnInit() {
     if (
-      this.store.selectSnapshot(state => state.meeting.meetingModel.messages)
+      this.store.selectSnapshot(state => state.meetings.meetingModel.messages)
         .length >= 20
     ) {
       this.hasMoreMessages = true;

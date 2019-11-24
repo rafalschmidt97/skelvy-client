@@ -3,7 +3,7 @@
     *ngIf="isLast"
     class="image rounded-circle flex-shrink-0"
     [class.image-first-last]="isLast && isFirst"
-    [style.background-image]="'url(' + user.profile.photos[0].url + ')'"
+    [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
   ></div>
   <div class="flex-fill" [class.message-continuation]="!isLast">
     <div *ngIf="isFirst" class="name">

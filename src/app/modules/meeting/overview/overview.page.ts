@@ -10,6 +10,6 @@ import { Select } from '@ngxs/store';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage {
-  @Select(state => state.meeting) meeting$: Observable<MeetingsStateModel>;
+  @Select(state => state.meetings) $meetings: Observable<MeetingsStateModel>;
   @Select(state => state.user) user$: Observable<UserStateModel>;
 }

@@ -54,7 +54,7 @@ export class ChatService {
 
   findMoreMessages(): Observable<MessageDto[]> {
     const firstMessage = this.store.selectSnapshot(
-      state => state.meeting.meetingModel.messages,
+      state => state.meetings.meetingModel.messages,
     )[0];
     return this.findMessages(firstMessage.groupId, firstMessage.date).pipe(
       tap(messages => {
@@ -159,7 +159,7 @@ export class ChatService {
 
   async readMessagesFromState(groupId: number) {
     const messages = this.store.selectSnapshot(
-      state => state.meeting.meetingModel.messages,
+      state => state.meetings.meetingModel.messages,
     );
 
     if (messages.length > 0) {

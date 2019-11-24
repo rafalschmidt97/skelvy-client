@@ -32,7 +32,7 @@ export interface MeetingsStateModel {
 }
 
 @State<MeetingsStateModel>({
-  name: 'meeting',
+  name: 'meetings',
   defaults: {
     loading: false,
     meetings: [],

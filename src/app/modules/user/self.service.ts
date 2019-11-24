@@ -69,6 +69,7 @@ export class SelfService {
           ) {
             const sync = await this.sync().toPromise();
             await this.initializeState(user, sync, friends);
+            return { fromStorage: false };
           } else {
             await this.initializeState(
               user,
@@ -81,6 +82,7 @@ export class SelfService {
               },
               friends,
             );
+            return { fromStorage: true };
           }
         },
       ),
@@ -95,7 +97,7 @@ export class SelfService {
   sync(): Observable<SyncModel> {
     return this.http
       .get<SyncModel>(
-        `${environment.versionApiUrl}users/sync?language=${this.translateService.currentLang}`,
+        `${environment.versionApiUrl}users/self/sync?language=${this.translateService.currentLang}`,
       )
       .pipe(
         tap(async sync => {

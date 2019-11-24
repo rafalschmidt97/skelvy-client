@@ -137,9 +137,11 @@ export class MeetingService {
     this.store.dispatch(new RemoveGroupUser(userId, groupId));
   }
 
-  clearMeeting(meetingId: number, groupId: number) {
+  clearMeeting(meetingId: number) {
     this.store.dispatch(new RemoveMeeting(meetingId));
-    this.store.dispatch(new RemoveGroup(groupId));
-    // TODO: set not red messages
+  }
+
+  clearMeetingRequest(requestId: number) {
+    this.store.dispatch(new RemoveRequest(requestId));
   }
 }

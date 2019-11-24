@@ -59,15 +59,6 @@ export class StateTrackerService {
       )
       .subscribe(async (meetings: MeetingsStateModel) => {
         await this.storage.set(storageKeys.meetings, meetings.meetings);
-      });
-
-    this.meetingActions = this.actions
-      .pipe(
-        ofActionSuccessful(UpdateMeetingsState),
-        concatMap(() => this.store.selectOnce(state => state.meetings)),
-      )
-      .subscribe(async (meetings: MeetingsStateModel) => {
-        await this.storage.set(storageKeys.meetings, meetings.meetings);
         await this.storage.set(storageKeys.requests, meetings.requests);
         await this.storage.set(storageKeys.groups, meetings.groups);
       });
@@ -82,7 +73,7 @@ export class StateTrackerService {
           MarkResponseGroupMessageAsFailed,
           RemoveResponseGroupMessage,
         ),
-        concatMap(() => this.store.selectOnce(state => state.meeting)),
+        concatMap(() => this.store.selectOnce(state => state.meetings)),
       )
       .subscribe(async (meetings: MeetingsStateModel) => {
         await this.storage.set(storageKeys.groups, meetings.groups);

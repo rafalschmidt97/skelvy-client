@@ -12,10 +12,10 @@ export class TabsComponent implements OnInit {
 
   ngOnInit() {
     this.store
-      .select(state => state.meeting)
-      .subscribe(async meeting => {
-        if (!meeting.loading) {
-          this.messagesToRead = meeting.toRead;
+      .select(state => state.meetings)
+      .subscribe(async meetings => {
+        if (!meetings.loading) {
+          this.messagesToRead = meetings.toRead;
         }
       });
   }

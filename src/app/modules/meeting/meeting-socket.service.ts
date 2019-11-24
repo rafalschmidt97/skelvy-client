@@ -91,8 +91,8 @@ export class MeetingSocketService {
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
 
-        const { userId } = notification.data.data;
-        this.meetingService.addUser(userId).subscribe(
+        const { userId, groupId, role } = notification.data.data;
+        this.meetingService.addUser(userId, groupId, role).subscribe(
           () => {
             this.toastService.createInformation(
               _('New user has been added to the group'),
@@ -136,8 +136,8 @@ export class MeetingSocketService {
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
 
-        const { userId } = notification.data.data;
-        this.meetingService.removeUser(userId);
+        const { userId, groupId } = notification.data.data;
+        this.meetingService.removeUser(userId, groupId);
       },
     );
   }
@@ -172,10 +172,12 @@ export class MeetingSocketService {
     this.userSocket.on(
       'MeetingRequestExpired',
       (notification: SocketNotificationMessage) => {
+        const { requestId } = notification.data.data;
+
         this.showNotificationIfBackground(notification);
 
         this.toastService.createInformation(_('Meeting request has expired'));
-        this.meetingService.clearMeeting();
+        this.meetingService.clearMeetingRequest(requestId);
       },
     );
   }
@@ -184,6 +186,8 @@ export class MeetingSocketService {
     this.userSocket.on(
       'MeetingExpired',
       (notification: SocketNotificationMessage) => {
+        const { meetingId } = notification.data.data;
+
         this.showNotificationIfBackground(notification);
 
         this.toastService.createInformation(_('The meeting has expired'));
@@ -192,7 +196,7 @@ export class MeetingSocketService {
           this.routerNavigation.navigateBack(['/app/tabs/meeting']);
         }
 
-        this.meetingService.clearMeeting();
+        this.meetingService.clearMeeting(meetingId);
       },
     );
   }
