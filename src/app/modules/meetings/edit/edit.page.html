@@ -3,10 +3,10 @@
     <ion-buttons slot="start">
       <ion-back-button
         [hidden]="isLoading"
-        defaultHref="/app/tabs/meetings"
+        defaultHref="/app/meetings/add"
       ></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ 'Add meeting' | translate }}</ion-title>
+    <ion-title>{{ 'Add request' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button
         [disabled]="isLoading || form.invalid || loadingForm"

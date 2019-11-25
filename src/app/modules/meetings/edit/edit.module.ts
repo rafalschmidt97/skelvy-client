@@ -26,4 +26,4 @@ const routes: Routes = [
   ],
   entryComponents: [AddressSearchModalComponent],
 })
-export class EditMeetingPageModule {}
+export class EditPageModule {}

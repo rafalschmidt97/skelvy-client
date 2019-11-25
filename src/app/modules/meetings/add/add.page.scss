@@ -1,0 +1,28 @@
+@import '~src/theme/bootstrap/variables';
+
+.header {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.description {
+  font-size: 15px;
+}
+
+.choice {
+  &:nth-child(1) {
+    background: gray('100');
+
+    &:active {
+      background: gray('200');
+    }
+  }
+
+  &:nth-child(2) {
+    border-top: 1px solid gray('300');
+
+    &:active {
+      background: gray('100');
+    }
+  }
+}

@@ -4,8 +4,12 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   { path: '', redirectTo: '/app/tabs/meetings', pathMatch: 'full' },
   {
+    path: 'add',
+    loadChildren: './add/add.module#AddPageModule',
+  },
+  {
     path: 'edit',
-    loadChildren: './edit/edit-meeting.module#EditMeetingPageModule',
+    loadChildren: './edit/edit.module#EditPageModule',
   },
 ];
 
