@@ -29,6 +29,10 @@ const routes: Routes = [
         loadChildren: './modules/meetings/meetings.module#MeetingsModule',
       },
       {
+        path: 'groups',
+        loadChildren: './modules/groups/groups.module#GroupsModule',
+      },
+      {
         path: 'settings',
         loadChildren: './modules/settings/settings.module#SettingsModule',
       },

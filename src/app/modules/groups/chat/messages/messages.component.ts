@@ -10,7 +10,7 @@ import {
 } from '../../../meetings/meetings';
 import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
-import { ChatService } from '../../chat.service';
+import { GroupsService } from '../../groups.service';
 import { Storage } from '@ionic/storage';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { ModalController, NavController } from '@ionic/angular';
@@ -42,7 +42,7 @@ export class MessagesComponent implements OnInit {
     private readonly router: Router,
     private readonly storage: Storage,
     private readonly meetingService: MeetingsService,
-    private readonly chatService: ChatService,
+    private readonly chatService: GroupsService,
     private readonly modalController: ModalController,
     private readonly store: Store,
   ) {}

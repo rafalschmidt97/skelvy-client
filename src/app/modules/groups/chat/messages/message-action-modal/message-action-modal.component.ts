@@ -3,7 +3,7 @@ import { ModalController, NavController } from '@ionic/angular';
 import { MessageState } from '../../../../meetings/meetings';
 import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../../../core/i18n/translate';
-import { ChatService } from '../../../chat.service';
+import { GroupsService } from '../../../groups.service';
 import { MeetingsService } from '../../../../meetings/meetings.service';
 import { ToastService } from '../../../../../core/toast/toast.service';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ export class MessageActionModalComponent {
 
   constructor(
     private readonly modalController: ModalController,
-    private readonly chatService: ChatService,
+    private readonly chatService: GroupsService,
     private readonly meetingService: MeetingsService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
@@ -37,7 +37,7 @@ export class MessageActionModalComponent {
         if (error.status === 404 || error.status === 409) {
           this.meetingService.findMeeting().subscribe();
 
-          if (this.router.url === '/app/chat') {
+          if (this.router.url === '/app/groups/chat') {
             this.routerNavigation.navigateBack(['/app/tabs/meetings']);
           }
 

@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
+  { path: '', redirectTo: '/app/tabs/groups', pathMatch: 'full' },
   {
-    path: '',
-    loadChildren: './overview/overview.module#OverviewPageModule',
-    pathMatch: 'full',
+    path: 'chat',
+    loadChildren: './chat/chat.module#ChatPageModule',
   },
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ChatRoutingModule {}
+export class GroupsRoutingModule {}

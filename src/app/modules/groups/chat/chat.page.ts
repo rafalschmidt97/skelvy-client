@@ -6,11 +6,11 @@ import { GlobalStateModel } from '../../../core/state/global-state';
 import { Select } from '@ngxs/store';
 
 @Component({
-  selector: 'app-overview',
-  templateUrl: './overview.page.html',
-  styleUrls: ['./overview.page.scss'],
+  selector: 'app-chat',
+  templateUrl: './chat.page.html',
+  styleUrls: ['./chat.page.scss'],
 })
-export class OverviewPage {
+export class ChatPage {
   @Select(state => state.meetings) $meetings: Observable<MeetingsStateModel>;
   @Select(state => state.user) user$: Observable<UserStateModel>;
   @Select(state => state.global) global$: Observable<GlobalStateModel>;

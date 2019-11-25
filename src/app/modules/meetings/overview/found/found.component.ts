@@ -12,7 +12,7 @@ import { Store } from '@ngxs/store';
 import { ProfileDetailsModalComponent } from '../../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { AlertModalComponent } from '../../../../shared/components/alert/alert-modal/alert-modal.component';
 import { TranslateService } from '@ngx-translate/core';
-import { ChatService } from '../../../chat/chat.service';
+import { GroupsService } from '../../../groups/groups.service';
 
 @Component({
   selector: 'app-found',
@@ -36,7 +36,7 @@ export class FoundComponent {
     private readonly storage: Storage,
     private readonly store: Store,
     private readonly translateService: TranslateService,
-    private readonly chatService: ChatService,
+    private readonly groupsService: GroupsService,
   ) {}
 
   get filteredMeetingUsers(): UserDto[] {
@@ -112,8 +112,10 @@ export class FoundComponent {
   }
 
   showMessages() {
-    this.routerNavigation.navigateForward(['/app/chat']).then(async () => {
-      await this.chatService.readMessagesFromState(this.meeting.groupId);
-    });
+    this.routerNavigation
+      .navigateForward(['/app/groups/chat'])
+      .then(async () => {
+        await this.groupsService.readMessagesFromState(this.meeting.groupId);
+      });
   }
 }

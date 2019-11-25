@@ -9,12 +9,12 @@ import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
 import { MessageActionType, MessageDto, MessageType } from './meetings';
 import { Store } from '@ngxs/store';
-import { ChatService } from '../chat/chat.service';
 import { BackgroundService } from '../../core/background/background.service';
 import {
   SocketNotificationMessage,
   SocketNotificationType,
 } from '../../core/background/background';
+import { GroupsService } from '../groups/groups.service';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +42,7 @@ export class MeetingsSocketService {
     private readonly meetingService: MeetingsService,
     private readonly storage: Storage,
     private readonly store: Store,
-    private readonly chatService: ChatService,
+    private readonly groupsService: GroupsService,
     private readonly backgroundService: BackgroundService,
   ) {}
 
@@ -76,7 +76,7 @@ export class MeetingsSocketService {
         });
 
         if (persistenceMessages.length > 0) {
-          await this.chatService.addSentMessagesWithReading(
+          await this.groupsService.addSentMessagesWithReading(
             persistenceMessages,
             this.store.selectSnapshot(state => state.user.user.id),
           );
@@ -154,7 +154,7 @@ export class MeetingsSocketService {
               _('All users have left the group'),
             );
 
-            if (this.router.url === '/app/chat') {
+            if (this.router.url === '/app/groups/chat') {
               this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             }
           },
@@ -192,7 +192,7 @@ export class MeetingsSocketService {
 
         this.toastService.createInformation(_('The meeting has expired'));
 
-        if (this.router.url === '/app/chat') {
+        if (this.router.url === '/app/groups/chat') {
           this.routerNavigation.navigateBack(['/app/tabs/meetings']);
         }
 

@@ -9,7 +9,7 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { MeetingsService } from '../../../meetings/meetings.service';
-import { ChatService } from '../../chat.service';
+import { GroupsService } from '../../groups.service';
 import { MessageState, MessageType } from '../../../meetings/meetings';
 import { Store } from '@ngxs/store';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
@@ -41,7 +41,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     private readonly router: Router,
     private readonly storage: Storage,
     private readonly meetingService: MeetingsService,
-    private readonly chatService: ChatService,
+    private readonly chatService: GroupsService,
     private readonly store: Store,
     private readonly camera: Camera,
     private readonly file: File,
@@ -194,7 +194,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
           if (error.status === 404 || error.status === 409) {
             this.meetingService.findMeeting().subscribe();
 
-            if (this.router.url === '/app/chat') {
+            if (this.router.url === '/app/groups/chat') {
               this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             }
 
@@ -231,7 +231,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
           if (error.status === 404 || error.status === 409) {
             this.meetingService.findMeeting().subscribe();
 
-            if (this.router.url === '/app/chat') {
+            if (this.router.url === '/app/groups/chat') {
               this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             }
 

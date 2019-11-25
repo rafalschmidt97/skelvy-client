@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { OverviewPage } from './overview.page';
+import { ChatPage } from './chat.page';
 import { SharedModule } from '../../../shared/shared.module';
 import { EmptyComponent } from './empty/empty.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -17,7 +17,7 @@ import { MessageActionsComponent } from './messages/message-actions/message-acti
 const routes: Routes = [
   {
     path: '',
-    component: OverviewPage,
+    component: ChatPage,
   },
 ];
 
@@ -25,7 +25,7 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes), SharedModule],
   entryComponents: [ImageViewerComponent, MessageActionModalComponent],
   declarations: [
-    OverviewPage,
+    ChatPage,
     EmptyComponent,
     ImageViewerComponent,
     MessageActionModalComponent,
@@ -38,4 +38,4 @@ const routes: Routes = [
     MessageActionsComponent,
   ],
 })
-export class OverviewPageModule {}
+export class ChatPageModule {}

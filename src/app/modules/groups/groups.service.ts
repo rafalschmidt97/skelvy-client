@@ -25,7 +25,7 @@ import { BackgroundService } from '../../core/background/background.service';
 @Injectable({
   providedIn: 'root',
 })
-export class ChatService {
+export class GroupsService {
   constructor(
     private readonly http: HttpClient,
     private readonly store: Store,
@@ -121,7 +121,7 @@ export class ChatService {
     this.store.dispatch(new AddGroupMessages(messages[0].groupId, messages));
 
     if (
-      this.router.url !== '/app/chat' ||
+      this.router.url !== '/app/groups/chat' ||
       this.backgroundService.inBackground
     ) {
       // TODO: set not red messages
