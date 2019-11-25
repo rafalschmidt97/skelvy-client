@@ -29,10 +29,6 @@ const routes: Routes = [
         loadChildren: './modules/meetings/meetings.module#MeetingsModule',
       },
       {
-        path: 'chat',
-        loadChildren: './modules/chat/chat.module#ChatModule',
-      },
-      {
         path: 'settings',
         loadChildren: './modules/settings/settings.module#SettingsModule',
       },
