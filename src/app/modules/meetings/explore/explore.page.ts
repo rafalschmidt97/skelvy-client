@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MeetingService } from '../meeting.service';
+import { MeetingsService } from '../meetings.service';
 import { ModalController, NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import * as moment from 'moment';
@@ -8,7 +8,7 @@ import {
   MeetingRequestWithUserDto,
   MeetingSuggestionsModel,
   MeetingWithUsersDto,
-} from '../meeting';
+} from '../meetings';
 import { MeetingSuggestionsModalComponent } from './meeting/meeting-suggestions-modal.component';
 import { RequestSuggestionsModalComponent } from './request/request-suggestions-modal.component';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
@@ -27,7 +27,7 @@ export class ExplorePage implements OnInit {
   suggestions: MeetingSuggestionsModel;
 
   constructor(
-    private readonly meetingService: MeetingService,
+    private readonly meetingService: MeetingsService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly modalController: ModalController,

@@ -8,9 +8,9 @@ import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-import { MeetingService } from '../../../meeting/meeting.service';
+import { MeetingsService } from '../../../meetings/meetings.service';
 import { ChatService } from '../../chat.service';
-import { MessageState, MessageType } from '../../../meeting/meeting';
+import { MessageState, MessageType } from '../../../meetings/meetings';
 import { Store } from '@ngxs/store';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { base64StringToBlob } from 'blob-util';
@@ -20,7 +20,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { from, throwError } from 'rxjs';
 import { PhotoDto } from '../../../../core/upload/upload';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { RemoveResponseGroupMessage } from '../../../meeting/store/meeting-actions';
+import { RemoveResponseGroupMessage } from '../../../meetings/store/meetings-actions';
 
 @Component({
   selector: 'app-message-form',
@@ -40,7 +40,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     private readonly toastService: ToastService,
     private readonly router: Router,
     private readonly storage: Storage,
-    private readonly meetingService: MeetingService,
+    private readonly meetingService: MeetingsService,
     private readonly chatService: ChatService,
     private readonly store: Store,
     private readonly camera: Camera,

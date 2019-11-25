@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { UserDto } from '../../../../user/user';
-import { MessageActionType, MessageState } from '../../../../meeting/meeting';
+import { MessageActionType, MessageState } from '../../../../meetings/meetings';
 
 @Component({
   selector: 'app-message-actions',

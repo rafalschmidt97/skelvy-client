@@ -3,7 +3,7 @@ import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { UserService } from '../../user/user.service';
-import { MeetingService } from '../../meeting/meeting.service';
+import { MeetingsService } from '../../meetings/meetings.service';
 import { SelfService } from '../../user/self.service';
 import { Storage } from '@ionic/storage';
 import { SessionService } from '../../../core/auth/session.service';
@@ -32,7 +32,7 @@ export class DataPage {
     private readonly translateService: TranslateService,
     private readonly loadingService: LoadingService,
     private readonly userService: UserService,
-    private readonly meetingService: MeetingService,
+    private readonly meetingService: MeetingsService,
     private readonly selfService: SelfService,
     private readonly storage: Storage,
     private readonly sessionService: SessionService,

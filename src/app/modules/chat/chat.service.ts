@@ -7,7 +7,7 @@ import {
   MessageDto,
   MessageState,
   MessageType,
-} from '../meeting/meeting';
+} from '../meetings/meetings';
 import { catchError, tap } from 'rxjs/operators';
 import {
   AddGroupMessage,
@@ -16,7 +16,7 @@ import {
   MarkResponseGroupMessageAsSent,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveResponseGroupMessage,
-} from '../meeting/store/meeting-actions';
+} from '../meetings/store/meetings-actions';
 import { Store } from '@ngxs/store';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';

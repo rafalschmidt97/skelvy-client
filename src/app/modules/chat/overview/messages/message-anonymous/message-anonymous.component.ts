@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MessageState } from '../../../../meeting/meeting';
+import { MessageState } from '../../../../meetings/meetings';
 import isOnlyEmojis from 'is-only-emojis';
 
 @Component({

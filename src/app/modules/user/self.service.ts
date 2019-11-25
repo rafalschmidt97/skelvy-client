@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { SyncModel } from './sync';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
-import { MeetingService } from '../meeting/meeting.service';
+import { MeetingsService } from '../meetings/meetings.service';
 import { forkJoin, Observable } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { storageKeys } from '../../core/storage/storage';
@@ -17,7 +17,7 @@ import {
   UpdateFriends,
   UpdateMeetingInvitations,
 } from '../settings/store/settings-actions';
-import { UpdateMeetingsState } from '../meeting/store/meeting-actions';
+import { UpdateMeetingsState } from '../meetings/store/meetings-actions';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,7 @@ import { UpdateMeetingsState } from '../meeting/store/meeting-actions';
 export class SelfService {
   constructor(
     private readonly http: HttpClient,
-    private readonly meetingService: MeetingService,
+    private readonly meetingService: MeetingsService,
     private readonly storage: Storage,
     private readonly translateService: TranslateService,
     private readonly authService: AuthService,

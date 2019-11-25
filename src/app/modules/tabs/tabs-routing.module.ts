@@ -13,11 +13,11 @@ const routes: Routes = [
       },
       {
         path: 'meetings',
-        loadChildren: '../meeting/overview/overview.module#OverviewPageModule',
+        loadChildren: '../meetings/overview/overview.module#OverviewPageModule',
       },
       {
         path: 'explore',
-        loadChildren: '../meeting/explore/explore.module#ExplorePageModule',
+        loadChildren: '../meetings/explore/explore.module#ExplorePageModule',
       },
       {
         path: 'settings',

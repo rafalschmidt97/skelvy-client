@@ -5,11 +5,11 @@ import { _ } from '../../../core/i18n/translate';
 import * as moment from 'moment';
 import { Checkbox } from '../../../shared/form/checkbox/checkbox';
 import { RangeComponent } from '../../../shared/form/range/range.component';
-import { MeetingService } from '../meeting.service';
-import { ActivityDto, MeetingRequestRequest } from '../meeting';
+import { MeetingsService } from '../meetings.service';
+import { ActivityDto, MeetingRequestRequest } from '../meetings';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
-import { MeetingSocketService } from '../meeting-socket.service';
+import { MeetingsSocketService } from '../meetings-socket.service';
 import { Storage } from '@ionic/storage';
 import { isNil } from 'lodash';
 import { storageKeys } from '../../../core/storage/storage';
@@ -35,8 +35,8 @@ export class EditPage implements Form, OnSubmit, OnInit {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly meetingService: MeetingService,
-    private readonly meetingSocket: MeetingSocketService,
+    private readonly meetingService: MeetingsService,
+    private readonly meetingSocket: MeetingsSocketService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly storage: Storage,

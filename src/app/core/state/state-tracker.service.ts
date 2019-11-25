@@ -9,7 +9,7 @@ import {
 } from '../../modules/user/store/user-actions';
 import { concatMap } from 'rxjs/operators';
 import { UserStateModel } from '../../modules/user/store/user-state';
-import { MeetingsStateModel } from '../../modules/meeting/store/meeting-state';
+import { MeetingsStateModel } from '../../modules/meetings/store/meetings-state';
 import {
   AddGroupMessages,
   AddGroupUser,
@@ -18,7 +18,7 @@ import {
   RemoveGroupUser,
   RemoveResponseGroupMessage,
   UpdateMeetingsState,
-} from '../../modules/meeting/store/meeting-actions';
+} from '../../modules/meetings/store/meetings-actions';
 import {
   AddFriend,
   AddFriends,

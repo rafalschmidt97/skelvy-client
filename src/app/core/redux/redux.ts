@@ -1,8 +1,8 @@
 import { UserState, UserStateModel } from '../../modules/user/store/user-state';
 import {
-  MeetingState,
+  MeetingsState,
   MeetingsStateModel,
-} from '../../modules/meeting/store/meeting-state';
+} from '../../modules/meetings/store/meetings-state';
 import {
   Connection,
   GlobalState,
@@ -21,7 +21,7 @@ export interface AppStateModel {
   settings: SettingsStateModel;
 }
 
-export const appState = [GlobalState, UserState, MeetingState, SettingsState];
+export const appState = [GlobalState, UserState, MeetingsState, SettingsState];
 
 export class ClearState {
   static readonly type = '[App] Clear state';

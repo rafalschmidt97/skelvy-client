@@ -9,10 +9,10 @@ import {
 } from '@aspnet/signalr';
 import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
-import { MeetingSocketService } from '../meeting/meeting-socket.service';
+import { MeetingsSocketService } from '../meetings/meetings-socket.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
-import { MeetingService } from '../meeting/meeting.service';
+import { MeetingsService } from '../meetings/meetings.service';
 import { Connection } from '../../core/state/global-state';
 import { tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
@@ -30,8 +30,8 @@ export class UserSocketService {
   constructor(
     private readonly sessionService: SessionService,
     private readonly toastService: ToastService,
-    private readonly meetingSocket: MeetingSocketService,
-    private readonly meetingService: MeetingService,
+    private readonly meetingSocket: MeetingsSocketService,
+    private readonly meetingService: MeetingsService,
     private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
     private readonly store: Store,

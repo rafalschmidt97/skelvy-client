@@ -7,7 +7,7 @@ import {
   MessageDto,
   MessageState,
   MessageType,
-} from '../../../meeting/meeting';
+} from '../../../meetings/meetings';
 import { UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
 import { ChatService } from '../../chat.service';
@@ -15,7 +15,7 @@ import { Storage } from '@ionic/storage';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { ModalController, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { MeetingService } from '../../../meeting/meeting.service';
+import { MeetingsService } from '../../../meetings/meetings.service';
 import { Store } from '@ngxs/store';
 import { ImageViewerComponent } from '../image-viewer/image-viewer.component';
 import { MessageActionModalComponent } from './message-action-modal/message-action-modal.component';
@@ -41,7 +41,7 @@ export class MessagesComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly router: Router,
     private readonly storage: Storage,
-    private readonly meetingService: MeetingService,
+    private readonly meetingService: MeetingsService,
     private readonly chatService: ChatService,
     private readonly modalController: ModalController,
     private readonly store: Store,

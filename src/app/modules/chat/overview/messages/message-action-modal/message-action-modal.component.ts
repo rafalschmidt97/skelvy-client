@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
-import { MessageState } from '../../../../meeting/meeting';
+import { MessageState } from '../../../../meetings/meetings';
 import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../../../core/i18n/translate';
 import { ChatService } from '../../../chat.service';
-import { MeetingService } from '../../../../meeting/meeting.service';
+import { MeetingsService } from '../../../../meetings/meetings.service';
 import { ToastService } from '../../../../../core/toast/toast.service';
 import { Router } from '@angular/router';
 
@@ -18,7 +18,7 @@ export class MessageActionModalComponent {
   constructor(
     private readonly modalController: ModalController,
     private readonly chatService: ChatService,
-    private readonly meetingService: MeetingService,
+    private readonly meetingService: MeetingsService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly router: Router,

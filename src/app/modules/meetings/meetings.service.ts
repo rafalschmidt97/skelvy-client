@@ -8,7 +8,7 @@ import {
   MeetingModel,
   MeetingRequestRequest,
   MeetingSuggestionsModel,
-} from './meeting';
+} from './meetings';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
@@ -22,12 +22,12 @@ import {
   RemoveMeeting,
   RemoveRequest,
   UpdateMeetingsFromModel,
-} from './store/meeting-actions';
+} from './store/meetings-actions';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MeetingService {
+export class MeetingsService {
   constructor(
     private readonly http: HttpClient,
     private readonly storage: Storage,

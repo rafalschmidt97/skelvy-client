@@ -5,7 +5,7 @@ import {
   MeetingRequestDto,
   MessageDto,
   MessageState,
-} from '../meeting';
+} from '../meetings';
 
 export class ChangeMeetingLoadingStatus {
   static readonly type = '[Meetings] Change meeting loading status';

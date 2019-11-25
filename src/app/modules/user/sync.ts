@@ -1,4 +1,4 @@
-import { GroupDto, MeetingDto, MeetingRequestDto } from '../meeting/meeting';
+import { GroupDto, MeetingDto, MeetingRequestDto } from '../meetings/meetings';
 import { FriendInvitation, MeetingInvitation } from './user';
 
 export interface SyncModel {

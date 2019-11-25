@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { GroupState, MeetingDto } from '../../meeting';
+import { GroupState, MeetingDto } from '../../meetings';
 import { UserDto } from '../../../user/user';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { _ } from '../../../../core/i18n/translate';
 import { LoadingService } from '../../../../core/loading/loading.service';
-import { MeetingService } from '../../meeting.service';
+import { MeetingsService } from '../../meetings.service';
 import { ModalController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -31,7 +31,7 @@ export class FoundComponent {
     private readonly modalController: ModalController,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
-    private readonly meetingService: MeetingService,
+    private readonly meetingService: MeetingsService,
     private readonly routerNavigation: NavController,
     private readonly storage: Storage,
     private readonly store: Store,

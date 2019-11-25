@@ -1,4 +1,4 @@
-import { MeetingWithUsersDto } from '../meeting/meeting';
+import { MeetingWithUsersDto } from '../meetings/meetings';
 
 export interface UserDto {
   id: number;

@@ -26,7 +26,7 @@ const routes: Routes = [
       },
       {
         path: 'meetings',
-        loadChildren: './modules/meeting/meeting.module#MeetingModule',
+        loadChildren: './modules/meetings/meetings.module#MeetingsModule',
       },
       {
         path: 'chat',

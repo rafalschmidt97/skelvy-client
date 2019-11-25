@@ -6,7 +6,7 @@ import {
   MessageDto,
   MessageState,
   MessageType,
-} from '../meeting';
+} from '../meetings';
 import { Action, State, StateContext } from '@ngxs/store';
 import {
   AddGroupMessage,
@@ -22,7 +22,7 @@ import {
   RemoveRequest,
   RemoveResponseGroupMessage,
   UpdateMeetingsState,
-} from './meeting-actions';
+} from './meetings-actions';
 
 export interface MeetingsStateModel {
   loading: boolean;
@@ -40,7 +40,7 @@ export interface MeetingsStateModel {
     groups: [],
   },
 })
-export class MeetingState {
+export class MeetingsState {
   @Action(ChangeMeetingLoadingStatus)
   changeMeetingLoadingStatus(
     { getState, setState }: StateContext<MeetingsStateModel>,

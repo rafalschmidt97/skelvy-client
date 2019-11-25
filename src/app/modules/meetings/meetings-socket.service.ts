@@ -4,10 +4,10 @@ import { SessionService } from '../../core/auth/session.service';
 import { ToastService } from '../../core/toast/toast.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-import { MeetingService } from './meeting.service';
+import { MeetingsService } from './meetings.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
-import { MessageActionType, MessageDto, MessageType } from './meeting';
+import { MessageActionType, MessageDto, MessageType } from './meetings';
 import { Store } from '@ngxs/store';
 import { ChatService } from '../chat/chat.service';
 import { BackgroundService } from '../../core/background/background.service';
@@ -19,9 +19,9 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class MeetingSocketService {
+export class MeetingsSocketService {
   private userSocket: HubConnection;
-  private readonly meetingNotifications = [
+  private readonly meetingsNotifications = [
     _('USER_SENT_PHOTO'),
     _('USER_SENT_MESSAGE'),
     _('MEETING'),
@@ -39,7 +39,7 @@ export class MeetingSocketService {
     private readonly toastService: ToastService,
     private readonly router: Router,
     private readonly routerNavigation: NavController,
-    private readonly meetingService: MeetingService,
+    private readonly meetingService: MeetingsService,
     private readonly storage: Storage,
     private readonly store: Store,
     private readonly chatService: ChatService,

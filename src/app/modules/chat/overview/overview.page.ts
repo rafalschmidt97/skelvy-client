@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MeetingsStateModel } from '../../meeting/store/meeting-state';
+import { MeetingsStateModel } from '../../meetings/store/meetings-state';
 import { Observable } from 'rxjs';
 import { UserStateModel } from '../../user/store/user-state';
 import { GlobalStateModel } from '../../../core/state/global-state';
