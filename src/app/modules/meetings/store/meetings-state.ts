@@ -21,7 +21,9 @@ import {
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveRequest,
   RemoveResponseGroupMessage,
+  UpdateMeetingsFromModel,
   UpdateMeetingsState,
+  UpdateRequests,
 } from './meetings-actions';
 
 export interface MeetingsStateModel {
@@ -96,6 +98,24 @@ export class MeetingsState {
   ) {
     const state = getState();
     setState({ ...state, meetings, requests, groups });
+  }
+
+  @Action(UpdateMeetingsFromModel)
+  updateMeetingsFromModel(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { meetings, groups }: UpdateMeetingsFromModel,
+  ) {
+    const state = getState();
+    setState({ ...state, meetings, groups });
+  }
+
+  @Action(UpdateRequests)
+  updateRequests(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { requests }: UpdateRequests,
+  ) {
+    const state = getState();
+    setState({ ...state, requests });
   }
 
   @Action(AddGroupMessage)

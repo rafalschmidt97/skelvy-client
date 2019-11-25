@@ -6,6 +6,7 @@ import { catchError, tap } from 'rxjs/operators';
 import {
   ActivityDto,
   MeetingModel,
+  MeetingRequestDto,
   MeetingRequestRequest,
   MeetingSuggestionsModel,
 } from './meetings';
@@ -22,6 +23,7 @@ import {
   RemoveMeeting,
   RemoveRequest,
   UpdateMeetingsFromModel,
+  UpdateRequests,
 } from './store/meetings-actions';
 
 @Injectable({
@@ -60,6 +62,29 @@ export class MeetingsService {
       );
   }
 
+  findRequests(
+    markedAsLoading: boolean = false,
+  ): Observable<MeetingRequestDto[]> {
+    if (!markedAsLoading) {
+      this.store.dispatch(new ChangeMeetingLoadingStatus(true));
+    }
+
+    return this.http
+      .get<MeetingRequestDto[]>(
+        `${environment.versionApiUrl}requests/self?language=${this.translateService.currentLang}`,
+      )
+      .pipe(
+        tap(requests => {
+          this.store.dispatch(new UpdateRequests(requests));
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+        }),
+        catchError(error => {
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+          return throwError(error);
+        }),
+      );
+  }
+
   leaveMeeting(meetingId: number, groupId: number): Observable<void> {
     return this.http
       .post<void>(environment.versionApiUrl + 'meetings/self/leave', null)
@@ -74,7 +99,7 @@ export class MeetingsService {
 
   createMeetingRequest(request: MeetingRequestRequest): Observable<void> {
     return this.http.post<void>(
-      environment.versionApiUrl + 'meetings/self/requests',
+      environment.versionApiUrl + 'requests',
       request,
     );
   }

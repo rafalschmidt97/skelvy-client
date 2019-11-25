@@ -93,6 +93,7 @@ export interface MeetingRequestRequest {
   latitude: number;
   longitude: number;
   activities: MeetingRequestActivityRequest[];
+  description?: string;
 }
 
 export interface MeetingRequestActivityRequest {

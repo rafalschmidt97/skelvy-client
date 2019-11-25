@@ -36,6 +36,11 @@ export class UpdateMeetingsFromModel {
   constructor(public meetings: MeetingDto[], public groups: GroupDto[]) {}
 }
 
+export class UpdateRequests {
+  static readonly type = '[Meetings] Update requests';
+  constructor(public requests: MeetingRequestDto[]) {}
+}
+
 export class AddGroupMessage {
   static readonly type = '[Groups] Add message';
   constructor(public groupId: number, public message: MessageState) {}

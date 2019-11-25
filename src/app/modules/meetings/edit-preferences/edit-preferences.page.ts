@@ -14,9 +14,10 @@ import { Storage } from '@ionic/storage';
 import { isNil } from 'lodash';
 import { storageKeys } from '../../../core/storage/storage';
 import { Store } from '@ngxs/store';
+import { InputComponent } from '../../../shared/form/input/input.component';
 
 @Component({
-  selector: 'app-edit',
+  selector: 'app-edit-preferences',
   templateUrl: './edit-preferences.page.html',
   styleUrls: ['./edit-preferences.page.scss'],
 })
@@ -47,6 +48,14 @@ export class EditPreferencesPage implements Form, OnSubmit, OnInit {
       address: [null, Validators.required],
       age: [[18, 25], RangeComponent.minimumRangeValidator(4)],
       activities: [[], Validators.required],
+      description: [
+        '',
+        [
+          Validators.maxLength(500),
+          InputComponent.maxEndline(5),
+          InputComponent.maxWhiteSpaces(200),
+        ],
+      ],
     });
   }
 
@@ -85,23 +94,20 @@ export class EditPreferencesPage implements Form, OnSubmit, OnInit {
         activities: form.activities.map(activityId => {
           return { id: activityId };
         }),
+        description: form.description,
       };
 
       this.meetingService.createMeetingRequest(request).subscribe(
         async () => {
           await this.storage.set(storageKeys.lastRequestForm, form);
 
-          this.meetingService.findMeeting().subscribe(
+          this.meetingService.findRequests().subscribe(
             () => {
-              if (window.history.length > 1) {
-                this.routerNavigation.back();
-              } else {
-                this.routerNavigation.navigateBack(['/app/tabs/meetings']);
-              }
+              this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             },
             () => {
               this.toastService.createError(
-                _('A problem occurred while finding the meeting'),
+                _('A problem occurred while finding requests'),
               );
             },
           );
