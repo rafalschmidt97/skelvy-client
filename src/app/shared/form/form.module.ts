@@ -17,6 +17,10 @@ import { RadioComponent } from './radio/radio.component';
 import { SwitchComponent } from './switch/switch.component';
 import { CalendarModalComponent } from './calendar/calendar-modal/calendar-modal.component';
 import { ModalModule } from '../components/modal/modal.module';
+import { AddressSearchModalComponent } from './address/address-search-modal/address-search-modal.component';
+import { AddressComponent } from './address/address.component';
+import { AutofocusDirective } from './address/autofocus.directive';
+import { AddressItemComponent } from './address/address-item/address-item.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +36,12 @@ import { ModalModule } from '../components/modal/modal.module';
     RadioComponent,
     SwitchComponent,
     CalendarModalComponent,
+    AddressSearchModalComponent,
+    AddressComponent,
+    AutofocusDirective,
+    AddressItemComponent,
   ],
-  entryComponents: [CalendarModalComponent],
+  entryComponents: [CalendarModalComponent, AddressSearchModalComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -58,6 +66,7 @@ import { ModalModule } from '../components/modal/modal.module';
     CheckboxComponent,
     RadioComponent,
     SwitchComponent,
+    AddressComponent,
   ],
 })
 export class FormModule {}

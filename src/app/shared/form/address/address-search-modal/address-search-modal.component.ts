@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { MapsResponse, MapsResponseType } from '../../../../../core/maps/maps';
-import { _ } from '../../../../../core/i18n/translate';
+import { MapsResponse, MapsResponseType } from '../../../../core/maps/maps';
+import { _ } from '../../../../core/i18n/translate';
 import { of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { ToastService } from '../../../../../core/toast/toast.service';
+import { ToastService } from '../../../../core/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MapsService } from '../../../../../core/maps/maps.service';
+import { MapsService } from '../../../../core/maps/maps.service';
 import { ModalController } from '@ionic/angular';
 
 @Component({

@@ -8,8 +8,9 @@ const routes: Routes = [
     loadChildren: './add/add.module#AddPageModule',
   },
   {
-    path: 'edit',
-    loadChildren: './edit/edit.module#EditPageModule',
+    path: 'edit-preferences',
+    loadChildren:
+      './edit-preferences/edit-preferences.module#EditPreferencesPageModule',
   },
 ];
 

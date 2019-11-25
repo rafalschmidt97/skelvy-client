@@ -17,10 +17,10 @@ import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-edit',
-  templateUrl: './edit.page.html',
-  styleUrls: ['./edit.page.scss'],
+  templateUrl: './edit-preferences.page.html',
+  styleUrls: ['./edit-preferences.page.scss'],
 })
-export class EditPage implements Form, OnSubmit, OnInit {
+export class EditPreferencesPage implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
   activities: Checkbox[];

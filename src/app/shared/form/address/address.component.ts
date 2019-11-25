@@ -1,9 +1,9 @@
 import { Component, forwardRef, Inject, Input, OnInit } from '@angular/core';
-import { ComplexFieldComponent } from '../../../../shared/form/complex-field.component';
-import { FormComponent } from '../../../../shared/form/form.component';
-import { MapsService } from '../../../../core/maps/maps.service';
+import { ComplexFieldComponent } from '../complex-field.component';
+import { FormComponent } from '../form.component';
+import { MapsService } from '../../../core/maps/maps.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MapsResponse } from '../../../../core/maps/maps';
+import { MapsResponse } from '../../../core/maps/maps';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { isNil } from 'lodash';
 import { AddressSearchModalComponent } from './address-search-modal/address-search-modal.component';

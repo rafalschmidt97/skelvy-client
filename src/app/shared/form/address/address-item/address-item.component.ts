@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MapsResponse, MapsResponseType } from '../../../../../core/maps/maps';
+import { MapsResponse, MapsResponseType } from '../../../../core/maps/maps';
 
 @Component({
   selector: 'app-address-item',
