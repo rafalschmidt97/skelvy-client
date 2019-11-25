@@ -1,5 +1,9 @@
 @import '~src/theme/bootstrap/variables';
 
+.bg-ultra-light {
+  background: gray('100');
+}
+
 .suggestions {
   padding: 8px 12px;
 
@@ -41,5 +45,21 @@
   .information {
     font-size: 70%;
     padding-top: 2px;
+  }
+}
+
+.empty {
+  .header {
+    font-size: 1.7rem;
+    font-weight: 300;
+    max-width: 330px;
+  }
+
+  .big-icon {
+    font-size: 140px;
+  }
+
+  .content {
+    max-width: 330px;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MeetingDto } from '../../../../modules/meeting/meeting';
+import { MeetingWithUsersDto } from '../../meeting';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
 
@@ -9,7 +9,7 @@ import * as moment from 'moment';
   styleUrls: ['./meeting-suggestions-modal.component.scss'],
 })
 export class MeetingSuggestionsModalComponent {
-  @Input() meeting: MeetingDto;
+  @Input() meeting: MeetingWithUsersDto;
 
   constructor(private readonly modalController: ModalController) {}
 

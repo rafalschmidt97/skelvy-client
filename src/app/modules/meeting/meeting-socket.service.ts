@@ -155,7 +155,7 @@ export class MeetingSocketService {
             );
 
             if (this.router.url === '/app/chat') {
-              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+              this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             }
           },
           () => {
@@ -193,7 +193,7 @@ export class MeetingSocketService {
         this.toastService.createInformation(_('The meeting has expired'));
 
         if (this.router.url === '/app/chat') {
-          this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+          this.routerNavigation.navigateBack(['/app/tabs/meetings']);
         }
 
         this.meetingService.clearMeeting(meetingId);

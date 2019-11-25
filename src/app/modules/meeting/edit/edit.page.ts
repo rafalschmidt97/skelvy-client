@@ -6,11 +6,7 @@ import * as moment from 'moment';
 import { Checkbox } from '../../../shared/form/checkbox/checkbox';
 import { RangeComponent } from '../../../shared/form/range/range.component';
 import { MeetingService } from '../meeting.service';
-import {
-  ActivityDto,
-  MeetingRequestRequest,
-  MeetingSuggestionsModel,
-} from '../meeting';
+import { ActivityDto, MeetingRequestRequest } from '../meeting';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { MeetingSocketService } from '../meeting-socket.service';
@@ -36,8 +32,6 @@ export class EditPage implements Form, OnSubmit, OnInit {
     .startOf('day')
     .toDate();
   loadingForm = true;
-  loadingSuggestions = false;
-  suggestions: MeetingSuggestionsModel;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -75,10 +69,6 @@ export class EditPage implements Form, OnSubmit, OnInit {
         );
       },
     );
-
-    this.form.get('address').valueChanges.subscribe(address => {
-      this.findSuggestions(address.latitude, address.longitude);
-    });
   }
 
   onSubmit() {
@@ -106,7 +96,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
               if (window.history.length > 1) {
                 this.routerNavigation.back();
               } else {
-                this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+                this.routerNavigation.navigateBack(['/app/tabs/meetings']);
               }
             },
             () => {
@@ -121,79 +111,6 @@ export class EditPage implements Form, OnSubmit, OnInit {
           this.toastService.createError(
             _('A problem occurred while creating the request'),
           );
-        },
-      );
-    }
-  }
-
-  join(meetingId: number) {
-    if (!this.isLoading) {
-      this.isLoading = true;
-
-      this.meetingService.joinMeeting(meetingId).subscribe(
-        () => {
-          this.meetingService.findMeeting().subscribe(
-            () => {
-              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-            },
-            () => {
-              this.toastService.createError(
-                _('A problem occurred while finding the meeting'),
-              );
-            },
-          );
-        },
-        () => {
-          this.isLoading = false;
-          this.toastService.createError(
-            _('A problem occurred while joining the meeting'),
-          );
-          const { latitude, longitude } = this.form.get('address').value;
-          this.findSuggestions(latitude, longitude);
-        },
-      );
-    }
-  }
-
-  connect(requestId: number) {
-    if (!this.isLoading) {
-      this.isLoading = true;
-
-      this.meetingService.connectMeetingRequest(requestId).subscribe(
-        () => {
-          this.meetingService.findMeeting().subscribe(
-            () => {
-              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
-            },
-            () => {
-              this.toastService.createError(
-                _('A problem occurred while finding the meeting'),
-              );
-            },
-          );
-        },
-        () => {
-          this.isLoading = false;
-          this.toastService.createError(
-            _('A problem occurred while connecting the request'),
-          );
-          const { latitude, longitude } = this.form.get('address').value;
-          this.findSuggestions(latitude, longitude);
-        },
-      );
-    }
-  }
-
-  findSuggestions(latitude: number, longitude: number) {
-    if (!this.loadingSuggestions) {
-      this.loadingSuggestions = true;
-      this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
-        suggestions => {
-          this.suggestions = suggestions;
-          this.loadingSuggestions = false;
-        },
-        () => {
-          this.loadingSuggestions = false;
         },
       );
     }

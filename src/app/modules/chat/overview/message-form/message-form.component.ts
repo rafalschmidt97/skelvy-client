@@ -195,7 +195,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
             this.meetingService.findMeeting().subscribe();
 
             if (this.router.url === '/app/chat') {
-              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+              this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             }
 
             this.toastService.createError(
@@ -232,7 +232,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
             this.meetingService.findMeeting().subscribe();
 
             if (this.router.url === '/app/chat') {
-              this.routerNavigation.navigateBack(['/app/tabs/meeting']);
+              this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             }
 
             this.toastService.createError(

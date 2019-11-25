@@ -2,7 +2,7 @@ export const storageKeys = {
   language: 'language',
   signInMethod: 'sign-in-method',
   user: 'user',
-  meetings: 'meeting',
+  meetings: 'meetings',
   requests: 'requests',
   groups: 'groups',
   friends: 'friends',

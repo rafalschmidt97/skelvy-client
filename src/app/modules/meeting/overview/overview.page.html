@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ 'Meeting' | translate }}</ion-title>
+    <ion-title>{{ 'Meetings' | translate }}</ion-title>
     <ion-buttons *ngIf="($meetings | async).loading" slot="end">
       <ion-button [disabled]="true">
         <ion-spinner color="dark" class="small-spinner"></ion-spinner>
@@ -22,7 +22,10 @@
         <label
           [innerText]="'More events in the future in your mind?' | translate"
         ></label>
-        <button type="button" class="btn btn-primary btn-block">
+        <button
+          routerLink="/app/tabs/explore"
+          class="btn btn-primary btn-block"
+        >
           Explore meetings
         </button>
       </section>

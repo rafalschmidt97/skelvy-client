@@ -57,6 +57,11 @@ export class SelfService {
           if (!user) {
             user = await this.http
               .get<SelfUserDto>(environment.versionApiUrl + 'users/self')
+              .pipe(
+                tap(async () => {
+                  await this.storage.set(storageKeys.user, user);
+                }),
+              )
               .toPromise();
           }
 
@@ -67,21 +72,36 @@ export class SelfService {
             !friendInvitations ||
             !meetingInvitations
           ) {
-            const sync = await this.sync().toPromise();
-            await this.initializeState(user, sync, friends);
+            await this.sync()
+              .pipe(
+                tap(async sync => {
+                  await this.storage.set(storageKeys.meetings, sync.meetings);
+                  await this.storage.set(storageKeys.requests, sync.requests);
+                  await this.storage.set(storageKeys.groups, sync.groups);
+                  await this.storage.set(
+                    storageKeys.friendInvitations,
+                    sync.friendInvitations,
+                  );
+                  await this.storage.set(
+                    storageKeys.meetingInvitations,
+                    sync.meetingInvitations,
+                  );
+                }),
+              )
+              .toPromise();
+            this.initializeUser(user);
+            this.initializeFriends(friends);
             return { fromStorage: false };
           } else {
-            await this.initializeState(
-              user,
-              {
-                meetings,
-                groups,
-                requests,
-                friendInvitations,
-                meetingInvitations,
-              },
-              friends,
-            );
+            this.initializeSync({
+              meetings,
+              groups,
+              requests,
+              friendInvitations,
+              meetingInvitations,
+            });
+            this.initializeUser(user);
+            this.initializeFriends(friends);
             return { fromStorage: true };
           }
         },
@@ -106,21 +126,17 @@ export class SelfService {
       );
   }
 
-  private async initializeState(
-    user: SelfUserDto,
-    sync: SyncModel,
-    friends: UserDto[],
-  ) {
-    await this.initializeSync(sync);
-
-    this.store.dispatch(new UpdateUser(user));
-
+  private initializeFriends(friends: UserDto[]) {
     if (friends) {
       this.store.dispatch(new UpdateFriends(friends));
     }
   }
 
-  private async initializeSync(sync: SyncModel) {
+  private initializeUser(user: SelfUserDto) {
+    this.store.dispatch(new UpdateUser(user));
+  }
+
+  private initializeSync(sync: SyncModel) {
     this.store.dispatch(
       new UpdateMeetingsState(sync.meetings, sync.requests, sync.groups),
     );

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MeetingRequestWithUserDto } from '../../../../modules/meeting/meeting';
+import { MeetingRequestWithUserDto } from '../../meeting';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
 

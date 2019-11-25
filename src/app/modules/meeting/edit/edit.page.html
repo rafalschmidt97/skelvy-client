@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button
         [hidden]="isLoading"
-        defaultHref="/app/tabs/meeting"
+        defaultHref="/app/tabs/meetings"
       ></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'Add meeting' | translate }}</ion-title>
@@ -43,13 +43,6 @@
           [label]="'Address' | translate"
           [placeholder]="'Type in your city...' | translate"
         ></app-address>
-        <app-meeting-suggestions
-          [suggestions]="suggestions"
-          [isLoading]="isLoading || loadingSuggestions"
-          [inForm]="true"
-          (connect)="connect($event)"
-          (join)="join($event)"
-        ></app-meeting-suggestions>
         <app-range
           name="age"
           [min]="18"

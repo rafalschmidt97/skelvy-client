@@ -20,7 +20,7 @@ export class UserService {
     private readonly store: Store,
   ) {}
 
-  findUser(markedAsLoading: boolean = false): Observable<SelfUserDto> {
+  findSelf(markedAsLoading: boolean = false): Observable<SelfUserDto> {
     if (!markedAsLoading) {
       this.store.dispatch(new ChangeUserLoadingStatus(true));
     }

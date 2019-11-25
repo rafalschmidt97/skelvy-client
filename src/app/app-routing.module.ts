@@ -25,7 +25,7 @@ const routes: Routes = [
         loadChildren: './modules/user/user.module#UserModule',
       },
       {
-        path: 'meeting',
+        path: 'meetings',
         loadChildren: './modules/meeting/meeting.module#MeetingModule',
       },
       {
@@ -36,7 +36,7 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: './modules/settings/settings.module#SettingsModule',
       },
-      { path: '', redirectTo: 'tabs/meeting', pathMatch: 'full' },
+      { path: '', redirectTo: 'tabs/meetings', pathMatch: 'full' },
     ],
   },
 ];

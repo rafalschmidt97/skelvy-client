@@ -64,7 +64,7 @@ export class DataPage {
   confirmRefreshUser() {
     this.isLoading = true;
     this.loadingService.lock();
-    this.userService.findUser().subscribe(
+    this.userService.findSelf().subscribe(
       () => {
         this.isLoading = false;
         this.loadingService.unlock();
