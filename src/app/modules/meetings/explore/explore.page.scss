@@ -1,17 +1,6 @@
 @import '~src/theme/bootstrap/variables';
 
-.bg-ultra-light {
-  background: gray('100');
-}
-
 .suggestions {
-  padding: 8px 12px;
-
-  &.form {
-    border-radius: $input-border-radius;
-    margin: 0 -10px 16px -10px;
-  }
-
   &.disabled {
     background: gray('600') !important;
 
@@ -27,17 +16,17 @@
 
   .item {
     border-radius: $input-border-radius;
+    border: 1px solid gray('300');
+    background: gray('100');
     font-size: 14px;
   }
 
   .join {
-    white-space: nowrap;
-    font-weight: 600;
-    font-size: 1rem;
+    font-size: 20px;
   }
 
   .meetings.has-sibling {
-    border-bottom: 1px solid $white;
+    border-bottom: 1px solid gray('300');
     padding-bottom: 20px;
     margin-bottom: 10px;
   }
@@ -62,4 +51,11 @@
   .content {
     max-width: 330px;
   }
+}
+
+.guidelines {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: gray('700');
+  border-bottom: 1px solid $border-color;
 }

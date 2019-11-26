@@ -126,6 +126,27 @@ export class ExplorePage implements OnInit {
     }
   }
 
+  refreshSuggestions(event) {
+    if (!this.isLoading && !this.isLoadingSuggestions) {
+      this.isLoadingSuggestions = true;
+      this.meetingService
+        .findMeetingSuggestions(this.latitude, this.longitude)
+        .subscribe(
+          suggestions => {
+            this.suggestions = suggestions;
+            this.isLoadingSuggestions = false;
+            event.target.complete();
+          },
+          () => {
+            this.isLoadingSuggestions = false;
+            event.target.complete();
+          },
+        );
+    } else {
+      event.target.complete();
+    }
+  }
+
   getDate(minDate: string | Date, maxDate: string | Date): string {
     if (maxDate !== minDate) {
       return `${moment(minDate).format('DD.MM.YYYY')} - ${moment(
