@@ -3,10 +3,6 @@
 .suggestions {
   &.disabled {
     background: gray('600') !important;
-
-    .join {
-      color: gray('600') !important;
-    }
   }
 
   label,
@@ -19,10 +15,6 @@
     border: 1px solid gray('300');
     background: gray('100');
     font-size: 14px;
-  }
-
-  .join {
-    font-size: 20px;
   }
 
   .meetings.has-sibling {

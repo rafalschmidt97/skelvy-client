@@ -106,7 +106,7 @@ export class MeetingsService {
 
   removeMeetingRequest(requestId: number): Observable<void> {
     return this.http
-      .delete<void>(environment.versionApiUrl + 'meetings/self/requests')
+      .delete<void>(`${environment.versionApiUrl}requests/${requestId}`)
       .pipe(
         tap(() => {
           this.store.dispatch(new RemoveRequest(requestId));
