@@ -12,11 +12,11 @@ import { ToastService } from '../../core/toast/toast.service';
 import { MeetingsSocketService } from '../meetings/meetings-socket.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NavController } from '@ionic/angular';
-import { MeetingsService } from '../meetings/meetings.service';
 import { Connection } from '../../core/state/global-state';
 import { tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { ChangeConnectionStatus } from '../../core/state/global-actions';
+import { SelfService } from './self.service';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +31,7 @@ export class UserSocketService {
     private readonly sessionService: SessionService,
     private readonly toastService: ToastService,
     private readonly meetingSocket: MeetingsSocketService,
-    private readonly meetingService: MeetingsService,
+    private readonly selfService: SelfService,
     private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
     private readonly store: Store,
@@ -145,7 +145,7 @@ export class UserSocketService {
           this.reconnectFailedAttempts = 0;
           this.store.dispatch(new ChangeConnectionStatus(Connection.CONNECTED));
           this.disconnected = false;
-          this.meetingService.findMeeting().subscribe();
+          this.selfService.sync().subscribe();
         })
         .catch(error => {
           this.reconnectFailedAttempts++;

@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/tabs/meetings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Meeting' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showMessages()">
+        <ion-icon name="chatbubbles" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="meeting && group" class="d-flex flex-column minh-100 flex-column">
+    <section class="d-flex flex-grow-1 bg-ultra-light py-3">
+      <div class="my-auto w-100 text-center header container">
+        {{ meeting.activity.name | translate }}
+        <ion-icon name="heart" class="header-icon"></ion-icon>
+      </div>
+    </section>
+    <section class="info">
+      <div class="d-flex text-center border-bottom border-top">
+        <div class="w-50 py-2 border-right">
+          <div class="font-weight-bold">{{ 'Date' | translate }}</div>
+          <div>{{ meeting.date | date: 'dd.MM.yyyy' }}</div>
+        </div>
+        <div class="py-2 w-50">
+          <div class="font-weight-bold">{{ 'City' | translate }}</div>
+          <div>{{ meeting.city }}</div>
+        </div>
+      </div>
+      <div class="d-flex text-center border-bottom">
+        <div class="w-50 py-2 border-right">
+          <div class="font-weight-bold">{{ 'Size' | translate }}</div>
+          <div>{{ group.users.length }} / {{ meeting.size }}</div>
+        </div>
+        <div class="py-2 w-50">
+          <div class="font-weight-bold">{{ 'Status' | translate }}</div>
+          <div>
+            <ng-container *ngIf="meeting.isHidden; else notHidden">
+              {{ 'Private' | translate }}
+              <ion-icon name="lock" class="icon-hidden align-middle"></ion-icon>
+            </ng-container>
+            <ng-template #notHidden>
+              {{ 'Public' | translate }}
+              <ion-icon
+                name="unlock"
+                class="icon-hidden align-middle"
+              ></ion-icon>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="users border-bottom">
+      <app-profile-preview
+        *ngFor="let user of filteredMeetingUsers"
+        [user]="user"
+        (openDetails)="openDetails($event)"
+      ></app-profile-preview>
+      <app-profile-missing
+        [size]="meeting.size"
+        [length]="group.users.length"
+        [isHidden]="meeting.isHidden"
+      ></app-profile-missing>
+    </section>
+    <section class="more">
+      <div class="container py-2">
+        <button (click)="openLeave()" class="btn btn-outline-primary btn-block">
+          <span
+            [hidden]="loadingLeave"
+            [innerText]="'Leave group' | translate"
+          ></span>
+          <ion-spinner [hidden]="!loadingLeave"></ion-spinner>
+        </button>
+      </div>
+    </section>
+  </div>
+</ion-content>

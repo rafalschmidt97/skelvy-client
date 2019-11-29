@@ -8,9 +8,17 @@ const routes: Routes = [
     loadChildren: './add/add.module#AddPageModule',
   },
   {
+    path: 'details/:id',
+    loadChildren: './details/details.module#DetailsPageModule',
+  },
+  {
     path: 'edit-preferences',
     loadChildren:
       './edit-preferences/edit-preferences.module#EditPreferencesPageModule',
+  },
+  {
+    path: 'edit-meeting',
+    loadChildren: './edit-meeting/edit-meeting.module#EditMeetingPageModule',
   },
 ];
 

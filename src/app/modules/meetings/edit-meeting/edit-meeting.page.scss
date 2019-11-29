@@ -1,0 +1,8 @@
+@import '~src/theme/bootstrap/variables';
+
+.guidelines {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: gray('700');
+  border-bottom: 1px solid $border-color;
+}

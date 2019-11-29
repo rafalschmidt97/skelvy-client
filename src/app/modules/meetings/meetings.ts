@@ -11,7 +11,6 @@ export interface MeetingDto {
   latitude: number;
   longitude: number;
   size: number;
-  isPrivate: boolean;
   isHidden: boolean;
   city: string;
   groupId: number;
@@ -78,11 +77,20 @@ export interface MeetingRequestWithUserDto {
 export interface ActivityDto {
   id: number;
   name: string;
+  size: number;
 }
 
 export interface MeetingSuggestionsModel {
   meetingRequests: MeetingRequestWithUserDto[];
   meetings: MeetingWithUsersDto[];
+}
+
+export interface MeetingRequest {
+  date: string;
+  latitude: number;
+  longitude: number;
+  activityId: number;
+  size: number;
 }
 
 export interface MeetingRequestRequest {

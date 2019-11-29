@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { OverviewPage } from './overview.page';
 import { SharedModule } from '../../../shared/shared.module';
+import { EditMeetingPage } from './edit-meeting.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: OverviewPage,
+    component: EditMeetingPage,
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
-  declarations: [OverviewPage],
+  declarations: [EditMeetingPage],
 })
-export class OverviewPageModule {}
+export class EditMeetingPageModule {}

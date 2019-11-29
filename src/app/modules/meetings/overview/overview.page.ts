@@ -12,6 +12,7 @@ import { MeetingsService } from '../meetings.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
+import { GroupState } from '../meetings';
 
 @Component({
   selector: 'app-overview',
@@ -38,6 +39,10 @@ export class OverviewPage {
     }
 
     return moment(minDate).format('DD.MM.YYYY');
+  }
+
+  getGroup(groupId: number, groups: GroupState[]): GroupState {
+    return groups.find(x => x.id === groupId);
   }
 
   async removeRequestAlert(id: number) {

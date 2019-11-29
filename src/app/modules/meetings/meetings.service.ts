@@ -6,6 +6,7 @@ import { catchError, tap } from 'rxjs/operators';
 import {
   ActivityDto,
   MeetingModel,
+  MeetingRequest,
   MeetingRequestDto,
   MeetingRequestRequest,
   MeetingSuggestionsModel,
@@ -112,6 +113,13 @@ export class MeetingsService {
           this.store.dispatch(new RemoveRequest(requestId));
         }),
       );
+  }
+
+  createMeeting(request: MeetingRequest): Observable<void> {
+    return this.http.post<void>(
+      environment.versionApiUrl + 'meetings',
+      request,
+    );
   }
 
   findActivities(): Observable<ActivityDto[]> {

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserDto } from '../../../../user/user';
+import { UserDto } from '../../../user/user';
 
 @Component({
   selector: 'app-profile-preview',

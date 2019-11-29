@@ -1,9 +1,5 @@
 @import '~src/theme/bootstrap/variables';
 
-:host {
-  height: 100%;
-}
-
 .bg-ultra-light {
   background: gray('100');
 }
@@ -23,10 +19,6 @@
   }
 }
 
-.chat-icon {
-  font-size: 24px;
-}
-
-.chat-icon {
-  font-size: 24px;
+.icon-hidden {
+  margin-top: -4px;
 }

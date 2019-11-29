@@ -6,7 +6,7 @@
         defaultHref="/app/meetings/add"
       ></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ 'Add request' | translate }}</ion-title>
+    <ion-title>{{ 'Add meeting' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button
         [disabled]="isLoading || form.invalid || loadingForm"
@@ -23,7 +23,8 @@
     <div class="container py-3">
       <div class="guidelines pb-3 mb-3">
         {{
-          'By choosing more activities or wider range of age and date, you increase your chances of finding quicker new meetings!'
+          'By default meetings you create are hidden which means that only people you invite can join it. ' +
+            'If you will change you mind it is always possible to open it for all people later.'
             | translate
         }}
       </div>
@@ -37,32 +38,23 @@
           name="date"
           [min]="today"
           [label]="'Date' | translate"
-          [range]="true"
         ></app-calendar>
         <app-address
           name="address"
           [label]="'Address' | translate"
           [placeholder]="'Type in your city...' | translate"
         ></app-address>
-        <app-range
-          name="age"
-          [min]="18"
-          [max]="55"
-          [range]="true"
-          [label]="'Age range' | translate"
-          maxLabelToRound="55+"
-          [maxValueToRound]="55"
-        ></app-range>
-        <app-checkbox
+        <app-select
+          name="size"
+          [label]="'Maximum amount of people' | translate"
+          [options]="sizes"
+        ></app-select>
+        <app-radio
           *ngIf="activities?.length > 0"
-          name="activities"
-          [label]="'Activities' | translate"
+          name="activityId"
+          [label]="'Activity' | translate"
           [options]="activities"
-        ></app-checkbox>
-        <app-textarea
-          name="description"
-          [label]="'Extra notes' | translate"
-        ></app-textarea>
+        ></app-radio>
       </app-form>
       <ng-template #loading>
         <div class="text-center py-3">
