@@ -2,7 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/app/tabs/settings', pathMatch: 'full' },
+  {
+    path: '',
+    pathMatch: 'full',
+    loadChildren: './overview/overview.module#OverviewPageModule',
+  },
   { path: 'legal', loadChildren: './legal/legal.module#LegalPageModule' },
   {
     path: 'blocked',

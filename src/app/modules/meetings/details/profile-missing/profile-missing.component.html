@@ -1,0 +1,108 @@
+<ng-container *ngIf="missing !== 0">
+  <ng-container *ngIf="size !== 1; else empty">
+    <div class="container d-flex" [style.height.px]="displayMissing * 98 + 1">
+      <div class="my-auto">
+        <div class="info mb-2">
+          <div class="font-weight-bold text-primary">
+            <ng-container [ngSwitch]="displayMissing">
+              <span
+                *ngSwitchCase="1"
+                [innerText]="'Missing one person' | translate"
+              ></span>
+              <span
+                *ngSwitchCase="2"
+                [innerText]="'Missing two people' | translate"
+              ></span>
+              <span
+                *ngSwitchCase="3"
+                [innerText]="'Missing three people' | translate"
+              ></span>
+              <span
+                *ngSwitchDefault
+                [innerText]="('Missing people' | translate) + ' = ' + missing"
+              ></span>
+            </ng-container>
+          </div>
+        </div>
+        <div class="help">
+          <ng-container *ngIf="!isHidden; else makePublic">
+            <div
+              class="mb-2"
+              [innerText]="
+                'We are looking for more people for you. If you want to help us invite your friends!'
+                  | translate
+              "
+            ></div>
+            <div
+              *ngIf="missing > 1"
+              [innerText]="
+                'Keep in mind that the app is relatively new so it might take a while.'
+                  | translate
+              "
+            ></div>
+          </ng-container>
+          <ng-template #makePublic>
+            <div
+              class="mb-2"
+              [innerText]="
+                'Remember that private groups cannot be seen in the explore tab.'
+                  | translate
+              "
+            ></div>
+            <div
+              *ngIf="missing > 1"
+              [innerText]="
+                'If you need more members it is always possible to change the status.'
+                  | translate
+              "
+            ></div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #empty>
+    <div class="container d-flex" [style.height.px]="missing * 98 + 1">
+      <div class="my-auto">
+        <div class="info mb-2">
+          <div class="font-weight-bold text-primary">
+            <ng-container [ngSwitch]="missing">
+              <span
+                *ngSwitchCase="1"
+                [innerText]="'Missing one person' | translate"
+              ></span>
+              <span
+                *ngSwitchCase="2"
+                [innerText]="'Missing two people' | translate"
+              ></span>
+              <span
+                *ngSwitchCase="3"
+                [innerText]="'Missing three people' | translate"
+              ></span>
+              <span
+                *ngSwitchDefault
+                [innerText]="('Missing people' | translate) + ' = ' + missing"
+              ></span>
+            </ng-container>
+          </div>
+        </div>
+        <div class="help">
+          <div
+            class="mb-2"
+            [innerText]="
+              'We are looking for more people for you. If you want to help us invite your friends!'
+                | translate
+            "
+          ></div>
+          <div
+            *ngIf="missing > 1"
+            [innerText]="
+              'Keep in mind that the app is relatively new so it might take a while.'
+                | translate
+            "
+          ></div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

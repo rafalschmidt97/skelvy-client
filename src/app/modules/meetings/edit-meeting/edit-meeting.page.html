@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        [hidden]="isLoading"
+        defaultHref="/app/meetings/add"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Edit meeting' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        [disabled]="isLoading || form.invalid || loadingForm"
+        (click)="onSubmit()"
+      >
+        {{ 'Done' | translate }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section>
+    <div class="container py-3">
+      <div class="guidelines pb-3 mb-3">
+        {{
+          'Private meeting means that only people you invite can join. ' +
+            'It is always possible to change it later in settings.' | translate
+        }}
+      </div>
+      <app-form
+        [form]="form"
+        (onSubmit)="onSubmit()"
+        [isLoading]="isLoading"
+        *ngIf="!loadingForm; else loading"
+      >
+        <app-calendar
+          name="date"
+          [min]="today"
+          [label]="'Date' | translate"
+        ></app-calendar>
+        <app-address
+          name="address"
+          [label]="'Address' | translate"
+          [placeholder]="'Type in your city...' | translate"
+        ></app-address>
+        <app-select
+          name="size"
+          [label]="'Maximum amount of people' | translate"
+          [options]="sizes"
+        ></app-select>
+        <app-select
+          name="isHidden"
+          [label]="'Should be private' | translate"
+          [options]="hiddenOptions"
+        ></app-select>
+        <app-radio
+          *ngIf="activities?.length > 0"
+          name="activityId"
+          [label]="'Activity' | translate"
+          [options]="activities"
+        ></app-radio>
+      </app-form>
+      <ng-template #loading>
+        <div class="text-center py-3">
+          <ion-spinner></ion-spinner>
+        </div>
+      </ng-template>
+    </div>
+  </section>
+</ion-content>

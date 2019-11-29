@@ -9,21 +9,21 @@ import {
 } from '../../modules/user/store/user-actions';
 import { concatMap } from 'rxjs/operators';
 import { UserStateModel } from '../../modules/user/store/user-state';
-import { MeetingStateModel } from '../../modules/meeting/store/meeting-state';
+import { MeetingsStateModel } from '../../modules/meetings/store/meetings-state';
 import {
-  AddChatMessages,
-  AddMeetingUser,
-  MarkResponseChatMessageAsFailed,
-  MarkResponseChatMessageAsSent,
-  RemoveMeetingUser,
-  RemoveResponseChatMessage,
-  UpdateMeeting,
-} from '../../modules/meeting/store/meeting-actions';
+  AddGroupMessages,
+  AddGroupUser,
+  MarkResponseGroupMessageAsFailed,
+  MarkResponseGroupMessageAsSent,
+  RemoveGroupUser,
+  RemoveResponseGroupMessage,
+  UpdateMeetingsState,
+} from '../../modules/meetings/store/meetings-actions';
 import {
-  AddBlockedUser,
-  AddBlockedUsers,
-  RemoveBlockedUser,
-  UpdateBlockedUsers,
+  AddFriend,
+  AddFriends,
+  RemoveFriend,
+  UpdateFriends,
 } from '../../modules/settings/store/settings-actions';
 import { SettingsStateModel } from '../../modules/settings/store/settings-state';
 
@@ -33,7 +33,8 @@ import { SettingsStateModel } from '../../modules/settings/store/settings-state'
 export class StateTrackerService {
   private userActions: Subscription;
   private meetingActions: Subscription;
-  private blockedUsersActions: Subscription;
+  private groupActions: Subscription;
+  private friendActions: Subscription;
 
   constructor(
     private readonly storage: Storage,
@@ -53,33 +54,38 @@ export class StateTrackerService {
 
     this.meetingActions = this.actions
       .pipe(
-        ofActionSuccessful(
-          UpdateMeeting,
-          AddMeetingUser,
-          RemoveMeetingUser,
-          AddChatMessages,
-          MarkResponseChatMessageAsSent,
-          MarkResponseChatMessageAsFailed,
-          RemoveResponseChatMessage,
-        ),
-        concatMap(() => this.store.selectOnce(state => state.meeting)),
+        ofActionSuccessful(UpdateMeetingsState),
+        concatMap(() => this.store.selectOnce(state => state.meetings)),
       )
-      .subscribe(async (meeting: MeetingStateModel) => {
-        await this.storage.set(storageKeys.meeting, meeting.meetingModel);
+      .subscribe(async (meetings: MeetingsStateModel) => {
+        await this.storage.set(storageKeys.meetings, meetings.meetings);
+        await this.storage.set(storageKeys.requests, meetings.requests);
+        await this.storage.set(storageKeys.groups, meetings.groups);
       });
 
-    this.blockedUsersActions = this.actions
+    this.groupActions = this.actions
       .pipe(
         ofActionSuccessful(
-          UpdateBlockedUsers,
-          AddBlockedUsers,
-          AddBlockedUser,
-          RemoveBlockedUser,
+          AddGroupUser,
+          RemoveGroupUser,
+          AddGroupMessages,
+          MarkResponseGroupMessageAsSent,
+          MarkResponseGroupMessageAsFailed,
+          RemoveResponseGroupMessage,
         ),
+        concatMap(() => this.store.selectOnce(state => state.meetings)),
+      )
+      .subscribe(async (meetings: MeetingsStateModel) => {
+        await this.storage.set(storageKeys.groups, meetings.groups);
+      });
+
+    this.friendActions = this.actions
+      .pipe(
+        ofActionSuccessful(UpdateFriends, AddFriends, AddFriend, RemoveFriend),
         concatMap(() => this.store.selectOnce(state => state.settings)),
       )
       .subscribe(async (settings: SettingsStateModel) => {
-        await this.storage.set(storageKeys.blockedUsers, settings.blockedUsers);
+        await this.storage.set(storageKeys.friends, settings.friends);
       });
   }
 
@@ -92,8 +98,12 @@ export class StateTrackerService {
       this.meetingActions.unsubscribe();
     }
 
-    if (this.blockedUsersActions) {
-      this.blockedUsersActions.unsubscribe();
+    if (this.groupActions) {
+      this.groupActions.unsubscribe();
+    }
+
+    if (this.friendActions) {
+      this.friendActions.unsubscribe();
     }
   }
 }

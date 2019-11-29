@@ -1,68 +1,154 @@
-import { UserDto } from '../../user/user';
+import { FriendInvitation, MeetingInvitation, UserDto } from '../../user/user';
 import { Action, State, StateContext } from '@ngxs/store';
 import {
-  AddBlockedUser,
-  AddBlockedUsers,
-  RemoveBlockedUser,
-  UpdateBlockedUsers,
+  AddFriend,
+  AddFriendInvitations,
+  AddFriends,
+  AddMeetingInvitations,
+  RemoveFriend,
+  RemoveFriendInvitation,
+  RemoveMeetingInvitation,
+  UpdateFriendInvitations,
+  UpdateFriends,
+  UpdateMeetingInvitations,
 } from './settings-actions';
 
 export interface SettingsStateModel {
-  blockedUsers: UserDto[];
+  friends: UserDto[];
+  friendInvitations: FriendInvitation[];
+  meetingInvitations: MeetingInvitation[];
 }
 
 @State<SettingsStateModel>({
   name: 'settings',
   defaults: {
-    blockedUsers: null,
+    friends: [],
+    friendInvitations: [],
+    meetingInvitations: [],
   },
 })
 export class SettingsState {
-  @Action(UpdateBlockedUsers)
-  updateBlockedUsers(
+  @Action(UpdateFriends)
+  updateFriends(
     { getState, setState }: StateContext<SettingsStateModel>,
-    { users }: UpdateBlockedUsers,
+    { users }: UpdateFriends,
   ) {
     const state = getState();
     setState({
       ...state,
-      blockedUsers: users,
+      friends: users,
     });
   }
 
-  @Action(AddBlockedUsers)
-  addBlockedUsers(
+  @Action(AddFriends)
+  addFriends(
     { getState, setState }: StateContext<SettingsStateModel>,
-    { users }: AddBlockedUsers,
+    { users }: AddFriends,
   ) {
     const state = getState();
     setState({
       ...state,
-      blockedUsers: [...state.blockedUsers, ...users],
+      friends: [...state.friends, ...users],
     });
   }
 
-  @Action(AddBlockedUser)
-  addBlockedUser(
+  @Action(AddFriend)
+  addFriend(
     { getState, setState }: StateContext<SettingsStateModel>,
-    { user }: AddBlockedUser,
+    { user }: AddFriend,
   ) {
     const state = getState();
     setState({
       ...state,
-      blockedUsers: [...state.blockedUsers, user],
+      friends: [...state.friends, user],
     });
   }
 
-  @Action(RemoveBlockedUser)
-  removeBlockedUser(
+  @Action(RemoveFriend)
+  removeFriend(
     { getState, setState }: StateContext<SettingsStateModel>,
-    { userId }: RemoveBlockedUser,
+    { userId }: RemoveFriend,
   ) {
     const state = getState();
     setState({
       ...state,
-      blockedUsers: state.blockedUsers.filter(x => x.id !== userId),
+      friends: state.friends.filter(x => x.id !== userId),
+    });
+  }
+
+  @Action(UpdateFriendInvitations)
+  updateFriendInvitations(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { invitations }: UpdateFriendInvitations,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      friendInvitations: invitations,
+    });
+  }
+
+  @Action(AddFriendInvitations)
+  addFriendInvitations(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { invitations }: AddFriendInvitations,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      friendInvitations: [...state.friendInvitations, ...invitations],
+    });
+  }
+
+  @Action(RemoveFriendInvitation)
+  removeFriendInvitation(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { invitationId }: RemoveFriendInvitation,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      friendInvitations: state.friendInvitations.filter(
+        x => x.id !== invitationId,
+      ),
+    });
+  }
+
+  @Action(UpdateMeetingInvitations)
+  updateMeetingInvitations(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { invitations }: UpdateMeetingInvitations,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetingInvitations: invitations,
+    });
+  }
+
+  @Action(AddMeetingInvitations)
+  addMeetingInvitations(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { invitations }: AddMeetingInvitations,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetingInvitations: [...state.meetingInvitations, ...invitations],
+    });
+  }
+
+  @Action(RemoveMeetingInvitation)
+  removeMeetingInvitation(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { invitationId }: RemoveMeetingInvitation,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetingInvitations: state.meetingInvitations.filter(
+        x => x.id !== invitationId,
+      ),
     });
   }
 }

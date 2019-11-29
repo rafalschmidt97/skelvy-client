@@ -23,6 +23,11 @@ export class CalendarComponent extends ComplexFieldComponent {
   }
 
   get dateLabel(): string {
+    if (!this.range) {
+      const date = this.form.get(this.name).value;
+      return moment(date).format('DD.MM.YYYY');
+    }
+
     const start = this.form.get(this.name).value[0];
     const end = this.form.get(this.name).value[1];
 
@@ -45,6 +50,7 @@ export class CalendarComponent extends ComplexFieldComponent {
           value,
           min: this.min,
           max: this.max,
+          range: this.range,
         },
         cssClass: 'ionic-modal ionic-action-modal',
       });
@@ -61,15 +67,22 @@ export class CalendarComponent extends ComplexFieldComponent {
   confirm(value) {
     this.form.markAsDirty();
     this.form.markAsTouched();
-    value[0].setHours(0, 0, 0, 0);
 
-    if (value[1]) {
+    if (this.range) {
+      value[0].setHours(0, 0, 0, 0);
+
+      if (value[1]) {
+        value[1].setHours(0, 0, 0, 0);
+      }
+
       this.form.patchValue({
         [this.name]: [value[0], value[1]],
       });
     } else {
+      value.setHours(0, 0, 0, 0);
+
       this.form.patchValue({
-        [this.name]: [value[0]],
+        [this.name]: value,
       });
     }
   }

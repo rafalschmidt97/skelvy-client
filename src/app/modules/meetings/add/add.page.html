@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/tabs/explore"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Add' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollY]="false">
+  <div class="d-flex flex-column h-100 bg-ultra-light">
+    <div
+      routerLink="/app/meetings/edit-preferences"
+      class="choice h-50 d-flex p-4 align-items-center"
+    >
+      <div class="d-flex align-items-center">
+        <div class="pr-4">
+          <div class="header text-primary">
+            Fill preferences
+          </div>
+          <div class="description mt-2">
+            {{
+              'Looking for plans for an evening? Would you like to meet new people? ' +
+                'More you choose the bigger possibility for a match.'
+                | translate
+            }}
+          </div>
+        </div>
+        <div class="text-primary">
+          <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+        </div>
+      </div>
+    </div>
+    <div
+      routerLink="/app/meetings/edit-meeting"
+      class="choice h-50 d-flex p-4 align-items-center"
+    >
+      <div class="d-flex align-items-center">
+        <div class="pr-4">
+          <div class="header text-primary">
+            {{ 'Create meeting' | translate }}
+          </div>
+          <div class="description mt-2">
+            {{
+              'Need more control or want to invite your friends? ' +
+                'You can create your own event and even make it not public.'
+                | translate
+            }}
+          </div>
+        </div>
+        <div class="text-primary">
+          <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

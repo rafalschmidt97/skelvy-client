@@ -93,7 +93,7 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
         this.backgroundService.allowPush = form.user;
       }
 
-      this.routerNavigation.navigateBack(['/app/tabs/settings']);
+      this.routerNavigation.navigateBack(['/app/settings']);
     }
   }
 

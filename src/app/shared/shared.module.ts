@@ -8,9 +8,6 @@ import { FormModule } from './form/form.module';
 import { AgePipe } from './pipes/age.pipe';
 import { ConnectionComponent } from './components/connection/connection.component';
 import { ProfileDetailsModalComponent } from './components/profile-details-modal/profile-details-modal.component';
-import { MeetingSuggestionsComponent } from './components/meeting-suggestions/meeting-suggestions.component';
-import { RequestSuggestionsModalComponent } from './components/meeting-suggestions/request/request-suggestions-modal.component';
-import { MeetingSuggestionsModalComponent } from './components/meeting-suggestions/meeting/meeting-suggestions-modal.component';
 import { ModalModule } from './components/modal/modal.module';
 
 @NgModule({
@@ -23,19 +20,8 @@ import { ModalModule } from './components/modal/modal.module';
     ModalModule,
     FormModule,
   ],
-  declarations: [
-    AgePipe,
-    ConnectionComponent,
-    MeetingSuggestionsComponent,
-    MeetingSuggestionsModalComponent,
-    RequestSuggestionsModalComponent,
-    ProfileDetailsModalComponent,
-  ],
-  entryComponents: [
-    MeetingSuggestionsModalComponent,
-    RequestSuggestionsModalComponent,
-    ProfileDetailsModalComponent,
-  ],
+  declarations: [AgePipe, ConnectionComponent, ProfileDetailsModalComponent],
+  entryComponents: [ProfileDetailsModalComponent],
   exports: [
     CommonModule,
     IonicModule,
@@ -46,7 +32,6 @@ import { ModalModule } from './components/modal/modal.module';
     FormModule,
     AgePipe,
     ConnectionComponent,
-    MeetingSuggestionsComponent,
     ProfileDetailsModalComponent,
   ],
 })

@@ -155,11 +155,14 @@ export class AuthService {
     await this.storage.remove(storageKeys.signInMethod);
 
     await this.storage.remove(storageKeys.user);
-    await this.storage.remove(storageKeys.meeting);
-    await this.storage.remove(storageKeys.blockedUsers);
+    await this.storage.remove(storageKeys.meetings);
+    await this.storage.remove(storageKeys.requests);
+    await this.storage.remove(storageKeys.groups);
+    await this.storage.remove(storageKeys.friends);
+    await this.storage.remove(storageKeys.friendInvitations);
+    await this.storage.remove(storageKeys.meetingInvitations);
 
     this.store.dispatch(new ClearState());
-    await this.storage.remove(storageKeys.lastMessageDate);
     await this.storage.remove(storageKeys.lastRequestForm);
   }
 

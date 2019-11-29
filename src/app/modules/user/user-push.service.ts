@@ -16,7 +16,7 @@ import {
   PushNotificationMessage,
   SocketNotificationMessage,
 } from '../../core/background/background';
-import { ChatService } from '../chat/chat.service';
+import { GroupsService } from '../groups/groups.service';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +33,7 @@ export class UserPushService {
     private readonly routerNavigation: NavController,
     private readonly store: Store,
     private readonly localNotifications: LocalNotifications,
-    private readonly chatService: ChatService,
+    private readonly groupsService: GroupsService,
   ) {}
 
   async initialize(force: boolean = false) {
@@ -85,13 +85,13 @@ export class UserPushService {
           const { redirect_to, action, data } = notification.additionalData;
           const dataJson = JSON.parse(data);
           if (redirect_to === 'meeting') {
-            this.routerNavigation.navigateRoot(['/app/tabs/meeting']);
+            this.routerNavigation.navigateRoot(['/app/tabs/meetings']);
           } else if (redirect_to === 'chat') {
             this.routerNavigation
-              .navigateForward(['/app/chat'])
+              .navigateForward(['/app/groups/chat'])
               .then(async () => {
                 if (action === 'UserSentMessage') {
-                  await this.chatService.readMessagesFromState(
+                  await this.groupsService.readMessagesFromState(
                     dataJson[0].group_id,
                   );
                 }
@@ -106,13 +106,15 @@ export class UserPushService {
         if (notification.data) {
           const { redirectTo, action, data } = notification.data;
           if (redirectTo === 'meeting') {
-            this.routerNavigation.navigateRoot(['/app/tabs/meeting']);
+            this.routerNavigation.navigateRoot(['/app/tabs/meetings']);
           } else if (redirectTo === 'chat') {
             this.routerNavigation
-              .navigateForward(['/app/chat'])
+              .navigateForward(['/app/groups/chat'])
               .then(async () => {
                 if (action === 'UserSentMessage') {
-                  await this.chatService.readMessagesFromState(data[0].groupId);
+                  await this.groupsService.readMessagesFromState(
+                    data[0].groupId,
+                  );
                 }
               });
           }

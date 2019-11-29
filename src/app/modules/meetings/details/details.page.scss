@@ -1,0 +1,24 @@
+@import '~src/theme/bootstrap/variables';
+
+.bg-ultra-light {
+  background: gray('100');
+}
+
+.header {
+  font-size: 2.2rem;
+  font-weight: 200;
+  max-width: 330px;
+
+  &:first-letter {
+    text-transform: uppercase;
+  }
+
+  .header-icon {
+    color: theme-color('danger');
+    margin-bottom: -7px;
+  }
+}
+
+.icon-hidden {
+  margin-top: -4px;
+}

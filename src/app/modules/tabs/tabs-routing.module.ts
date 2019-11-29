@@ -12,12 +12,16 @@ const routes: Routes = [
         loadChildren: '../user/overview/overview.module#OverviewPageModule',
       },
       {
-        path: 'meeting',
-        loadChildren: '../meeting/overview/overview.module#OverviewPageModule',
+        path: 'meetings',
+        loadChildren: '../meetings/overview/overview.module#OverviewPageModule',
       },
       {
-        path: 'settings',
-        loadChildren: '../settings/overview/overview.module#OverviewPageModule',
+        path: 'explore',
+        loadChildren: '../meetings/explore/explore.module#ExplorePageModule',
+      },
+      {
+        path: 'groups',
+        loadChildren: '../groups/overview/overview.module#OverviewPageModule',
       },
     ],
   },

@@ -1,0 +1,9 @@
+<div
+  *ngIf="message.action === messageActionType.SEEN"
+  class="message-actions-container"
+>
+  <div
+    class="image rounded-circle ml-auto flex-shrink-0"
+    [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
+  ></div>
+</div>

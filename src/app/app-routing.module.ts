@@ -25,18 +25,18 @@ const routes: Routes = [
         loadChildren: './modules/user/user.module#UserModule',
       },
       {
-        path: 'meeting',
-        loadChildren: './modules/meeting/meeting.module#MeetingModule',
+        path: 'meetings',
+        loadChildren: './modules/meetings/meetings.module#MeetingsModule',
       },
       {
-        path: 'chat',
-        loadChildren: './modules/chat/chat.module#ChatModule',
+        path: 'groups',
+        loadChildren: './modules/groups/groups.module#GroupsModule',
       },
       {
         path: 'settings',
         loadChildren: './modules/settings/settings.module#SettingsModule',
       },
-      { path: '', redirectTo: 'tabs/meeting', pathMatch: 'full' },
+      { path: '', redirectTo: 'tabs/meetings', pathMatch: 'full' },
     ],
   },
 ];

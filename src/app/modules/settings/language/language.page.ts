@@ -67,18 +67,18 @@ export class LanguagePage implements Form, OnSubmit, OnInit {
         this.userService.updateLanguage(form.language).subscribe(
           () => {
             this.isLoading = false;
-            this.routerNavigation.navigateBack(['/app/tabs/settings']);
+            this.routerNavigation.navigateBack(['/app/settings']);
           },
           () => {
             this.isLoading = false;
-            this.routerNavigation.navigateBack(['/app/tabs/settings']);
+            this.routerNavigation.navigateBack(['/app/settings']);
             this.toastService.createError(
               _('A problem occurred while updating the language'),
             );
           },
         );
       } else {
-        this.routerNavigation.navigateBack(['/app/tabs/settings']);
+        this.routerNavigation.navigateBack(['/app/settings']);
       }
     }
   }

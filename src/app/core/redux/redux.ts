@@ -1,8 +1,8 @@
 import { UserState, UserStateModel } from '../../modules/user/store/user-state';
 import {
-  MeetingState,
-  MeetingStateModel,
-} from '../../modules/meeting/store/meeting-state';
+  MeetingsState,
+  MeetingsStateModel,
+} from '../../modules/meetings/store/meetings-state';
 import {
   Connection,
   GlobalState,
@@ -17,11 +17,11 @@ import { getActionTypeFromInstance } from '@ngxs/store';
 export interface AppStateModel {
   global: GlobalStateModel;
   user: UserStateModel;
-  meeting: MeetingStateModel;
+  meetings: MeetingsStateModel;
   settings: SettingsStateModel;
 }
 
-export const appState = [GlobalState, UserState, MeetingState, SettingsState];
+export const appState = [GlobalState, UserState, MeetingsState, SettingsState];
 
 export class ClearState {
   static readonly type = '[App] Clear state';
@@ -37,13 +37,16 @@ export function clearState(state: AppStateModel, action, next) {
         loading: false,
         user: null,
       },
-      meeting: {
+      meetings: {
         loading: false,
-        toRead: 0,
-        meetingModel: null,
+        meetings: [],
+        requests: [],
+        groups: [],
       },
       settings: {
-        blockedUsers: null,
+        friends: [],
+        friendInvitations: [],
+        meetingInvitations: [],
       },
     };
   }
