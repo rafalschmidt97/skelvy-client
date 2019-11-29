@@ -103,7 +103,7 @@ export class DataPage {
   confirmRefreshMeeting() {
     this.isLoading = true;
     this.loadingService.lock();
-    this.meetingService.findMeeting().subscribe(
+    this.meetingService.findMeetings().subscribe(
       () => {
         this.isLoading = false;
         this.loadingService.unlock();

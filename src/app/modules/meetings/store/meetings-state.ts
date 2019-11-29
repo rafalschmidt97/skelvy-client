@@ -65,7 +65,7 @@ export class MeetingsState {
       ...state,
       groups: state.groups.map(group => {
         if (group.id === groupId) {
-          group.users = [...group.users, user];
+          return { ...group, users: [...group.users, user] };
         }
 
         return group;
@@ -83,7 +83,7 @@ export class MeetingsState {
       ...state,
       groups: state.groups.map(group => {
         if (group.id === groupId) {
-          group.users = group.users.filter(x => x.id !== userId);
+          return { ...group, users: group.users.filter(x => x.id !== userId) };
         }
 
         return group;

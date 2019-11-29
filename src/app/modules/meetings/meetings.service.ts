@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import {
   ActivityDto,
+  GroupUserRole,
   MeetingModel,
   MeetingRequest,
   MeetingRequestDto,
@@ -39,7 +40,7 @@ export class MeetingsService {
     private readonly store: Store,
   ) {}
 
-  findMeeting(markedAsLoading: boolean = false): Observable<MeetingModel> {
+  findMeetings(markedAsLoading: boolean = false): Observable<MeetingModel> {
     if (!markedAsLoading) {
       this.store.dispatch(new ChangeMeetingLoadingStatus(true));
     }
@@ -88,7 +89,22 @@ export class MeetingsService {
 
   leaveMeeting(meetingId: number, groupId: number): Observable<void> {
     return this.http
-      .post<void>(environment.versionApiUrl + 'meetings/self/leave', null)
+      .post<void>(
+        `${environment.versionApiUrl}meetings/${meetingId}/leave`,
+        null,
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveMeeting(meetingId));
+          this.store.dispatch(new RemoveGroup(groupId));
+          // TODO: remove red messages date
+        }),
+      );
+  }
+
+  removeMeeting(meetingId: number, groupId: number): Observable<void> {
+    return this.http
+      .delete<void>(`${environment.versionApiUrl}meetings/${meetingId}`)
       .pipe(
         tap(() => {
           this.store.dispatch(new RemoveMeeting(meetingId));
@@ -122,6 +138,13 @@ export class MeetingsService {
     );
   }
 
+  updateMeeting(meetingId: number, request: MeetingRequest): Observable<void> {
+    return this.http.put<void>(
+      `${environment.versionApiUrl}meetings/${meetingId}`,
+      request,
+    );
+  }
+
   findActivities(): Observable<ActivityDto[]> {
     return this.http.get<ActivityDto[]>(
       environment.versionApiUrl + 'activities',
@@ -147,7 +170,7 @@ export class MeetingsService {
 
   connectMeetingRequest(requestId: number): Observable<void> {
     return this.http.post<void>(
-      `${environment.versionApiUrl}self/requests/${requestId}/connect`,
+      `${environment.versionApiUrl}requests/${requestId}/connect`,
       null,
     );
   }
@@ -158,7 +181,11 @@ export class MeetingsService {
     );
   }
 
-  addUser(userId: number, groupId: number, role: string): Observable<UserDto> {
+  addUser(
+    userId: number,
+    groupId: number,
+    role: GroupUserRole,
+  ): Observable<UserDto> {
     return this.findUser(userId).pipe(
       tap(user => {
         this.store.dispatch(new AddGroupUser(groupId, { ...user, role }));
@@ -167,7 +194,7 @@ export class MeetingsService {
   }
 
   removeUser(userId: number, groupId: number) {
-    this.store.dispatch(new RemoveGroupUser(userId, groupId));
+    this.store.dispatch(new RemoveGroupUser(groupId, userId));
   }
 
   clearMeeting(meetingId: number) {

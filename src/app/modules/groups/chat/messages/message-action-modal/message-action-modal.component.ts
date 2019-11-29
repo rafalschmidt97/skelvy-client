@@ -35,7 +35,7 @@ export class MessageActionModalComponent {
       (error: HttpErrorResponse) => {
         // data is not relevant (connection lost and reconnected)
         if (error.status === 404 || error.status === 409) {
-          this.meetingService.findMeeting().subscribe();
+          this.meetingService.findMeetings().subscribe();
 
           if (this.router.url === '/app/groups/chat') {
             this.routerNavigation.navigateBack(['/app/tabs/meetings']);

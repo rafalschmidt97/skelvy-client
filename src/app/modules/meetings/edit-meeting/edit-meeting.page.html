@@ -6,7 +6,7 @@
         defaultHref="/app/meetings/add"
       ></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ 'Add meeting' | translate }}</ion-title>
+    <ion-title>{{ 'Edit meeting' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button
         [disabled]="isLoading || form.invalid || loadingForm"
@@ -23,9 +23,8 @@
     <div class="container py-3">
       <div class="guidelines pb-3 mb-3">
         {{
-          'By default meetings you create are hidden which means that only people you invite can join it. ' +
-            'If you will change you mind it is always possible to open it for all people later.'
-            | translate
+          'Private meeting means that only people you invite can join. ' +
+            'It is always possible to change it later in settings.' | translate
         }}
       </div>
       <app-form
@@ -48,6 +47,11 @@
           name="size"
           [label]="'Maximum amount of people' | translate"
           [options]="sizes"
+        ></app-select>
+        <app-select
+          name="isHidden"
+          [label]="'Should be private' | translate"
+          [options]="hiddenOptions"
         ></app-select>
         <app-radio
           *ngIf="activities?.length > 0"

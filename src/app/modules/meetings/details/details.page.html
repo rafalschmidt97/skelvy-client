@@ -5,8 +5,15 @@
     </ion-buttons>
     <ion-title>{{ 'Meeting' | translate }}</ion-title>
     <ion-buttons slot="end">
+      <ion-button
+        color="dark"
+        *ngIf="isAdmin || isOwner"
+        (click)="editMeeting()"
+      >
+        <ion-icon name="create"></ion-icon>
+      </ion-button>
       <ion-button (click)="showMessages()">
-        <ion-icon name="chatbubbles" slot="icon-only"></ion-icon>
+        <ion-icon name="chatbubbles"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -68,13 +75,40 @@
     </section>
     <section class="more">
       <div class="container py-2">
-        <button (click)="openLeave()" class="btn btn-outline-primary btn-block">
-          <span
-            [hidden]="loadingLeave"
-            [innerText]="'Leave group' | translate"
-          ></span>
-          <ion-spinner [hidden]="!loadingLeave"></ion-spinner>
-        </button>
+        <ng-container *ngIf="isOwner; else member">
+          <div class="row no-gutters">
+            <div class="col mr-1">
+              <button (click)="openLeave()" class="btn btn-primary btn-block">
+                <span
+                  [hidden]="loadingAction"
+                  [innerText]="'Leave' | translate"
+                ></span>
+                <ion-spinner [hidden]="!loadingAction"></ion-spinner>
+              </button>
+            </div>
+            <div class="col ml-1">
+              <button
+                (click)="openRemove()"
+                class="btn btn-outline-primary btn-block"
+              >
+                <span
+                  [hidden]="loadingAction"
+                  [innerText]="'Remove' | translate"
+                ></span>
+                <ion-spinner [hidden]="!loadingAction"></ion-spinner>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #member>
+          <button (click)="openLeave()" class="btn btn-primary btn-block">
+            <span
+              [hidden]="loadingAction"
+              [innerText]="'Leave group' | translate"
+            ></span>
+            <ion-spinner [hidden]="!loadingAction"></ion-spinner>
+          </button>
+        </ng-template>
       </div>
     </section>
   </div>

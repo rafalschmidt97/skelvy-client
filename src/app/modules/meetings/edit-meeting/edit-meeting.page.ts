@@ -13,6 +13,11 @@ import { isNil, range } from 'lodash';
 import { storageKeys } from '../../../core/storage/storage';
 import { Radio } from '../../../shared/form/radio/radio';
 import { Select } from '../../../shared/form/select/select';
+import { ActivatedRoute } from '@angular/router';
+import { MeetingsStateModel } from '../store/meetings-state';
+import { Store } from '@ngxs/store';
+import { MapsService } from '../../../core/maps/maps.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-meeting',
@@ -33,6 +38,17 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
       value: number,
     };
   });
+  hiddenOptions: Select[] = [
+    {
+      label: _('Yes'),
+      value: 'true',
+    },
+    {
+      label: _('No'),
+      value: 'false',
+    },
+  ];
+  meetingId: number;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -41,12 +57,17 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
     private readonly storage: Storage,
+    private readonly route: ActivatedRoute,
+    private readonly store: Store,
+    private readonly mapsService: MapsService,
+    private readonly translateService: TranslateService,
   ) {
     this.form = this.formBuilder.group({
       date: [this.today, Validators.required],
       address: [null, Validators.required],
       activityId: [null, Validators.required],
       size: [4, Validators.required],
+      isHidden: [true, Validators.required],
     });
   }
 
@@ -81,57 +102,115 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
         longitude: form.address.longitude,
         activityId: form.activityId,
         size: form.size,
+        isHidden: form.isHidden === 'true',
       };
 
-      this.meetingService.createMeeting(request).subscribe(
-        async () => {
-          await this.storage.set(storageKeys.lastMeetingForm, form);
+      if (!this.meetingId) {
+        this.meetingService.createMeeting(request).subscribe(
+          async () => {
+            await this.storage.set(storageKeys.lastMeetingForm, form);
 
-          this.meetingService.findMeeting().subscribe(
-            () => {
-              this.routerNavigation.navigateBack(['/app/tabs/meetings']);
-            },
-            () => {
-              this.toastService.createError(
-                _('A problem occurred while finding meetings'),
-              );
-            },
-          );
-        },
-        () => {
-          this.isLoading = false;
-          this.toastService.createError(
-            _('A problem occurred while creating the meeting'),
-          );
-        },
-      );
+            this.meetingService.findMeetings().subscribe(
+              () => {
+                this.routerNavigation.navigateBack(['/app/tabs/meetings']);
+              },
+              () => {
+                this.toastService.createError(
+                  _('A problem occurred while finding meetings'),
+                );
+              },
+            );
+          },
+          () => {
+            this.isLoading = false;
+            this.toastService.createError(
+              _('A problem occurred while creating the meeting'),
+            );
+          },
+        );
+      } else {
+        this.meetingService.updateMeeting(this.meetingId, request).subscribe(
+          async () => {
+            this.meetingService.findMeetings().subscribe(
+              () => {
+                this.routerNavigation.navigateBack(['/app/tabs/meetings']);
+              },
+              () => {
+                this.toastService.createError(
+                  _('A problem occurred while finding meetings'),
+                );
+              },
+            );
+          },
+          () => {
+            this.isLoading = false;
+            this.toastService.createError(
+              _('A problem occurred while updating the meeting'),
+            );
+          },
+        );
+      }
     }
   }
 
-  private fillForm() {
-    this.storage
-      .get(storageKeys.lastMeetingForm)
-      .then(meetingForm => {
-        if (!isNil(meetingForm)) {
-          const minDate = new Date(meetingForm.date);
-          const minDateValidated = minDate >= this.today ? minDate : this.today;
+  async fillForm() {
+    const meetingId = +this.route.snapshot.paramMap.get('meetingId');
 
-          this.form.patchValue({
-            date: minDateValidated,
-            address: meetingForm.address,
-            activityId: meetingForm.activityId,
-            size: meetingForm.size,
-          });
-        } else {
-          this.form.patchValue({
-            activityId: this.activities[0].value,
-          });
-        }
+    if (meetingId) {
+      const meetingState: MeetingsStateModel = this.store.selectSnapshot(
+        state => state.meetings,
+      );
 
-        this.loadingForm = false;
-      })
-      .catch(() => {
-        this.loadingForm = false;
+      const meeting = meetingState.meetings.find(x => x.id === meetingId);
+
+      if (!meeting) {
+        this.routerNavigation.navigateBack(['/app/tabs/meetings']);
+      }
+
+      const address = await this.mapsService
+        .reverse(
+          meeting.latitude,
+          meeting.longitude,
+          this.translateService.currentLang,
+        )
+        .toPromise();
+
+      this.form.patchValue({
+        date: new Date(meeting.date),
+        address: address[0] || null,
+        activityId: meeting.activity.id.toString(),
+        size: meeting.size,
+        isHidden: meeting.isHidden ? 'true' : 'false',
       });
+
+      this.meetingId = meetingId;
+      this.loadingForm = false;
+    } else {
+      this.storage
+        .get(storageKeys.lastMeetingForm)
+        .then(meetingForm => {
+          if (!isNil(meetingForm)) {
+            const date = new Date(meetingForm.date);
+            const dateValidated = date >= this.today ? date : this.today;
+
+            this.form.patchValue({
+              date: dateValidated,
+              address: meetingForm.address,
+              activityId: meetingForm.activityId,
+              size: meetingForm.size,
+              isHidden: meetingForm.isHidden,
+            });
+          } else {
+            this.form.patchValue({
+              activityId: this.activities[0].value,
+            });
+          }
+
+          this.loadingForm = false;
+        })
+        .catch(() => {
+          this.loadingForm = false;
+        });
+    }
   }
 }

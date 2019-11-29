@@ -31,8 +31,15 @@ export interface GroupState {
 
 export interface GroupUserDto {
   id: number;
-  role: string;
+  role: GroupUserRole;
   profile: ProfileDto;
+}
+
+export enum GroupUserRole {
+  OWNER = 'owner',
+  ADMIN = 'admin',
+  PRIVILEGED = 'privileged',
+  MEMBER = 'member',
 }
 
 export interface MeetingWithUsersDto {
@@ -91,6 +98,7 @@ export interface MeetingRequest {
   longitude: number;
   activityId: number;
   size: number;
+  isHidden: boolean;
 }
 
 export interface MeetingRequestRequest {

@@ -114,7 +114,7 @@ export class MeetingsSocketService {
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
 
-        this.meetingService.findMeeting().subscribe(
+        this.meetingService.findMeetings().subscribe(
           () => {
             this.toastService.createInformation(
               _('New meeting has been found'),
@@ -148,7 +148,7 @@ export class MeetingsSocketService {
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
 
-        this.meetingService.findMeeting().subscribe(
+        this.meetingService.findMeetings().subscribe(
           () => {
             this.toastService.createInformation(
               _('All users have left the group'),

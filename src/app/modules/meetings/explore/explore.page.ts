@@ -61,11 +61,13 @@ export class ExplorePage implements OnInit {
 
       this.meetingService.joinMeeting(meetingId).subscribe(
         () => {
-          this.meetingService.findMeeting().subscribe(
+          this.meetingService.findMeetings().subscribe(
             () => {
+              this.isLoading = false;
               this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             },
             () => {
+              this.isLoading = false;
               this.toastService.createError(
                 _('A problem occurred while finding the meeting'),
               );
@@ -89,11 +91,13 @@ export class ExplorePage implements OnInit {
 
       this.meetingService.connectMeetingRequest(requestId).subscribe(
         () => {
-          this.meetingService.findMeeting().subscribe(
+          this.meetingService.findMeetings().subscribe(
             () => {
+              this.isLoading = false;
               this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             },
             () => {
+              this.isLoading = false;
               this.toastService.createError(
                 _('A problem occurred while finding the meeting'),
               );
