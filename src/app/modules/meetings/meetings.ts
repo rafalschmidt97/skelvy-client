@@ -159,3 +159,8 @@ export enum MessageActionType {
   TYPINGON = 'typing_on',
   TYPINGOFF = 'typing_off',
 }
+
+export interface ConnectRequest {
+  date: string;
+  activityId: number;
+}

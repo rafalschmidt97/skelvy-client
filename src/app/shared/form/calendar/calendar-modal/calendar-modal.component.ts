@@ -24,6 +24,10 @@ export class CalendarModalComponent {
     clear: '',
   };
   today = new Date();
+  nextYear = moment()
+    .add(1, 'years')
+    .startOf('day')
+    .toDate();
 
   constructor(private readonly modalController: ModalController) {}
 

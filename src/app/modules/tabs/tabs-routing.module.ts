@@ -17,7 +17,7 @@ const routes: Routes = [
       },
       {
         path: 'explore',
-        loadChildren: '../meetings/explore/explore.module#ExplorePageModule',
+        loadChildren: '../explore/overview/overview.module#OverviewPageModule',
       },
       {
         path: 'groups',

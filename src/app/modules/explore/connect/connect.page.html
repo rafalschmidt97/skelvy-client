@@ -3,10 +3,10 @@
     <ion-buttons slot="start">
       <ion-back-button
         [hidden]="isLoading"
-        defaultHref="/app/tabs/meetings"
+        defaultHref="/app/tabs/explore"
       ></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ 'Edit meeting' | translate }}</ion-title>
+    <ion-title>{{ 'Connect' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button
         [disabled]="isLoading || form.invalid || loadingForm"
@@ -23,8 +23,9 @@
     <div class="container py-3">
       <div class="guidelines pb-3 mb-3">
         {{
-          'Private meeting means that only people you invite can join. ' +
-            'It is always possible to change it later in settings.' | translate
+          'As a connecting user you can decide which day and activity you want to take a part. ' +
+            'Remember that it is always possible to change it later.'
+            | translate
         }}
       </div>
       <app-form
@@ -35,24 +36,10 @@
       >
         <app-calendar
           name="date"
-          [min]="today"
+          [min]="minDate"
+          [max]="maxDate"
           [label]="'Date' | translate"
         ></app-calendar>
-        <app-address
-          name="address"
-          [label]="'Address' | translate"
-          [placeholder]="'Type in your city...' | translate"
-        ></app-address>
-        <app-select
-          name="size"
-          [label]="'Maximum amount of people' | translate"
-          [options]="sizes"
-        ></app-select>
-        <app-select
-          name="isHidden"
-          [label]="'Should be private' | translate"
-          [options]="hiddenOptions"
-        ></app-select>
         <app-radio
           *ngIf="activities?.length > 0"
           name="activityId"
