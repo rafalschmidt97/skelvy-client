@@ -17,6 +17,7 @@ import { ChangeConnectionStatus } from '../../../core/state/global-actions';
 import { AlertModalComponent } from '../../../shared/components/alert/alert-modal/alert-modal.component';
 import { ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-data',
@@ -185,7 +186,10 @@ export class DataPage {
     this.clearState();
     await this.clearStorage();
 
-    this.selfService.sync().subscribe(
+    combineLatest([
+      this.userService.findSelf(),
+      this.selfService.sync(),
+    ]).subscribe(
       () => {
         this.isLoading = false;
         this.loadingService.unlock();

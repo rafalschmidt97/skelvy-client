@@ -4,24 +4,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { _ } from '../../../core/i18n/translate';
 import * as moment from 'moment';
 import { MeetingsService } from '../../meetings/meetings.service';
-import {
-  ActivityDto,
-  ConnectRequest,
-  MeetingRequest,
-} from '../../meetings/meetings';
+import { ConnectRequest } from '../../meetings/meetings';
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import { MeetingsSocketService } from '../../meetings/meetings-socket.service';
-import { Storage } from '@ionic/storage';
-import { isNil, range } from 'lodash';
-import { storageKeys } from '../../../core/storage/storage';
 import { Radio } from '../../../shared/form/radio/radio';
-import { Select } from '../../../shared/form/select/select';
 import { ActivatedRoute } from '@angular/router';
-import { MeetingsStateModel } from '../../meetings/store/meetings-state';
 import { Store } from '@ngxs/store';
-import { MapsService } from '../../../core/maps/maps.service';
-import { TranslateService } from '@ngx-translate/core';
 import { ExploreStateModel } from '../store/explore-state';
 
 @Component({
@@ -44,7 +33,6 @@ export class ConnectPage implements Form, OnSubmit, OnInit {
     private readonly meetingSocket: MeetingsSocketService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
-    private readonly storage: Storage,
     private readonly route: ActivatedRoute,
     private readonly store: Store,
   ) {
@@ -71,15 +59,13 @@ export class ConnectPage implements Form, OnSubmit, OnInit {
       const form = this.form.value;
       const request: ConnectRequest = {
         date: form.date,
-        activityId: form.activityId,
+        activityId: Number(form.activityId),
       };
 
       this.meetingService
         .connectMeetingRequest(this.requestId, request)
         .subscribe(
           async () => {
-            await this.storage.set(storageKeys.lastMeetingForm, form);
-
             this.meetingService.findMeetings().subscribe(
               () => {
                 this.routerNavigation.navigateBack(['/app/tabs/meetings']);

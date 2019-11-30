@@ -100,8 +100,8 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
         date: form.date,
         latitude: form.address.latitude,
         longitude: form.address.longitude,
-        activityId: form.activityId,
-        size: form.size,
+        activityId: Number(form.activityId),
+        size: Number(form.size),
         isHidden: form.isHidden === 'true',
       };
 

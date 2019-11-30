@@ -92,7 +92,7 @@ export class EditPreferencesPage implements Form, OnSubmit, OnInit {
         latitude: form.address.latitude,
         longitude: form.address.longitude,
         activities: form.activities.map(activityId => {
-          return { id: activityId };
+          return { id: Number(activityId) };
         }),
         description: form.description,
       };
