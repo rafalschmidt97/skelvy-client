@@ -1,0 +1,150 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ 'Explore' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/app/explore/add">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher
+    (ionRefresh)="refreshSuggestions($event)"
+    [disabled]="isLoading || isLoadingSuggestions"
+  >
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ng-container *ngIf="$explore | async as explore">
+    <section
+      *ngIf="!isLoading && explore; else loading"
+      class="d-flex flex-column minh-100 suggestions"
+    >
+      <div
+        *ngIf="
+          explore.meetings.length > 0 || explore.requests.length > 0;
+          else empty
+        "
+        class="container py-3"
+        [class.disabled]="isLoading"
+      >
+        <div
+          class="guidelines pb-3 mb-3"
+          *ngIf="explore.meetings.length + explore.requests.length < 3"
+          [innerText]="
+            'Share with your friends. Bigger the community better experience for all! Encouraging other people ' +
+              'to create events. Keep in mind that the app is new so your help is a blessing.'
+              | translate
+          "
+        ></div>
+        <div
+          class="meetings"
+          *ngIf="explore.meetings.length > 0"
+          [class.has-sibling]="explore.requests.length > 0"
+        >
+          <label [innerText]="'Near meetings to join' | translate"></label>
+          <div
+            *ngFor="let meeting of explore.meetings"
+            class="d-flex align-items-center mb-1 item"
+            (click)="openMeetingDetails(meeting)"
+          >
+            <div class="py-2 pl-2">
+              <div>
+                <span class="font-weight-bold">{{ 'Date' | translate }}</span
+                >: {{ meeting.date | date: 'dd.MM.yyyy' }}
+              </div>
+              <div>
+                <span class="font-weight-bold">{{ 'City' | translate }}</span
+                >: {{ meeting.city }}
+              </div>
+              <div>
+                <span class="font-weight-bold">{{ 'People' | translate }}</span
+                >: {{ meeting.users.length }}
+              </div>
+              <div>
+                <span class="font-weight-bold">{{
+                  'Activity' | translate
+                }}</span
+                >: {{ meeting.activity.name | translate }}
+              </div>
+            </div>
+            <div
+              class="text-primary ml-auto align-self-stretch px-3 d-flex align-items-center"
+            >
+              <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+            </div>
+          </div>
+        </div>
+        <div class="requests" *ngIf="explore.requests.length > 0">
+          <label [innerText]="'Near requests to connect' | translate"></label>
+          <div
+            *ngFor="let request of explore.requests"
+            class="d-flex align-items-center mb-1 item"
+            (click)="openRequestDetails(request)"
+          >
+            <div class="py-2 pl-2">
+              <div>
+                <span class="font-weight-bold">{{ 'Date' | translate }}</span
+                >: {{ getDate(request.minDate, request.maxDate) }}
+              </div>
+              <div>
+                <span class="font-weight-bold">{{ 'City' | translate }}</span
+                >: {{ request.city }}
+              </div>
+              <div>
+                <span class="font-weight-bold">{{
+                  'Activities' | translate
+                }}</span
+                >:
+                <ng-container
+                  *ngFor="let activity of request.activities; let i = index"
+                >
+                  <span class="d-inline-block">{{
+                    activity.name | translate
+                  }}</span>
+                  <span *ngIf="i !== request.activities.length - 1">, </span>
+                </ng-container>
+              </div>
+            </div>
+            <div
+              class="text-primary ml-auto align-self-stretch px-3 d-flex align-items-center"
+            >
+              <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+            </div>
+          </div>
+        </div>
+        <div class="information">
+          {{ 'Suggestions are based on your location.' | translate }}
+        </div>
+      </div>
+      <ng-template #empty>
+        <div class="empty m-auto text-center py-3">
+          <div class="content container">
+            <ion-icon name="contacts" class="big-icon text-primary"></ion-icon>
+            <div class="header">
+              {{ "Couldn't find any meetings around you." | translate }}
+            </div>
+            <p class="body mt-3 mb-4">
+              {{
+                "It's time to specify your preferences or create your own meeting. You are one step away from changing your evening!"
+                  | translate
+              }}
+            </p>
+            <button
+              routerLink="/app/explore/add"
+              class="btn btn-outline-primary px-4"
+            >
+              {{ 'Create now' | translate }}
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </section>
+    <ng-template #loading>
+      <div class="text-center py-3">
+        <ion-spinner></ion-spinner>
+      </div>
+    </ng-template>
+  </ng-container>
+</ion-content>

@@ -1,12 +1,11 @@
 <app-modal (confirm)="confirm()" (decline)="decline()">
-  <!--  <ng-container [formGroup]="inputForm">-->
   <p-calendar
     [(ngModel)]="value"
     [locale]="locale"
     [minDate]="min || today"
+    [maxDate]="max || nextYear"
     dateFormat="dd.mm.yy"
     [selectionMode]="range ? 'range' : 'single'"
     [inline]="true"
   ></p-calendar>
-  <!--  </ng-container>-->
 </app-modal>

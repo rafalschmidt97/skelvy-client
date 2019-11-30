@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import {
   ActivityDto,
+  ConnectRequest,
   GroupUserRole,
   MeetingModel,
   MeetingRequest,
@@ -27,6 +28,12 @@ import {
   UpdateMeetingsFromModel,
   UpdateRequests,
 } from './store/meetings-actions';
+import {
+  ChangeExploreLoadingStatus,
+  RemoveExploreMeeting,
+  RemoveExploreRequest,
+  UpdateExploreState,
+} from '../explore/store/explore-actions';
 
 @Injectable({
   providedIn: 'root',
@@ -154,25 +161,58 @@ export class MeetingsService {
   findMeetingSuggestions(
     latitude: number,
     longitude: number,
+    markedAsLoading: boolean = false,
   ): Observable<MeetingSuggestionsModel> {
-    return this.http.get<MeetingSuggestionsModel>(
-      `${environment.versionApiUrl}meetings/self/suggestions` +
-        `?latitude=${latitude}&longitude=${longitude}&language=${this.translateService.currentLang}`,
-    );
+    if (!markedAsLoading) {
+      this.store.dispatch(new ChangeExploreLoadingStatus(true));
+    }
+
+    return this.http
+      .get<MeetingSuggestionsModel>(
+        `${environment.versionApiUrl}meetings/self/suggestions` +
+          `?latitude=${latitude}&longitude=${longitude}&language=${this.translateService.currentLang}`,
+      )
+      .pipe(
+        tap(model => {
+          this.store.dispatch(
+            new UpdateExploreState(model.meetingRequests, model.meetings),
+          );
+          this.store.dispatch(new ChangeExploreLoadingStatus(false));
+        }),
+        catchError(error => {
+          this.store.dispatch(new ChangeExploreLoadingStatus(false));
+          return throwError(error);
+        }),
+      );
   }
 
   joinMeeting(meetingId: number): Observable<void> {
-    return this.http.post<void>(
-      `${environment.versionApiUrl}meetings/${meetingId}/join`,
-      null,
-    );
+    return this.http
+      .post<void>(
+        `${environment.versionApiUrl}meetings/${meetingId}/join`,
+        null,
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveExploreMeeting(meetingId));
+        }),
+      );
   }
 
-  connectMeetingRequest(requestId: number): Observable<void> {
-    return this.http.post<void>(
-      `${environment.versionApiUrl}requests/${requestId}/connect`,
-      null,
-    );
+  connectMeetingRequest(
+    requestId: number,
+    request: ConnectRequest,
+  ): Observable<void> {
+    return this.http
+      .post<void>(
+        `${environment.versionApiUrl}requests/${requestId}/connect`,
+        request,
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveExploreRequest(requestId));
+        }),
+      );
   }
 
   findUser(userId: number): Observable<UserDto> {

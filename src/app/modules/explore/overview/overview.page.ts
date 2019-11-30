@@ -1,30 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { MeetingsService } from '../meetings.service';
 import { ModalController, NavController } from '@ionic/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import * as moment from 'moment';
-import {
-  MeetingDto,
-  MeetingRequestWithUserDto,
-  MeetingSuggestionsModel,
-  MeetingWithUsersDto,
-} from '../meetings';
 import { MeetingSuggestionsModalComponent } from './meeting/meeting-suggestions-modal.component';
 import { RequestSuggestionsModalComponent } from './request/request-suggestions-modal.component';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { _ } from '../../../core/i18n/translate';
+import {
+  MeetingRequestWithUserDto,
+  MeetingWithUsersDto,
+} from '../../meetings/meetings';
+import { MeetingsService } from '../../meetings/meetings.service';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { ExploreStateModel } from '../store/explore-state';
 
 @Component({
-  selector: 'app-explore',
-  templateUrl: './explore.page.html',
-  styleUrls: ['./explore.page.scss'],
+  selector: 'app-overview',
+  templateUrl: './overview.page.html',
+  styleUrls: ['./overview.page.scss'],
 })
-export class ExplorePage implements OnInit {
+export class OverviewPage implements OnInit {
+  @Select(state => state.explore) $explore: Observable<ExploreStateModel>;
   isLoading = false;
   isLoadingSuggestions = true;
   latitude: number;
   longitude: number;
-  suggestions: MeetingSuggestionsModel;
 
   constructor(
     private readonly meetingService: MeetingsService,
@@ -87,31 +88,9 @@ export class ExplorePage implements OnInit {
 
   connect(requestId: number) {
     if (!this.isLoading) {
-      this.isLoading = true;
-
-      this.meetingService.connectMeetingRequest(requestId).subscribe(
-        () => {
-          this.meetingService.findMeetings().subscribe(
-            () => {
-              this.isLoading = false;
-              this.routerNavigation.navigateBack(['/app/tabs/meetings']);
-            },
-            () => {
-              this.isLoading = false;
-              this.toastService.createError(
-                _('A problem occurred while finding the meeting'),
-              );
-            },
-          );
-        },
-        () => {
-          this.isLoading = false;
-          this.toastService.createError(
-            _('A problem occurred while connecting the request'),
-          );
-          this.findSuggestions(this.latitude, this.longitude);
-        },
-      );
+      this.routerNavigation.navigateForward([
+        `/app/explore/connect/${requestId}`,
+      ]);
     }
   }
 
@@ -119,8 +98,7 @@ export class ExplorePage implements OnInit {
     if (!this.isLoading && (!this.isLoadingSuggestions || isInitial)) {
       this.isLoadingSuggestions = true;
       this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
-        suggestions => {
-          this.suggestions = suggestions;
+        () => {
           this.isLoadingSuggestions = false;
         },
         () => {
@@ -136,8 +114,7 @@ export class ExplorePage implements OnInit {
       this.meetingService
         .findMeetingSuggestions(this.latitude, this.longitude)
         .subscribe(
-          suggestions => {
-            this.suggestions = suggestions;
+          () => {
             this.isLoadingSuggestions = false;
             event.target.complete();
           },

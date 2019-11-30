@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { MeetingWithUsersDto } from '../../meetings';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
+import { MeetingWithUsersDto } from '../../../meetings/meetings';
 
 @Component({
   selector: 'app-meeting-suggestions-modal',

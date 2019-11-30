@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ExplorePage } from './explore.page';
+import { OverviewPage } from './overview.page';
 import { SharedModule } from '../../../shared/shared.module';
 import { MeetingSuggestionsModalComponent } from './meeting/meeting-suggestions-modal.component';
 import { RequestSuggestionsModalComponent } from './request/request-suggestions-modal.component';
@@ -8,14 +8,14 @@ import { RequestSuggestionsModalComponent } from './request/request-suggestions-
 const routes: Routes = [
   {
     path: '',
-    component: ExplorePage,
+    component: OverviewPage,
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes), SharedModule],
   declarations: [
-    ExplorePage,
+    OverviewPage,
     MeetingSuggestionsModalComponent,
     RequestSuggestionsModalComponent,
   ],
@@ -24,4 +24,4 @@ const routes: Routes = [
     RequestSuggestionsModalComponent,
   ],
 })
-export class ExplorePageModule {}
+export class OverviewPageModule {}
