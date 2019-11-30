@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-tabs',

@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
-  GroupDto,
   GroupState,
   MeetingDto,
   MessageActionType,

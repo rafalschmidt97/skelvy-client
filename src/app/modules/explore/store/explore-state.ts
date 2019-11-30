@@ -6,8 +6,6 @@ import {
   UpdateExploreState,
 } from './explore-actions';
 import {
-  MeetingDto,
-  MeetingRequestDto,
   MeetingRequestWithUserDto,
   MeetingWithUsersDto,
 } from '../../meetings/meetings';
