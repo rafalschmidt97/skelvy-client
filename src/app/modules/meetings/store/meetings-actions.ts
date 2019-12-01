@@ -1,7 +1,9 @@
 import {
+  ActivityDto,
   GroupDto,
   GroupUserDto,
   MeetingDto,
+  MeetingRequest,
   MeetingRequestDto,
   MessageDto,
   MessageState,
@@ -36,9 +38,34 @@ export class UpdateMeetingsFromModel {
   constructor(public meetings: MeetingDto[], public groups: GroupDto[]) {}
 }
 
+export class UpdateMeeting {
+  static readonly type = '[Meetings] Update meeting';
+  constructor(public meeting: MeetingDto) {}
+}
+
+export class UpdateMeetingFromRequest {
+  static readonly type = '[Meetings] Update meeting from request';
+  constructor(
+    public meetingId: number,
+    public meetingRequest: MeetingRequest,
+    public resolvedActivity: ActivityDto,
+    public resolvedCity: string,
+  ) {}
+}
+
 export class UpdateRequests {
   static readonly type = '[Meetings] Update requests';
   constructor(public requests: MeetingRequestDto[]) {}
+}
+
+export class AddMeeting {
+  static readonly type = '[Meetings] Add meeting';
+  constructor(public meeting: MeetingDto) {}
+}
+
+export class AddGroup {
+  static readonly type = '[Meetings] Add group';
+  constructor(public group: GroupDto) {}
 }
 
 export class AddGroupMessage {

@@ -3,6 +3,8 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import {
+  GroupDto,
+  MeetingDto,
   MessageActionType,
   MessageDto,
   MessageState,
@@ -10,12 +12,15 @@ import {
 } from '../meetings/meetings';
 import { catchError, tap } from 'rxjs/operators';
 import {
+  AddGroup,
   AddGroupMessage,
   AddGroupMessages,
+  ChangeMeetingLoadingStatus,
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveResponseGroupMessage,
+  UpdateMeeting,
 } from '../meetings/store/meetings-actions';
 import { Store } from '@ngxs/store';
 import { Storage } from '@ionic/storage';
@@ -33,6 +38,29 @@ export class GroupsService {
     private readonly router: Router,
     private readonly backgroundService: BackgroundService,
   ) {}
+
+  addFoundGroup(
+    id: number,
+    markedAsLoading: boolean = false,
+  ): Observable<GroupDto> {
+    if (!markedAsLoading) {
+      this.store.dispatch(new ChangeMeetingLoadingStatus(true));
+    }
+
+    return this.http
+      .get<GroupDto>(`${environment.versionApiUrl}groups/${id}`)
+      .pipe(
+        tap(group => {
+          this.store.dispatch(new AddGroup(group));
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+          // TODO: set not red messages
+        }),
+        catchError(error => {
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+          return throwError(error);
+        }),
+      );
+  }
 
   findMessages(groupId: number, beforeDate: string): Observable<MessageDto[]> {
     return this.http

@@ -28,6 +28,7 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
   activities: Radio[];
+  activitiesResponse: ActivityDto[];
   today = moment()
     .startOf('day')
     .toDate();
@@ -74,6 +75,7 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
   ngOnInit() {
     this.meetingService.findActivities().subscribe(
       (activities: ActivityDto[]) => {
+        this.activitiesResponse = activities;
         this.activities = activities.map(type => {
           return {
             label: type.name,
@@ -129,26 +131,26 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
           },
         );
       } else {
-        this.meetingService.updateMeeting(this.meetingId, request).subscribe(
-          async () => {
-            this.meetingService.findMeetings().subscribe(
-              () => {
-                this.routerNavigation.navigateBack(['/app/tabs/meetings']);
-              },
-              () => {
-                this.toastService.createError(
-                  _('A problem occurred while finding meetings'),
-                );
-              },
-            );
-          },
-          () => {
-            this.isLoading = false;
-            this.toastService.createError(
-              _('A problem occurred while updating the meeting'),
-            );
-          },
+        const chosenActivity = this.activitiesResponse.find(
+          x => x.id === request.activityId,
         );
+        const chosenCity = form.address.city;
+        this.meetingService
+          .updateMeeting(this.meetingId, request, chosenActivity, chosenCity)
+          .subscribe(
+            () => {
+              this.routerNavigation.navigateBack([
+                '/app/meetings/details',
+                this.meetingId,
+              ]);
+            },
+            () => {
+              this.isLoading = false;
+              this.toastService.createError(
+                _('A problem occurred while updating the meeting'),
+              );
+            },
+          );
       }
     }
   }

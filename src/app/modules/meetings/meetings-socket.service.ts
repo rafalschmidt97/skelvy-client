@@ -15,6 +15,7 @@ import {
   SocketNotificationType,
 } from '../../core/background/background';
 import { GroupsService } from '../groups/groups.service';
+import { combineLatest } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,7 @@ export class MeetingsSocketService {
     _('USER_SENT_MESSAGE'),
     _('MEETING'),
     _('USER_JOINED_MEETING'),
-    _('USER_FOUND_MEETING'),
+    _('USER_CONNECTED_TO_MEETING'),
     _('USER_LEFT_MEETING'),
     _('MEETING_ABORTED'),
     _('MEETING_REQUEST_EXPIRED'),
@@ -53,9 +54,10 @@ export class MeetingsSocketService {
   onMeetingActions() {
     this.onUserSentMessage();
     this.onUserJoinedMeeting();
-    this.onUserFoundMeeting();
+    this.onUserConnectedToMeeting();
     this.onUserLeftMeeting();
     this.onMeetingAborted();
+    this.onMeetingUpdated();
     this.onMeetingRequestExpired();
     this.onMeetingExpired();
   }
@@ -108,13 +110,19 @@ export class MeetingsSocketService {
     );
   }
 
-  private onUserFoundMeeting() {
+  private onUserConnectedToMeeting() {
     this.userSocket.on(
-      'UserFoundMeeting',
+      'UserConnectedToMeeting',
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
 
-        this.meetingService.findMeetings().subscribe(
+        const { meetingId, requestId, groupId } = notification.data.data;
+        this.meetingService.clearMeetingRequest(requestId);
+
+        combineLatest([
+          this.meetingService.addFoundMeeting(meetingId),
+          this.groupsService.addFoundGroup(groupId, true),
+        ]).subscribe(
           () => {
             this.toastService.createInformation(
               _('New meeting has been found'),
@@ -148,15 +156,41 @@ export class MeetingsSocketService {
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
 
-        this.meetingService.findMeetings().subscribe(
+        const { groupId } = notification.data.data;
+
+        combineLatest([
+          this.meetingService.findMeetings(),
+          this.meetingService.findRequests(true),
+        ]).subscribe(
           () => {
             this.toastService.createInformation(
-              _('All users have left the group'),
+              _('The meeting has been aborted'),
             );
 
-            if (this.router.url === '/app/groups/chat') {
+            if (this.router.url === `/app/groups/${groupId}/chat`) {
               this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             }
+          },
+          () => {
+            this.toastService.createError(
+              _('A problem occurred while finding the meeting'),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  private onMeetingUpdated() {
+    this.userSocket.on(
+      'MeetingUpdated',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+
+        const { meetingId } = notification.data.data;
+        this.meetingService.syncMeeting(meetingId).subscribe(
+          () => {
+            this.toastService.createInformation(_('Meeting has been updated'));
           },
           () => {
             this.toastService.createError(
@@ -186,13 +220,13 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'MeetingExpired',
       (notification: SocketNotificationMessage) => {
-        const { meetingId } = notification.data.data;
+        const { meetingId, groupId } = notification.data.data;
 
         this.showNotificationIfBackground(notification);
 
         this.toastService.createInformation(_('The meeting has expired'));
 
-        if (this.router.url === '/app/groups/chat') {
+        if (this.router.url === `/app/groups/${groupId}/chat`) {
           this.routerNavigation.navigateBack(['/app/tabs/meetings']);
         }
 

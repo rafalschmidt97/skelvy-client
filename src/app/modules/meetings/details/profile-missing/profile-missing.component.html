@@ -4,7 +4,7 @@
       <div class="my-auto">
         <div class="info mb-2">
           <div class="font-weight-bold text-primary">
-            <ng-container [ngSwitch]="displayMissing">
+            <ng-container [ngSwitch]="missing">
               <span
                 *ngSwitchCase="1"
                 [innerText]="'Missing one person' | translate"

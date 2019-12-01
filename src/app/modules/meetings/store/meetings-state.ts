@@ -9,9 +9,11 @@ import {
 } from '../meetings';
 import { Action, State, StateContext } from '@ngxs/store';
 import {
+  AddGroup,
   AddGroupMessage,
   AddGroupMessages,
   AddGroupUser,
+  AddMeeting,
   ChangeMeetingLoadingStatus,
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
@@ -21,6 +23,8 @@ import {
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveRequest,
   RemoveResponseGroupMessage,
+  UpdateMeeting,
+  UpdateMeetingFromRequest,
   UpdateMeetingsFromModel,
   UpdateMeetingsState,
   UpdateRequests,
@@ -92,7 +96,7 @@ export class MeetingsState {
   }
 
   @Action(UpdateMeetingsState)
-  updateMeeting(
+  updateMeetingState(
     { getState, setState }: StateContext<MeetingsStateModel>,
     { meetings, requests, groups }: UpdateMeetingsState,
   ) {
@@ -109,6 +113,56 @@ export class MeetingsState {
     setState({ ...state, meetings, groups });
   }
 
+  @Action(UpdateMeeting)
+  updateMeeting(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { meeting }: UpdateMeeting,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetings: state.meetings.map(x => {
+        if (x.id === meeting.id) {
+          return meeting;
+        }
+
+        return x;
+      }),
+    });
+  }
+
+  @Action(UpdateMeetingFromRequest)
+  updateMeetingFromRequest(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    {
+      meetingId,
+      meetingRequest,
+      resolvedActivity,
+      resolvedCity,
+    }: UpdateMeetingFromRequest,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetings: state.meetings.map(x => {
+        if (x.id === meetingId) {
+          return {
+            ...x,
+            date: meetingRequest.date,
+            latitude: meetingRequest.latitude,
+            longitude: meetingRequest.longitude,
+            size: meetingRequest.size,
+            isHidden: meetingRequest.isHidden,
+            activity: resolvedActivity,
+            city: resolvedCity,
+          };
+        }
+
+        return x;
+      }),
+    });
+  }
+
   @Action(UpdateRequests)
   updateRequests(
     { getState, setState }: StateContext<MeetingsStateModel>,
@@ -116,6 +170,24 @@ export class MeetingsState {
   ) {
     const state = getState();
     setState({ ...state, requests });
+  }
+
+  @Action(AddMeeting)
+  addMeeting(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { meeting }: AddMeeting,
+  ) {
+    const state = getState();
+    setState({ ...state, meetings: [...state.meetings, meeting] });
+  }
+
+  @Action(AddGroup)
+  addGroup(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { group }: AddGroup,
+  ) {
+    const state = getState();
+    setState({ ...state, groups: [...state.groups, group] });
   }
 
   @Action(AddGroupMessage)

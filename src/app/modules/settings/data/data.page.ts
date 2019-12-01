@@ -80,7 +80,7 @@ export class DataPage {
     );
   }
 
-  async refreshMeeting() {
+  async refreshMeetings() {
     if (!this.isLoading) {
       const modal = await this.modalController.create({
         component: AlertModalComponent,
@@ -96,15 +96,18 @@ export class DataPage {
       const { data } = await modal.onWillDismiss();
 
       if (data && data.response) {
-        this.confirmRefreshMeeting();
+        this.confirmRefreshMeetings();
       }
     }
   }
 
-  confirmRefreshMeeting() {
+  confirmRefreshMeetings() {
     this.isLoading = true;
     this.loadingService.lock();
-    this.meetingService.findMeetings().subscribe(
+    combineLatest([
+      this.meetingService.findMeetings(),
+      this.meetingService.findRequests(true),
+    ]).subscribe(
       () => {
         this.isLoading = false;
         this.loadingService.unlock();

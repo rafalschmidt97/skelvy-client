@@ -1,7 +1,7 @@
 {
   "app" : {
     "USER_JOINED_MEETING": "Nowy użytkownik został dodany do grupy",
-    "USER_FOUND_MEETING": "Znaleziono nowe spotkanie",
+    "USER_CONNECTED_TO_MEETING": "Znaleziono nowe spotkanie",
     "USER_LEFT_MEETING": "Użytkownik opuścił grupę",
     "USER_SENT_PHOTO": "Wysłał zdjęcie",
     "USER_SENT_MESSAGE": "Wysłał wiadomość",

@@ -7,6 +7,7 @@ import {
   ActivityDto,
   ConnectRequest,
   GroupUserRole,
+  MeetingDto,
   MeetingModel,
   MeetingRequest,
   MeetingRequestDto,
@@ -20,11 +21,14 @@ import { UserDto } from '../user/user';
 import { Store } from '@ngxs/store';
 import {
   AddGroupUser,
+  AddMeeting,
   ChangeMeetingLoadingStatus,
   RemoveGroup,
   RemoveGroupUser,
   RemoveMeeting,
   RemoveRequest,
+  UpdateMeeting,
+  UpdateMeetingFromRequest,
   UpdateMeetingsFromModel,
   UpdateRequests,
 } from './store/meetings-actions';
@@ -61,6 +65,56 @@ export class MeetingsService {
           this.store.dispatch(
             new UpdateMeetingsFromModel(model.meetings, model.groups),
           );
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+          // TODO: set not red messages
+        }),
+        catchError(error => {
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+          return throwError(error);
+        }),
+      );
+  }
+
+  syncMeeting(
+    id: number,
+    markedAsLoading: boolean = false,
+  ): Observable<MeetingDto> {
+    if (!markedAsLoading) {
+      this.store.dispatch(new ChangeMeetingLoadingStatus(true));
+    }
+
+    return this.http
+      .get<MeetingDto>(
+        `${environment.versionApiUrl}meetings/${id}?language=${this.translateService.currentLang}`,
+      )
+      .pipe(
+        tap(meeting => {
+          this.store.dispatch(new UpdateMeeting(meeting));
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+          // TODO: set not red messages
+        }),
+        catchError(error => {
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+          return throwError(error);
+        }),
+      );
+  }
+
+  addFoundMeeting(
+    id: number,
+    markedAsLoading: boolean = false,
+  ): Observable<MeetingDto> {
+    if (!markedAsLoading) {
+      this.store.dispatch(new ChangeMeetingLoadingStatus(true));
+    }
+
+    return this.http
+      .get<MeetingDto>(
+        `${environment.versionApiUrl}meetings/${id}?language=${this.translateService.currentLang}`,
+      )
+      .pipe(
+        tap(meeting => {
+          this.store.dispatch(new AddMeeting(meeting));
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
           // TODO: set not red messages
         }),
@@ -145,11 +199,21 @@ export class MeetingsService {
     );
   }
 
-  updateMeeting(meetingId: number, request: MeetingRequest): Observable<void> {
-    return this.http.put<void>(
-      `${environment.versionApiUrl}meetings/${meetingId}`,
-      request,
-    );
+  updateMeeting(
+    meetingId: number,
+    request: MeetingRequest,
+    activity: ActivityDto,
+    city: string,
+  ): Observable<void> {
+    return this.http
+      .put<void>(`${environment.versionApiUrl}meetings/${meetingId}`, request)
+      .pipe(
+        tap(() => {
+          this.store.dispatch(
+            new UpdateMeetingFromRequest(meetingId, request, activity, city),
+          );
+        }),
+      );
   }
 
   findActivities(): Observable<ActivityDto[]> {

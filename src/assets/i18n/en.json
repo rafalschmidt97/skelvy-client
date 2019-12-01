@@ -1,6 +1,6 @@
 {
   "USER_JOINED_MEETING": "New user has been added to the group",
-  "USER_FOUND_MEETING": "New meeting has been found",
+  "USER_CONNECTED_TO_MEETING": "New meeting has been found",
   "USER_LEFT_MEETING": "User has left the group",
   "USER_SENT_PHOTO": "Sent a photo",
   "USER_SENT_MESSAGE": "Sent a message",

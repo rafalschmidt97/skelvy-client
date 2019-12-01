@@ -160,7 +160,7 @@
 	"Type a message...": "Wpisz wiadomość...",
 	"Type in your city e.g. ”Warsaw”. If this would not be enough try to add state or country.": "Wpisz swoje miasto, np. \"Warszawa\". Jeśli to nie wystarczy, spróbuj dodać województwo lub kraj.",
 	"Type in your city...": "Wpisz swoje miasto...",
-	"USER_FOUND_MEETING": "Znaleziono nowe spotkanie",
+	"USER_CONNECTED_TO_MEETING": "Znaleziono nowe spotkanie",
 	"USER_JOINED_MEETING": "Nowy użytkownik został dodany do grupy",
 	"USER_LEFT_MEETING": "Użytkownik opuścił grupę",
 	"USER_SENT_MESSAGE": "Wysłał wiadomość",

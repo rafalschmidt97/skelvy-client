@@ -15,6 +15,6 @@ export class ProfileMissingComponent {
   }
 
   get displayMissing(): number {
-    return this.size - this.length < 4 ? this.size - this.length : 4;
+    return this.size - this.length < 3 ? this.size - this.length : 2;
   }
 }
