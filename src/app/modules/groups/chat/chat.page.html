@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/app/tabs/meetings"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'Chat' | translate }}</ion-title>
-    <ion-buttons *ngIf="($meetings | async).loading" slot="end">
+    <ion-buttons *ngIf="isLoading" slot="end">
       <ion-button [disabled]="true">
         <ion-spinner color="dark" class="small-spinner"></ion-spinner>
       </ion-button>
@@ -14,13 +14,12 @@
 
 <ion-content [scrollY]="false">
   <div class="d-flex flex-column h-100 safe-area-b">
-    <ng-container *ngIf="$meetings | async as meeting">
+    <ng-container *ngIf="group && user">
       <app-connection [hasBackground]="true"></app-connection>
       <app-messages
-        *ngIf="meeting.meetingModel?.messages.length > 0; else empty"
-        [messages]="meeting.meetingModel.messages"
-        [meeting]="meeting.meetingModel.meeting"
-        [user]="(user$ | async).user"
+        *ngIf="group.messages.length > 0; else empty"
+        [group]="group"
+        [user]="user"
       ></app-messages>
       <ng-template #empty>
         <app-empty></app-empty>

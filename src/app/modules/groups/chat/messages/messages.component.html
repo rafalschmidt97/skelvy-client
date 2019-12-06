@@ -16,14 +16,18 @@
           [message]="message"
           [user]="meetingUser"
           [isLast]="
-            i === messages.length - 1
+            i === this.group.messages.length - 1
               ? true
-              : messages[i].userId !== messages[i + 1].userId ||
-                (messages[i + 1].type === messageType.ACTION &&
-                  messages[i + 1].action === messageActionType.SEEN)
+              : this.group.messages[i].userId !==
+                  this.group.messages[i + 1].userId ||
+                (this.group.messages[i + 1].type === messageType.ACTION &&
+                  this.group.messages[i + 1].action === messageActionType.SEEN)
           "
           [isFirst]="
-            i === 0 ? true : messages[i].userId !== messages[i - 1].userId
+            i === 0
+              ? true
+              : this.group.messages[i].userId !==
+                this.group.messages[i - 1].userId
           "
           [dateToShow]="dateToShow"
           (showDate)="showDate($event)"
@@ -35,14 +39,19 @@
             [message]="message"
             [user]="meetingUser"
             [isLast]="
-              i === messages.length - 1
+              i === this.group.messages.length - 1
                 ? true
-                : messages[i].userId !== messages[i + 1].userId ||
-                  (messages[i + 1].type === messageType.ACTION &&
-                    messages[i + 1].action === messageActionType.SEEN)
+                : this.group.messages[i].userId !==
+                    this.group.messages[i + 1].userId ||
+                  (this.group.messages[i + 1].type === messageType.ACTION &&
+                    this.group.messages[i + 1].action ===
+                      messageActionType.SEEN)
             "
             [isFirst]="
-              i === 0 ? true : messages[i].userId !== messages[i - 1].userId
+              i === 0
+                ? true
+                : this.group.messages[i].userId !==
+                  this.group.messages[i - 1].userId
             "
             [dateToShow]="dateToShow"
             (showDate)="showDate($event)"
@@ -62,14 +71,18 @@
         <app-message-anonymous
           [message]="message"
           [isLast]="
-            i === messages.length - 1
+            i === this.group.messages.length - 1
               ? true
-              : messages[i].userId !== messages[i + 1].userId ||
-                (messages[i + 1].type === messageType.ACTION &&
-                  messages[i + 1].action === messageActionType.SEEN)
+              : this.group.messages[i].userId !==
+                  this.group.messages[i + 1].userId ||
+                (this.group.messages[i + 1].type === messageType.ACTION &&
+                  this.group.messages[i + 1].action === messageActionType.SEEN)
           "
           [isFirst]="
-            i === 0 ? true : messages[i].userId !== messages[i - 1].userId
+            i === 0
+              ? true
+              : this.group.messages[i].userId !==
+                this.group.messages[i - 1].userId
           "
           [dateToShow]="dateToShow"
           (showDate)="showDate($event)"

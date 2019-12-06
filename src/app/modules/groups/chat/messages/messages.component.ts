@@ -7,7 +7,7 @@ import {
   MessageState,
   MessageType,
 } from '../../../meetings/meetings';
-import { UserDto } from '../../../user/user';
+import { SelfUserDto, UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
 import { GroupsService } from '../../groups.service';
 import { Storage } from '@ionic/storage';
@@ -26,9 +26,8 @@ import { MessageActionModalComponent } from './message-action-modal/message-acti
 })
 export class MessagesComponent implements OnInit {
   @ViewChild('content') content: ElementRef;
-  @Input() meeting: MeetingDto;
   @Input() group: GroupState;
-  @Input() user: UserDto;
+  @Input() user: SelfUserDto;
   dateToShow: string;
   isLoading = false;
   hasMoreMessages = false;
@@ -43,7 +42,6 @@ export class MessagesComponent implements OnInit {
     private readonly meetingService: MeetingsService,
     private readonly chatService: GroupsService,
     private readonly modalController: ModalController,
-    private readonly store: Store,
   ) {}
 
   get messagesWithoutSelfSeen(): MessageState[] {
@@ -53,16 +51,13 @@ export class MessagesComponent implements OnInit {
           x.type === MessageType.ACTION &&
           x.action === MessageActionType.SEEN &&
           x.userId === this.user.id &&
-          x.groupId === this.meeting.groupId
+          x.groupId === this.group.id
         ),
     );
   }
 
   ngOnInit() {
-    if (
-      this.store.selectSnapshot(state => state.meetings.meetingModel.messages)
-        .length >= 20
-    ) {
+    if (this.group.messages.length >= 20) {
       this.hasMoreMessages = true;
     }
 

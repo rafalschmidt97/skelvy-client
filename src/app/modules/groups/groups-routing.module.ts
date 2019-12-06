@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   { path: '', redirectTo: '/app/tabs/groups', pathMatch: 'full' },
   {
-    path: 'chat',
+    path: ':id/chat',
     loadChildren: './chat/chat.module#ChatPageModule',
   },
 ];

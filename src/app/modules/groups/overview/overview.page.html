@@ -1,18 +1,78 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>{{ 'Groups' | translate }}</ion-title>
+    <ion-buttons *ngIf="($meetings | async).loading" slot="end">
+      <ion-button [disabled]="true">
+        <ion-spinner color="dark" class="small-spinner"></ion-spinner>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <app-connection></app-connection>
-  <ng-container *ngIf="$groups | async as groups">
-    <div class="d-flex flex-column minh-100 flex-column bg-ultra-light">
-      <section class="d-flex flex-grow-1 py-3">
-        <div class="my-auto w-100 text-center header container">
-          {{ 'My groups' | translate }}
+  <ng-container *ngIf="$meetings | async as meetings">
+    <section
+      *ngIf="meetings; else loading"
+      class="d-flex flex-column minh-100 groups"
+    >
+      <div *ngIf="meetings.groups.length > 0; else empty">
+        <div
+          *ngFor="let group of meetings.groups"
+          [routerLink]="['/app/groups/', group.id, 'chat']"
+          class="person"
+        >
+          <div class="container d-flex align-items-center">
+            <div
+              class="flex-shrink-0 image rounded-circle"
+              [style.background-image]="
+                'url(' + (group.users[0]?.profile.photos)[0]?.url + ')'
+              "
+            ></div>
+            <div class="min-width mx-3">
+              <h4 class="mb-0 text-primary">
+                {{ getGroupName(group) }}
+              </h4>
+              <p class="last-message small text-muted mb-0">
+                {{ getLastMessage(group) }}
+              </p>
+            </div>
+            <div class="text-primary ml-auto">
+              <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+            </div>
+          </div>
         </div>
-      </section>
-    </div>
+      </div>
+      <ng-template #empty>
+        <div class="empty m-auto text-center py-3">
+          <div class="content container">
+            <ion-icon
+              name="chatbubbles"
+              class="big-icon text-primary"
+            ></ion-icon>
+            <div class="header">
+              {{ "You don't have any groups yet" | translate }}
+            </div>
+            <p class="body mt-3 mb-4">
+              {{
+                'The easiest way is to fill your preferences or create own meeting!'
+                  | translate
+              }}
+            </p>
+            <button
+              routerLink="/app/tabs/explore"
+              class="btn btn-outline-primary px-4"
+            >
+              {{ 'Explore' | translate }}
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </section>
+    <ng-template #loading>
+      <div class="text-center py-3">
+        <ion-spinner></ion-spinner>
+      </div>
+    </ng-template>
   </ng-container>
 </ion-content>
