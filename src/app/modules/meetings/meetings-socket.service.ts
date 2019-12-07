@@ -65,11 +65,16 @@ export class MeetingsSocketService {
   private onUserSentMessage() {
     this.userSocket.on(
       'UserSentMessage',
-      async (notification: SocketNotificationMessage<MessageDto[]>) => {
+      async (
+        notification: SocketNotificationMessage<{
+          groupId: number;
+          messages: MessageDto[];
+        }>,
+      ) => {
         this.showNotificationIfBackground(notification);
 
-        const messages = notification.data.data;
-        const persistenceMessages = messages.filter(x => {
+        const data = notification.data.data;
+        const persistenceMessages = data.messages.filter(x => {
           return (
             x.type === MessageType.RESPONSE ||
             (x.type === MessageType.ACTION &&
@@ -79,6 +84,7 @@ export class MeetingsSocketService {
 
         if (persistenceMessages.length > 0) {
           await this.groupsService.addSentMessagesWithReading(
+            data.groupId,
             persistenceMessages,
             this.store.selectSnapshot(state => state.user.user.id),
           );

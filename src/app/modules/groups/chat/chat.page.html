@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/app/tabs/meetings"></ion-back-button>
+      <ion-back-button defaultHref="/app/tabs/groups"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'Chat' | translate }}</ion-title>
     <ion-buttons *ngIf="isLoading" slot="end">
@@ -24,7 +24,7 @@
       <ng-template #empty>
         <app-empty></app-empty>
       </ng-template>
-      <app-message-form></app-message-form>
+      <app-message-form [group]="group" [user]="user"></app-message-form>
     </ng-container>
   </div>
 </ion-content>

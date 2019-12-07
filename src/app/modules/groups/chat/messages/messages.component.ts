@@ -79,7 +79,7 @@ export class MessagesComponent implements OnInit {
   loadMessages() {
     if (this.hasMoreMessages && !this.isLoading) {
       this.isLoading = true;
-      this.chatService.findMoreMessages().subscribe(
+      this.chatService.findMoreMessages(this.group.id).subscribe(
         (messages: MessageDto[]) => {
           if (messages.length < 20) {
             this.hasMoreMessages = false;

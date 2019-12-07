@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Form, OnSubmit } from '../../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/form/input/input.component';
@@ -10,7 +10,12 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { MeetingsService } from '../../../meetings/meetings.service';
 import { GroupsService } from '../../groups.service';
-import { MessageState, MessageType } from '../../../meetings/meetings';
+import {
+  GroupState,
+  MeetingDto,
+  MessageState,
+  MessageType,
+} from '../../../meetings/meetings';
 import { Store } from '@ngxs/store';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { base64StringToBlob } from 'blob-util';
@@ -21,6 +26,7 @@ import { from, throwError } from 'rxjs';
 import { PhotoDto } from '../../../../core/upload/upload';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { RemoveResponseGroupMessage } from '../../../meetings/store/meetings-actions';
+import { SelfUserDto } from '../../../user/user';
 
 @Component({
   selector: 'app-message-form',
@@ -29,10 +35,24 @@ import { RemoveResponseGroupMessage } from '../../../meetings/store/meetings-act
 })
 export class MessageFormComponent implements Form, OnSubmit, OnInit {
   @ViewChild('messageInput') messageInput: ElementRef;
+  @Input() group: GroupState;
+  @Input() user: SelfUserDto;
   form: FormGroup;
   isLoading = false;
   submitIcon = '👍';
-  private readonly activities = [_('soft drinks'), _('alcoholic drinks')];
+  private readonly activities = [
+    _('Soft drinks'),
+    _('Alcoholic drinks'),
+    _('Board games'),
+    _('Running'),
+    _('Cycling'),
+    _('Motorcycling'),
+    _('Football'),
+    _('Basketball'),
+    _('Volleyball'),
+    _('Tennis'),
+    _('Squash'),
+  ];
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -69,12 +89,26 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
   }
 
   ngOnInit() {
-    const activity = this.store.selectSnapshot(
-      state => state.meetings.meetingModel.meeting.activity.name,
-    );
+    const meetingFromGroup: MeetingDto = this.store
+      .selectSnapshot(state => state.meetings.meetings)
+      .find(x => x.groupId === this.group.id);
 
-    if (activity === this.activities[1]) {
-      this.submitIcon = '🍻';
+    if (meetingFromGroup) {
+      const activity = meetingFromGroup.activity.name;
+
+      if (activity === this.activities[1]) {
+        this.submitIcon = '🍻';
+      } else if (activity === this.activities[2]) {
+        this.submitIcon = '🎲';
+      } else if (activity === this.activities[6]) {
+        this.submitIcon = '⚽️';
+      } else if (activity === this.activities[7]) {
+        this.submitIcon = '🏀';
+      } else if (activity === this.activities[8]) {
+        this.submitIcon = '🏐';
+      } else if (activity === this.activities[9]) {
+        this.submitIcon = '🎾';
+      }
     }
   }
 
@@ -91,10 +125,8 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
         attachmentUrl: null,
         date: new Date().toISOString(),
         action: null,
-        userId: this.store.selectSnapshot(state => state.user.user.id),
-        groupId: this.store.selectSnapshot(
-          state => state.meetings.meetingModel.meeting.groupId,
-        ),
+        userId: this.user.id,
+        groupId: this.group.id,
         sending: true,
       });
 
@@ -117,10 +149,8 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
         attachmentUrl: null,
         date: new Date().toISOString(),
         action: null,
-        userId: this.store.selectSnapshot(state => state.user.user.id),
-        groupId: this.store.selectSnapshot(
-          state => state.meetings.meetingModel.meeting.groupId,
-        ),
+        userId: this.user.id,
+        groupId: this.group.id,
         sending: true,
       });
 
@@ -142,10 +172,8 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
           text: null,
           attachmentUrl: takenPhotoUri,
           action: null,
-          userId: this.store.selectSnapshot(state => state.user.user.id),
-          groupId: this.store.selectSnapshot(
-            state => state.meetings.meetingModel.meeting.groupId,
-          ),
+          userId: this.user.id,
+          groupId: this.group.id,
           sending: true,
         });
 
@@ -168,10 +196,8 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
           text: null,
           attachmentUrl: chosenPhotoUri,
           action: null,
-          userId: this.store.selectSnapshot(state => state.user.user.id),
-          groupId: this.store.selectSnapshot(
-            state => state.meetings.meetingModel.meeting.groupId,
-          ),
+          userId: this.user.id,
+          groupId: this.group.id,
           sending: true,
         });
 
