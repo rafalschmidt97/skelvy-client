@@ -22,15 +22,23 @@
           [routerLink]="['/app/groups/', group.id, 'chat']"
           class="person"
         >
-          <div class="container d-flex align-items-center">
-            <div
-              class="flex-shrink-0 image rounded-circle"
-              [style.background-image]="
-                'url(' + (group.users[0]?.profile.photos)[0]?.url + ')'
-              "
-            ></div>
+          <div
+            class="container d-flex align-items-center"
+            [class.two]="group.users.length === 2"
+            [class.three]="group.users.length === 3"
+            [class.more]="group.users.length > 3"
+          >
+            <div class="flex-shrink-0 image-container">
+              <div
+                *ngFor="let user of getFirstUsers(group)"
+                class="image rounded-circle"
+                [style.background-image]="
+                  'url(' + user.profile.photos[0]?.url + ')'
+                "
+              ></div>
+            </div>
             <div class="min-width mx-3">
-              <h4 class="mb-0 text-primary">
+              <h4 class="group-name mb-0 text-primary">
                 {{ getGroupName(group) }}
               </h4>
               <p class="last-message small text-muted mb-0">

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { MeetingsStateModel } from '../../meetings/store/meetings-state';
-import { GroupState, MessageType } from '../../meetings/meetings';
+import { GroupState, GroupUserDto, MessageType } from '../../meetings/meetings';
 import { isEmpty } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { _ } from '../../../core/i18n/translate';
@@ -50,5 +50,9 @@ export class OverviewPage {
     return lastMessage.attachmentUrl
       ? `${messageUser.profile.name}: ${this.sentAttachmentMessage}`
       : `${messageUser.profile.name}: ${lastMessage.text}`;
+  }
+
+  getFirstUsers(group: GroupState): GroupUserDto[] {
+    return group.users.slice(0, 4);
   }
 }
