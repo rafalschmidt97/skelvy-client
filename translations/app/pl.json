@@ -2,13 +2,18 @@
   "app" : {
     "USER_JOINED_MEETING": "Nowy użytkownik został dodany do grupy",
     "USER_CONNECTED_TO_MEETING": "Znaleziono nowe spotkanie",
-    "USER_LEFT_MEETING": "Użytkownik opuścił grupę",
+    "USER_LEFT_MEETING": "Użytkownik opuścił spotkanie",
     "USER_SENT_PHOTO": "Wysłał zdjęcie",
     "USER_SENT_MESSAGE": "Wysłał wiadomość",
     "MEETING_REQUEST_EXPIRED": "Twoje preferencje wygasły",
     "MEETING_ABORTED": "Twoje spotkanie zostało anulowane",
     "MEETING_EXPIRED": "Twoje spotkanie wygasło",
     "MEETING": "Spotkanie",
-    "MEETING_REQUEST": "Preferencje spotkania"
+    "MEETING_REQUEST": "Preferencje spotkania",
+    "USER_REMOVED_FROM_MEETING": "Użytkownik został usunięty ze spotkania",
+    "USER_SELF_REMOVED_FROM_MEETING": "Zostałeś usunięty ze spotkania",
+    "USER_LEFT_GROUP": "Użytkownik opuścił grupę",
+    "MEETING_UPDATED": "Spotkanie zostało zaktualizowane",
+    "GROUP_ABORTED": "Twoja grupa została usunięta"
   }
 }

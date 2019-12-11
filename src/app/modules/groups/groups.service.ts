@@ -18,6 +18,7 @@ import {
   ChangeMeetingLoadingStatus,
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
+  RemoveGroup,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveResponseGroupMessage,
 } from '../meetings/store/meetings-actions';
@@ -249,5 +250,9 @@ export class GroupsService {
       environment.versionApiUrl + 'messages',
       message,
     );
+  }
+
+  clearGroup(groupId: number) {
+    this.store.dispatch(new RemoveGroup(groupId));
   }
 }
