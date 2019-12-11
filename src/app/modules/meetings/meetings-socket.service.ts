@@ -25,7 +25,8 @@ export class MeetingsSocketService {
   private readonly meetingsNotifications = [
     _('USER_SENT_PHOTO'),
     _('USER_SENT_MESSAGE'),
-    _('MEETING'),
+    _('MEETINGS'),
+    _('GROUPS'),
     _('USER_JOINED_MEETING'),
     _('USER_CONNECTED_TO_MEETING'),
     _('USER_LEFT_MEETING'),

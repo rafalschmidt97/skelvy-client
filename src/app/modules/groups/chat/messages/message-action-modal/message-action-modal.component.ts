@@ -17,7 +17,7 @@ export class MessageActionModalComponent {
 
   constructor(
     private readonly modalController: ModalController,
-    private readonly chatService: GroupsService,
+    private readonly groupsService: GroupsService,
     private readonly meetingService: MeetingsService,
     private readonly routerNavigation: NavController,
     private readonly toastService: ToastService,
@@ -30,7 +30,7 @@ export class MessageActionModalComponent {
 
   sendAgain(oldMessage: MessageState) {
     this.dismiss();
-    this.chatService.sendAgainMessage(oldMessage).subscribe(
+    this.groupsService.sendAgainMessage(oldMessage).subscribe(
       () => {},
       (error: HttpErrorResponse) => {
         // data is not relevant (connection lost and reconnected)
@@ -48,6 +48,6 @@ export class MessageActionModalComponent {
 
   remove(message: MessageState) {
     this.dismiss();
-    this.chatService.removeMessage(message);
+    this.groupsService.removeMessage(message);
   }
 }

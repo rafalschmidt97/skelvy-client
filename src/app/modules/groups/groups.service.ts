@@ -155,7 +155,7 @@ export class GroupsService {
     this.store.dispatch(new AddGroupMessages(groupId, messages));
 
     if (
-      this.router.url !== '/app/groups/chat' ||
+      this.router.url !== `/app/groups/${groupId}/chat` ||
       this.backgroundService.inBackground
     ) {
       // TODO: set not red messages

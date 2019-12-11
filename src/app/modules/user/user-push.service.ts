@@ -84,18 +84,22 @@ export class UserPushService {
         if (!notification.additionalData.foreground) {
           const { redirect_to, action, data } = notification.additionalData;
           const dataJson = JSON.parse(data);
-          if (redirect_to === 'meeting') {
+          if (redirect_to === 'meetings') {
             this.routerNavigation.navigateRoot(['/app/tabs/meetings']);
-          } else if (redirect_to === 'chat') {
-            this.routerNavigation
-              .navigateForward(['/app/groups/chat'])
-              .then(async () => {
-                if (action === 'UserSentMessage') {
-                  await this.groupsService.readMessagesFromState(
-                    dataJson[0].group_id,
-                  );
-                }
-              });
+          } else if (redirect_to === 'groups') {
+            if (data.groupId) {
+              this.routerNavigation
+                .navigateForward(['/app/groups', data.groupId, 'chat'])
+                .then(async () => {
+                  if (action === 'UserSentMessage') {
+                    await this.groupsService.readMessagesFromState(
+                      dataJson[0].group_id,
+                    );
+                  }
+                });
+            } else {
+              this.routerNavigation.navigateForward(['/app/tabs/groups']);
+            }
           }
         }
       });
@@ -105,18 +109,22 @@ export class UserPushService {
       .subscribe((notification: SocketNotificationMessage) => {
         if (notification.data) {
           const { redirectTo, action, data } = notification.data;
-          if (redirectTo === 'meeting') {
+          if (redirectTo === 'meetings') {
             this.routerNavigation.navigateRoot(['/app/tabs/meetings']);
-          } else if (redirectTo === 'chat') {
-            this.routerNavigation
-              .navigateForward(['/app/groups/chat'])
-              .then(async () => {
-                if (action === 'UserSentMessage') {
-                  await this.groupsService.readMessagesFromState(
-                    data[0].groupId,
-                  );
-                }
-              });
+          } else if (redirectTo === 'groups') {
+            if (data.groupId) {
+              this.routerNavigation
+                .navigateForward(['/app/groups', data.groupId, 'chat'])
+                .then(async () => {
+                  if (action === 'UserSentMessage') {
+                    await this.groupsService.readMessagesFromState(
+                      data[0].groupId,
+                    );
+                  }
+                });
+            } else {
+              this.routerNavigation.navigateForward(['/app/tabs/groups']);
+            }
           }
         }
       });

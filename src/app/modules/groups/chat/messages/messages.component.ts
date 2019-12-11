@@ -40,7 +40,7 @@ export class MessagesComponent implements OnInit {
     private readonly router: Router,
     private readonly storage: Storage,
     private readonly meetingService: MeetingsService,
-    private readonly chatService: GroupsService,
+    private readonly groupsService: GroupsService,
     private readonly modalController: ModalController,
   ) {}
 
@@ -79,7 +79,7 @@ export class MessagesComponent implements OnInit {
   loadMessages() {
     if (this.hasMoreMessages && !this.isLoading) {
       this.isLoading = true;
-      this.chatService.findMoreMessages(this.group.id).subscribe(
+      this.groupsService.findMoreMessages(this.group.id).subscribe(
         (messages: MessageDto[]) => {
           if (messages.length < 20) {
             this.hasMoreMessages = false;

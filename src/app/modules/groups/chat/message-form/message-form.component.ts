@@ -61,7 +61,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     private readonly router: Router,
     private readonly storage: Storage,
     private readonly meetingService: MeetingsService,
-    private readonly chatService: GroupsService,
+    private readonly groupsService: GroupsService,
     private readonly store: Store,
     private readonly camera: Camera,
     private readonly file: File,
@@ -207,10 +207,10 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
   }
 
   private sendTextMessage(message: MessageState) {
-    return from(this.chatService.addMessage(message))
+    return from(this.groupsService.addMessage(message))
       .pipe(
         switchMap(() => {
-          return this.chatService.sendMessage(message);
+          return this.groupsService.sendMessage(message);
         }),
       )
       .subscribe(
@@ -231,7 +231,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
 
   private sendAttachmentMessage(message: MessageState) {
     return from(
-      this.chatService.addMessage({
+      this.groupsService.addMessage({
         ...message,
         attachmentUrl: this.webview.convertFileSrc(message.attachmentUrl),
       }),
@@ -241,7 +241,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
           return from(this.uploadPhoto(message));
         }),
         switchMap(photo => {
-          return this.chatService.sendMessage({
+          return this.groupsService.sendMessage({
             ...message,
             attachmentUrl: photo.url,
           });
