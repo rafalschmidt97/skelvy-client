@@ -29,7 +29,12 @@ export class MeetingsSocketService {
     _('USER_JOINED_MEETING'),
     _('USER_CONNECTED_TO_MEETING'),
     _('USER_LEFT_MEETING'),
+    _('USER_REMOVED_FROM_MEETING'),
+    _('USER_SELF_REMOVED_FROM_MEETING'),
+    _('USER_LEFT_GROUP'),
     _('MEETING_ABORTED'),
+    _('MEETING_UPDATED'),
+    _('GROUP_ABORTED'),
     _('MEETING_REQUEST_EXPIRED'),
     _('MEETING_REQUEST'),
     _('MEETING_EXPIRED'),
@@ -56,20 +61,29 @@ export class MeetingsSocketService {
     this.onUserJoinedMeeting();
     this.onUserConnectedToMeeting();
     this.onUserLeftMeeting();
+    this.onUserRemovedFromMeeting();
+    this.onUserSelfRemovedFromMeeting();
+    this.onUserLeftGroup();
     this.onMeetingAborted();
     this.onMeetingUpdated();
     this.onMeetingRequestExpired();
+    this.onGroupAborted();
     this.onMeetingExpired();
   }
 
   private onUserSentMessage() {
     this.userSocket.on(
       'UserSentMessage',
-      async (notification: SocketNotificationMessage<MessageDto[]>) => {
+      async (
+        notification: SocketNotificationMessage<{
+          groupId: number;
+          messages: MessageDto[];
+        }>,
+      ) => {
         this.showNotificationIfBackground(notification);
 
-        const messages = notification.data.data;
-        const persistenceMessages = messages.filter(x => {
+        const data = notification.data.data;
+        const persistenceMessages = data.messages.filter(x => {
           return (
             x.type === MessageType.RESPONSE ||
             (x.type === MessageType.ACTION &&
@@ -79,6 +93,7 @@ export class MeetingsSocketService {
 
         if (persistenceMessages.length > 0) {
           await this.groupsService.addSentMessagesWithReading(
+            data.groupId,
             persistenceMessages,
             this.store.selectSnapshot(state => state.user.user.id),
           );
@@ -150,6 +165,30 @@ export class MeetingsSocketService {
     );
   }
 
+  private onUserLeftGroup() {
+    this.userSocket.on(
+      'UserLeftGroup',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+
+        const { userId, groupId } = notification.data.data;
+        this.meetingService.removeUser(userId, groupId);
+      },
+    );
+  }
+
+  private onUserRemovedFromMeeting() {
+    this.userSocket.on(
+      'UserRemovedFromMeeting',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+
+        const { removedUserId, groupId } = notification.data.data;
+        this.meetingService.removeUser(removedUserId, groupId);
+      },
+    );
+  }
+
   private onMeetingAborted() {
     this.userSocket.on(
       'MeetingAborted',
@@ -216,6 +255,25 @@ export class MeetingsSocketService {
     );
   }
 
+  private onGroupAborted() {
+    this.userSocket.on(
+      'GroupAborted',
+      (notification: SocketNotificationMessage) => {
+        const { groupId } = notification.data.data;
+
+        this.showNotificationIfBackground(notification);
+
+        this.toastService.createInformation(_('The group has been aborted'));
+
+        if (this.router.url === `/app/groups/${groupId}/chat`) {
+          this.routerNavigation.navigateBack(['/app/tabs/groups']);
+        }
+
+        this.groupsService.clearGroup(groupId);
+      },
+    );
+  }
+
   private onMeetingExpired() {
     this.userSocket.on(
       'MeetingExpired',
@@ -230,7 +288,28 @@ export class MeetingsSocketService {
           this.routerNavigation.navigateBack(['/app/tabs/meetings']);
         }
 
-        this.meetingService.clearMeeting(meetingId);
+        this.meetingService.clearMeeting(meetingId, groupId);
+      },
+    );
+  }
+
+  private onUserSelfRemovedFromMeeting() {
+    this.userSocket.on(
+      'UserSelfRemovedFromMeeting',
+      (notification: SocketNotificationMessage) => {
+        const { meetingId, groupId } = notification.data.data;
+
+        this.showNotificationIfBackground(notification);
+
+        this.toastService.createInformation(
+          _('You have been removed from the meeting'),
+        );
+
+        if (this.router.url === `/app/groups/${groupId}/chat`) {
+          this.routerNavigation.navigateBack(['/app/tabs/meetings']);
+        }
+
+        this.meetingService.clearMeeting(meetingId, groupId);
       },
     );
   }

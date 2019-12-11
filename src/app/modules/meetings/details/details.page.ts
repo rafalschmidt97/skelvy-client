@@ -90,6 +90,7 @@ export class DetailsPage implements OnInit, OnDestroy {
   get filteredMeetingUsers(): UserDto[] {
     return this.group.users.filter(user => user.id !== this.user.id);
   }
+
   async openDetails(user: UserDto) {
     const modal = await this.modalController.create({
       component: ProfileDetailsModalComponent,
@@ -198,26 +199,26 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   showMessages() {
     this.routerNavigation
-      .navigateForward(['/app/groups/:id/chat', this.group.id])
+      .navigateForward(['/app/groups/', this.group.id, 'chat'])
       .then(async () => {
         await this.groupsService.readMessagesFromState(this.meeting.groupId);
       });
   }
 
   get isAdmin(): boolean {
-    if (!this.group) {
+    if (!this.group || !this.user) {
       return false;
     }
     const groupSelf = this.group.users.find(x => x.id === this.user.id);
-    return groupSelf.role === GroupUserRole.ADMIN;
+    return groupSelf ? groupSelf.role === GroupUserRole.ADMIN : false;
   }
 
   get isOwner(): boolean {
-    if (!this.group) {
+    if (!this.group || !this.user) {
       return false;
     }
     const groupSelf = this.group.users.find(x => x.id === this.user.id);
-    return groupSelf.role === GroupUserRole.OWNER;
+    return groupSelf ? groupSelf.role === GroupUserRole.OWNER : false;
   }
 
   editMeeting() {

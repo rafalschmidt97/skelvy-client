@@ -201,12 +201,15 @@ export class MeetingsState {
       ...state,
       groups: state.groups.map(group => {
         if (group.id === groupId) {
-          group.messages = isSeenMessage(message)
-            ? [
-                ...group.messages.filter(x => !isSameSeenMessage(x, message)),
-                message,
-              ]
-            : [...group.messages, message];
+          return {
+            ...group,
+            messages: isSeenMessage(message)
+              ? [
+                  ...group.messages.filter(x => !isSameSeenMessage(x, message)),
+                  message,
+                ]
+              : [...group.messages, message],
+          };
         }
 
         return group;
@@ -226,14 +229,17 @@ export class MeetingsState {
       ...state,
       groups: state.groups.map(group => {
         if (group.id === groupId) {
-          group.messages = end
-            ? [
-                ...group.messages.filter(
-                  x => !isSameSeenInMessages(x, seenMessages),
-                ),
-                ...messages,
-              ]
-            : [...messages, ...group.messages];
+          return {
+            ...group,
+            messages: end
+              ? [
+                  ...group.messages.filter(
+                    x => !isSameSeenInMessages(x, seenMessages),
+                  ),
+                  ...messages,
+                ]
+              : [...messages, ...group.messages],
+          };
         }
 
         return group;
@@ -251,9 +257,12 @@ export class MeetingsState {
       ...state,
       groups: state.groups.map(group => {
         if (group.id === groupId) {
-          group.messages = group.messages.filter(
-            x => !isSameMessageByDate(x, message),
-          );
+          return {
+            ...group,
+            messages: group.messages.filter(
+              x => !isSameMessageByDate(x, message),
+            ),
+          };
         }
 
         return group;
@@ -271,10 +280,15 @@ export class MeetingsState {
       ...state,
       groups: state.groups.map(group => {
         if (group.id === groupId) {
-          group.messages = [
-            ...group.messages.filter(x => !isSameMessageByDate(x, oldMessage)),
-            newMessage,
-          ];
+          return {
+            ...group,
+            messages: [
+              ...group.messages.filter(
+                x => !isSameMessageByDate(x, oldMessage),
+              ),
+              newMessage,
+            ],
+          };
         }
 
         return group;
@@ -297,25 +311,28 @@ export class MeetingsState {
       ...state,
       groups: state.groups.map(group => {
         if (group.id === groupId) {
-          group.messages = [
-            ...group.messages
-              .map(x => {
-                if (isSameMessageByDate(x, message)) {
-                  return {
-                    ...x,
-                    id: apiMessage.id,
-                    date: apiMessage.date,
-                    attachmentUrl: message.attachmentUrl,
-                    sending: false,
-                    failed: false,
-                  };
-                }
+          return {
+            ...group,
+            messages: [
+              ...group.messages
+                .map(x => {
+                  if (isSameMessageByDate(x, message)) {
+                    return {
+                      ...x,
+                      id: apiMessage.id,
+                      date: apiMessage.date,
+                      attachmentUrl: message.attachmentUrl,
+                      sending: false,
+                      failed: false,
+                    };
+                  }
 
-                return x;
-              })
-              .filter(x => !isSameSeenMessage(x, apiMessage)),
-            ...otherMessages,
-          ];
+                  return x;
+                })
+                .filter(x => !isSameSeenMessage(x, apiMessage)),
+              ...otherMessages,
+            ],
+          };
         }
 
         return group;
@@ -333,18 +350,21 @@ export class MeetingsState {
       ...state,
       groups: state.groups.map(group => {
         if (group.id === groupId) {
-          group.messages = group.messages.map(x => {
-            if (isSameMessageByDate(x, message)) {
-              return {
-                ...x,
-                attachmentUrl: message.attachmentUrl,
-                sending: false,
-                failed: true,
-              };
-            }
+          return {
+            ...group,
+            messages: group.messages.map(x => {
+              if (isSameMessageByDate(x, message)) {
+                return {
+                  ...x,
+                  attachmentUrl: message.attachmentUrl,
+                  sending: false,
+                  failed: true,
+                };
+              }
 
-            return x;
-          });
+              return x;
+            }),
+          };
         }
 
         return group;

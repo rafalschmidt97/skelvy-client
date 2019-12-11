@@ -2,13 +2,18 @@
   "app" : {
     "USER_JOINED_MEETING": "New user has been added to the group",
     "USER_CONNECTED_TO_MEETING": "New meeting has been found",
-    "USER_LEFT_MEETING": "User has left the group",
+    "USER_LEFT_MEETING": "User has left the meeting",
     "USER_SENT_PHOTO": "Sent a photo",
     "USER_SENT_MESSAGE": "Sent a message",
     "MEETING_REQUEST_EXPIRED": "Your request has expired",
     "MEETING_ABORTED": "Your meeting has been aborted",
     "MEETING_EXPIRED": "Your meeting has expired",
     "MEETING": "Meeting",
-    "MEETING_REQUEST": "Meeting request"
-  }
+    "MEETING_REQUEST": "Meeting request",
+    "USER_REMOVED_FROM_MEETING": "User has been removed from the meeting",
+    "USER_SELF_REMOVED_FROM_MEETING": "You have been removed from the meeting",
+    "USER_LEFT_GROUP": "User has left the group",
+    "MEETING_UPDATED": "Meeting has been updated",
+    "GROUP_ABORTED": "Your meeting has been aborted"
+  },
 }

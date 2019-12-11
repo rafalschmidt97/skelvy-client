@@ -301,8 +301,9 @@ export class MeetingsService {
     this.store.dispatch(new RemoveGroupUser(groupId, userId));
   }
 
-  clearMeeting(meetingId: number) {
+  clearMeeting(meetingId: number, groupId: number) {
     this.store.dispatch(new RemoveMeeting(meetingId));
+    this.store.dispatch(new RemoveGroup(groupId));
   }
 
   clearMeetingRequest(requestId: number) {

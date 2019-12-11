@@ -18,9 +18,10 @@ import {
   ChangeMeetingLoadingStatus,
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
+  RemoveGroup,
+  RemoveMeeting,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveResponseGroupMessage,
-  UpdateMeeting,
 } from '../meetings/store/meetings-actions';
 import { Store } from '@ngxs/store';
 import { Storage } from '@ionic/storage';
@@ -67,7 +68,7 @@ export class GroupsService {
       .get<MessageDto[]>(
         `${
           environment.versionApiUrl
-        }messages/self?groupId=${groupId}&beforeDate=${new Date(
+        }messages?groupId=${groupId}&beforeDate=${new Date(
           beforeDate,
         ).toISOString()}`,
       )
@@ -80,10 +81,11 @@ export class GroupsService {
       );
   }
 
-  findMoreMessages(): Observable<MessageDto[]> {
-    const firstMessage = this.store.selectSnapshot(
-      state => state.meetings.meetingModel.messages,
-    )[0];
+  findMoreMessages(groupId: number): Observable<MessageDto[]> {
+    const firstMessage = this.store
+      .selectSnapshot(state => state.meetings.groups)
+      .find(x => x.id === groupId).messages[0];
+
     return this.findMessages(firstMessage.groupId, firstMessage.date).pipe(
       tap(messages => {
         this.store.dispatch(
@@ -95,7 +97,7 @@ export class GroupsService {
 
   sendMessage(message: MessageState): Observable<MessageDto[]> {
     return this.http
-      .post<MessageDto[]>(environment.versionApiUrl + 'messages/self', message)
+      .post<MessageDto[]>(environment.versionApiUrl + 'messages', message)
       .pipe(
         tap(async apiMessages => {
           this.store.dispatch(
@@ -145,8 +147,12 @@ export class GroupsService {
     // TODO: set not red messages
   }
 
-  async addSentMessagesWithReading(messages: MessageState[], userId: number) {
-    this.store.dispatch(new AddGroupMessages(messages[0].groupId, messages));
+  async addSentMessagesWithReading(
+    groupId: number,
+    messages: MessageState[],
+    userId: number,
+  ) {
+    this.store.dispatch(new AddGroupMessages(groupId, messages));
 
     if (
       this.router.url !== '/app/groups/chat' ||
@@ -186,9 +192,9 @@ export class GroupsService {
   }
 
   async readMessagesFromState(groupId: number) {
-    const messages = this.store.selectSnapshot(
-      state => state.meetings.meetingModel.messages,
-    );
+    const messages = this.store
+      .selectSnapshot(state => state.meetings.groups)
+      .find(x => x.id === groupId).messages;
 
     if (messages.length > 0) {
       await this.readMessages(groupId, messages);
@@ -214,7 +220,7 @@ export class GroupsService {
     };
 
     return this.http
-      .post<MessageDto[]>(environment.versionApiUrl + 'messages/self', message)
+      .post<MessageDto[]>(environment.versionApiUrl + 'messages', message)
       .pipe(
         tap(async ([seenMessage]) => {
           this.store.dispatch(
@@ -242,8 +248,23 @@ export class GroupsService {
     };
 
     return this.http.post<MessageDto[]>(
-      environment.versionApiUrl + 'messages/self',
+      environment.versionApiUrl + 'messages',
       message,
     );
+  }
+
+  clearGroup(groupId: number) {
+    this.store.dispatch(new RemoveGroup(groupId));
+  }
+
+  leaveGroup(groupId: number): Observable<void> {
+    return this.http
+      .post<void>(`${environment.versionApiUrl}groups/${groupId}/leave`, null)
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveGroup(groupId));
+          // TODO: remove red messages date
+        }),
+      );
   }
 }
