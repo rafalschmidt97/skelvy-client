@@ -4,9 +4,19 @@
       <ion-back-button defaultHref="/app/tabs/groups"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'Chat' | translate }}</ion-title>
-    <ion-buttons *ngIf="isLoading" slot="end">
-      <ion-button [disabled]="true">
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isLoading" [disabled]="true">
         <ion-spinner color="dark" class="small-spinner"></ion-spinner>
+      </ion-button>
+      <ion-button
+        *ngIf="isNotMeeting"
+        (click)="openLeave()"
+        [disabled]="loadingAction"
+      >
+        <ion-icon name="exit" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!isNotMeeting" (click)="seeMeeting()">
+        <ion-icon name="calendar" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

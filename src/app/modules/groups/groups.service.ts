@@ -19,6 +19,7 @@ import {
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
   RemoveGroup,
+  RemoveMeeting,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveResponseGroupMessage,
 } from '../meetings/store/meetings-actions';
@@ -254,5 +255,16 @@ export class GroupsService {
 
   clearGroup(groupId: number) {
     this.store.dispatch(new RemoveGroup(groupId));
+  }
+
+  leaveGroup(groupId: number): Observable<void> {
+    return this.http
+      .post<void>(`${environment.versionApiUrl}groups/${groupId}/leave`, null)
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveGroup(groupId));
+          // TODO: remove red messages date
+        }),
+      );
   }
 }
