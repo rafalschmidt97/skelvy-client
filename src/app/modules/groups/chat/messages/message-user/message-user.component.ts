@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserDto } from '../../../../user/user';
-import { MessageState } from '../../../../meetings/meetings';
+import { GroupUserDto, MessageState } from '../../../../meetings/meetings';
 import isOnlyEmojis from 'is-only-emojis';
 
 @Component({
@@ -9,7 +8,7 @@ import isOnlyEmojis from 'is-only-emojis';
   styleUrls: ['./message-user.component.scss'],
 })
 export class MessageUserComponent {
-  @Input() user: UserDto;
+  @Input() user: GroupUserDto;
   @Input() message: MessageState;
   @Input() isLast: boolean;
   @Input() isFirst: boolean;

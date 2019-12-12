@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Username' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isLoadingCheck" [disabled]="true">
+        <ion-spinner color="dark" class="small-spinner"></ion-spinner>
+      </ion-button>
+      <ion-button
+        [disabled]="
+          isLoading ||
+          isLoadingCheck ||
+          isNameTaken ||
+          form.invalid ||
+          isInitial
+        "
+        (click)="onSubmit()"
+      >
+        {{ 'Done' | translate }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <div class="py-3">
+      <app-form
+        [form]="form"
+        (onSubmit)="onSubmit()"
+        [isLoading]="isLoading"
+        class="py-3"
+      >
+        <app-input
+          name="username"
+          [label]="'Username' | translate"
+          [autocomplete]="false"
+          [autocorrect]="false"
+          [autocapitalize]="false"
+        ></app-input>
+      </app-form>
+      <div class="text-danger small" *ngIf="isNameTaken && !isLoadingCheck">
+        {{ 'This username is already taken. Try something else!' | translate }}
+      </div>
+    </div>
+  </div>
+</ion-content>

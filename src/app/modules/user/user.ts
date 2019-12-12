@@ -2,6 +2,7 @@ import { MeetingWithUsersDto } from '../meetings/meetings';
 
 export interface UserDto {
   id: number;
+  name: string;
   profile: ProfileDto;
 }
 
@@ -15,6 +16,8 @@ export interface ProfileDto {
 
 export interface SelfUserDto {
   id: number;
+  name: string;
+  email: string;
   profile: SelfProfileDto;
 }
 

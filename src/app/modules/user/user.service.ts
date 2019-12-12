@@ -9,6 +9,8 @@ import {
   ChangeUserLoadingStatus,
   UpdateProfile,
   UpdateUser,
+  UpdateUserEmail,
+  UpdateUserName,
 } from './store/user-actions';
 
 @Injectable({
@@ -56,5 +58,35 @@ export class UserService {
           this.store.dispatch(new UpdateProfile(profile));
         }),
       );
+  }
+
+  updateName(name: string): Observable<void> {
+    return this.http
+      .patch<void>(environment.versionApiUrl + 'users/self/name', {
+        name,
+      })
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new UpdateUserName(name));
+        }),
+      );
+  }
+
+  updateEmail(email: string): Observable<void> {
+    return this.http
+      .patch<void>(environment.versionApiUrl + 'users/self/email', {
+        email,
+      })
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new UpdateUserEmail(email));
+        }),
+      );
+  }
+
+  checkNameAvailable(name: string): Observable<boolean> {
+    return this.http.get<boolean>(
+      `${environment.versionApiUrl}users/name-available?name=${name}`,
+    );
   }
 }

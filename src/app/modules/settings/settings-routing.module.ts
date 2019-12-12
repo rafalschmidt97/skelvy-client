@@ -21,6 +21,14 @@ const routes: Routes = [
     loadChildren: './language/language.module#LanguagePageModule',
   },
   {
+    path: 'email',
+    loadChildren: './email/email.module#EmailPageModule',
+  },
+  {
+    path: 'username',
+    loadChildren: './username/username.module#UsernamePageModule',
+  },
+  {
     path: 'notifications',
     loadChildren:
       './notifications/notifications.module#NotificationsPageModule',

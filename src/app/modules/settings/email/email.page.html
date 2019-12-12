@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Email' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        [disabled]="isLoading || form.invalid || isInitial"
+        (click)="onSubmit()"
+      >
+        {{ 'Done' | translate }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <div class="py-3">
+      <app-form
+        [form]="form"
+        (onSubmit)="onSubmit()"
+        [isLoading]="isLoading"
+        class="py-3"
+      >
+        <app-input
+          name="email"
+          [label]="'Email' | translate"
+          [isEmail]="true"
+        ></app-input>
+      </app-form>
+    </div>
+  </div>
+</ion-content>
