@@ -1,6 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { UserDto } from '../../../../user/user';
-import { MessageActionType, MessageState } from '../../../../meetings/meetings';
+import {
+  GroupUserDto,
+  MessageActionType,
+  MessageState,
+} from '../../../../meetings/meetings';
 
 @Component({
   selector: 'app-message-actions',
@@ -8,7 +11,7 @@ import { MessageActionType, MessageState } from '../../../../meetings/meetings';
   styleUrls: ['./message-actions.component.scss'],
 })
 export class MessageActionsComponent {
-  @Input() user: UserDto;
+  @Input() user: GroupUserDto;
   @Input() message: MessageState;
   messageActionType = MessageActionType;
 }

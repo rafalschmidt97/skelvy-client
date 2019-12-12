@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
   GroupState,
+  GroupUserDto,
   MeetingDto,
   MessageActionType,
   MessageDto,
@@ -64,7 +65,7 @@ export class MessagesComponent implements OnInit {
     this.scrollToLastMessage();
   }
 
-  findUser(userId: number): UserDto {
+  findUser(userId: number): GroupUserDto {
     return this.group.users.find(user => user.id === userId);
   }
 

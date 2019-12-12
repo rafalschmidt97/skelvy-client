@@ -32,6 +32,7 @@ export interface GroupState {
 export interface GroupUserDto {
   id: number;
   role: GroupUserRole;
+  name: string;
   profile: ProfileDto;
 }
 

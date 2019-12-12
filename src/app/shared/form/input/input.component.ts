@@ -11,6 +11,9 @@ export class InputComponent extends ComplexFieldComponent {
   @Input() isPassword: boolean;
   @Input() isEmail: boolean;
   @Input() placeholder = '';
+  @Input() autocomplete = true;
+  @Input() autocorrect = true;
+  @Input() autocapitalize = true;
 
   get hasErrorEmail(): boolean {
     return this.form.get(this.name).hasError('email') && !this.hasErrorRequired;

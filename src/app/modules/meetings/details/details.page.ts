@@ -5,7 +5,12 @@ import { ModalController, NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingsService } from '../meetings.service';
 import { LoadingService } from '../../../core/loading/loading.service';
-import { GroupState, GroupUserRole, MeetingDto } from '../meetings';
+import {
+  GroupState,
+  GroupUserDto,
+  GroupUserRole,
+  MeetingDto,
+} from '../meetings';
 import { AlertModalComponent } from '../../../shared/components/alert/alert-modal/alert-modal.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../core/i18n/translate';
@@ -87,7 +92,7 @@ export class DetailsPage implements OnInit, OnDestroy {
     }
   }
 
-  get filteredMeetingUsers(): UserDto[] {
+  get filteredMeetingUsers(): GroupUserDto[] {
     return this.group.users.filter(user => user.id !== this.user.id);
   }
 

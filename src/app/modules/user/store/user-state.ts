@@ -4,6 +4,8 @@ import {
   ChangeUserLoadingStatus,
   UpdateProfile,
   UpdateUser,
+  UpdateUserEmail,
+  UpdateUserName,
 } from './user-actions';
 
 export interface UserStateModel {
@@ -55,6 +57,36 @@ export class UserState {
     setState({
       ...state,
       user,
+    });
+  }
+
+  @Action(UpdateUserName)
+  updateUserName(
+    { getState, setState }: StateContext<UserStateModel>,
+    { name }: UpdateUserName,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      user: {
+        ...state.user,
+        name,
+      },
+    });
+  }
+
+  @Action(UpdateUserEmail)
+  updateUserEmail(
+    { getState, setState }: StateContext<UserStateModel>,
+    { email }: UpdateUserEmail,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      user: {
+        ...state.user,
+        email,
+      },
     });
   }
 }

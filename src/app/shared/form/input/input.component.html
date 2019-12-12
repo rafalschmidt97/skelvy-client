@@ -9,6 +9,10 @@
       [class.is-invalid]="isInvalid && isTouched && hasFeedback"
       [attr.disabled]="isLoading ? '' : null"
       [placeholder]="placeholder"
+      [attr.autocomplete]="autocomplete ? 'on' : 'off'"
+      [attr.autocorrect]="autocomplete ? 'on' : 'off'"
+      [attr.autocapitalize]="autocapitalize ? 'on' : 'off'"
+      [attr.spellcheck]="autocorrect ? 'true' : 'false'"
     />
 
     <ng-container *ngIf="hasFeedback">
