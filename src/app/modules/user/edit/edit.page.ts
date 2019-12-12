@@ -104,10 +104,17 @@ export class EditPage implements Form, OnSubmit, OnInit {
 
       this.userService.updateProfile(profile).subscribe(
         () => {
-          if (window.history.length > 1) {
-            this.routerNavigation.back();
+          if (this.created) {
+            this.routerNavigation.navigateForward([
+              '/app/settings/username',
+              { created: true },
+            ]);
           } else {
-            this.routerNavigation.navigateBack(['/app/tabs/user']);
+            if (window.history.length > 1) {
+              this.routerNavigation.back();
+            } else {
+              this.routerNavigation.navigateBack(['/app/tabs/user']);
+            }
           }
         },
         () => {

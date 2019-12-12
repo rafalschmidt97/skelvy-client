@@ -1,7 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/app/settings"></ion-back-button>
+      <ion-back-button
+        [hidden]="isLoading || created"
+        defaultHref="/app/settings"
+      ></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'Email' | translate }}</ion-title>
     <ion-buttons slot="end">

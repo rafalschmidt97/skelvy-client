@@ -15,6 +15,7 @@ import {
 } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { InputComponent } from '../../../shared/form/input/input.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-email',
@@ -27,6 +28,7 @@ export class UsernamePage implements Form, OnSubmit, OnInit {
   isLoadingCheck = false;
   isNameTaken = false;
   initialValue: string;
+  created = true;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -34,6 +36,7 @@ export class UsernamePage implements Form, OnSubmit, OnInit {
     private readonly toastService: ToastService,
     private readonly routerNavigation: NavController,
     private readonly store: Store,
+    private readonly route: ActivatedRoute,
   ) {
     const username = this.store.selectSnapshot(state => state.user.user.name);
     this.initialValue = username;
@@ -46,6 +49,12 @@ export class UsernamePage implements Form, OnSubmit, OnInit {
   }
 
   ngOnInit() {
+    this.created = !!this.route.snapshot.paramMap.get('created');
+
+    if (this.created) {
+      this.initialValue = '';
+    }
+
     this.form
       .get('username')
       .valueChanges.pipe(
@@ -84,8 +93,14 @@ export class UsernamePage implements Form, OnSubmit, OnInit {
       this.isLoading = true;
       this.userService.updateName(form.username.trim().toLowerCase()).subscribe(
         () => {
-          this.isLoading = false;
-          this.routerNavigation.navigateBack(['/app/settings']);
+          if (this.created) {
+            this.routerNavigation.navigateForward([
+              '/app/settings/email',
+              { created: true },
+            ]);
+          } else {
+            this.routerNavigation.navigateBack(['/app/settings']);
+          }
         },
         () => {
           this.isLoading = false;

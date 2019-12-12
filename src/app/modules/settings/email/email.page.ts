@@ -13,16 +13,18 @@ import { NavController } from '@ionic/angular';
 import { storageKeys } from '../../../core/storage/storage';
 import { Store } from '@ngxs/store';
 import { InputComponent } from '../../../shared/form/input/input.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-email',
   templateUrl: './email.page.html',
   styleUrls: ['../overview/overview.page.scss'],
 })
-export class EmailPage implements Form, OnSubmit {
+export class EmailPage implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
   initialValue: string;
+  created = true;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -30,6 +32,7 @@ export class EmailPage implements Form, OnSubmit {
     private readonly toastService: ToastService,
     private readonly routerNavigation: NavController,
     private readonly store: Store,
+    private readonly route: ActivatedRoute,
   ) {
     const email = this.store.selectSnapshot(state => state.user.user.email);
     this.initialValue = email;
@@ -43,6 +46,13 @@ export class EmailPage implements Form, OnSubmit {
         ],
       ],
     });
+  }
+  ngOnInit() {
+    this.created = !!this.route.snapshot.paramMap.get('created');
+
+    if (this.created) {
+      this.initialValue = '';
+    }
   }
 
   onSubmit() {
