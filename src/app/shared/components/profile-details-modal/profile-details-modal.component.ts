@@ -17,7 +17,8 @@ export class ProfileDetailsModalComponent {
   @Input() mine: boolean;
   @Input() blocked: boolean;
   @Input() friend: boolean;
-  loading = false;
+  loadingFriend = false;
+  loadingBlocked = false;
 
   constructor(
     private readonly emailComposer: EmailComposer,
@@ -28,57 +29,57 @@ export class ProfileDetailsModalComponent {
   ) {}
 
   blockUser() {
-    this.loading = true;
+    this.loadingBlocked = true;
     this.settingsService.addBlockedUser(this.user).subscribe(
       () => {
         this.blocked = true;
-        this.loading = false;
+        this.loadingBlocked = false;
       },
       () => {
         this.blocked = true;
-        this.loading = false;
+        this.loadingBlocked = false;
       },
     );
   }
 
   removeBlockUser() {
-    this.loading = true;
+    this.loadingBlocked = true;
     this.settingsService.removeBlockedUser(this.user.id).subscribe(
       () => {
         this.blocked = false;
-        this.loading = false;
+        this.loadingBlocked = false;
       },
       () => {
         this.blocked = false;
-        this.loading = false;
+        this.loadingBlocked = false;
       },
     );
   }
 
   inviteFriend() {
-    this.loading = true;
+    this.loadingFriend = true;
     this.settingsService.inviteFriend(this.user.id).subscribe(
       () => {
         this.blocked = true;
-        this.loading = false;
+        this.loadingFriend = false;
       },
       () => {
         this.blocked = true;
-        this.loading = false;
+        this.loadingFriend = false;
       },
     );
   }
 
   removeFriend() {
-    this.loading = true;
+    this.loadingFriend = true;
     this.settingsService.removeFriend(this.user.id).subscribe(
       () => {
         this.friend = false;
-        this.loading = false;
+        this.loadingFriend = false;
       },
       () => {
         this.friend = false;
-        this.loading = false;
+        this.loadingFriend = false;
       },
     );
   }

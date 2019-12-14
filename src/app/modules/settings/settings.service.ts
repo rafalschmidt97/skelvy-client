@@ -90,7 +90,7 @@ export class SettingsService {
       )
       .pipe(
         tap(() => {
-          this.store.dispatch(new RemoveBlockedUser(userId));
+          this.store.dispatch(new RemoveFriend(userId));
         }),
       );
   }

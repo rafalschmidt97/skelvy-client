@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
-import { UserDto } from '../../user/user';
+import { FriendInvitation, UserDto } from '../../user/user';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { ModalController } from '@ionic/angular';
+import { FriendInvitationModalComponent } from './invitation-modal/invitation-modal.component';
 
 @Component({
   selector: 'app-friends',
@@ -16,6 +17,9 @@ import { ModalController } from '@ionic/angular';
 })
 export class FriendsPage implements OnInit {
   @Select(x => x.settings.friends) friends$: Observable<UserDto[]>;
+  @Select(x => x.settings.friendInvitations) friendInvitations$: Observable<
+    FriendInvitation[]
+  >;
   loadingFriends = true;
   loadingFriendsMore = false;
   allFriendsLoaded = false;
@@ -98,5 +102,24 @@ export class FriendsPage implements OnInit {
     });
 
     await modal.present();
+  }
+
+  async openInvitation(invitation: FriendInvitation) {
+    const modal = await this.modalController.create({
+      component: FriendInvitationModalComponent,
+      componentProps: {
+        invitation,
+      },
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (data && data.invitationId) {
+      this.settingsService
+        .respondFriendInvitation(data.invitationId, data.accept)
+        .subscribe();
+    }
   }
 }

@@ -9,6 +9,18 @@
 
 <ion-content>
   <div class="blocked content minh-100 bg-ultra-light">
+    <ng-container *ngIf="friendInvitations$ | async as invitations">
+      <ng-container *ngIf="invitations.length > 0">
+        <div class="label text-muted">{{ 'Invitations' | translate }}</div>
+        <div class="bg-white border-top">
+          <app-invitation-preview
+            *ngFor="let invitation of invitations"
+            [invitation]="invitation"
+            (openInvitation)="openInvitation($event)"
+          ></app-invitation-preview>
+        </div>
+      </ng-container>
+    </ng-container>
     <div class="label text-muted">{{ 'Your friends' | translate }}</div>
     <ng-container *ngIf="!loadingFriends; else loading">
       <ng-container *ngIf="friends$ | async as friends">
