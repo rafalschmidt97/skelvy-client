@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import {
   UpdateProfile,
   UpdateUser,
+  UpdateUserEmail,
+  UpdateUserName,
 } from '../../modules/user/store/user-actions';
 import { concatMap } from 'rxjs/operators';
 import { UserStateModel } from '../../modules/user/store/user-state';
@@ -45,7 +47,12 @@ export class StateTrackerService {
   track() {
     this.userActions = this.actions
       .pipe(
-        ofActionSuccessful(UpdateUser, UpdateProfile),
+        ofActionSuccessful(
+          UpdateUser,
+          UpdateProfile,
+          UpdateUserName,
+          UpdateUserEmail,
+        ),
         concatMap(() => this.store.selectOnce(state => state.user)),
       )
       .subscribe(async (user: UserStateModel) => {

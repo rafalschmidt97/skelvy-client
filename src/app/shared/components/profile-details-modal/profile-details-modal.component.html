@@ -24,24 +24,47 @@
     </p>
     <ng-container *ngIf="!mine">
       <button
+        *ngIf="!friend; else invite"
+        type="button"
+        [disabled]="loading"
+        (click)="blockUser()"
+        class="btn btn-block btn-primary"
+      >
+        <ng-container *ngIf="!loading; else loading">{{
+          'Invite friend' | translate
+        }}</ng-container>
+      </button>
+      <ng-template #invite>
+        <button
+          type="button"
+          [disabled]="loading"
+          (click)="removeFriend()"
+          class="btn btn-block btn-dark"
+        >
+          <ng-container *ngIf="!loading; else loading">{{
+            'Remove friend' | translate
+          }}</ng-container>
+        </button>
+      </ng-template>
+      <button
         *ngIf="!blocked; else unblock"
         type="button"
-        [disabled]="loadingBlocking"
+        [disabled]="loading"
         (click)="blockUser()"
         class="btn btn-block btn-danger"
       >
-        <ng-container *ngIf="!loadingBlocking; else loading">{{
+        <ng-container *ngIf="!loading; else loading">{{
           'Block user' | translate
         }}</ng-container>
       </button>
       <ng-template #unblock>
         <button
           type="button"
-          [disabled]="loadingBlocking"
+          [disabled]="loading"
           (click)="removeBlockUser()"
           class="btn btn-block btn-dark"
         >
-          <ng-container *ngIf="!loadingBlocking; else loading">{{
+          <ng-container *ngIf="!loading; else loading">{{
             'Unblock user' | translate
           }}</ng-container>
         </button>

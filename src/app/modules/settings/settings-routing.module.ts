@@ -13,6 +13,10 @@ const routes: Routes = [
     loadChildren: './blocked/blocked.module#BlockedPageModule',
   },
   {
+    path: 'friends',
+    loadChildren: './friends/friends.module#FriendsPageModule',
+  },
+  {
     path: 'community',
     loadChildren: './community/community.module#CommunityPageModule',
   },

@@ -10,15 +10,15 @@ import { ProfileDetailsModalComponent } from '../../../shared/components/profile
 import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-blocked',
-  templateUrl: './blocked.page.html',
+  selector: 'app-friends',
+  templateUrl: './friends.page.html',
   styleUrls: ['../overview/overview.page.scss'],
 })
-export class BlockedPage implements OnInit {
-  @Select(x => x.settings.blockedUsers) blockedUsers$: Observable<UserDto[]>;
-  loadingBlocked = true;
-  loadingBlockedMore = false;
-  allBlockedLoaded = false;
+export class FriendsPage implements OnInit {
+  @Select(x => x.settings.friends) friends$: Observable<UserDto[]>;
+  loadingFriends = true;
+  loadingFriendsMore = false;
+  allFriendsLoaded = false;
   page = 1;
 
   constructor(
@@ -30,60 +30,58 @@ export class BlockedPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    const blockedUsers = this.store.selectSnapshot(
-      state => state.settings.blockedUsers,
-    );
-    if (!blockedUsers || blockedUsers.length === 0) {
-      this.loadBlockedUsers();
+    const friends = this.store.selectSnapshot(state => state.settings.friends);
+    if (!friends || friends.length === 0) {
+      this.loadFriends();
     } else {
-      this.loadingBlocked = false;
-      const blockedUsersAmount = blockedUsers.length;
+      this.loadingFriends = false;
+      const blockedUsersAmount = friends.length;
       this.page =
         blockedUsersAmount % 10 !== 0
           ? blockedUsersAmount / 10 + 1
           : blockedUsersAmount / 10;
-      this.allBlockedLoaded = blockedUsers.length % 10 !== 0;
+      this.allFriendsLoaded = friends.length % 10 !== 0;
     }
   }
 
-  loadBlockedUsers() {
-    this.loadingBlocked = true;
-    this.settingsService.findBlockedUsers().subscribe(
-      blockedUsers => {
-        this.loadingBlocked = false;
-        this.allBlockedLoaded = blockedUsers.length % 10 !== 0;
+  loadFriends() {
+    this.loadingFriends = true;
+    this.settingsService.findFriends().subscribe(
+      friends => {
+        this.loadingFriends = false;
+        this.allFriendsLoaded = friends.length % 10 !== 0;
 
         if (this.page !== 1) {
           this.page = 1;
         }
       },
       () => {
-        this.loadingBlocked = false;
+        this.loadingFriends = false;
         this.toastService.createError(
-          _('A problem occurred while finding blocked users'),
+          _('A problem occurred while finding friends'),
         );
       },
     );
   }
 
-  loadMoreBlockedUsers() {
+  loadMoreFriends() {
     this.page = this.page + 1;
-    this.loadingBlockedMore = true;
-    this.settingsService.findBlockedUsers(this.page).subscribe(
-      blockedUsers => {
-        this.loadingBlockedMore = false;
+    this.loadingFriendsMore = true;
+    this.settingsService.findFriends(this.page).subscribe(
+      friends => {
+        this.loadingFriendsMore = false;
 
-        if (blockedUsers.length > 0) {
-          this.allBlockedLoaded = blockedUsers.length % 10 !== 0;
+        if (friends.length > 0) {
+          this.allFriendsLoaded = friends.length % 10 !== 0;
         } else {
-          this.allBlockedLoaded = true;
+          this.allFriendsLoaded = true;
         }
       },
       () => {
-        this.loadingBlockedMore = false;
-        this.allBlockedLoaded = true;
+        this.loadingFriendsMore = false;
+        this.allFriendsLoaded = true;
         this.toastService.createError(
-          _('A problem occurred while finding blocked users'),
+          _('A problem occurred while finding friends'),
         );
       },
     );
@@ -94,7 +92,7 @@ export class BlockedPage implements OnInit {
       component: ProfileDetailsModalComponent,
       componentProps: {
         user,
-        blocked: true,
+        friend: true,
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });

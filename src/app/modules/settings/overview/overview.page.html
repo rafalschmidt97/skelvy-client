@@ -17,8 +17,8 @@
         {{ 'Notifications' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
-      <a routerLink="/app/settings/blocked" class="btn btn-settings btn-icon">
-        {{ 'Blocked users' | translate }}
+      <a routerLink="/app/settings/friends" class="btn btn-settings btn-icon">
+        {{ 'Friends' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
       <a routerLink="/app/settings/language" class="btn btn-settings btn-icon">
@@ -33,6 +33,10 @@
         {{ 'Email' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
+      <a routerLink="/app/settings/blocked" class="btn btn-settings btn-icon">
+        {{ 'Blocked users' | translate }}
+        <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
+      </a>
       <a routerLink="/app/settings/data" class="btn btn-settings btn-icon">
         {{ 'Stored data' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
@@ -45,11 +49,7 @@
         {{ 'Legal' | translate }}
         <ion-icon name="arrow-forward" class="icon ml-auto"></ion-icon>
       </a>
-      <button
-        type="button"
-        (click)="logout(logout)"
-        class="btn btn-settings mt-3"
-      >
+      <button type="button" (click)="logout()" class="btn btn-settings mt-3">
         {{ 'Log out' | translate }}
       </button>
       <button type="button" (click)="sendReport()" class="btn btn-settings">
