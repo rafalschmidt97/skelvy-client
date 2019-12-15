@@ -78,6 +78,7 @@ export interface MeetingRequestWithUserDto {
   latitude: number;
   longitude: number;
   city: string;
+  description: string;
   activities: ActivityDto[];
   user: UserDto;
 }

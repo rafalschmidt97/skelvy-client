@@ -93,9 +93,15 @@
                 >: {{ request.city }}
               </div>
               <div>
-                <span class="font-weight-bold">{{
-                  'Activities' | translate
-                }}</span
+                <span class="font-weight-bold">
+                  <ng-container
+                    *ngIf="request.activities.length > 1; else oneActivity"
+                  >
+                    {{ 'Activities' | translate }}
+                  </ng-container>
+                  <ng-template #oneActivity>
+                    {{ 'Activity' | translate }}
+                  </ng-template> </span
                 >:
                 <ng-container
                   *ngFor="let activity of request.activities; let i = index"
