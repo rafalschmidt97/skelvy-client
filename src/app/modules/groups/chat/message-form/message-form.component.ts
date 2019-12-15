@@ -44,7 +44,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     _('Soft drinks'),
     _('Alcoholic drinks'),
     _('Board games'),
-    _('Running'),
+    _('Jogging'),
     _('Cycling'),
     _('Motorcycling'),
     _('Football'),
