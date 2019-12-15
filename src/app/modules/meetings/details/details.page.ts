@@ -101,6 +101,9 @@ export class DetailsPage implements OnInit, OnDestroy {
       component: GroupProfileModalComponent,
       componentProps: {
         user,
+        meeting: this.meeting,
+        group: this.group,
+        openingUser: this.group.users.find(x => x.id === this.user.id),
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });

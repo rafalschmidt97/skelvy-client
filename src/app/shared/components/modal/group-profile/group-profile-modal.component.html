@@ -24,6 +24,46 @@
     >
       {{ 'User did not fill his bio yet.' | translate }}
     </p>
+    <ng-container
+      *ngIf="
+        user.role !== roles.OWNER &&
+        (openingUser.role === roles.ADMIN || openingUser.role === roles.OWNER)
+      "
+    >
+      <button
+        *ngIf="user.role !== roles.ADMIN"
+        type="button"
+        [disabled]="loadingRole"
+        (click)="makeAdmin()"
+        class="btn btn-block btn-primary"
+      >
+        <ng-container *ngIf="!loadingRole; else loading">{{
+          'Make admin' | translate
+        }}</ng-container>
+      </button>
+      <button
+        *ngIf="user.role !== roles.PRIVILEGED"
+        type="button"
+        [disabled]="true"
+        (click)="makePrivileged()"
+        class="btn btn-block btn-outline-primary"
+      >
+        <ng-container *ngIf="!loadingRole; else loading">{{
+          'Make privileged' | translate
+        }}</ng-container>
+      </button>
+      <button
+        *ngIf="user.role !== roles.MEMBER"
+        type="button"
+        [disabled]="loadingRole"
+        (click)="removePrivileges()"
+        class="btn btn-block btn-outline-danger"
+      >
+        <ng-container *ngIf="!loadingRole; else loading">{{
+          'Remove privileges' | translate
+        }}</ng-container>
+      </button>
+    </ng-container>
     <button
       *ngIf="relation === null"
       type="button"

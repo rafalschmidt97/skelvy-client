@@ -6,7 +6,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from '../../../../modules/settings/settings.service';
 import { _ } from '../../../../core/i18n/translate';
 import { ModalController } from '@ionic/angular';
-import { GroupUserDto } from '../../../../modules/meetings/meetings';
+import {
+  GroupState,
+  GroupUserDto,
+  GroupUserRole,
+  MeetingDto,
+} from '../../../../modules/meetings/meetings';
+import { MeetingsService } from '../../../../modules/meetings/meetings.service';
 
 @Component({
   selector: 'app-group-profile-details-modal',
@@ -15,10 +21,15 @@ import { GroupUserDto } from '../../../../modules/meetings/meetings';
 })
 export class GroupProfileModalComponent {
   @Input() user: GroupUserDto;
+  @Input() meeting: MeetingDto;
+  @Input() group: GroupState;
   @Input() relation: RelationType;
+  @Input() openingUser: GroupUserDto;
+  loadingRole = false;
   loadingFriend = false;
   loadingBlocked = false;
   relations = RelationType;
+  roles = GroupUserRole;
   private readonly relationsTypes = [_('friend'), _('blocked'), _('pending')];
 
   constructor(
@@ -27,7 +38,68 @@ export class GroupProfileModalComponent {
     private readonly settingsService: SettingsService,
     private readonly translateService: TranslateService,
     private readonly modalController: ModalController,
+    private readonly meetingsService: MeetingsService,
   ) {}
+
+  makeAdmin() {
+    this.loadingRole = true;
+    this.meetingsService
+      .updateMeetingUserRole(
+        this.meeting.id,
+        this.group.id,
+        this.user.id,
+        GroupUserRole.ADMIN,
+      )
+      .subscribe(
+        () => {
+          this.loadingRole = false;
+          this.modalController.dismiss();
+        },
+        () => {
+          this.loadingRole = false;
+        },
+      );
+  }
+
+  makePrivileged() {
+    this.loadingRole = true;
+    this.meetingsService
+      .updateMeetingUserRole(
+        this.meeting.id,
+        this.group.id,
+        this.user.id,
+        GroupUserRole.PRIVILEGED,
+      )
+      .subscribe(
+        () => {
+          this.loadingRole = false;
+          this.modalController.dismiss();
+        },
+        () => {
+          this.loadingRole = false;
+        },
+      );
+  }
+
+  removePrivileges() {
+    this.loadingRole = true;
+    this.meetingsService
+      .updateMeetingUserRole(
+        this.meeting.id,
+        this.group.id,
+        this.user.id,
+        GroupUserRole.MEMBER,
+      )
+      .subscribe(
+        () => {
+          this.loadingRole = false;
+          this.modalController.dismiss();
+        },
+        () => {
+          this.loadingRole = false;
+        },
+      );
+  }
 
   blockUser() {
     this.loadingBlocked = true;

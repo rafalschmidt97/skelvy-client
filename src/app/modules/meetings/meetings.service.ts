@@ -30,6 +30,7 @@ import {
   UpdateMeeting,
   UpdateMeetingFromRequest,
   UpdateMeetingsFromModel,
+  UpdateMeetingUserRole,
   UpdateRequests,
 } from './store/meetings-actions';
 import {
@@ -216,6 +217,26 @@ export class MeetingsService {
       );
   }
 
+  updateMeetingUserRole(
+    meetingId: number,
+    groupId: number,
+    updatedUserId: number,
+    role: GroupUserRole,
+  ): Observable<void> {
+    return this.http
+      .patch<void>(
+        `${environment.versionApiUrl}meetings/${meetingId}/users/${updatedUserId}/role`,
+        { role },
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(
+            new UpdateMeetingUserRole(groupId, updatedUserId, role),
+          );
+        }),
+      );
+  }
+
   findActivities(): Observable<ActivityDto[]> {
     return this.http.get<ActivityDto[]>(
       environment.versionApiUrl + 'activities',
@@ -308,5 +329,11 @@ export class MeetingsService {
 
   clearMeetingRequest(requestId: number) {
     this.store.dispatch(new RemoveRequest(requestId));
+  }
+
+  updatedUserRole(groupId: number, updatedUserId: number, role: GroupUserRole) {
+    this.store.dispatch(
+      new UpdateMeetingUserRole(groupId, updatedUserId, role),
+    );
   }
 }

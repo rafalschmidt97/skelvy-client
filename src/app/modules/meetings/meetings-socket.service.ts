@@ -35,6 +35,7 @@ export class MeetingsSocketService {
     _('USER_LEFT_GROUP'),
     _('MEETING_ABORTED'),
     _('MEETING_UPDATED'),
+    _('MEETING_USER_ROLE_UPDATED'),
     _('GROUP_ABORTED'),
     _('MEETING_REQUEST_EXPIRED'),
     _('MEETING_REQUEST'),
@@ -67,6 +68,7 @@ export class MeetingsSocketService {
     this.onUserLeftGroup();
     this.onMeetingAborted();
     this.onMeetingUpdated();
+    this.onMeetingUserRoleUpdated();
     this.onMeetingRequestExpired();
     this.onGroupAborted();
     this.onMeetingExpired();
@@ -238,6 +240,17 @@ export class MeetingsSocketService {
             );
           },
         );
+      },
+    );
+  }
+
+  private onMeetingUserRoleUpdated() {
+    this.userSocket.on(
+      'MeetingUserRoleUpdated',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+        const { groupId, updatedUserId, role } = notification.data.data;
+        this.meetingService.updatedUserRole(groupId, updatedUserId, role);
       },
     );
   }

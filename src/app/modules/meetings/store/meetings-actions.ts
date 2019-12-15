@@ -2,6 +2,7 @@ import {
   ActivityDto,
   GroupDto,
   GroupUserDto,
+  GroupUserRole,
   MeetingDto,
   MeetingRequest,
   MeetingRequestDto,
@@ -50,6 +51,15 @@ export class UpdateMeetingFromRequest {
     public meetingRequest: MeetingRequest,
     public resolvedActivity: ActivityDto,
     public resolvedCity: string,
+  ) {}
+}
+
+export class UpdateMeetingUserRole {
+  static readonly type = '[Meetings] Update meeting user role';
+  constructor(
+    public groupId: number,
+    public userId: number,
+    public role: GroupUserRole,
   ) {}
 }
 

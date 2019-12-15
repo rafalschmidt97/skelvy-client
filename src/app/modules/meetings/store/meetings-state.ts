@@ -27,6 +27,7 @@ import {
   UpdateMeetingFromRequest,
   UpdateMeetingsFromModel,
   UpdateMeetingsState,
+  UpdateMeetingUserRole,
   UpdateRequests,
 } from './meetings-actions';
 
@@ -127,6 +128,36 @@ export class MeetingsState {
         }
 
         return x;
+      }),
+    });
+  }
+
+  @Action(UpdateMeetingUserRole)
+  updateMeetingUserRole(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, userId, role }: UpdateMeetingUserRole,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      groups: state.groups.map(group => {
+        if (group.id === groupId) {
+          return {
+            ...group,
+            users: group.users.map(user => {
+              if (user.id === userId) {
+                return {
+                  ...user,
+                  role,
+                };
+              }
+
+              return user;
+            }),
+          };
+        }
+
+        return group;
       }),
     });
   }
