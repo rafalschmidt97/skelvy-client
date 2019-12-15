@@ -6,8 +6,8 @@ import { LoadingService } from '../../../core/loading/loading.service';
 import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { ModalController } from '@ionic/angular';
+import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
 
 @Component({
   selector: 'app-blocked',
@@ -92,7 +92,7 @@ export class BlockedPage implements OnInit {
 
   async openDetails(user: UserDto) {
     const modal = await this.modalController.create({
-      component: ProfileDetailsModalComponent,
+      component: ProfileModalComponent,
       componentProps: {
         user,
         relation: this.relations.BLOCKED,

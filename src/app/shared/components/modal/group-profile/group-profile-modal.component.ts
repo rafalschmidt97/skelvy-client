@@ -1,24 +1,25 @@
 import { Component, Input } from '@angular/core';
-import { RelationType, UserDto } from '../../../modules/user/user';
+import { RelationType } from '../../../../modules/user/user';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
-import { ToastService } from '../../../core/toast/toast.service';
+import { ToastService } from '../../../../core/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SettingsService } from '../../../modules/settings/settings.service';
-import { _ } from '../../../core/i18n/translate';
+import { SettingsService } from '../../../../modules/settings/settings.service';
+import { _ } from '../../../../core/i18n/translate';
 import { ModalController } from '@ionic/angular';
+import { GroupUserDto } from '../../../../modules/meetings/meetings';
 
 @Component({
-  selector: 'app-profile-details-modal',
-  templateUrl: './profile-details-modal.component.html',
-  styleUrls: ['./profile-details-modal.component.scss'],
+  selector: 'app-group-profile-details-modal',
+  templateUrl: './group-profile-modal.component.html',
+  styleUrls: ['./group-profile-modal.component.scss'],
 })
-export class ProfileDetailsModalComponent {
-  @Input() user: UserDto;
-  @Input() mine: boolean;
+export class GroupProfileModalComponent {
+  @Input() user: GroupUserDto;
   @Input() relation: RelationType;
   loadingFriend = false;
   loadingBlocked = false;
   relations = RelationType;
+  private readonly relationsTypes = [_('friend'), _('blocked'), _('pending')];
 
   constructor(
     private readonly emailComposer: EmailComposer,

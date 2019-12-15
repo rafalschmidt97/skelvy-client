@@ -5,9 +5,9 @@ import { FriendInvitation, RelationType, UserDto } from '../../user/user';
 import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
-import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { ModalController } from '@ionic/angular';
 import { FriendInvitationModalComponent } from './invitation-modal/invitation-modal.component';
+import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
 
 @Component({
   selector: 'app-friends',
@@ -58,7 +58,7 @@ export class FriendsPage implements OnInit {
 
   async openDetails(user: UserDto) {
     const modal = await this.modalController.create({
-      component: ProfileDetailsModalComponent,
+      component: ProfileModalComponent,
       componentProps: {
         user,
         relation: this.relations.FRIEND,

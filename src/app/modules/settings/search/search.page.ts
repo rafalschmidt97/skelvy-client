@@ -3,10 +3,10 @@ import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { UserWithRoleDto } from '../../user/user';
 import { SettingsService } from '../settings.service';
-import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { ModalController } from '@ionic/angular';
 import { of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
 
 @Component({
   selector: 'app-search',
@@ -76,7 +76,7 @@ export class SearchPage {
 
   async openDetails(user: UserWithRoleDto) {
     const modal = await this.modalController.create({
-      component: ProfileDetailsModalComponent,
+      component: ProfileModalComponent,
       componentProps: {
         user: { id: user.id, profile: user.profile, name: user.name },
         relation: user.relationType,

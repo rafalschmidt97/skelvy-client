@@ -3,8 +3,8 @@ import { SelfUserDto } from '../user';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import * as moment from 'moment';
-import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { ModalController } from '@ionic/angular';
+import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
 
 @Component({
   selector: 'app-overview',
@@ -33,7 +33,7 @@ export class OverviewPage {
     };
 
     const modal = await this.modalController.create({
-      component: ProfileDetailsModalComponent,
+      component: ProfileModalComponent,
       componentProps: {
         user: detailsUser,
         mine: true,

@@ -16,11 +16,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../core/i18n/translate';
 import { SelfUserDto, UserDto } from '../../user/user';
 import { ActivatedRoute } from '@angular/router';
-import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { Storage } from '@ionic/storage';
 import { GroupsService } from '../../groups/groups.service';
 import { combineLatest, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { GroupProfileModalComponent } from '../../../shared/components/modal/group-profile/group-profile-modal.component';
 
 @Component({
   selector: 'app-details',
@@ -98,7 +98,7 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   async openDetails(user: UserDto) {
     const modal = await this.modalController.create({
-      component: ProfileDetailsModalComponent,
+      component: GroupProfileModalComponent,
       componentProps: {
         user,
       },

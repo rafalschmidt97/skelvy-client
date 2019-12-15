@@ -1,0 +1,92 @@
+<app-modal (confirm)="confirm()">
+  <div class="slider">
+    <ion-slides pager="true">
+      <ion-slide *ngFor="let photo of user.profile.photos">
+        <div
+          class="slide"
+          [style.background-image]="'url(' + photo.url + ')'"
+        ></div>
+      </ion-slide>
+    </ion-slides>
+  </div>
+  <div class="content container pb-3">
+    <h2 class="mb-0">{{ user.profile.name }}, {{ user.profile.age }}</h2>
+    <div class="text-muted mb-2">
+      @{{ user.name }} ({{ user.role | translate }})
+    </div>
+    <h5>{{ 'About me' | translate }}</h5>
+    <p class="description" *ngIf="user.profile.description?.length > 0">
+      {{ user.profile.description }}
+    </p>
+    <p
+      class="text-muted"
+      *ngIf="!user.profile.description || user.profile.description.length === 0"
+    >
+      {{ 'User did not fill his bio yet.' | translate }}
+    </p>
+    <button
+      *ngIf="relation === null"
+      type="button"
+      [disabled]="loadingFriend"
+      (click)="inviteFriend()"
+      class="btn btn-block btn-primary"
+    >
+      <ng-container *ngIf="!loadingFriend; else loading">{{
+        'Invite friend' | translate
+      }}</ng-container>
+    </button>
+    <button
+      *ngIf="relation === relations.PENDING"
+      type="button"
+      [disabled]="true"
+      class="btn btn-block btn-outline-primary"
+    >
+      <ng-container *ngIf="!loadingFriend; else loading">{{
+        'Invitation pending' | translate
+      }}</ng-container>
+    </button>
+    <button
+      *ngIf="relation === relations.FRIEND"
+      type="button"
+      [disabled]="loadingFriend"
+      (click)="removeFriend()"
+      class="btn btn-block btn-dark"
+    >
+      <ng-container *ngIf="!loadingFriend; else loading">{{
+        'Remove friend' | translate
+      }}</ng-container>
+    </button>
+    <button
+      *ngIf="relation !== relations.BLOCKED"
+      type="button"
+      [disabled]="loadingBlocked"
+      (click)="blockUser()"
+      class="btn btn-block btn-danger"
+    >
+      <ng-container *ngIf="!loadingBlocked; else loading">{{
+        'Block user' | translate
+      }}</ng-container>
+    </button>
+    <button
+      *ngIf="relation === relations.BLOCKED"
+      type="button"
+      [disabled]="loadingBlocked"
+      (click)="removeBlockUser()"
+      class="btn btn-block btn-dark"
+    >
+      <ng-container *ngIf="!loadingBlocked; else loading">{{
+        'Unblock user' | translate
+      }}</ng-container>
+    </button>
+    <ng-template #loading>
+      <ion-spinner></ion-spinner>
+    </ng-template>
+    <button
+      type="button"
+      (click)="sendReport()"
+      class="btn btn-block btn-outline-dark"
+    >
+      {{ 'Report user' | translate }}
+    </button>
+  </div>
+</app-modal>
