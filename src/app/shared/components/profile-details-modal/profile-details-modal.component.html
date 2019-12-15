@@ -24,28 +24,59 @@
     </p>
     <ng-container *ngIf="!mine">
       <button
-        *ngIf="!blocked; else unblock"
+        *ngIf="relation === null"
         type="button"
-        [disabled]="loadingBlocking"
+        [disabled]="loadingFriend"
+        (click)="inviteFriend()"
+        class="btn btn-block btn-primary"
+      >
+        <ng-container *ngIf="!loadingFriend; else loading">{{
+          'Invite friend' | translate
+        }}</ng-container>
+      </button>
+      <button
+        *ngIf="relation === relations.PENDING"
+        type="button"
+        [disabled]="true"
+        class="btn btn-block btn-outline-primary"
+      >
+        <ng-container *ngIf="!loadingFriend; else loading">{{
+          'Invitation pending' | translate
+        }}</ng-container>
+      </button>
+      <button
+        *ngIf="relation === relations.FRIEND"
+        type="button"
+        [disabled]="loadingFriend"
+        (click)="removeFriend()"
+        class="btn btn-block btn-dark"
+      >
+        <ng-container *ngIf="!loadingFriend; else loading">{{
+          'Remove friend' | translate
+        }}</ng-container>
+      </button>
+      <button
+        *ngIf="relation !== relations.BLOCKED"
+        type="button"
+        [disabled]="loadingBlocked"
         (click)="blockUser()"
         class="btn btn-block btn-danger"
       >
-        <ng-container *ngIf="!loadingBlocking; else loading">{{
+        <ng-container *ngIf="!loadingBlocked; else loading">{{
           'Block user' | translate
         }}</ng-container>
       </button>
-      <ng-template #unblock>
-        <button
-          type="button"
-          [disabled]="loadingBlocking"
-          (click)="removeBlockUser()"
-          class="btn btn-block btn-dark"
-        >
-          <ng-container *ngIf="!loadingBlocking; else loading">{{
-            'Unblock user' | translate
-          }}</ng-container>
-        </button>
-      </ng-template>
+      <button
+        *ngIf="relation === relations.BLOCKED"
+        type="button"
+        [disabled]="loadingBlocked"
+        (click)="removeBlockUser()"
+        class="btn btn-block btn-dark"
+      >
+        <ng-container *ngIf="!loadingBlocked; else loading">{{
+          'Unblock user' | translate
+        }}</ng-container>
+      </button>
       <ng-template #loading>
         <ion-spinner></ion-spinner>
       </ng-template>

@@ -155,7 +155,46 @@ export class DataPage {
         this.isLoading = false;
         this.loadingService.unlock();
         this.toastService.createError(
-          _('A problem occurred while finding the user'),
+          _('A problem occurred while finding blocked users'),
+        );
+      },
+    );
+  }
+
+  async refreshFriends() {
+    if (!this.isLoading) {
+      const modal = await this.modalController.create({
+        component: AlertModalComponent,
+        componentProps: {
+          title: this.translateService.instant(
+            'Are you sure you want to force to reload friends?',
+          ),
+        },
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data && data.response) {
+        this.confirmRefreshFriends();
+      }
+    }
+  }
+
+  confirmRefreshFriends() {
+    this.isLoading = true;
+    this.loadingService.lock();
+    this.settingsService.findFriends().subscribe(
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+      },
+      () => {
+        this.isLoading = false;
+        this.loadingService.unlock();
+        this.toastService.createError(
+          _('A problem occurred while finding friends'),
         );
       },
     );
@@ -192,6 +231,8 @@ export class DataPage {
     combineLatest([
       this.userService.findSelf(),
       this.selfService.sync(),
+      this.settingsService.findFriends(),
+      this.settingsService.findBlockedUsers(),
     ]).subscribe(
       () => {
         this.isLoading = false;

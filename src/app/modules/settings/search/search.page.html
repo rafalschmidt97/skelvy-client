@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Search' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container py-4 border-bottom">
+    <form (ngSubmit)="onSubmit()" novalidate>
+      <input
+        (keyup)="search$.next($event.target.value)"
+        class="form-control"
+        [(ngModel)]="search"
+        name="search"
+        [placeholder]="'Type in a username...' | translate"
+        appAutofocus
+        [attr.autocomplete]="'off'"
+        [attr.autocorrect]="'off'"
+        [attr.autocapitalize]="'off'"
+        [attr.spellcheck]="'false'"
+      />
+    </form>
+  </div>
+  <div class="content">
+    <ng-container *ngIf="resultLoading">
+      <div class="text-center py-3">
+        <ion-spinner></ion-spinner>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!resultLoading">
+      <ng-container *ngIf="!resultSearched">
+        <div class="container text-center py-3 text-muted">
+          {{
+            'If they do not remember the name it is possible to find this information in settings.'
+              | translate
+          }}
+        </div>
+      </ng-container>
+      <ng-container *ngIf="resultSearched">
+        <ng-container *ngIf="results?.length > 0">
+          <app-profile-preview
+            *ngFor="let user of results"
+            [user]="user"
+            (openDetails)="openDetails($event)"
+          ></app-profile-preview>
+        </ng-container>
+        <ng-container *ngIf="!results || !(results.length > 0)">
+          <div class="container text-center py-3">
+            {{ 'Nothing found. Try again!' | translate }}
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+</ion-content>

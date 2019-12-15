@@ -17,6 +17,12 @@ import { tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { ChangeConnectionStatus } from '../../core/state/global-actions';
 import { SelfService } from './self.service';
+import {
+  SocketNotificationMessage,
+  SocketNotificationType,
+} from '../../core/background/background';
+import { BackgroundService } from '../../core/background/background.service';
+import { SettingsService } from '../settings/settings.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +32,11 @@ export class UserSocketService {
   private initialized = false;
   private disconnected = true;
   private reconnectFailedAttempts = 0;
+  private readonly usersNotifications = [
+    _('FRIENDS'),
+    _('NEW_FRIEND_INVITATION'),
+    _('FRIEND_INVITATION_ACCEPTED'),
+  ];
 
   constructor(
     private readonly sessionService: SessionService,
@@ -35,6 +46,8 @@ export class UserSocketService {
     private readonly authService: AuthService,
     private readonly routerNavigation: NavController,
     private readonly store: Store,
+    private readonly backgroundService: BackgroundService,
+    private readonly settingsService: SettingsService,
   ) {
     this.socket = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'users', {
@@ -55,6 +68,9 @@ export class UserSocketService {
       this.onUserRemoved();
       this.onUserDisabled();
       this.onClose();
+      this.onUserSentFriendInvitation();
+      this.onUserRespondedFriendInvitation();
+      this.onFriendRemoved();
 
       this.initialized = true;
     }
@@ -171,6 +187,53 @@ export class UserSocketService {
             setTimeout(() => this.reconnectToSocket(), 1000);
           }
         });
+    }
+  }
+
+  private onUserSentFriendInvitation() {
+    this.socket.on(
+      'UserSentFriendInvitation',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+        this.settingsService.findFriendInvitations().subscribe();
+      },
+    );
+  }
+
+  private onUserRespondedFriendInvitation() {
+    this.socket.on(
+      'UserRespondedFriendInvitation',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+
+        const { isAccepted } = notification.data.data;
+
+        if (isAccepted) {
+          this.settingsService.findFriends().subscribe();
+        }
+      },
+    );
+  }
+
+  private onFriendRemoved() {
+    this.socket.on(
+      'FriendRemoved',
+      (notification: SocketNotificationMessage) => {
+        const { removingUserId } = notification.data.data;
+        this.settingsService.clearFriend(removingUserId);
+      },
+    );
+  }
+
+  private showNotificationIfBackground(
+    notification: SocketNotificationMessage,
+  ) {
+    if (
+      this.backgroundService.inBackground &&
+      this.backgroundService.allowPush &&
+      notification.type === SocketNotificationType.REGULAR
+    ) {
+      this.backgroundService.createFromNotification(notification);
     }
   }
 }

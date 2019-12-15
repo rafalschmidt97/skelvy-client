@@ -61,6 +61,7 @@ export function clearState(state: AppStateModel, action, next) {
       },
       settings: {
         friends: [],
+        blockedUsers: [],
         friendInvitations: [],
         meetingInvitations: [],
       },

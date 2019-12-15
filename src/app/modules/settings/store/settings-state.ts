@@ -1,13 +1,17 @@
 import { FriendInvitation, MeetingInvitation, UserDto } from '../../user/user';
 import { Action, State, StateContext } from '@ngxs/store';
 import {
+  AddBlockedUser,
+  AddBlockedUsers,
   AddFriend,
   AddFriendInvitations,
   AddFriends,
   AddMeetingInvitations,
+  RemoveBlockedUser,
   RemoveFriend,
   RemoveFriendInvitation,
   RemoveMeetingInvitation,
+  UpdateBlockedUsers,
   UpdateFriendInvitations,
   UpdateFriends,
   UpdateMeetingInvitations,
@@ -15,6 +19,7 @@ import {
 
 export interface SettingsStateModel {
   friends: UserDto[];
+  blockedUsers: UserDto[];
   friendInvitations: FriendInvitation[];
   meetingInvitations: MeetingInvitation[];
 }
@@ -23,6 +28,7 @@ export interface SettingsStateModel {
   name: 'settings',
   defaults: {
     friends: [],
+    blockedUsers: [],
     friendInvitations: [],
     meetingInvitations: [],
   },
@@ -149,6 +155,54 @@ export class SettingsState {
       meetingInvitations: state.meetingInvitations.filter(
         x => x.id !== invitationId,
       ),
+    });
+  }
+
+  @Action(UpdateBlockedUsers)
+  updateBlockedUsers(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { users }: UpdateBlockedUsers,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      blockedUsers: users,
+    });
+  }
+
+  @Action(AddBlockedUsers)
+  addBlockedUsers(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { users }: AddBlockedUsers,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      blockedUsers: [...state.blockedUsers, ...users],
+    });
+  }
+
+  @Action(AddBlockedUser)
+  addBlockedUser(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { user }: AddBlockedUser,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      blockedUsers: [...state.blockedUsers, user],
+    });
+  }
+
+  @Action(RemoveBlockedUser)
+  removeBlockedUser(
+    { getState, setState }: StateContext<SettingsStateModel>,
+    { userId }: RemoveBlockedUser,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      blockedUsers: state.blockedUsers.filter(x => x.id !== userId),
     });
   }
 }

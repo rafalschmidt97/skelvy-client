@@ -23,6 +23,9 @@
       >
         {{ 'Reload meeting' | translate }}
       </button>
+      <button type="button" (click)="refreshFriends()" class="btn btn-settings">
+        {{ 'Reload friends' | translate }}
+      </button>
       <button
         type="button"
         (click)="refreshBlockedUsers()"

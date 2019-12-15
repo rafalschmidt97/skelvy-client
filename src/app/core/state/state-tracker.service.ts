@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import {
   UpdateProfile,
   UpdateUser,
+  UpdateUserEmail,
+  UpdateUserName,
 } from '../../modules/user/store/user-actions';
 import { concatMap } from 'rxjs/operators';
 import { UserStateModel } from '../../modules/user/store/user-state';
@@ -21,9 +23,15 @@ import {
 } from '../../modules/meetings/store/meetings-actions';
 import {
   AddFriend,
+  AddFriendInvitations,
   AddFriends,
+  AddMeetingInvitations,
   RemoveFriend,
+  RemoveFriendInvitation,
+  RemoveMeetingInvitation,
+  UpdateFriendInvitations,
   UpdateFriends,
+  UpdateMeetingInvitations,
 } from '../../modules/settings/store/settings-actions';
 import { SettingsStateModel } from '../../modules/settings/store/settings-state';
 
@@ -35,6 +43,8 @@ export class StateTrackerService {
   private meetingActions: Subscription;
   private groupActions: Subscription;
   private friendActions: Subscription;
+  private friendInvitationsActions: Subscription;
+  private meetingInvitationsActions: Subscription;
 
   constructor(
     private readonly storage: Storage,
@@ -45,7 +55,12 @@ export class StateTrackerService {
   track() {
     this.userActions = this.actions
       .pipe(
-        ofActionSuccessful(UpdateUser, UpdateProfile),
+        ofActionSuccessful(
+          UpdateUser,
+          UpdateProfile,
+          UpdateUserName,
+          UpdateUserEmail,
+        ),
         concatMap(() => this.store.selectOnce(state => state.user)),
       )
       .subscribe(async (user: UserStateModel) => {
@@ -87,6 +102,38 @@ export class StateTrackerService {
       .subscribe(async (settings: SettingsStateModel) => {
         await this.storage.set(storageKeys.friends, settings.friends);
       });
+
+    this.friendInvitationsActions = this.actions
+      .pipe(
+        ofActionSuccessful(
+          UpdateFriendInvitations,
+          AddFriendInvitations,
+          RemoveFriendInvitation,
+        ),
+        concatMap(() => this.store.selectOnce(state => state.settings)),
+      )
+      .subscribe(async (settings: SettingsStateModel) => {
+        await this.storage.set(
+          storageKeys.friendInvitations,
+          settings.friendInvitations,
+        );
+      });
+
+    this.meetingInvitationsActions = this.actions
+      .pipe(
+        ofActionSuccessful(
+          UpdateMeetingInvitations,
+          AddMeetingInvitations,
+          RemoveMeetingInvitation,
+        ),
+        concatMap(() => this.store.selectOnce(state => state.settings)),
+      )
+      .subscribe(async (settings: SettingsStateModel) => {
+        await this.storage.set(
+          storageKeys.meetingInvitations,
+          settings.meetingInvitations,
+        );
+      });
   }
 
   stop() {
@@ -104,6 +151,14 @@ export class StateTrackerService {
 
     if (this.friendActions) {
       this.friendActions.unsubscribe();
+    }
+
+    if (this.friendInvitationsActions) {
+      this.friendInvitationsActions.unsubscribe();
+    }
+
+    if (this.meetingInvitationsActions) {
+      this.meetingInvitationsActions.unsubscribe();
     }
   }
 }

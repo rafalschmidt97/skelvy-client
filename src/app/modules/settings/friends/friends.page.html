@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Friends' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/app/settings/search">
+        <ion-icon name="search" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="blocked content minh-100 bg-ultra-light">
+    <ng-container *ngIf="friendInvitations$ | async as invitations">
+      <ng-container *ngIf="invitations.length > 0">
+        <div class="label text-muted">{{ 'Invitations' | translate }}</div>
+        <div class="bg-white border-top">
+          <app-invitation-preview
+            *ngFor="let invitation of invitations"
+            [invitation]="invitation"
+            (openInvitation)="openInvitation($event)"
+          ></app-invitation-preview>
+        </div>
+      </ng-container>
+    </ng-container>
+    <div class="label text-muted">{{ 'Your friends' | translate }}</div>
+    <ng-container *ngIf="friends$ | async as friends">
+      <div
+        *ngIf="friends.length > 0; else emptyList"
+        class="bg-white border-top"
+      >
+        <app-profile-preview
+          *ngFor="let user of friends"
+          [user]="user"
+          (openDetails)="openDetails($event)"
+        ></app-profile-preview>
+        <div class="container">
+          <button
+            *ngIf="friends.length % 10 === 0 && !allFriendsLoaded"
+            [disabled]="loadingFriends"
+            type="button"
+            (click)="loadFriends()"
+            class="btn btn-primary btn-block my-3"
+          >
+            {{ 'Load more' | translate }}
+          </button>
+        </div>
+      </div>
+      <ng-template #emptyList>
+        <div *ngIf="!loadingFriends" class="mb-3 text-center">
+          <div class="border-top border-bottom text-center p-3 bg-white">
+            <p>
+              {{ 'Your friends list is empty.' | translate }}
+            </p>
+            <p class="mb-0">
+              {{
+                'Add more friends and invite them for you meetings!' | translate
+              }}
+            </p>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container *ngIf="loadingFriends">
+      <div class="text-center py-3">
+        <ion-spinner></ion-spinner>
+      </div>
+    </ng-container>
+  </div>
+</ion-content>

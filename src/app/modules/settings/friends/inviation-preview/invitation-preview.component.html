@@ -1,0 +1,23 @@
+<div class="border-bottom person" (click)="openInvitation.emit(invitation)">
+  <div class="container d-flex align-items-center">
+    <div
+      class="flex-shrink-0 image rounded-circle"
+      [style.background-image]="
+        'url(' + invitation.invitingUser.profile.photos[0]?.url + ')'
+      "
+    ></div>
+    <div class="min-width mx-3">
+      <h3 class="mb-0 text-primary">
+        {{ invitation.invitingUser.profile.name }},
+        {{ invitation.invitingUser.profile.age }}
+      </h3>
+      <p class="description small text-muted mb-0">
+        {{ 'Invited at' | translate }}:
+        {{ invitation.createdAt | date: 'dd.MM.yyyy' }}
+      </p>
+    </div>
+    <div class="text-primary ml-auto">
+      <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+    </div>
+  </div>
+</div>
