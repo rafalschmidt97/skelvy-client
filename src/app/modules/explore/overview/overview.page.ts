@@ -164,7 +164,7 @@ export class OverviewPage implements OnInit {
     await modal.present();
     const { data } = await modal.onWillDismiss();
 
-    if (data.meetingId) {
+    if (data && data.meetingId) {
       this.join(data.meetingId);
     }
   }
@@ -181,7 +181,7 @@ export class OverviewPage implements OnInit {
     await modal.present();
     const { data } = await modal.onWillDismiss();
 
-    if (data.requestId) {
+    if (data && data.requestId) {
       this.connect(data.requestId);
     }
   }
