@@ -4,7 +4,6 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import {
   GroupDto,
-  MeetingDto,
   MessageActionType,
   MessageDto,
   MessageState,
@@ -19,7 +18,6 @@ import {
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
   RemoveGroup,
-  RemoveMeeting,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveResponseGroupMessage,
 } from '../meetings/store/meetings-actions';

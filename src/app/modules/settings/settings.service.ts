@@ -8,7 +8,6 @@ import { Store } from '@ngxs/store';
 import {
   AddBlockedUser,
   AddBlockedUsers,
-  AddFriend,
   AddFriends,
   RemoveBlockedUser,
   RemoveFriend,

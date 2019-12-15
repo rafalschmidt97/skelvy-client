@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RelationType, UserDto, UserWithRoleDto } from '../../../user/user';
+import { UserWithRoleDto } from '../../../user/user';
 
 @Component({
   selector: 'app-profile-preview',

@@ -2,13 +2,12 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
   GroupState,
   GroupUserDto,
-  MeetingDto,
   MessageActionType,
   MessageDto,
   MessageState,
   MessageType,
 } from '../../../meetings/meetings';
-import { SelfUserDto, UserDto } from '../../../user/user';
+import { SelfUserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
 import { GroupsService } from '../../groups.service';
 import { Storage } from '@ionic/storage';
@@ -16,7 +15,6 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { ModalController, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MeetingsService } from '../../../meetings/meetings.service';
-import { Store } from '@ngxs/store';
 import { ImageViewerComponent } from '../image-viewer/image-viewer.component';
 import { MessageActionModalComponent } from './message-action-modal/message-action-modal.component';
 
