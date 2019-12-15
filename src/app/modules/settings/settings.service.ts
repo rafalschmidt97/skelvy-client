@@ -144,4 +144,8 @@ export class SettingsService {
       `${environment.versionApiUrl}users?userName=${username}&page=${page}`,
     );
   }
+
+  clearFriend(userId: number) {
+    this.store.dispatch(new RemoveFriend(userId));
+  }
 }

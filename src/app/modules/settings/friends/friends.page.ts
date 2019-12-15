@@ -21,7 +21,6 @@ export class FriendsPage implements OnInit {
     FriendInvitation[]
   >;
   loadingFriends = true;
-  loadingFriendsMore = false;
   allFriendsLoaded = false;
   page = 1;
   relations = RelationType;
@@ -30,51 +29,18 @@ export class FriendsPage implements OnInit {
     private readonly settingsService: SettingsService,
     private readonly modalController: ModalController,
     private readonly toastService: ToastService,
-    private readonly loadingService: LoadingService,
-    private readonly store: Store,
   ) {}
 
   ngOnInit() {
-    const friends = this.store.selectSnapshot(state => state.settings.friends);
-    if (!friends || friends.length === 0) {
-      this.loadFriends();
-    } else {
-      this.loadingFriends = false;
-      const blockedUsersAmount = friends.length;
-      this.page =
-        blockedUsersAmount % 10 !== 0
-          ? blockedUsersAmount / 10 + 1
-          : blockedUsersAmount / 10;
-      this.allFriendsLoaded = friends.length % 10 !== 0;
-    }
+    this.loadFriends();
   }
 
   loadFriends() {
     this.loadingFriends = true;
-    this.settingsService.findFriends().subscribe(
-      friends => {
-        this.loadingFriends = false;
-        this.allFriendsLoaded = friends.length % 10 !== 0;
-
-        if (this.page !== 1) {
-          this.page = 1;
-        }
-      },
-      () => {
-        this.loadingFriends = false;
-        this.toastService.createError(
-          _('A problem occurred while finding friends'),
-        );
-      },
-    );
-  }
-
-  loadMoreFriends() {
-    this.page = this.page + 1;
-    this.loadingFriendsMore = true;
     this.settingsService.findFriends(this.page).subscribe(
       friends => {
-        this.loadingFriendsMore = false;
+        this.loadingFriends = false;
+        this.page = this.page + 1;
 
         if (friends.length > 0) {
           this.allFriendsLoaded = friends.length % 10 !== 0;
@@ -83,8 +49,7 @@ export class FriendsPage implements OnInit {
         }
       },
       () => {
-        this.loadingFriendsMore = false;
-        this.allFriendsLoaded = true;
+        this.loadingFriends = false;
         this.toastService.createError(
           _('A problem occurred while finding friends'),
         );

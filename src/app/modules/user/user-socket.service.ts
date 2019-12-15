@@ -70,6 +70,7 @@ export class UserSocketService {
       this.onClose();
       this.onUserSentFriendInvitation();
       this.onUserRespondedFriendInvitation();
+      this.onFriendRemoved();
 
       this.initialized = true;
     }
@@ -210,6 +211,16 @@ export class UserSocketService {
         if (isAccepted) {
           this.settingsService.findFriends().subscribe();
         }
+      },
+    );
+  }
+
+  private onFriendRemoved() {
+    this.socket.on(
+      'FriendRemoved',
+      (notification: SocketNotificationMessage) => {
+        const { removingUserId } = notification.data.data;
+        this.settingsService.clearFriend(removingUserId);
       },
     );
   }
