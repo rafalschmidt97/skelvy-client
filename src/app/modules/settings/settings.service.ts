@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { FriendInvitation, UserDto } from '../user/user';
+import { FriendInvitation, UserDto, UserWithRoleDto } from '../user/user';
 import { tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import {
@@ -137,5 +137,11 @@ export class SettingsService {
           }
         }),
       );
+  }
+
+  findUsers(username: string, page: number = 1): Observable<UserWithRoleDto[]> {
+    return this.http.get<UserWithRoleDto[]>(
+      `${environment.versionApiUrl}users?userName=${username}&page=${page}`,
+    );
   }
 }

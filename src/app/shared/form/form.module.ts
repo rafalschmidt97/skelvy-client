@@ -67,6 +67,7 @@ import { AddressItemComponent } from './address/address-item/address-item.compon
     RadioComponent,
     SwitchComponent,
     AddressComponent,
+    AutofocusDirective,
   ],
 })
 export class FormModule {}

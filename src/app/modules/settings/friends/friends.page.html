@@ -4,6 +4,11 @@
       <ion-back-button defaultHref="/app/settings"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'Friends' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/app/settings/search">
+        <ion-icon name="search" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
-import { UserDto } from '../../user/user';
+import { RelationType, UserDto } from '../../user/user';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
@@ -20,6 +20,7 @@ export class BlockedPage implements OnInit {
   loadingBlockedMore = false;
   allBlockedLoaded = false;
   page = 1;
+  relations = RelationType;
 
   constructor(
     private readonly settingsService: SettingsService,
@@ -94,7 +95,7 @@ export class BlockedPage implements OnInit {
       component: ProfileDetailsModalComponent,
       componentProps: {
         user,
-        blocked: true,
+        relation: this.relations.BLOCKED,
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });

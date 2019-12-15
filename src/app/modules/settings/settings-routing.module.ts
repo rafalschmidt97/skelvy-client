@@ -17,6 +17,10 @@ const routes: Routes = [
     loadChildren: './friends/friends.module#FriendsPageModule',
   },
   {
+    path: 'search',
+    loadChildren: './search/search.module#SearchPageModule',
+  },
+  {
     path: 'community',
     loadChildren: './community/community.module#CommunityPageModule',
   },

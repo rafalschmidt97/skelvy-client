@@ -1,0 +1,28 @@
+<div class="border-bottom person" (click)="openDetails.emit(user)">
+  <div class="container d-flex align-items-center">
+    <div
+      class="flex-shrink-0 image rounded-circle"
+      [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
+    ></div>
+    <div class="min-width mx-3">
+      <h3 class="mb-0 text-primary">
+        {{ user.profile.name }}, {{ user.profile.age }}
+      </h3>
+      <p class="description small text-muted mb-0">
+        <ng-container *ngIf="user.profile.description?.length > 0">
+          {{ user.profile.description }}
+        </ng-container>
+        <ng-container
+          *ngIf="
+            !user.profile.description || user.profile.description.length === 0
+          "
+        >
+          {{ 'User did not fill his bio yet.' | translate }}
+        </ng-container>
+      </p>
+    </div>
+    <div class="text-primary ml-auto">
+      <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+    </div>
+  </div>
+</div>

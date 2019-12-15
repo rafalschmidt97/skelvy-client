@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
-import { FriendInvitation, UserDto } from '../../user/user';
+import { FriendInvitation, RelationType, UserDto } from '../../user/user';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
@@ -24,6 +24,7 @@ export class FriendsPage implements OnInit {
   loadingFriendsMore = false;
   allFriendsLoaded = false;
   page = 1;
+  relations = RelationType;
 
   constructor(
     private readonly settingsService: SettingsService,
@@ -96,7 +97,7 @@ export class FriendsPage implements OnInit {
       component: ProfileDetailsModalComponent,
       componentProps: {
         user,
-        friend: true,
+        relation: this.relations.FRIEND,
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });
