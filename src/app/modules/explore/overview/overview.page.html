@@ -12,13 +12,13 @@
 <ion-content>
   <ion-refresher
     (ionRefresh)="refreshSuggestions($event)"
-    [disabled]="isLoading || isLoadingSuggestions"
+    [disabled]="isLoadingInitial || isLoadingJoin || isLoadingSuggestions"
   >
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ng-container *ngIf="$explore | async as explore">
     <section
-      *ngIf="!isLoading && explore; else loading"
+      *ngIf="!isLoadingInitial; else loading"
       class="d-flex flex-column minh-100 suggestions"
     >
       <div
@@ -27,7 +27,7 @@
           else empty
         "
         class="container py-3"
-        [class.disabled]="isLoading"
+        [class.disabled]="isLoadingJoin"
       >
         <div
           class="guidelines pb-3 mb-3"

@@ -22,8 +22,9 @@ import { ExploreStateModel } from '../store/explore-state';
 })
 export class OverviewPage implements OnInit {
   @Select(state => state.explore) $explore: Observable<ExploreStateModel>;
-  isLoading = false;
-  isLoadingSuggestions = true;
+  isLoadingInitial = true;
+  isLoadingJoin = false;
+  isLoadingSuggestions = false;
   latitude: number;
   longitude: number;
 
@@ -46,29 +47,28 @@ export class OverviewPage implements OnInit {
         this.latitude = res.coords.latitude;
         this.longitude = res.coords.longitude;
 
-        this.findSuggestions(res.coords.latitude, res.coords.longitude, true);
+        this.findInitialSuggestions(res.coords.latitude, res.coords.longitude);
       })
       .catch(() => {
         this.toastService.createError(
           _('A problem occurred while asking for location'),
         );
-        // TODO: add address input
       });
   }
 
   join(meetingId: number) {
-    if (!this.isLoading) {
-      this.isLoading = true;
+    if (!this.isLoadingJoin) {
+      this.isLoadingJoin = true;
 
       this.meetingService.joinMeeting(meetingId).subscribe(
         () => {
           this.meetingService.findMeetings().subscribe(
             () => {
-              this.isLoading = false;
+              this.isLoadingJoin = false;
               this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             },
             () => {
-              this.isLoading = false;
+              this.isLoadingJoin = false;
               this.toastService.createError(
                 _('A problem occurred while finding the meeting'),
               );
@@ -76,7 +76,7 @@ export class OverviewPage implements OnInit {
           );
         },
         () => {
-          this.isLoading = false;
+          this.isLoadingJoin = false;
           this.toastService.createError(
             _('A problem occurred while joining the meeting'),
           );
@@ -87,29 +87,43 @@ export class OverviewPage implements OnInit {
   }
 
   connect(requestId: number) {
-    if (!this.isLoading) {
+    if (!this.isLoadingJoin) {
       this.routerNavigation.navigateForward([
         `/app/explore/connect/${requestId}`,
       ]);
     }
   }
 
-  findSuggestions(latitude: number, longitude: number, isInitial = false) {
-    if (!this.isLoading && (!this.isLoadingSuggestions || isInitial)) {
+  findInitialSuggestions(latitude: number, longitude: number) {
+    this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
+      () => {
+        this.isLoadingInitial = false;
+      },
+      () => {
+        this.toastService.createError(
+          _('A problem occurred while finding suggestions'),
+        );
+        this.isLoadingInitial = false;
+      },
+    );
+  }
+
+  findSuggestions(latitude: number, longitude: number) {
+    if (!this.isLoadingSuggestions || this.isLoadingInitial) {
       this.isLoadingSuggestions = true;
       this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
         () => {
-          this.isLoadingSuggestions = false;
+          this.isLoadingInitial = false;
         },
         () => {
-          this.isLoadingSuggestions = false;
+          this.isLoadingInitial = false;
         },
       );
     }
   }
 
   refreshSuggestions(event) {
-    if (!this.isLoading && !this.isLoadingSuggestions) {
+    if (!this.isLoadingSuggestions || this.isLoadingInitial) {
       this.isLoadingSuggestions = true;
       this.meetingService
         .findMeetingSuggestions(this.latitude, this.longitude)
