@@ -1,0 +1,28 @@
+<div class="person" (click)="openInvitation.emit(invitation)">
+  <div
+    class="container d-flex align-items-center"
+    [class.two]="invitation.meeting.users.length === 2"
+    [class.three]="invitation.meeting.users.length === 3"
+    [class.more]="invitation.meeting.users.length > 3"
+  >
+    <div class="flex-shrink-0 image-container">
+      <div
+        *ngFor="let user of getFirstUsers(invitation.meeting.users)"
+        class="image rounded-circle"
+        [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
+      ></div>
+    </div>
+    <div class="min-width mx-3">
+      <h4 class="group-name mb-0 text-primary">
+        {{ getGroupName(invitation.meeting.users) }}
+      </h4>
+      <p class="last-message small text-muted mb-0">
+        {{ 'Invited at' | translate }}:
+        {{ invitation.createdAt | date: 'dd.MM.yyyy' }}
+      </p>
+    </div>
+    <div class="text-primary ml-auto">
+      <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+    </div>
+  </div>
+</div>

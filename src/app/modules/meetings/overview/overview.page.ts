@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MeetingsStateModel } from '../store/meetings-state';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { UserStateModel } from '../../user/store/user-state';
 import { Select } from '@ngxs/store';
 import * as moment from 'moment';
@@ -13,6 +13,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { GroupState } from '../meetings';
+import { MeetingInvitation } from '../../user/user';
+import { MeetingInvitationModalComponent } from './invitation-modal/meeting-invitation-modal.component';
+import { tap } from 'rxjs/operators';
+import { GroupsService } from '../../groups/groups.service';
 
 @Component({
   selector: 'app-overview',
@@ -21,6 +25,8 @@ import { GroupState } from '../meetings';
 })
 export class OverviewPage {
   @Select(state => state.meetings) $meetings: Observable<MeetingsStateModel>;
+  @Select(state => state.settings.meetingInvitations)
+  $meetingInvitations: Observable<MeetingInvitation[]>;
   @Select(state => state.user) user$: Observable<UserStateModel>;
 
   constructor(
@@ -28,6 +34,7 @@ export class OverviewPage {
     private readonly modalController: ModalController,
     private readonly translateService: TranslateService,
     private readonly meetingService: MeetingsService,
+    private readonly groupsService: GroupsService,
     private readonly loadingService: LoadingService,
   ) {}
 
@@ -82,5 +89,44 @@ export class OverviewPage {
         );
       },
     );
+  }
+
+  async openInvitation(invitation: MeetingInvitation) {
+    const modal = await this.modalController.create({
+      component: MeetingInvitationModalComponent,
+      componentProps: {
+        invitation,
+      },
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (data && data.invitationId) {
+      this.meetingService
+        .respondMeetingInvitation(data.invitationId, data.accept)
+        .pipe(
+          tap(() => {
+            if (data.accept) {
+              combineLatest([
+                this.meetingService.addFoundMeeting(invitation.meeting.id),
+                this.groupsService.addFoundGroup(
+                  invitation.meeting.groupId,
+                  true,
+                ),
+              ]).subscribe(
+                () => {},
+                () => {
+                  this.toastService.createError(
+                    _('A problem occurred while finding the meeting'),
+                  );
+                },
+              );
+            }
+          }),
+        )
+        .subscribe();
+    }
   }
 }

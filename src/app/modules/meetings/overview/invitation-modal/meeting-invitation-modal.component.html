@@ -1,0 +1,58 @@
+<app-modal>
+  <ion-slides
+    pager="true"
+    class="slider pt-4"
+    [options]="{ autoplay: { delay: 6000 } }"
+  >
+    <ion-slide *ngFor="let user of invitation.meeting.users">
+      <div class="profile d-flex align-items-center">
+        <div
+          class="flex-shrink-0 image rounded-circle"
+          [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
+        ></div>
+        <div class="min-width mx-3">
+          <h3 class="mb-0 text-primary">
+            {{ user.profile.name }}, {{ user.profile.age }}
+          </h3>
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slides>
+  <div class="px-4 pb-4">
+    <div class="py-4">
+      <div>
+        <span class="font-weight-bold">{{ 'Date' | translate }}</span
+        >: {{ invitation.meeting.date | date: 'dd.MM.yyyy' }}
+      </div>
+      <div>
+        <span class="font-weight-bold">{{ 'City' | translate }}</span
+        >: {{ invitation.meeting.city }}
+      </div>
+      <div>
+        <span class="font-weight-bold">{{ 'People' | translate }}</span
+        >: {{ invitation.meeting.users.length }}
+      </div>
+      <div>
+        <span class="font-weight-bold">{{ 'Activity' | translate }}</span
+        >: {{ invitation.meeting.activity.name | translate }}
+      </div>
+      <div>
+        <span class="font-weight-bold">{{ 'Sent at' | translate }}</span
+        >: {{ invitation.createdAt | date: 'dd.MM.yyyy' }}
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary btn-block" (click)="accept()">
+      {{ 'Accept' | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-primary btn-block"
+      (click)="reject()"
+    >
+      {{ 'Reject' | translate }}
+    </button>
+    <button type="button" class="btn btn-light btn-block" (click)="decline()">
+      {{ 'Cancel' | translate }}
+    </button>
+  </div>
+</app-modal>

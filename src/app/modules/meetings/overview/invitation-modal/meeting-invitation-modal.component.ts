@@ -1,14 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { FriendInvitation } from '../../../user/user';
+import { MeetingInvitation } from '../../../user/user';
 
 @Component({
-  selector: 'app-friend-invitation-modal',
-  templateUrl: './invitation-modal.component.html',
-  styleUrls: ['./invitation-modal.component.scss'],
+  selector: 'app-meeting-suggestions-modal',
+  templateUrl: './meeting-invitation-modal.component.html',
+  styleUrls: ['./meeting-invitation-modal.component.scss'],
 })
-export class FriendInvitationModalComponent {
-  @Input() invitation: FriendInvitation;
+export class MeetingInvitationModalComponent {
+  @Input() invitation: MeetingInvitation;
 
   constructor(private readonly modalController: ModalController) {}
 

@@ -6,7 +6,7 @@ import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { ModalController } from '@ionic/angular';
-import { FriendInvitationModalComponent } from './invitation-modal/invitation-modal.component';
+import { FriendInvitationModalComponent } from './invitation-modal/friend-invitation-modal.component';
 import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
 
 @Component({

@@ -17,7 +17,7 @@ import {
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { UserDto } from '../user/user';
+import { MeetingInvitation, UserDto } from '../user/user';
 import { Store } from '@ngxs/store';
 import {
   AddGroupUser,
@@ -39,6 +39,10 @@ import {
   RemoveExploreRequest,
   UpdateExploreState,
 } from '../explore/store/explore-actions';
+import {
+  RemoveMeetingInvitation,
+  UpdateMeetingInvitations,
+} from '../settings/store/settings-actions';
 
 @Injectable({
   providedIn: 'root',
@@ -335,5 +339,45 @@ export class MeetingsService {
     this.store.dispatch(
       new UpdateMeetingUserRole(groupId, updatedUserId, role),
     );
+  }
+
+  findMeetingInvitations(): Observable<MeetingInvitation[]> {
+    return this.http
+      .get<MeetingInvitation[]>(
+        `${environment.versionApiUrl}meetings/self/invitations`,
+      )
+      .pipe(
+        tap(invitations => {
+          this.store.dispatch(new UpdateMeetingInvitations(invitations));
+        }),
+      );
+  }
+
+  inviteToMeeting(userId: number, meetingId: number): Observable<void> {
+    return this.http.post<void>(
+      `${environment.versionApiUrl}meetings/self/invitations`,
+      {
+        invitingUserId: userId,
+        meetingId: meetingId,
+      },
+    );
+  }
+
+  respondMeetingInvitation(
+    invitationId: number,
+    isAccepted: boolean,
+  ): Observable<void> {
+    return this.http
+      .post<void>(
+        `${environment.versionApiUrl}meetings/self/invitations/${invitationId}/respond`,
+        {
+          isAccepted,
+        },
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveMeetingInvitation(invitationId));
+        }),
+      );
   }
 }

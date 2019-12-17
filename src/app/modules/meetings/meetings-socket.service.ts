@@ -7,7 +7,12 @@ import { Storage } from '@ionic/storage';
 import { MeetingsService } from './meetings.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
-import { MessageActionType, MessageDto, MessageType } from './meetings';
+import {
+  GroupUserRole,
+  MessageActionType,
+  MessageDto,
+  MessageType,
+} from './meetings';
 import { Store } from '@ngxs/store';
 import { BackgroundService } from '../../core/background/background.service';
 import {
@@ -72,6 +77,8 @@ export class MeetingsSocketService {
     this.onMeetingRequestExpired();
     this.onGroupAborted();
     this.onMeetingExpired();
+    this.onUserSentMeetingInvitation();
+    this.onUserRespondedMeetingInvitation();
   }
 
   private onUserSentMessage() {
@@ -324,6 +331,44 @@ export class MeetingsSocketService {
         }
 
         this.meetingService.clearMeeting(meetingId, groupId);
+      },
+    );
+  }
+
+  private onUserSentMeetingInvitation() {
+    this.socket.on(
+      'UserSentMeetingInvitation',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+        this.meetingService.findMeetingInvitations().subscribe();
+      },
+    );
+  }
+
+  private onUserRespondedMeetingInvitation() {
+    this.socket.on(
+      'UserRespondedMeetingInvitation',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+
+        const { isAccepted, invitedUserId, groupId } = notification.data.data;
+
+        if (isAccepted) {
+          this.meetingService
+            .addUser(invitedUserId, groupId, GroupUserRole.MEMBER)
+            .subscribe(
+              () => {
+                this.toastService.createInformation(
+                  _('New user has been added to the group'),
+                );
+              },
+              () => {
+                this.toastService.createError(
+                  _('A problem occurred loading meeting user'),
+                );
+              },
+            );
+        }
       },
     );
   }

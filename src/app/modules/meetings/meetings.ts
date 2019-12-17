@@ -54,7 +54,7 @@ export interface MeetingWithUsersDto {
   city: string;
   groupId: number;
   activity: ActivityDto;
-  users: UserDto[];
+  users: GroupUserDto[];
 }
 
 export interface MeetingRequestDto {

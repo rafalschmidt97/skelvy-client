@@ -108,9 +108,12 @@ export class SettingsService {
 
   inviteFriend(userId: number): Observable<void> {
     return this.http
-      .post<void>(`${environment.versionApiUrl}relations/self/friends/invite`, {
-        invitingUserId: userId,
-      })
+      .post<void>(
+        `${environment.versionApiUrl}relations/self/friends/invitations`,
+        {
+          invitingUserId: userId,
+        },
+      )
       .pipe(
         tap(() => {
           this.findFriendInvitations().subscribe();
@@ -124,8 +127,8 @@ export class SettingsService {
   ): Observable<void> {
     return this.http
       .post<void>(
-        `${environment.versionApiUrl}relations/self/friends/respond`,
-        { invitationId, isAccepted },
+        `${environment.versionApiUrl}relations/self/friends/invitations/${invitationId}/respond`,
+        { isAccepted },
       )
       .pipe(
         tap(() => {
