@@ -4,6 +4,13 @@ import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { storageKeys } from '../storage/storage';
 import { Subscription } from 'rxjs';
 import {
+  AddFriend,
+  AddFriendInvitations,
+  AddFriends,
+  RemoveFriend,
+  RemoveFriendInvitation,
+  UpdateFriendInvitations,
+  UpdateFriends,
   UpdateProfile,
   UpdateUser,
   UpdateUserEmail,
@@ -15,25 +22,15 @@ import { MeetingsStateModel } from '../../modules/meetings/store/meetings-state'
 import {
   AddGroupMessages,
   AddGroupUser,
+  AddMeetingInvitations,
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
   RemoveGroupUser,
+  RemoveMeetingInvitation,
   RemoveResponseGroupMessage,
+  UpdateMeetingInvitations,
   UpdateMeetingsState,
 } from '../../modules/meetings/store/meetings-actions';
-import {
-  AddFriend,
-  AddFriendInvitations,
-  AddFriends,
-  AddMeetingInvitations,
-  RemoveFriend,
-  RemoveFriendInvitation,
-  RemoveMeetingInvitation,
-  UpdateFriendInvitations,
-  UpdateFriends,
-  UpdateMeetingInvitations,
-} from '../../modules/settings/store/settings-actions';
-import { SettingsStateModel } from '../../modules/settings/store/settings-state';
 
 @Injectable({
   providedIn: 'root',
@@ -97,10 +94,10 @@ export class StateTrackerService {
     this.friendActions = this.actions
       .pipe(
         ofActionSuccessful(UpdateFriends, AddFriends, AddFriend, RemoveFriend),
-        concatMap(() => this.store.selectOnce(state => state.settings)),
+        concatMap(() => this.store.selectOnce(state => state.user)),
       )
-      .subscribe(async (settings: SettingsStateModel) => {
-        await this.storage.set(storageKeys.friends, settings.friends);
+      .subscribe(async (user: UserStateModel) => {
+        await this.storage.set(storageKeys.friends, user.friends);
       });
 
     this.friendInvitationsActions = this.actions
@@ -110,12 +107,12 @@ export class StateTrackerService {
           AddFriendInvitations,
           RemoveFriendInvitation,
         ),
-        concatMap(() => this.store.selectOnce(state => state.settings)),
+        concatMap(() => this.store.selectOnce(state => state.user)),
       )
-      .subscribe(async (settings: SettingsStateModel) => {
+      .subscribe(async (user: UserStateModel) => {
         await this.storage.set(
           storageKeys.friendInvitations,
-          settings.friendInvitations,
+          user.friendInvitations,
         );
       });
 
@@ -126,12 +123,12 @@ export class StateTrackerService {
           AddMeetingInvitations,
           RemoveMeetingInvitation,
         ),
-        concatMap(() => this.store.selectOnce(state => state.settings)),
+        concatMap(() => this.store.selectOnce(state => state.meetings)),
       )
-      .subscribe(async (settings: SettingsStateModel) => {
+      .subscribe(async (meetings: MeetingsStateModel) => {
         await this.storage.set(
           storageKeys.meetingInvitations,
-          settings.meetingInvitations,
+          meetings.meetingInvitations,
         );
       });
   }

@@ -9,6 +9,7 @@ import {
   MessageDto,
   MessageState,
 } from '../meetings';
+import { MeetingInvitation } from '../../user/user';
 
 export class ChangeMeetingLoadingStatus {
   static readonly type = '[Meetings] Change meeting loading status';
@@ -133,4 +134,19 @@ export class RemoveRequest {
 export class RemoveGroup {
   static readonly type = '[Groups] Remove group';
   constructor(public groupId: number) {}
+}
+
+export class UpdateMeetingInvitations {
+  static readonly type = '[Settings] Update meetings invitations';
+  constructor(public invitations: MeetingInvitation[]) {}
+}
+
+export class AddMeetingInvitations {
+  static readonly type = '[Settings] Add meeting invitations';
+  constructor(public invitations: MeetingInvitation[]) {}
+}
+
+export class RemoveMeetingInvitation {
+  static readonly type = '[Settings] Remove meeting invitation';
+  constructor(public invitationId: number) {}
 }

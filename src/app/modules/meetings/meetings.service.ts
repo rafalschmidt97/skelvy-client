@@ -26,9 +26,11 @@ import {
   RemoveGroup,
   RemoveGroupUser,
   RemoveMeeting,
+  RemoveMeetingInvitation,
   RemoveRequest,
   UpdateMeeting,
   UpdateMeetingFromRequest,
+  UpdateMeetingInvitations,
   UpdateMeetingsFromModel,
   UpdateMeetingUserRole,
   UpdateRequests,
@@ -39,10 +41,6 @@ import {
   RemoveExploreRequest,
   UpdateExploreState,
 } from '../explore/store/explore-actions';
-import {
-  RemoveMeetingInvitation,
-  UpdateMeetingInvitations,
-} from '../settings/store/settings-actions';
 
 @Injectable({
   providedIn: 'root',

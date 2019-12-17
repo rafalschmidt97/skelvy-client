@@ -25,8 +25,6 @@ import { GroupsService } from '../../groups/groups.service';
 })
 export class OverviewPage {
   @Select(state => state.meetings) $meetings: Observable<MeetingsStateModel>;
-  @Select(state => state.settings.meetingInvitations)
-  $meetingInvitations: Observable<MeetingInvitation[]>;
   @Select(state => state.user) user$: Observable<UserStateModel>;
 
   constructor(

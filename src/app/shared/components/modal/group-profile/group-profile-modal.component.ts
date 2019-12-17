@@ -3,7 +3,6 @@ import { RelationType } from '../../../../modules/user/user';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SettingsService } from '../../../../modules/settings/settings.service';
 import { _ } from '../../../../core/i18n/translate';
 import { ModalController } from '@ionic/angular';
 import {
@@ -13,6 +12,7 @@ import {
   MeetingDto,
 } from '../../../../modules/meetings/meetings';
 import { MeetingsService } from '../../../../modules/meetings/meetings.service';
+import { UserService } from '../../../../modules/user/user.service';
 
 @Component({
   selector: 'app-group-profile-details-modal',
@@ -36,7 +36,7 @@ export class GroupProfileModalComponent {
   constructor(
     private readonly emailComposer: EmailComposer,
     private readonly toastService: ToastService,
-    private readonly settingsService: SettingsService,
+    private readonly userService: UserService,
     private readonly translateService: TranslateService,
     private readonly modalController: ModalController,
     private readonly meetingsService: MeetingsService,
@@ -104,7 +104,7 @@ export class GroupProfileModalComponent {
 
   blockUser() {
     this.loadingBlocked = true;
-    this.settingsService.addBlockedUser(this.user).subscribe(
+    this.userService.addBlockedUser(this.user).subscribe(
       () => {
         this.relation = RelationType.BLOCKED;
         this.loadingBlocked = false;
@@ -117,7 +117,7 @@ export class GroupProfileModalComponent {
 
   removeBlockUser() {
     this.loadingBlocked = true;
-    this.settingsService.removeBlockedUser(this.user.id).subscribe(
+    this.userService.removeBlockedUser(this.user.id).subscribe(
       () => {
         this.relation = null;
         this.loadingBlocked = false;
@@ -130,7 +130,7 @@ export class GroupProfileModalComponent {
 
   inviteFriend() {
     this.loadingFriend = true;
-    this.settingsService.inviteFriend(this.user.id).subscribe(
+    this.userService.inviteFriend(this.user.id).subscribe(
       () => {
         this.relation = RelationType.PENDING;
         this.loadingFriend = false;
@@ -143,7 +143,7 @@ export class GroupProfileModalComponent {
 
   removeFriend() {
     this.loadingFriend = true;
-    this.settingsService.removeFriend(this.user.id).subscribe(
+    this.userService.removeFriend(this.user.id).subscribe(
       () => {
         this.relation = null;
         this.loadingFriend = false;

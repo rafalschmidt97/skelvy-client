@@ -37,6 +37,6 @@ import { Select } from '@ngxs/store';
 })
 export class ConnectionComponent {
   @Input() hasBackground: boolean;
-  @Select(x => x.global.connection) connection$: Observable<Connection>;
+  @Select(state => state.global.connection) connection$: Observable<Connection>;
   connectedStatus = Connection;
 }

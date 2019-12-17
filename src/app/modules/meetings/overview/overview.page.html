@@ -13,17 +13,15 @@
   <app-connection></app-connection>
   <ng-container *ngIf="$meetings | async as meetings">
     <section class="d-flex flex-column minh-100">
-      <ng-container *ngIf="$meetingInvitations | async as invitations">
-        <ng-container *ngIf="invitations.length > 0">
-          <div class="label text-muted">{{ 'Invitations' | translate }}</div>
-          <div class="bg-white border-top">
-            <app-meeting-invitation-preview
-              *ngFor="let invitation of invitations"
-              [invitation]="invitation"
-              (openInvitation)="openInvitation($event)"
-            ></app-meeting-invitation-preview>
-          </div>
-        </ng-container>
+      <ng-container *ngIf="meetings.meetingInvitations.length > 0">
+        <div class="label text-muted">{{ 'Invitations' | translate }}</div>
+        <div class="bg-white border-top">
+          <app-meeting-invitation-preview
+            *ngFor="let invitation of meetings.meetingInvitations"
+            [invitation]="invitation"
+            (openInvitation)="openInvitation($event)"
+          ></app-meeting-invitation-preview>
+        </div>
       </ng-container>
       <div *ngIf="meetings; else loading" class="meetings">
         <div
@@ -62,9 +60,7 @@
                     'People' | translate
                   }}</span
                   >:
-                  {{
-                    getGroup(meeting.groupId, meetings.groups).users.length
-                  }}
+                  {{ getGroup(meeting.groupId, meetings.groups).users.length }}
                   /
                   {{ meeting.size }}
                   <ion-icon

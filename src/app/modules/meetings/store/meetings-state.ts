@@ -14,28 +14,33 @@ import {
   AddGroupMessages,
   AddGroupUser,
   AddMeeting,
+  AddMeetingInvitations,
   ChangeMeetingLoadingStatus,
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
   RemoveGroup,
   RemoveGroupUser,
   RemoveMeeting,
+  RemoveMeetingInvitation,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveRequest,
   RemoveResponseGroupMessage,
   UpdateMeeting,
   UpdateMeetingFromRequest,
+  UpdateMeetingInvitations,
   UpdateMeetingsFromModel,
   UpdateMeetingsState,
   UpdateMeetingUserRole,
   UpdateRequests,
 } from './meetings-actions';
+import { MeetingInvitation } from '../../user/user';
 
 export interface MeetingsStateModel {
   loading: boolean;
   meetings: MeetingDto[];
   requests: MeetingRequestDto[];
   groups: GroupState[];
+  meetingInvitations: MeetingInvitation[];
 }
 
 @State<MeetingsStateModel>({
@@ -45,6 +50,7 @@ export interface MeetingsStateModel {
     meetings: [],
     requests: [],
     groups: [],
+    meetingInvitations: [],
   },
 })
 export class MeetingsState {
@@ -436,6 +442,44 @@ export class MeetingsState {
     setState({
       ...state,
       groups: state.groups.filter(x => x.id !== groupId),
+    });
+  }
+
+  @Action(UpdateMeetingInvitations)
+  updateMeetingInvitations(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { invitations }: UpdateMeetingInvitations,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetingInvitations: invitations,
+    });
+  }
+
+  @Action(AddMeetingInvitations)
+  addMeetingInvitations(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { invitations }: AddMeetingInvitations,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetingInvitations: [...state.meetingInvitations, ...invitations],
+    });
+  }
+
+  @Action(RemoveMeetingInvitation)
+  removeMeetingInvitation(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { invitationId }: RemoveMeetingInvitation,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetingInvitations: state.meetingInvitations.filter(
+        x => x.id !== invitationId,
+      ),
     });
   }
 }

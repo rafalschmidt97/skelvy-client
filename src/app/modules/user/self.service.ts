@@ -10,14 +10,16 @@ import { forkJoin, Observable } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { storageKeys } from '../../core/storage/storage';
 import { Store } from '@ngxs/store';
-import { UpdateUser } from './store/user-actions';
-import { SelfUserDto, UserDto } from './user';
 import {
   UpdateFriendInvitations,
   UpdateFriends,
+  UpdateUser,
+} from './store/user-actions';
+import { SelfUserDto, UserDto } from './user';
+import {
   UpdateMeetingInvitations,
-} from '../settings/store/settings-actions';
-import { UpdateMeetingsState } from '../meetings/store/meetings-actions';
+  UpdateMeetingsState,
+} from '../meetings/store/meetings-actions';
 
 @Injectable({
   providedIn: 'root',
