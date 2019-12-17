@@ -26,8 +26,9 @@
     </p>
     <ng-container
       *ngIf="
-        user.role !== roles.OWNER &&
-        (openingUser.role === roles.ADMIN || openingUser.role === roles.OWNER)
+        (openingUser.role === roles.OWNER ||
+          (openingUser.role === roles.ADMIN && user.role !== roles.ADMIN)) &&
+        user.role != roles.OWNER
       "
     >
       <button
@@ -61,6 +62,16 @@
       >
         <ng-container *ngIf="!loadingRole; else loading">{{
           'Remove privileges' | translate
+        }}</ng-container>
+      </button>
+      <button
+        type="button"
+        [disabled]="loadingRole"
+        (click)="removeFromGroup()"
+        class="btn btn-block btn-danger"
+      >
+        <ng-container *ngIf="!loadingRemoved; else loading">{{
+          'Remove' | translate
         }}</ng-container>
       </button>
     </ng-container>

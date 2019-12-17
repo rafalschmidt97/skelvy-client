@@ -380,4 +380,16 @@ export class MeetingsService {
         }),
       );
   }
+
+  removeFromGroup(userId: number, meetingId: number, groupId: number) {
+    return this.http
+      .delete<void>(
+        `${environment.versionApiUrl}meetings/${meetingId}/users/${userId}`,
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveGroupUser(groupId, userId));
+        }),
+      );
+  }
 }

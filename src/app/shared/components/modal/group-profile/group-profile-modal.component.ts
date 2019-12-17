@@ -25,6 +25,7 @@ export class GroupProfileModalComponent {
   @Input() group: GroupState;
   @Input() relation: RelationType;
   @Input() openingUser: GroupUserDto;
+  loadingRemoved = false;
   loadingRole = false;
   loadingFriend = false;
   loadingBlocked = false;
@@ -151,6 +152,20 @@ export class GroupProfileModalComponent {
         this.loadingFriend = false;
       },
     );
+  }
+
+  removeFromGroup() {
+    this.loadingRemoved = true;
+    this.meetingsService
+      .removeFromGroup(this.user.id, this.meeting.id, this.group.id)
+      .subscribe(
+        () => {
+          this.modalController.dismiss();
+        },
+        () => {
+          this.loadingRemoved = false;
+        },
+      );
   }
 
   async sendReport() {
