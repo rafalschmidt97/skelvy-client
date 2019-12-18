@@ -336,7 +336,7 @@ export class MeetingsSocketService {
   }
 
   private onUserSentMeetingInvitation() {
-    this.socket.on(
+    this.userSocket.on(
       'UserSentMeetingInvitation',
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
@@ -346,7 +346,7 @@ export class MeetingsSocketService {
   }
 
   private onUserRespondedMeetingInvitation() {
-    this.socket.on(
+    this.userSocket.on(
       'UserRespondedMeetingInvitation',
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
