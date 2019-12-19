@@ -340,6 +340,9 @@ export class MeetingsSocketService {
       'UserSentMeetingInvitation',
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
+        this.toastService.createInformation(
+          _('Someone has sent you new meeting invitation'),
+        );
         this.meetingService.findMeetingInvitations().subscribe();
       },
     );

@@ -16,6 +16,10 @@ const routes: Routes = [
     path: 'edit-meeting',
     loadChildren: './edit-meeting/edit-meeting.module#EditMeetingPageModule',
   },
+  {
+    path: 'invite',
+    loadChildren: './invite/invite.module#InvitePageModule',
+  },
 ];
 
 @NgModule({

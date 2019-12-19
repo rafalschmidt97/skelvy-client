@@ -195,6 +195,9 @@ export class UserSocketService {
       'UserSentFriendInvitation',
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
+        this.toastService.createInformation(
+          _('Someone has sent you new friend invitation'),
+        );
         this.userService.findFriendInvitations().subscribe();
       },
     );
@@ -209,6 +212,9 @@ export class UserSocketService {
         const { isAccepted } = notification.data.data;
 
         if (isAccepted) {
+          this.toastService.createInformation(
+            _('User has accepted your friend invitation'),
+          );
           this.userService.findFriends().subscribe();
         }
       },

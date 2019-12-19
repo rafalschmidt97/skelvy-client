@@ -156,7 +156,7 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
   }
 
   async fillForm() {
-    const meetingId = +this.route.snapshot.paramMap.get('meetingId');
+    const meetingId = +this.route.snapshot.paramMap.get('id');
 
     if (meetingId) {
       const meetingState: MeetingsStateModel = this.store.selectSnapshot(

@@ -240,14 +240,14 @@ export class DetailsPage implements OnInit, OnDestroy {
   editMeeting() {
     this.routerNavigation.navigateForward([
       '/app/meetings/edit-meeting',
-      { meetingId: this.meeting.id },
+      { id: this.meeting.id },
     ]);
   }
 
   addUsers() {
     this.routerNavigation.navigateForward([
       '/app/meetings/invite',
-      { meetingId: this.meeting.id },
+      { id: this.meeting.id },
     ]);
   }
 }
