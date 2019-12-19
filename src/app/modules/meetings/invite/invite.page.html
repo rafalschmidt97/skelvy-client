@@ -1,10 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/app/tabs/meetings"></ion-back-button>
+      <ion-back-button
+        [hidden]="created"
+        defaultHref="/app/tabs/meetings"
+      ></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'Invite' | translate }}</ion-title>
-    <ion-buttons slot="end"> </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [hidden]="!created" (click)="moveToMeeting()">
+        {{ 'Done' | translate }}
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

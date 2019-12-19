@@ -18,8 +18,8 @@ import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import {
-  MeetingInvitationDetails,
   MeetingInvitation,
+  MeetingInvitationDetails,
   UserDto,
 } from '../user/user';
 import { Store } from '@ngxs/store';

@@ -7,7 +7,7 @@ import { Store } from '@ngxs/store';
 import { ModalController, NavController } from '@ionic/angular';
 import { UserService } from '../../user/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { mergeMap, reduce, switchMap } from 'rxjs/operators';
+import { mergeMap, switchMap } from 'rxjs/operators';
 import { MeetingsService } from '../meetings.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class InvitePage implements OnInit {
   allFriendsLoaded = false;
   page = 1;
   meetingId: number;
+  created: boolean;
 
   constructor(
     private readonly userService: UserService,
@@ -40,6 +41,8 @@ export class InvitePage implements OnInit {
     }
 
     this.meetingId = meetingId;
+
+    this.created = !!this.route.snapshot.paramMap.get('created');
 
     this.store
       .select(state => state.user.friends)
@@ -118,5 +121,12 @@ export class InvitePage implements OnInit {
         ]);
       },
     );
+  }
+
+  moveToMeeting() {
+    this.routerNavigation.navigateBack([
+      '/app/meetings/details',
+      this.meetingId,
+    ]);
   }
 }
