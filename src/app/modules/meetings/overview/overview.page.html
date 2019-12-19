@@ -14,7 +14,10 @@
   <ng-container *ngIf="$meetings | async as meetings">
     <section class="d-flex flex-column minh-100">
       <ng-container *ngIf="meetings.meetingInvitations.length > 0">
-        <div class="label text-muted">{{ 'Invitations' | translate }}</div>
+        <div
+          class="text-center my-3"
+          [innerText]="'Received invitations' | translate"
+        ></div>
         <div class="bg-white border-top">
           <app-meeting-invitation-preview
             *ngFor="let invitation of meetings.meetingInvitations"
@@ -23,10 +26,12 @@
           ></app-meeting-invitation-preview>
         </div>
       </ng-container>
-      <div *ngIf="meetings; else loading" class="meetings">
+      <ng-container *ngIf="meetings; else loading">
         <div
           *ngIf="
-            meetings.meetings.length > 0 || meetings.requests.length > 0;
+            meetings.meetings.length > 0 ||
+              meetings.requests.length > 0 ||
+              meetings.meetingInvitations.length > 0;
             else empty
           "
           class="py-3"
@@ -160,7 +165,7 @@
             </div>
           </div>
         </ng-template>
-      </div>
+      </ng-container>
       <ng-template #loading>
         <div class="text-center py-3">
           <ion-spinner></ion-spinner>

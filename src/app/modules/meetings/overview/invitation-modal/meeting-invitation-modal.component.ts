@@ -12,14 +12,14 @@ export class MeetingInvitationModalComponent {
 
   constructor(private readonly modalController: ModalController) {}
 
-  accept() {
+  join() {
     this.modalController.dismiss({
       invitationId: this.invitation.id,
       accept: true,
     });
   }
 
-  reject() {
+  remove() {
     this.modalController.dismiss({
       invitationId: this.invitation.id,
       accept: false,

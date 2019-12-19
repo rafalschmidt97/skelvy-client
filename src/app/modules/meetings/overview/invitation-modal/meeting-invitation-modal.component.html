@@ -37,19 +37,19 @@
         >: {{ invitation.meeting.activity.name | translate }}
       </div>
       <div>
-        <span class="font-weight-bold">{{ 'Sent at' | translate }}</span
+        <span class="font-weight-bold">{{ 'Invited at' | translate }}</span
         >: {{ invitation.createdAt | date: 'dd.MM.yyyy' }}
       </div>
     </div>
-    <button type="button" class="btn btn-primary btn-block" (click)="accept()">
-      {{ 'Accept' | translate }}
+    <button type="button" class="btn btn-primary btn-block" (click)="join()">
+      {{ 'Join' | translate }}
     </button>
     <button
       type="button"
       class="btn btn-outline-primary btn-block"
-      (click)="reject()"
+      (click)="remove()"
     >
-      {{ 'Reject' | translate }}
+      {{ 'Remove' | translate }}
     </button>
     <button type="button" class="btn btn-light btn-block" (click)="decline()">
       {{ 'Cancel' | translate }}
