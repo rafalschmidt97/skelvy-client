@@ -229,9 +229,24 @@ export class DetailsPage implements OnInit, OnDestroy {
     return groupSelf ? groupSelf.role === GroupUserRole.OWNER : false;
   }
 
+  get isNotMember(): boolean {
+    if (!this.group || !this.user) {
+      return false;
+    }
+    const groupSelf = this.group.users.find(x => x.id === this.user.id);
+    return groupSelf ? groupSelf.role !== GroupUserRole.MEMBER : false;
+  }
+
   editMeeting() {
     this.routerNavigation.navigateForward([
       '/app/meetings/edit-meeting',
+      { meetingId: this.meeting.id },
+    ]);
+  }
+
+  addUsers() {
+    this.routerNavigation.navigateForward([
+      '/app/meetings/invite',
       { meetingId: this.meeting.id },
     ]);
   }
