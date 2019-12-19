@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { FriendInvitation, RelationType, UserDto } from '../../user/user';
-import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
-import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { ModalController } from '@ionic/angular';
-import { FriendInvitationModalComponent } from './invitation-modal/invitation-modal.component';
+import { FriendInvitationModalComponent } from './invitation-modal/friend-invitation-modal.component';
+import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-friends',
@@ -15,8 +15,8 @@ import { FriendInvitationModalComponent } from './invitation-modal/invitation-mo
   styleUrls: ['../overview/overview.page.scss'],
 })
 export class FriendsPage implements OnInit {
-  @Select(x => x.settings.friends) friends$: Observable<UserDto[]>;
-  @Select(x => x.settings.friendInvitations) friendInvitations$: Observable<
+  @Select(state => state.user.friends) friends$: Observable<UserDto[]>;
+  @Select(state => state.user.friendInvitations) friendInvitations$: Observable<
     FriendInvitation[]
   >;
   loadingFriends = true;
@@ -25,7 +25,7 @@ export class FriendsPage implements OnInit {
   relations = RelationType;
 
   constructor(
-    private readonly settingsService: SettingsService,
+    private readonly userService: UserService,
     private readonly modalController: ModalController,
     private readonly toastService: ToastService,
   ) {}
@@ -36,7 +36,7 @@ export class FriendsPage implements OnInit {
 
   loadFriends() {
     this.loadingFriends = true;
-    this.settingsService.findFriends(this.page).subscribe(
+    this.userService.findFriends(this.page).subscribe(
       friends => {
         this.loadingFriends = false;
         this.page = this.page + 1;
@@ -58,7 +58,7 @@ export class FriendsPage implements OnInit {
 
   async openDetails(user: UserDto) {
     const modal = await this.modalController.create({
-      component: ProfileDetailsModalComponent,
+      component: ProfileModalComponent,
       componentProps: {
         user,
         relation: this.relations.FRIEND,
@@ -82,7 +82,7 @@ export class FriendsPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.invitationId) {
-      this.settingsService
+      this.userService
         .respondFriendInvitation(data.invitationId, data.accept)
         .subscribe();
     }

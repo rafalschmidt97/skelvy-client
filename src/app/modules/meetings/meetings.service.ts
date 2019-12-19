@@ -17,7 +17,11 @@ import {
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { UserDto } from '../user/user';
+import {
+  MeetingInvitation,
+  MeetingInvitationDetails,
+  UserDto,
+} from '../user/user';
 import { Store } from '@ngxs/store';
 import {
   AddGroupUser,
@@ -26,10 +30,13 @@ import {
   RemoveGroup,
   RemoveGroupUser,
   RemoveMeeting,
+  RemoveMeetingInvitation,
   RemoveRequest,
   UpdateMeeting,
   UpdateMeetingFromRequest,
+  UpdateMeetingInvitations,
   UpdateMeetingsFromModel,
+  UpdateMeetingUserRole,
   UpdateRequests,
 } from './store/meetings-actions';
 import {
@@ -216,6 +223,26 @@ export class MeetingsService {
       );
   }
 
+  updateMeetingUserRole(
+    meetingId: number,
+    groupId: number,
+    updatedUserId: number,
+    role: GroupUserRole,
+  ): Observable<void> {
+    return this.http
+      .patch<void>(
+        `${environment.versionApiUrl}meetings/${meetingId}/users/${updatedUserId}/role`,
+        { role },
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(
+            new UpdateMeetingUserRole(groupId, updatedUserId, role),
+          );
+        }),
+      );
+  }
+
   findActivities(): Observable<ActivityDto[]> {
     return this.http.get<ActivityDto[]>(
       environment.versionApiUrl + 'activities',
@@ -308,5 +335,71 @@ export class MeetingsService {
 
   clearMeetingRequest(requestId: number) {
     this.store.dispatch(new RemoveRequest(requestId));
+  }
+
+  updatedUserRole(groupId: number, updatedUserId: number, role: GroupUserRole) {
+    this.store.dispatch(
+      new UpdateMeetingUserRole(groupId, updatedUserId, role),
+    );
+  }
+
+  findMeetingInvitations(): Observable<MeetingInvitation[]> {
+    return this.http
+      .get<MeetingInvitation[]>(
+        `${environment.versionApiUrl}meetings/self/invitations`,
+      )
+      .pipe(
+        tap(invitations => {
+          this.store.dispatch(new UpdateMeetingInvitations(invitations));
+        }),
+      );
+  }
+
+  inviteToMeeting(userId: number, meetingId: number): Observable<void> {
+    return this.http.post<void>(
+      `${environment.versionApiUrl}meetings/self/invitations`,
+      {
+        invitingUserId: userId,
+        meetingId: meetingId,
+      },
+    );
+  }
+
+  respondMeetingInvitation(
+    invitationId: number,
+    isAccepted: boolean,
+  ): Observable<void> {
+    return this.http
+      .post<void>(
+        `${environment.versionApiUrl}meetings/self/invitations/${invitationId}/respond`,
+        {
+          isAccepted,
+        },
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveMeetingInvitation(invitationId));
+        }),
+      );
+  }
+
+  removeFromGroup(userId: number, meetingId: number, groupId: number) {
+    return this.http
+      .delete<void>(
+        `${environment.versionApiUrl}meetings/${meetingId}/users/${userId}`,
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveGroupUser(groupId, userId));
+        }),
+      );
+  }
+
+  findMeetingInvitationsDetails(
+    meetingId: number,
+  ): Observable<MeetingInvitationDetails[]> {
+    return this.http.get<MeetingInvitationDetails[]>(
+      `${environment.versionApiUrl}meetings/${meetingId}/invitations`,
+    );
   }
 }

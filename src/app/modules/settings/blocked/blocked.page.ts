@@ -3,11 +3,11 @@ import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { RelationType, UserDto } from '../../user/user';
 import { LoadingService } from '../../../core/loading/loading.service';
-import { SettingsService } from '../settings.service';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { ProfileDetailsModalComponent } from '../../../shared/components/profile-details-modal/profile-details-modal.component';
 import { ModalController } from '@ionic/angular';
+import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-blocked',
@@ -15,7 +15,9 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['../overview/overview.page.scss'],
 })
 export class BlockedPage implements OnInit {
-  @Select(x => x.settings.blockedUsers) blockedUsers$: Observable<UserDto[]>;
+  @Select(state => state.user.blockedUsers) blockedUsers$: Observable<
+    UserDto[]
+  >;
   loadingBlocked = true;
   loadingBlockedMore = false;
   allBlockedLoaded = false;
@@ -23,7 +25,7 @@ export class BlockedPage implements OnInit {
   relations = RelationType;
 
   constructor(
-    private readonly settingsService: SettingsService,
+    private readonly userService: UserService,
     private readonly modalController: ModalController,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
@@ -32,7 +34,7 @@ export class BlockedPage implements OnInit {
 
   ngOnInit() {
     const blockedUsers = this.store.selectSnapshot(
-      state => state.settings.blockedUsers,
+      state => state.user.blockedUsers,
     );
     if (!blockedUsers || blockedUsers.length === 0) {
       this.loadBlockedUsers();
@@ -49,7 +51,7 @@ export class BlockedPage implements OnInit {
 
   loadBlockedUsers() {
     this.loadingBlocked = true;
-    this.settingsService.findBlockedUsers().subscribe(
+    this.userService.findBlockedUsers().subscribe(
       blockedUsers => {
         this.loadingBlocked = false;
         this.allBlockedLoaded = blockedUsers.length % 10 !== 0;
@@ -70,7 +72,7 @@ export class BlockedPage implements OnInit {
   loadMoreBlockedUsers() {
     this.page = this.page + 1;
     this.loadingBlockedMore = true;
-    this.settingsService.findBlockedUsers(this.page).subscribe(
+    this.userService.findBlockedUsers(this.page).subscribe(
       blockedUsers => {
         this.loadingBlockedMore = false;
 
@@ -92,7 +94,7 @@ export class BlockedPage implements OnInit {
 
   async openDetails(user: UserDto) {
     const modal = await this.modalController.create({
-      component: ProfileDetailsModalComponent,
+      component: ProfileModalComponent,
       componentProps: {
         user,
         relation: this.relations.BLOCKED,

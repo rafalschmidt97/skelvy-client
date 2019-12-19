@@ -8,7 +8,6 @@ import { SelfService } from '../../user/self.service';
 import { Storage } from '@ionic/storage';
 import { SessionService } from '../../../core/auth/session.service';
 import { storageKeys } from '../../../core/storage/storage';
-import { SettingsService } from '../settings.service';
 import { Store } from '@ngxs/store';
 import { ClearState } from '../../../core/redux/redux';
 import { tap } from 'rxjs/operators';
@@ -37,7 +36,6 @@ export class DataPage {
     private readonly selfService: SelfService,
     private readonly storage: Storage,
     private readonly sessionService: SessionService,
-    private readonly settingsService: SettingsService,
     private readonly store: Store,
   ) {}
 
@@ -146,7 +144,7 @@ export class DataPage {
   confirmRefreshBlockedUsers() {
     this.isLoading = true;
     this.loadingService.lock();
-    this.settingsService.findBlockedUsers().subscribe(
+    this.userService.findBlockedUsers().subscribe(
       () => {
         this.isLoading = false;
         this.loadingService.unlock();
@@ -185,7 +183,7 @@ export class DataPage {
   confirmRefreshFriends() {
     this.isLoading = true;
     this.loadingService.lock();
-    this.settingsService.findFriends().subscribe(
+    this.userService.findFriends().subscribe(
       () => {
         this.isLoading = false;
         this.loadingService.unlock();
@@ -231,8 +229,8 @@ export class DataPage {
     combineLatest([
       this.userService.findSelf(),
       this.selfService.sync(),
-      this.settingsService.findFriends(),
-      this.settingsService.findBlockedUsers(),
+      this.userService.findFriends(),
+      this.userService.findBlockedUsers(),
     ]).subscribe(
       () => {
         this.isLoading = false;

@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 import { FriendsPage } from './friends.page';
 import { ProfilePreviewComponent } from './profile-preview/profile-preview.component';
-import { InvitationPreviewComponent } from './inviation-preview/invitation-preview.component';
-import { FriendInvitationModalComponent } from './invitation-modal/invitation-modal.component';
+import { FriendInvitationPreviewComponent } from './inviation-preview/friend-invitation-preview.component';
+import { FriendInvitationModalComponent } from './invitation-modal/friend-invitation-modal.component';
 
 const routes: Routes = [
   {
@@ -18,7 +18,7 @@ const routes: Routes = [
   declarations: [
     FriendsPage,
     ProfilePreviewComponent,
-    InvitationPreviewComponent,
+    FriendInvitationPreviewComponent,
     FriendInvitationModalComponent,
   ],
   entryComponents: [FriendInvitationModalComponent],

@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        [hidden]="created"
+        defaultHref="/app/tabs/meetings"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'Invite' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [hidden]="!created" (click)="moveToMeeting()">
+        {{ 'Done' | translate }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content minh-100 bg-ultra-light">
+    <div class="container guidelines py-3">
+      {{
+        'If you cannot see here some of your friends it means that they are probably already invited.'
+          | translate
+      }}
+    </div>
+    <div
+      *ngIf="reducedFriends.length > 0; else emptyList"
+      class="bg-white border-top"
+    >
+      <app-profile-preview
+        *ngFor="let user of reducedFriends"
+        [user]="user"
+        (invite)="invite($event)"
+      ></app-profile-preview>
+      <div class="container">
+        <button
+          *ngIf="!allFriendsLoaded"
+          [disabled]="loadingFriends"
+          type="button"
+          (click)="loadFriends()"
+          class="btn btn-primary btn-block my-3"
+        >
+          {{ 'Load more' | translate }}
+        </button>
+      </div>
+    </div>
+    <ng-template #emptyList>
+      <div *ngIf="!loadingFriends" class="mb-3 text-center">
+        <div class="border-top border-bottom text-center p-3 bg-white">
+          <p>
+            {{ 'Your friends list is empty.' | translate }}
+          </p>
+          <p class="mb-0">
+            {{
+              'Add more friends and invite them for you meetings!' | translate
+            }}
+          </p>
+        </div>
+      </div>
+    </ng-template>
+    <ng-container *ngIf="loadingFriends">
+      <div class="text-center py-3">
+        <ion-spinner></ion-spinner>
+      </div>
+    </ng-container>
+  </div>
+</ion-content>

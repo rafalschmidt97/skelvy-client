@@ -3,14 +3,10 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/app/tabs/meetings"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ 'Meeting' | translate }}</ion-title>
+    <ion-title>{{ 'Meeting' | translate }} </ion-title>
     <ion-buttons slot="end">
-      <ion-button
-        color="dark"
-        *ngIf="isAdmin || isOwner"
-        (click)="editMeeting()"
-      >
-        <ion-icon name="create"></ion-icon>
+      <ion-button color="dark" *ngIf="isNotMember" (click)="addUsers()">
+        <ion-icon name="person-add"></ion-icon>
       </ion-button>
       <ion-button (click)="showMessages()">
         <ion-icon name="chatbubbles"></ion-icon>
@@ -24,7 +20,7 @@
     <section class="d-flex flex-grow-1 bg-ultra-light py-3">
       <div class="my-auto w-100 text-center header container">
         {{ meeting.activity.name | translate }}
-        <ion-icon name="heart" class="header-icon"></ion-icon>
+        <ion-icon name="heart" class="heart-icon text-danger"></ion-icon>
       </div>
     </section>
     <section class="info">
@@ -75,6 +71,13 @@
     </section>
     <section class="more">
       <div class="container py-2">
+        <button
+          *ngIf="isAdmin || isOwner"
+          (click)="editMeeting()"
+          class="btn btn-outline-primary btn-block mb-2"
+        >
+          {{ 'Edit details' | translate }}
+        </button>
         <ng-container *ngIf="isOwner; else member">
           <div class="row no-gutters">
             <div class="col mr-1">
@@ -87,10 +90,7 @@
               </button>
             </div>
             <div class="col ml-1">
-              <button
-                (click)="openRemove()"
-                class="btn btn-outline-primary btn-block"
-              >
+              <button (click)="openRemove()" class="btn btn-danger btn-block">
                 <span
                   [hidden]="loadingAction"
                   [innerText]="'Remove' | translate"

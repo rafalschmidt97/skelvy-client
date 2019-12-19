@@ -7,7 +7,12 @@ import { Storage } from '@ionic/storage';
 import { MeetingsService } from './meetings.service';
 import { HubConnection } from '@aspnet/signalr';
 import { NavController } from '@ionic/angular';
-import { MessageActionType, MessageDto, MessageType } from './meetings';
+import {
+  GroupUserRole,
+  MessageActionType,
+  MessageDto,
+  MessageType,
+} from './meetings';
 import { Store } from '@ngxs/store';
 import { BackgroundService } from '../../core/background/background.service';
 import {
@@ -35,6 +40,7 @@ export class MeetingsSocketService {
     _('USER_LEFT_GROUP'),
     _('MEETING_ABORTED'),
     _('MEETING_UPDATED'),
+    _('MEETING_USER_ROLE_UPDATED'),
     _('GROUP_ABORTED'),
     _('MEETING_REQUEST_EXPIRED'),
     _('MEETING_REQUEST'),
@@ -67,9 +73,12 @@ export class MeetingsSocketService {
     this.onUserLeftGroup();
     this.onMeetingAborted();
     this.onMeetingUpdated();
+    this.onMeetingUserRoleUpdated();
     this.onMeetingRequestExpired();
     this.onGroupAborted();
     this.onMeetingExpired();
+    this.onUserSentMeetingInvitation();
+    this.onUserRespondedMeetingInvitation();
   }
 
   private onUserSentMessage() {
@@ -242,6 +251,17 @@ export class MeetingsSocketService {
     );
   }
 
+  private onMeetingUserRoleUpdated() {
+    this.userSocket.on(
+      'MeetingUserRoleUpdated',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+        const { groupId, updatedUserId, role } = notification.data.data;
+        this.meetingService.updatedUserRole(groupId, updatedUserId, role);
+      },
+    );
+  }
+
   private onMeetingRequestExpired() {
     this.userSocket.on(
       'MeetingRequestExpired',
@@ -311,6 +331,47 @@ export class MeetingsSocketService {
         }
 
         this.meetingService.clearMeeting(meetingId, groupId);
+      },
+    );
+  }
+
+  private onUserSentMeetingInvitation() {
+    this.userSocket.on(
+      'UserSentMeetingInvitation',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+        this.toastService.createInformation(
+          _('Someone has sent you new meeting invitation'),
+        );
+        this.meetingService.findMeetingInvitations().subscribe();
+      },
+    );
+  }
+
+  private onUserRespondedMeetingInvitation() {
+    this.userSocket.on(
+      'UserRespondedMeetingInvitation',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+
+        const { isAccepted, invitedUserId, groupId } = notification.data.data;
+
+        if (isAccepted) {
+          this.meetingService
+            .addUser(invitedUserId, groupId, GroupUserRole.MEMBER)
+            .subscribe(
+              () => {
+                this.toastService.createInformation(
+                  _('New user has been added to the group'),
+                );
+              },
+              () => {
+                this.toastService.createError(
+                  _('A problem occurred loading meeting user'),
+                );
+              },
+            );
+        }
       },
     );
   }

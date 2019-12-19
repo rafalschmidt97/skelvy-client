@@ -22,7 +22,7 @@ import {
   SocketNotificationType,
 } from '../../core/background/background';
 import { BackgroundService } from '../../core/background/background.service';
-import { SettingsService } from '../settings/settings.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -47,7 +47,7 @@ export class UserSocketService {
     private readonly routerNavigation: NavController,
     private readonly store: Store,
     private readonly backgroundService: BackgroundService,
-    private readonly settingsService: SettingsService,
+    private readonly userService: UserService,
   ) {
     this.socket = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'users', {
@@ -195,7 +195,10 @@ export class UserSocketService {
       'UserSentFriendInvitation',
       (notification: SocketNotificationMessage) => {
         this.showNotificationIfBackground(notification);
-        this.settingsService.findFriendInvitations().subscribe();
+        this.toastService.createInformation(
+          _('Someone has sent you new friend invitation'),
+        );
+        this.userService.findFriendInvitations().subscribe();
       },
     );
   }
@@ -209,7 +212,10 @@ export class UserSocketService {
         const { isAccepted } = notification.data.data;
 
         if (isAccepted) {
-          this.settingsService.findFriends().subscribe();
+          this.toastService.createInformation(
+            _('User has accepted your friend invitation'),
+          );
+          this.userService.findFriends().subscribe();
         }
       },
     );
@@ -220,7 +226,7 @@ export class UserSocketService {
       'FriendRemoved',
       (notification: SocketNotificationMessage) => {
         const { removingUserId } = notification.data.data;
-        this.settingsService.clearFriend(removingUserId);
+        this.userService.clearFriend(removingUserId);
       },
     );
   }

@@ -60,6 +60,13 @@ export interface MeetingInvitation {
   createdAt: string;
 }
 
+export interface MeetingInvitationDetails {
+  id: number;
+  invitingUserId: number;
+  invitedUser: UserDto;
+  createdAt: string;
+}
+
 export interface UserWithRoleDto {
   id: number;
   name: string;

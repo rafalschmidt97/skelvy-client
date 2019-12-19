@@ -1,0 +1,11 @@
+@import '~src/theme/bootstrap/variables';
+
+.bg-ultra-light {
+  background: gray('100');
+}
+
+.guidelines {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: gray('700');
+}

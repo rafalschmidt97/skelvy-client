@@ -8,10 +8,6 @@ import {
   GlobalState,
   GlobalStateModel,
 } from '../state/global-state';
-import {
-  SettingsState,
-  SettingsStateModel,
-} from '../../modules/settings/store/settings-state';
 import { getActionTypeFromInstance } from '@ngxs/store';
 import {
   ExploreState,
@@ -23,16 +19,9 @@ export interface AppStateModel {
   user: UserStateModel;
   meetings: MeetingsStateModel;
   explore: ExploreStateModel;
-  settings: SettingsStateModel;
 }
 
-export const appState = [
-  GlobalState,
-  UserState,
-  MeetingsState,
-  ExploreState,
-  SettingsState,
-];
+export const appState = [GlobalState, UserState, MeetingsState, ExploreState];
 
 export class ClearState {
   static readonly type = '[App] Clear state';
@@ -47,23 +36,21 @@ export function clearState(state: AppStateModel, action, next) {
       user: {
         loading: false,
         user: null,
+        friends: [],
+        blockedUsers: [],
+        friendInvitations: [],
       },
       meetings: {
         loading: false,
         meetings: [],
         requests: [],
         groups: [],
+        meetingInvitations: [],
       },
       explore: {
         loading: false,
         meetings: [],
         requests: [],
-      },
-      settings: {
-        friends: [],
-        blockedUsers: [],
-        friendInvitations: [],
-        meetingInvitations: [],
       },
     };
   }
