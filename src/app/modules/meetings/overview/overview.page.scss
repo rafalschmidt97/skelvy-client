@@ -4,15 +4,14 @@
   transform: scale(0.7);
 }
 
-.meetings {
-  &.disabled {
-    background: gray('600') !important;
-
-    .icon {
-      color: gray('600') !important;
-    }
+.disabled {
+  .icon {
+    color: gray('600') !important;
   }
+}
 
+.meetings,
+.requests {
   .item {
     border-top: 1px solid gray('300');
     border-bottom: 1px solid gray('300');

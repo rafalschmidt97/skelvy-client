@@ -50,18 +50,6 @@ export class NotificationsPage implements Form, OnSubmit, OnInit {
     await this.initialize();
   }
 
-  async getPermission() {
-    try {
-      await this.userPush.initialize(true);
-      this.loadingSettings = true;
-      await this.initialize();
-    } catch {
-      this.toastService.createError(
-        _('A problem occurred while asking for a permission'),
-      );
-    }
-  }
-
   async onSubmit() {
     if (this.form.valid && !this.isLoading) {
       this.isLoading = true;

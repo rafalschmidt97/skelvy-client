@@ -36,21 +36,12 @@
         </div>
       </app-form>
       <ng-template #noPermission>
-        <div class="mb-3 text-center">
+        <div class="text-center">
           <div class="border-top border-bottom text-center p-3 bg-white">
-            <p>
-              {{
-                'You have to allow to send you notifications first. Go to system preferences and change your preferences.'
-                  | translate
-              }}
-            </p>
-            <button
-              type="button"
-              (click)="getPermission()"
-              class="btn btn-primary btn-block"
-            >
-              {{ 'Request permission' | translate }}
-            </button>
+            {{
+              'You have to allow to send you notifications first. Go to system preferences and change your preferences.'
+                | translate
+            }}
           </div>
         </div>
       </ng-template>

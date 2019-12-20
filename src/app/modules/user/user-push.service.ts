@@ -36,40 +36,34 @@ export class UserPushService {
     private readonly groupsService: GroupsService,
   ) {}
 
-  async initialize(force: boolean = false) {
+  async initialize() {
     const push = await this.storage.get(storageKeys.push);
+    if (!push) {
+      await this.push.hasPermission();
 
-    if (isNil(push) || force) {
-      const permission = await this.push.hasPermission();
+      this.push$ = this.push.init({
+        android: {
+          topics: ['all', 'android'],
+        },
+        ios: {
+          alert: true,
+          badge: true,
+          sound: true,
+          topics: ['all', 'ios'],
+        },
+      });
 
-      if (permission.isEnabled) {
-        this.push$ = this.push.init({
-          android: {
-            topics: ['all', 'android'],
-          },
-          ios: {
-            alert: true,
-            badge: true,
-            sound: true,
-            topics: ['all', 'ios'],
-          },
-        });
+      this.push$.on('registration').subscribe(async () => {
+        await this.storage.set(storageKeys.push, true);
+        await this.storage.set(storageKeys.pushTopicAll, true);
+        await this.storage.set(storageKeys.pushTopicPlatform, true);
+      });
 
-        this.push$.on('registration').subscribe(async () => {
-          await this.storage.set(storageKeys.push, true);
-          await this.storage.set(storageKeys.pushTopicAll, true);
-          await this.storage.set(storageKeys.pushTopicPlatform, true);
-        });
-
-        this.push$.on('error').subscribe(() => {
-          this.toastService.createError(
-            _('A problem occurred while registering the device'),
-          );
-        });
-      } else {
-        await this.storage.set(storageKeys.push, false);
-        throw new Error('Push initialize failed');
-      }
+      this.push$.on('error').subscribe(() => {
+        this.toastService.createError(
+          _('A problem occurred while registering the device'),
+        );
+      });
     }
   }
 
