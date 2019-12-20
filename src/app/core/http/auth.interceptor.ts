@@ -32,10 +32,7 @@ export class AuthInterceptor implements HttpInterceptor {
         return next.handle(bearerRequest).pipe(
           catchError(error => {
             if (error instanceof HttpErrorResponse && error.status === 401) {
-              if (
-                bearerRequest.url.includes('auth') ||
-                bearerRequest.url.includes('refresh')
-              ) {
+              if (bearerRequest.url.includes('auth/refresh')) {
                 this.authService.logoutWithoutRequest().then(() => {
                   this.routerNavigation.navigateBack(['/home/sign-in']);
                   this.toastService.createError(_('The session has expired'));
@@ -66,11 +63,11 @@ export class AuthInterceptor implements HttpInterceptor {
     const session = await this.sessionService.getSession();
 
     if (session) {
-      return (request = request.clone({
+      return request.clone({
         setHeaders: {
           Authorization: `Bearer ${session.accessToken}`,
         },
-      }));
+      });
     }
 
     return request;

@@ -142,10 +142,14 @@ export class UserPushService {
       .get(storageKeys.pushTopicUser)
       .then(async (pushTopicUser: boolean) => {
         if (isNil(pushTopicUser)) {
-          await this.addTopic(
-            'user-' + this.getUserId(),
-            storageKeys.pushTopicUser,
-          );
+          const userId = this.getUserId();
+
+          if (userId) {
+            await this.addTopic(
+              'user-' + this.getUserId(),
+              storageKeys.pushTopicUser,
+            );
+          }
         }
       });
 
@@ -157,13 +161,25 @@ export class UserPushService {
   }
 
   async disconnect() {
-    await this.removeTopic(
-      'user-' + this.getUserId(),
-      storageKeys.pushTopicUser,
-    );
+    if (!this.push$) {
+      this.push$ = this.push.init({});
+    }
+
+    const userId = this.getUserId();
+
+    if (userId) {
+      await this.removeTopic(
+        'user-' + this.getUserId(),
+        storageKeys.pushTopicUser,
+      );
+    }
   }
 
   addTopic(topic: string, storageKey: string): Promise<any> {
+    if (!this.push$) {
+      this.push$ = this.push.init({});
+    }
+
     return this.push$.subscribe(topic).then(
       async () => {
         await this.storage.set(storageKey, true);
@@ -177,6 +193,10 @@ export class UserPushService {
   }
 
   removeTopic(topic: string, storageKey: string): Promise<any> {
+    if (!this.push$) {
+      this.push$ = this.push.init({});
+    }
+
     return this.push$.unsubscribe(topic).then(
       async () => {
         await this.storage.set(storageKey, false);
@@ -195,7 +215,8 @@ export class UserPushService {
     await this.push$.clearAllNotifications();
   }
 
-  private getUserId(): number {
-    return this.store.selectSnapshot(state => state.user.user.id);
+  private getUserId(): number | null {
+    const user = this.store.selectSnapshot(state => state.user.user);
+    return user ? user.id : null;
   }
 }
