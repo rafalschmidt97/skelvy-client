@@ -4,6 +4,8 @@ import { OverviewPage } from './overview.page';
 import { SharedModule } from '../../../shared/shared.module';
 import { MeetingInvitationPreviewComponent } from './inviation-preview/meeting-invitation-preview.component';
 import { MeetingInvitationModalComponent } from './invitation-modal/meeting-invitation-modal.component';
+import { MeetingPreviewComponent } from './meeting-preview/meeting-preview.component';
+import { RequestPreviewComponent } from './request-preview/request-preview.component';
 
 const routes: Routes = [
   {
@@ -18,6 +20,8 @@ const routes: Routes = [
     OverviewPage,
     MeetingInvitationModalComponent,
     MeetingInvitationPreviewComponent,
+    MeetingPreviewComponent,
+    RequestPreviewComponent,
   ],
   entryComponents: [MeetingInvitationModalComponent],
 })

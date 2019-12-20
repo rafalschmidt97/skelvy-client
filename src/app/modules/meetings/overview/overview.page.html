@@ -46,98 +46,24 @@
               class="text-center mb-3"
               [innerText]="'Meetings you participate' | translate"
             ></div>
-            <div
+            <app-meeting-preview
               *ngFor="let meeting of meetings.meetings"
-              [routerLink]="['/app/meetings/details', meeting.id]"
-              class="d-flex align-items-center mb-1 item"
+              [group]="getGroup(meeting.groupId, meetings.groups)"
+              [meeting]="meeting"
             >
-              <div class="py-3 pl-3">
-                <div>
-                  <span class="font-weight-bold">{{ 'Date' | translate }}</span
-                  >: {{ meeting.date | date: 'dd.MM.yyyy' }}
-                </div>
-                <div>
-                  <span class="font-weight-bold">{{ 'City' | translate }}</span
-                  >: {{ meeting.city }}
-                </div>
-                <div>
-                  <span class="font-weight-bold">{{
-                    'People' | translate
-                  }}</span
-                  >:
-                  {{ getGroup(meeting.groupId, meetings.groups).users.length }}
-                  /
-                  {{ meeting.size }}
-                  <ion-icon
-                    *ngIf="meeting.isHidden; else notHidden"
-                    name="lock"
-                    class="icon-hidden align-middle"
-                  ></ion-icon>
-                  <ng-template #notHidden>
-                    <ion-icon
-                      name="unlock"
-                      class="icon-hidden align-middle"
-                    ></ion-icon>
-                  </ng-template>
-                </div>
-                <div>
-                  <span class="font-weight-bold">{{
-                    'Activity' | translate
-                  }}</span
-                  >: {{ meeting.activity.name | translate }}
-                </div>
-              </div>
-              <button
-                type="button"
-                class="icon text-primary ml-auto align-self-stretch px-3 d-flex align-items-center"
-                [disabled]="meetings.loading"
-              >
-                <ion-icon name="arrow-forward" class="d-block"></ion-icon>
-              </button>
-            </div>
+            </app-meeting-preview>
           </div>
           <div class="requests" *ngIf="meetings.requests.length > 0">
             <div
               class="text-center my-3"
               [innerText]="'Requests created by you' | translate"
             ></div>
-            <div
+            <app-request-preview
               *ngFor="let request of meetings.requests"
-              class="d-flex align-items-center mb-1 item"
+              [request]="request"
+              (openRemoveRequest)="openRemoveRequest($event)"
             >
-              <div class="py-3 pl-3">
-                <div>
-                  <span class="font-weight-bold">{{ 'Date' | translate }}</span
-                  >: {{ getDate(request.minDate, request.maxDate) }}
-                </div>
-                <div>
-                  <span class="font-weight-bold">{{ 'City' | translate }}</span
-                  >: {{ request.city }}
-                </div>
-                <div>
-                  <span class="font-weight-bold">{{
-                    'Activities' | translate
-                  }}</span
-                  >:
-                  <ng-container
-                    *ngFor="let activity of request.activities; let i = index"
-                  >
-                    <span class="d-inline-block">{{
-                      activity.name | translate
-                    }}</span>
-                    <span *ngIf="i !== request.activities.length - 1">, </span>
-                  </ng-container>
-                </div>
-              </div>
-              <button
-                type="button"
-                class="icon cross text-danger ml-auto align-self-stretch px-3 d-flex align-items-center"
-                (click)="removeRequestAlert(request.id)"
-                [disabled]="meetings.loading"
-              >
-                <ion-icon name="close" class="d-block"></ion-icon>
-              </button>
-            </div>
+            </app-request-preview>
           </div>
         </div>
         <ng-template #empty>

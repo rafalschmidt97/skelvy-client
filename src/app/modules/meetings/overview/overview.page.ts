@@ -50,22 +50,20 @@ export class OverviewPage {
     return groups.find(x => x.id === groupId);
   }
 
-  async removeRequestAlert(id: number) {
-    {
-      const modal = await this.modalController.create({
-        component: AlertModalComponent,
-        componentProps: {
-          title: this.translateService.instant('Are you sure?'),
-        },
-        cssClass: 'ionic-modal ionic-action-modal',
-      });
+  async openRemoveRequest(id: number) {
+    const modal = await this.modalController.create({
+      component: AlertModalComponent,
+      componentProps: {
+        title: this.translateService.instant('Are you sure?'),
+      },
+      cssClass: 'ionic-modal ionic-action-modal',
+    });
 
-      await modal.present();
-      const { data } = await modal.onWillDismiss();
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
 
-      if (data && data.response) {
-        this.removeRequest(id);
-      }
+    if (data && data.response) {
+      this.removeRequest(id);
     }
   }
 

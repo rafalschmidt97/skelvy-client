@@ -1,0 +1,27 @@
+<div class="d-flex align-items-center mb-1 item">
+  <div class="py-3 pl-3">
+    <div>
+      <span class="font-weight-bold">{{ 'Date' | translate }}</span
+      >: {{ getDate(request.minDate, request.maxDate) }}
+    </div>
+    <div>
+      <span class="font-weight-bold">{{ 'City' | translate }}</span
+      >: {{ request.city }}
+    </div>
+    <div>
+      <span class="font-weight-bold">{{ 'Activities' | translate }}</span
+      >:
+      <ng-container *ngFor="let activity of request.activities; let i = index">
+        <span class="d-inline-block">{{ activity.name | translate }}</span>
+        <span *ngIf="i !== request.activities.length - 1">, </span>
+      </ng-container>
+    </div>
+  </div>
+  <button
+    type="button"
+    class="icon cross text-danger ml-auto align-self-stretch px-3 d-flex align-items-center"
+    (click)="openRemoveRequest.emit(request.id)"
+  >
+    <ion-icon name="close" class="d-block"></ion-icon>
+  </button>
+</div>
