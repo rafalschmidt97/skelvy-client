@@ -59,12 +59,8 @@ export class SelfService {
           if (!user) {
             user = await this.http
               .get<SelfUserDto>(environment.versionApiUrl + 'users/self')
-              .pipe(
-                tap(async () => {
-                  await this.storage.set(storageKeys.user, user);
-                }),
-              )
               .toPromise();
+            await this.storage.set(storageKeys.user, user);
           }
 
           if (
