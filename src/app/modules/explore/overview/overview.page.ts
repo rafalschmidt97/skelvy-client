@@ -158,7 +158,7 @@ export class OverviewPage implements OnInit {
       componentProps: {
         meeting: previewMeeting,
       },
-      cssClass: 'ionic-modal ionic-action-modal',
+      cssClass: 'ionic-modal ionic-full-modal',
     });
 
     await modal.present();
@@ -175,7 +175,7 @@ export class OverviewPage implements OnInit {
       componentProps: {
         request: previewRequest,
       },
-      cssClass: 'ionic-modal ionic-action-modal',
+      cssClass: 'ionic-modal ionic-full-modal',
     });
 
     await modal.present();

@@ -93,7 +93,7 @@ export class OverviewPage {
       componentProps: {
         invitation,
       },
-      cssClass: 'ionic-modal ionic-action-modal',
+      cssClass: 'ionic-modal ionic-full-modal',
     });
 
     await modal.present();

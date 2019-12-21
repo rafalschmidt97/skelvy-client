@@ -13,16 +13,6 @@ export class MeetingSuggestionsModalComponent {
 
   constructor(private readonly modalController: ModalController) {}
 
-  getDate(minDate: string | Date, maxDate: string | Date): string {
-    if (maxDate !== minDate) {
-      return `${moment(minDate).format('DD.MM.YYYY')} - ${moment(
-        maxDate,
-      ).format('DD.MM.YYYY')}`;
-    }
-
-    return moment(minDate).format('DD.MM.YYYY');
-  }
-
   joinMeeting(meetingId: number) {
     this.modalController.dismiss({ meetingId });
   }

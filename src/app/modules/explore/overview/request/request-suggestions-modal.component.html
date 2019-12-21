@@ -1,49 +1,55 @@
 <app-modal>
-  <div
-    class="profile py-4 d-flex align-items-center justify-content-center"
-    *ngIf="request.user as user"
-  >
+  <div class="my-auto">
     <div
-      class="flex-shrink-0 image rounded-circle"
-      [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
-    ></div>
-    <div class="min-width mx-3">
-      <h3 class="mb-0 text-primary">
-        {{ user.profile.name }}, {{ user.profile.age }}
-      </h3>
+      class="profile py-4 d-flex align-items-center justify-content-center"
+      *ngIf="request.user as user"
+    >
+      <div
+        class="flex-shrink-0 image rounded-circle"
+        [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
+      ></div>
+      <div class="min-width mx-3">
+        <h3 class="mb-0 text-primary">
+          {{ user.profile.name }}, {{ user.profile.age }}
+        </h3>
+      </div>
+    </div>
+    <div class="px-4">
+      <div class="border-top py-4">
+        <div>
+          <span class="font-weight-bold">{{ 'Date' | translate }}</span
+          >: {{ getDate(request.minDate, request.maxDate) }}
+        </div>
+        <div>
+          <span class="font-weight-bold">{{ 'City' | translate }}</span
+          >: {{ request.city }}
+        </div>
+        <div>
+          <span class="font-weight-bold">
+            <ng-container
+              *ngIf="request.activities.length > 1; else oneActivity"
+            >
+              {{ 'Activities' | translate }}
+            </ng-container>
+            <ng-template #oneActivity>
+              {{ 'Activity' | translate }}
+            </ng-template> </span
+          >:
+          <ng-container
+            *ngFor="let activity of request.activities; let i = index"
+          >
+            <span class="d-inline-block">{{ activity.name | translate }}</span>
+            <span *ngIf="i !== request.activities.length - 1">, </span>
+          </ng-container>
+        </div>
+        <div>
+          <span class="font-weight-bold">{{ 'Description' | translate }}</span
+          >: {{ request.description || '-' }}
+        </div>
+      </div>
     </div>
   </div>
-  <div class="px-4 pb-4">
-    <div class="border-top py-4">
-      <div>
-        <span class="font-weight-bold">{{ 'Date' | translate }}</span
-        >: {{ getDate(request.minDate, request.maxDate) }}
-      </div>
-      <div>
-        <span class="font-weight-bold">{{ 'City' | translate }}</span
-        >: {{ request.city }}
-      </div>
-      <div>
-        <span class="font-weight-bold">
-          <ng-container *ngIf="request.activities.length > 1; else oneActivity">
-            {{ 'Activities' | translate }}
-          </ng-container>
-          <ng-template #oneActivity>
-            {{ 'Activity' | translate }}
-          </ng-template> </span
-        >:
-        <ng-container
-          *ngFor="let activity of request.activities; let i = index"
-        >
-          <span class="d-inline-block">{{ activity.name | translate }}</span>
-          <span *ngIf="i !== request.activities.length - 1">, </span>
-        </ng-container>
-      </div>
-      <div *ngIf="request.description">
-        <span class="font-weight-bold">{{ 'Description' | translate }}</span
-        >: {{ request.description }}
-      </div>
-    </div>
+  <div class="px-4 pb-4 mt-auto">
     <button
       type="button"
       class="btn btn-primary btn-block"
