@@ -53,6 +53,10 @@ export class UsernamePage implements Form, OnSubmit, OnInit {
 
     if (this.created) {
       this.initialValue = '';
+
+      this.form.patchValue({
+        username: '',
+      });
     }
 
     this.form
