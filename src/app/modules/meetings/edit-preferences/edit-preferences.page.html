@@ -59,6 +59,13 @@
           [label]="'Activities' | translate"
           [options]="activities"
         ></app-checkbox>
+        <div class="note mb-3">
+          {{
+            'If you miss your favourite activity do not hesitate to contact us by using our website. ' +
+              'We are more than happy to improve the system so all feedback is very welcome.'
+              | translate
+          }}
+        </div>
         <app-textarea
           name="description"
           [label]="'Extra notes' | translate"
