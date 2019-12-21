@@ -43,7 +43,12 @@ export class UsernamePage implements Form, OnSubmit, OnInit {
     this.form = this.formBuilder.group({
       username: [
         username || '',
-        [Validators.required, InputComponent.maxWhiteSpaces(0)],
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(20),
+          InputComponent.maxWhiteSpaces(0),
+        ],
       ],
     });
   }
