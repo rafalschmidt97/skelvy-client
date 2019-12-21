@@ -1,5 +1,10 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/app/settings/friends">
+        <ion-icon name="contacts" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>{{ 'Profile' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button routerLink="/app/settings">
@@ -10,25 +15,29 @@
 </ion-header>
 
 <ion-content>
-  <div
-    *ngIf="(user$ | async)?.profile as profile"
-    class="d-flex flex-column minh-100"
-  >
+  <div *ngIf="user$ | async as user" class="d-flex flex-column minh-100">
     <section class="container d-flex flex-grow-1 py-3 bg-ultra-light preview">
       <div class="m-auto text-center">
-        <div (click)="openDetails()">
-          <div class="avatar d-inline-block">
+        <div>
+          <div (click)="openDetails()" class="avatar d-inline-block">
             <div
               class="image"
-              [style.background-image]="'url(' + profile.photos[0]?.url + ')'"
+              [style.background-image]="
+                'url(' + user.profile.photos[0]?.url + ')'
+              "
             ></div>
           </div>
 
           <h2 class="name my-4">
-            <div class="d-inline-block">
-              {{ profile.name }}, {{ profile.birthday | age }}
-              <div class="tap">{{ 'Tap to see your profile' | translate }}</div>
-            </div>
+            <span class="d-inline-block">
+              {{ user.profile.name }}, {{ user.profile.birthday | age }}
+              <span
+                routerLink="/app/settings/username"
+                class="tap d-block w-100"
+              >
+                @{{ user.name }}
+              </span>
+            </span>
           </h2>
         </div>
 
