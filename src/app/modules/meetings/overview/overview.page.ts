@@ -3,7 +3,6 @@ import { MeetingsStateModel } from '../store/meetings-state';
 import { combineLatest, Observable } from 'rxjs';
 import { UserStateModel } from '../../user/store/user-state';
 import { Select } from '@ngxs/store';
-import * as moment from 'moment';
 import { AlertModalComponent } from '../../../shared/components/alert/alert-modal/alert-modal.component';
 import { ToastService } from '../../../core/toast/toast.service';
 import { ModalController } from '@ionic/angular';
@@ -35,16 +34,6 @@ export class OverviewPage {
     private readonly groupsService: GroupsService,
     private readonly loadingService: LoadingService,
   ) {}
-
-  getDate(minDate: string | Date, maxDate: string | Date): string {
-    if (maxDate !== minDate) {
-      return `${moment(minDate).format('DD.MM.YYYY')} - ${moment(
-        maxDate,
-      ).format('DD.MM.YYYY')}`;
-    }
-
-    return moment(minDate).format('DD.MM.YYYY');
-  }
 
   getGroup(groupId: number, groups: GroupState[]): GroupState {
     return groups.find(x => x.id === groupId);
@@ -122,7 +111,18 @@ export class OverviewPage {
             }
           }),
         )
-        .subscribe();
+        .subscribe(
+          () => {},
+          (error: HttpErrorResponse) => {
+            if (error.status === 404) {
+              this.meetingService.findMeetingInvitations().subscribe();
+            }
+
+            this.toastService.createError(
+              _('A problem occurred while responding meeting invitation'),
+            );
+          },
+        );
     }
   }
 }

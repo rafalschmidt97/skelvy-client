@@ -18,6 +18,7 @@ import { MeetingsStateModel } from '../store/meetings-state';
 import { Store } from '@ngxs/store';
 import { MapsService } from '../../../core/maps/maps.service';
 import { TranslateService } from '@ngx-translate/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-edit-meeting',
@@ -144,7 +145,12 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
                 this.meetingId,
               ]);
             },
-            () => {
+            (error: HttpErrorResponse) => {
+              if (error.status === 404) {
+                this.routerNavigation.navigateBack(['/app/tabs/meetings']);
+                this.meetingService.findMeetings().subscribe();
+              }
+
               this.isLoading = false;
               this.toastService.createError(
                 _('A problem occurred while updating the meeting'),

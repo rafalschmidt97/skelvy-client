@@ -9,6 +9,7 @@ import { UserService } from '../../user/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { mergeMap, switchMap } from 'rxjs/operators';
 import { MeetingsService } from '../meetings.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-invite',
@@ -110,7 +111,11 @@ export class InvitePage implements OnInit {
           this.reducedFriends = reducedFriends;
         }
       },
-      () => {
+      (error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          this.userService.findFriends().subscribe();
+        }
+
         this.toastService.createError(
           _('A problem occurred while inviting a friend'),
         );

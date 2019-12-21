@@ -13,6 +13,7 @@ import { ToastService } from '../../../core/toast/toast.service';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { GroupsService } from '../groups.service';
 import { TranslateService } from '@ngx-translate/core';
+import { MeetingsService } from '../../meetings/meetings.service';
 
 @Component({
   selector: 'app-chat',
@@ -36,6 +37,7 @@ export class ChatPage implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly groupService: GroupsService,
+    private readonly meetingService: MeetingsService,
     private readonly translateService: TranslateService,
   ) {}
 
@@ -120,6 +122,7 @@ export class ChatPage implements OnInit, OnDestroy {
         // data is not relevant (connection lost and reconnected)
         if (error.status === 404) {
           this.routerNavigation.navigateBack(['/app/tabs/groups']);
+          this.meetingService.findMeetings().subscribe();
         }
 
         this.loadingAction = false;

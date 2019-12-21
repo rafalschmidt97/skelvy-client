@@ -147,6 +147,7 @@ export class DetailsPage implements OnInit, OnDestroy {
           // data is not relevant (connection lost and reconnected)
           if (error.status === 404) {
             this.routerNavigation.navigateBack(['/app/tabs/meetings']);
+            this.meetingService.findMeetings().subscribe();
           }
 
           this.loadingAction = false;
@@ -194,6 +195,7 @@ export class DetailsPage implements OnInit, OnDestroy {
           // data is not relevant (connection lost and reconnected)
           if (error.status === 404) {
             this.routerNavigation.navigateBack(['/app/tabs/meetings']);
+            this.meetingService.findMeetings().subscribe();
           }
 
           this.loadingAction = false;
