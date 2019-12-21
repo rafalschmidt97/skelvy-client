@@ -5,7 +5,7 @@
       [style.height.px]="displayMissing * 92 + 2"
     >
       <div class="my-auto">
-        <div class="info mb-2">
+        <div *ngIf="!isHidden" class="info mb-2">
           <div class="font-weight-bold text-primary">
             <ng-container [ngSwitch]="missing">
               <span
@@ -53,7 +53,15 @@
               "
             ></div>
             <div
-              *ngIf="missing > 1"
+              *ngIf="length === 0"
+              [innerText]="
+                'This meeting is empty right now so you can either make it public to find more people or add some friends.'
+                  | translate
+              "
+            ></div>
+            <div
+              *ngIf="missing > 1 && length !== 0"
+              class=""
               [innerText]="
                 'If you need more members it is always possible to change the status.'
                   | translate
