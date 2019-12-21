@@ -1,6 +1,9 @@
-<ng-container *ngIf="missing !== 0">
+<ng-container *ngIf="missing > 0">
   <ng-container *ngIf="size !== 1; else empty">
-    <div class="container d-flex" [style.height.px]="displayMissing * 92 + 2">
+    <div
+      class="container d-flex border-bottom"
+      [style.height.px]="displayMissing * 92 + 2"
+    >
       <div class="my-auto">
         <div class="info mb-2">
           <div class="font-weight-bold text-primary">
