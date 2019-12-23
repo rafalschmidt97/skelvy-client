@@ -34,7 +34,6 @@
               meetings.meetingInvitations.length > 0;
             else empty
           "
-          class="py-3"
           [class.disabled]="meetings.loading"
         >
           <div
@@ -43,7 +42,7 @@
             [class.has-sibling]="meetings.requests.length > 0"
           >
             <div
-              class="text-center mb-3"
+              class="text-center my-3"
               [innerText]="'Meetings you participate' | translate"
             ></div>
             <app-meeting-preview
