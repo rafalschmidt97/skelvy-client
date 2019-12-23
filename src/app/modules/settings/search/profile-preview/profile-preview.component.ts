@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UserWithRoleDto } from '../../../user/user';
 
 @Component({
-  selector: 'app-profile-preview',
+  selector: 'app-search-profile-preview',
   templateUrl: './profile-preview.component.html',
   styleUrls: ['./profile-preview.component.scss'],
 })

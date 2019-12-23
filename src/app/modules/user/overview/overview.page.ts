@@ -37,6 +37,7 @@ export class OverviewPage {
       componentProps: {
         user: detailsUser,
         mine: true,
+        openingUser: this.store.selectSnapshot(state => state.user.user),
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });

@@ -1,38 +1,44 @@
 <app-modal>
-  <div
-    class="profile py-4 d-flex align-items-center justify-content-center"
-    *ngIf="invitation.invitingUser as user"
-  >
+  <div class="my-auto">
     <div
-      class="flex-shrink-0 image rounded-circle"
-      [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
-    ></div>
-    <div class="min-width mx-3">
-      <h3 class="mb-0 text-primary">
-        {{ user.profile.name }}, {{ user.profile.age }}
-      </h3>
+      class="profile py-4 d-flex align-items-center justify-content-center"
+      *ngIf="invitation.invitingUser as user"
+    >
+      <div
+        class="flex-shrink-0 image rounded-circle"
+        [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
+      ></div>
+      <div class="min-width mx-3">
+        <h3 class="mb-0 text-primary">
+          {{ user.profile.name }}, {{ user.profile.age }}
+        </h3>
+      </div>
+    </div>
+    <div class="px-4" *ngIf="invitation.invitingUser as user">
+      <p class="description" *ngIf="user.profile.description?.length > 0">
+        {{ user.profile.description }}
+      </p>
+      <p
+        class="text-muted"
+        *ngIf="
+          !user.profile.description || user.profile.description.length === 0
+        "
+      >
+        {{ 'User did not fill his bio yet.' | translate }}
+      </p>
+      <div class="border-top py-4">
+        <div>
+          <span class="font-weight-bold">{{ 'Invited at' | translate }}</span
+          >: {{ invitation.createdAt | date: 'dd.MM.yyyy' }}
+        </div>
+        <div>
+          <span class="font-weight-bold">{{ 'Username' | translate }}</span
+          >: @{{ user.name }}
+        </div>
+      </div>
     </div>
   </div>
-  <div class="px-4 pb-4" *ngIf="invitation.invitingUser as user">
-    <p class="description" *ngIf="user.profile.description?.length > 0">
-      {{ user.profile.description }}
-    </p>
-    <p
-      class="text-muted"
-      *ngIf="!user.profile.description || user.profile.description.length === 0"
-    >
-      {{ 'User did not fill his bio yet.' | translate }}
-    </p>
-    <div class="border-top py-4">
-      <div>
-        <span class="font-weight-bold">{{ 'Invited at' | translate }}</span
-        >: {{ invitation.createdAt | date: 'dd.MM.yyyy' }}
-      </div>
-      <div>
-        <span class="font-weight-bold">{{ 'Username' | translate }}</span
-        >: @{{ user.name }}
-      </div>
-    </div>
+  <div class="mt-auto px-4 pb-4===">
     <button type="button" class="btn btn-primary btn-block" (click)="accept()">
       {{ 'Accept' | translate }}
     </button>

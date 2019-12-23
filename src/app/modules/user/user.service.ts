@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import {
   FriendInvitation,
   ProfileRequest,
+  RelationDto,
   SelfUserDto,
   UserDto,
   UserWithRoleDto,
@@ -223,6 +224,12 @@ export class UserService {
   findUsers(username: string, page: number = 1): Observable<UserWithRoleDto[]> {
     return this.http.get<UserWithRoleDto[]>(
       `${environment.versionApiUrl}users?userName=${username}&page=${page}`,
+    );
+  }
+
+  checkRelation(userId: number): Observable<RelationDto> {
+    return this.http.get<RelationDto>(
+      `${environment.versionApiUrl}relations/self/check/${userId}`,
     );
   }
 

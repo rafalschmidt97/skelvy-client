@@ -3,7 +3,7 @@ import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { FriendInvitation, RelationType, UserDto } from '../../user/user';
 import { Observable } from 'rxjs';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { ModalController } from '@ionic/angular';
 import { FriendInvitationModalComponent } from './invitation-modal/friend-invitation-modal.component';
 import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
@@ -28,6 +28,7 @@ export class FriendsPage implements OnInit {
     private readonly userService: UserService,
     private readonly modalController: ModalController,
     private readonly toastService: ToastService,
+    private readonly store: Store,
   ) {}
 
   ngOnInit() {
@@ -61,7 +62,7 @@ export class FriendsPage implements OnInit {
       component: ProfileModalComponent,
       componentProps: {
         user,
-        relation: this.relations.FRIEND,
+        openingUser: this.store.selectSnapshot(state => state.user.user),
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });
@@ -75,7 +76,7 @@ export class FriendsPage implements OnInit {
       componentProps: {
         invitation,
       },
-      cssClass: 'ionic-modal ionic-action-modal',
+      cssClass: 'ionic-modal ionic-full-modal',
     });
 
     await modal.present();

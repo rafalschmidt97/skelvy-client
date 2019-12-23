@@ -29,7 +29,7 @@ export class AddressSearchModalComponent {
   ) {
     this.search$
       .pipe(
-        debounceTime(2500),
+        debounceTime(1000),
         distinctUntilChanged(),
         switchMap((text: string) => {
           return this.searchLocation(text);
@@ -55,23 +55,6 @@ export class AddressSearchModalComponent {
 
   filterVillages(response: MapsResponse[]): MapsResponse[] {
     return response.filter(x => x.type !== MapsResponseType.LOCALITY);
-  }
-
-  onSubmit() {
-    if (this.search.toLowerCase() !== this.lastSearch.toLowerCase()) {
-      this.searchLocation(this.search).subscribe(
-        results => {
-          this.resultSearched = true;
-          this.results = results;
-          this.resultLoading = false;
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while searching for locations'),
-          );
-        },
-      );
-    }
   }
 
   select(result: MapsResponse) {

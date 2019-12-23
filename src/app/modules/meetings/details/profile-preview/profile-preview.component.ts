@@ -3,7 +3,7 @@ import { UserDto } from '../../../user/user';
 import { GroupUserDto } from '../../meetings';
 
 @Component({
-  selector: 'app-profile-preview',
+  selector: 'app-details-profile-preview',
   templateUrl: './profile-preview.component.html',
   styleUrls: ['./profile-preview.component.scss'],
 })

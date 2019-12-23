@@ -32,11 +32,11 @@
         *ngIf="friends.length > 0; else emptyList"
         class="bg-white border-top"
       >
-        <app-profile-preview
+        <app-friends-profile-preview
           *ngFor="let user of friends"
           [user]="user"
           (openDetails)="openDetails($event)"
-        ></app-profile-preview>
+        ></app-friends-profile-preview>
         <div class="container">
           <button
             *ngIf="friends.length % 10 === 0 && !allFriendsLoaded"

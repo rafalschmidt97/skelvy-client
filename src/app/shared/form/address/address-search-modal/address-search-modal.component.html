@@ -1,6 +1,6 @@
 <app-modal (confirm)="confirm()">
   <div class="container pb-4 pt-1 border-bottom">
-    <form (ngSubmit)="onSubmit()" novalidate>
+    <form novalidate>
       <input
         (keyup)="search$.next($event.target.value)"
         class="form-control"

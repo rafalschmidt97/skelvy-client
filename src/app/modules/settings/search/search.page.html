@@ -9,7 +9,7 @@
 
 <ion-content>
   <div class="container py-4 border-bottom">
-    <form (ngSubmit)="onSubmit()" novalidate>
+    <form novalidate>
       <input
         (keyup)="search$.next($event.target.value)"
         class="form-control"
@@ -41,11 +41,11 @@
       </ng-container>
       <ng-container *ngIf="resultSearched">
         <ng-container *ngIf="results?.length > 0">
-          <app-profile-preview
+          <app-search-profile-preview
             *ngFor="let user of results"
             [user]="user"
             (openDetails)="openDetails($event)"
-          ></app-profile-preview>
+          ></app-search-profile-preview>
         </ng-container>
         <ng-container *ngIf="!results || !(results.length > 0)">
           <div class="container text-center py-3">

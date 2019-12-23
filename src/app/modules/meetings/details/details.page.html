@@ -53,11 +53,11 @@
       </div>
     </section>
     <section class="users">
-      <app-profile-preview
+      <app-details-profile-preview
         *ngFor="let user of filteredMeetingUsers"
         [user]="user"
         (openDetails)="openDetails($event)"
-      ></app-profile-preview>
+      ></app-details-profile-preview>
       <app-profile-missing
         [size]="meeting.size"
         [length]="group.users.length"

@@ -7,6 +7,8 @@ import { of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
 import { UserService } from '../../user/user.service';
+import { Store } from '@ngxs/store';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-search',
@@ -24,10 +26,11 @@ export class SearchPage {
     private readonly userService: UserService,
     private readonly modalController: ModalController,
     private readonly toastService: ToastService,
+    private readonly store: Store,
   ) {
     this.search$
       .pipe(
-        debounceTime(1500),
+        debounceTime(1000),
         distinctUntilChanged(),
         switchMap((text: string) => {
           return this.searchUsers(text);
@@ -47,28 +50,11 @@ export class SearchPage {
       );
   }
 
-  onSubmit() {
-    if (this.search.toLowerCase()) {
-      this.searchUsers(this.search).subscribe(
-        results => {
-          this.resultSearched = true;
-          this.results = results;
-          this.resultLoading = false;
-        },
-        () => {
-          this.toastService.createError(
-            _('A problem occurred while searching for locations'),
-          );
-        },
-      );
-    }
-  }
-
   private searchUsers(username: string) {
-    if (username.trim().length > 0) {
+    if (username.trim().length >= 3) {
       this.resultLoading = true;
 
-      return this.userService.findUsers(username);
+      return this.userService.findUsers(username.trim().toLowerCase());
     } else {
       return of(this.results);
     }
@@ -79,7 +65,7 @@ export class SearchPage {
       component: ProfileModalComponent,
       componentProps: {
         user: { id: user.id, profile: user.profile, name: user.name },
-        relation: user.relationType,
+        openingUser: this.store.selectSnapshot(state => state.user.user),
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });

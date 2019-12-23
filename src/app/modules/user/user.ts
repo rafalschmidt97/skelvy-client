@@ -79,3 +79,9 @@ export enum RelationType {
   BLOCKED = 'blocked',
   PENDING = 'pending',
 }
+
+export interface RelationDto {
+  userId: number;
+  relatedUserId: number;
+  type: RelationType;
+}

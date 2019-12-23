@@ -103,7 +103,7 @@ export class DetailsPage implements OnInit, OnDestroy {
         user,
         meeting: this.meeting,
         group: this.group,
-        openingUser: this.group.users.find(x => x.id === this.user.id),
+        openingUser: this.store.selectSnapshot(state => state.user.user),
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });

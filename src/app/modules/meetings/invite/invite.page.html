@@ -27,11 +27,11 @@
       *ngIf="reducedFriends && reducedFriends.length > 0; else emptyList"
       class="bg-white border-top"
     >
-      <app-profile-preview
+      <app-invite-profile-preview
         *ngFor="let user of reducedFriends"
         [user]="user"
         (invite)="invite($event)"
-      ></app-profile-preview>
+      ></app-invite-profile-preview>
       <div class="container">
         <button
           *ngIf="!allFriendsLoaded"

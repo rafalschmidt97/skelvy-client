@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { RelationType } from '../../../../modules/user/user';
+import { Component, Input, OnInit } from '@angular/core';
+import { RelationDto, RelationType } from '../../../../modules/user/user';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,18 +13,20 @@ import {
 } from '../../../../modules/meetings/meetings';
 import { MeetingsService } from '../../../../modules/meetings/meetings.service';
 import { UserService } from '../../../../modules/user/user.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-group-profile-details-modal',
   templateUrl: './group-profile-modal.component.html',
   styleUrls: ['./group-profile-modal.component.scss'],
 })
-export class GroupProfileModalComponent {
+export class GroupProfileModalComponent implements OnInit {
+  @Input() openingUser: GroupUserDto;
   @Input() user: GroupUserDto;
   @Input() meeting: MeetingDto;
   @Input() group: GroupState;
-  @Input() relation: RelationType;
-  @Input() openingUser: GroupUserDto;
+  relation: RelationDto = null;
+  loadingRelation = true;
   loadingRemoved = false;
   loadingRole = false;
   loadingFriend = false;
@@ -41,6 +43,31 @@ export class GroupProfileModalComponent {
     private readonly modalController: ModalController,
     private readonly meetingsService: MeetingsService,
   ) {}
+
+  ngOnInit() {
+    this.getRelation();
+  }
+
+  getRelation() {
+    this.loadingRelation = true;
+    this.userService.checkRelation(this.user.id).subscribe(
+      relation => {
+        this.relation = relation;
+        this.loadingRelation = false;
+      },
+      (error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          this.loadingRelation = false;
+        } else {
+          this.toastService.createError(
+            _('A problem occurred while finding the relation'),
+          );
+
+          this.modalController.dismiss();
+        }
+      },
+    );
+  }
 
   makeAdmin() {
     this.loadingRole = true;
@@ -106,10 +133,11 @@ export class GroupProfileModalComponent {
     this.loadingBlocked = true;
     this.userService.addBlockedUser(this.user).subscribe(
       () => {
-        this.relation = RelationType.BLOCKED;
+        this.setRelationType(RelationType.BLOCKED);
         this.loadingBlocked = false;
       },
       () => {
+        this.getRelation();
         this.loadingBlocked = false;
       },
     );
@@ -123,6 +151,7 @@ export class GroupProfileModalComponent {
         this.loadingBlocked = false;
       },
       () => {
+        this.getRelation();
         this.loadingBlocked = false;
       },
     );
@@ -132,10 +161,11 @@ export class GroupProfileModalComponent {
     this.loadingFriend = true;
     this.userService.inviteFriend(this.user.id).subscribe(
       () => {
-        this.relation = RelationType.PENDING;
+        this.setRelationType(RelationType.PENDING);
         this.loadingFriend = false;
       },
       () => {
+        this.getRelation();
         this.loadingFriend = false;
       },
     );
@@ -149,6 +179,7 @@ export class GroupProfileModalComponent {
         this.loadingFriend = false;
       },
       () => {
+        this.getRelation();
         this.loadingFriend = false;
       },
     );
@@ -163,6 +194,7 @@ export class GroupProfileModalComponent {
           this.modalController.dismiss();
         },
         () => {
+          this.getRelation();
           this.loadingRemoved = false;
         },
       );
@@ -190,5 +222,17 @@ export class GroupProfileModalComponent {
 
   confirm() {
     this.modalController.dismiss();
+  }
+
+  private setRelationType(relation: RelationType) {
+    if (this.relation == null) {
+      this.relation = {
+        userId: this.openingUser.id,
+        relatedUserId: this.user.id,
+        type: relation,
+      };
+    } else {
+      this.relation.type = relation;
+    }
   }
 }

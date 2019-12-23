@@ -97,7 +97,7 @@ export class BlockedPage implements OnInit {
       component: ProfileModalComponent,
       componentProps: {
         user,
-        relation: this.relations.BLOCKED,
+        openingUser: this.store.selectSnapshot(state => state.user.user),
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });

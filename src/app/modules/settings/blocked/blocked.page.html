@@ -16,11 +16,11 @@
           *ngIf="blockedUsers.length > 0; else emptyList"
           class="bg-white border-top"
         >
-          <app-profile-preview
+          <app-blocked-profile-preview
             *ngFor="let user of blockedUsers"
             [user]="user"
             (openDetails)="openDetails($event)"
-          ></app-profile-preview>
+          ></app-blocked-profile-preview>
           <div class="container">
             <button
               *ngIf="blockedUsers.length % 10 === 0 && !allBlockedLoaded"
