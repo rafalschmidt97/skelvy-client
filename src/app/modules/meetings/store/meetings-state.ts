@@ -25,6 +25,8 @@ import {
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveRequest,
   RemoveResponseGroupMessage,
+  UpdateGroup,
+  UpdateGroupFromRequest,
   UpdateMeeting,
   UpdateMeetingFromRequest,
   UpdateMeetingInvitations,
@@ -138,6 +140,24 @@ export class MeetingsState {
     });
   }
 
+  @Action(UpdateGroup)
+  updateGroup(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { group }: UpdateGroup,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      groups: state.groups.map(x => {
+        if (x.id === group.id) {
+          return group;
+        }
+
+        return x;
+      }),
+    });
+  }
+
   @Action(UpdateMeetingUserRole)
   updateMeetingUserRole(
     { getState, setState }: StateContext<MeetingsStateModel>,
@@ -189,9 +209,31 @@ export class MeetingsState {
             latitude: meetingRequest.latitude,
             longitude: meetingRequest.longitude,
             size: meetingRequest.size,
+            description: meetingRequest.description,
             isHidden: meetingRequest.isHidden,
             activity: resolvedActivity,
             city: resolvedCity,
+          };
+        }
+
+        return x;
+      }),
+    });
+  }
+
+  @Action(UpdateGroupFromRequest)
+  updateGroupFromRequest(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId, groupRequest }: UpdateGroupFromRequest,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      groups: state.groups.map(x => {
+        if (x.id === groupId) {
+          return {
+            ...x,
+            name: groupRequest.name,
           };
         }
 

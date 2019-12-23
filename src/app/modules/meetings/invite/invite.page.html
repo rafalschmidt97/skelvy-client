@@ -24,7 +24,7 @@
       }}
     </div>
     <div
-      *ngIf="reducedFriends.length > 0; else emptyList"
+      *ngIf="reducedFriends && reducedFriends.length > 0; else emptyList"
       class="bg-white border-top"
     >
       <app-profile-preview

@@ -13,6 +13,11 @@
       ></div>
     </div>
     <div class="min-width mx-3">
+      <div *ngIf="group.name">
+        <span class="font-weight-bold text-primary">
+          {{ group.name }}
+        </span>
+      </div>
       <div>
         <span class="font-weight-bold">{{ 'Date' | translate }}</span
         >: {{ meeting.date | date: 'dd.MM.yyyy' }}

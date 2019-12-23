@@ -43,6 +43,11 @@
           <span class="font-weight-bold">{{ 'Invited at' | translate }}</span
           >: {{ invitation.createdAt | date: 'dd.MM.yyyy' }}
         </div>
+        <div>
+          <span class="font-weight-bold">{{ 'Description' | translate }}</span
+          >:
+          <div class="small">{{ invitation.meeting.description || '-' }}</div>
+        </div>
       </div>
     </div>
   </div>

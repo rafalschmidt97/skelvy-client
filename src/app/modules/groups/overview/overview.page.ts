@@ -28,7 +28,7 @@ export class OverviewPage {
   }
 
   getGroupName(group: GroupState): string {
-    return group.users.map(x => x.profile.name).join(', ');
+    return group.name || group.users.map(x => x.profile.name).join(', ');
   }
 
   getLastMessage(group: GroupState): string {

@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import * as moment from 'moment';
 import { MeetingWithUsersDto } from '../../../meetings/meetings';
 
 @Component({

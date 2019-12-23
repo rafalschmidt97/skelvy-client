@@ -73,6 +73,7 @@ export class MeetingsSocketService {
     this.onUserLeftGroup();
     this.onMeetingAborted();
     this.onMeetingUpdated();
+    this.onGroupUpdated();
     this.onMeetingUserRoleUpdated();
     this.onMeetingRequestExpired();
     this.onGroupAborted();
@@ -244,6 +245,27 @@ export class MeetingsSocketService {
           () => {
             this.toastService.createError(
               _('A problem occurred while finding the meeting'),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  private onGroupUpdated() {
+    this.userSocket.on(
+      'GroupUpdated',
+      (notification: SocketNotificationMessage) => {
+        this.showNotificationIfBackground(notification);
+
+        const { groupId } = notification.data.data;
+        this.groupsService.syncGroup(groupId).subscribe(
+          () => {
+            this.toastService.createInformation(_('Group has been updated'));
+          },
+          () => {
+            this.toastService.createError(
+              _('A problem occurred while finding the group'),
             );
           },
         );
