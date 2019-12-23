@@ -7,6 +7,10 @@ const routes: Routes = [
     path: ':id/chat',
     loadChildren: './chat/chat.module#ChatPageModule',
   },
+  {
+    path: 'edit',
+    loadChildren: './edit/edit-group.module#EditGroupPageModule',
+  },
 ];
 
 @NgModule({

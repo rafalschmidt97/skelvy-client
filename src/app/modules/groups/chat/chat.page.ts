@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs/operators';
-import { GroupState } from '../../meetings/meetings';
+import { GroupState, GroupUserRole } from '../../meetings/meetings';
 import { SelfUserDto } from '../../user/user';
 import { ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
@@ -28,6 +28,7 @@ export class ChatPage implements OnInit, OnDestroy {
   loadingAction: boolean;
   isNotMeeting: boolean;
   meetingId: number;
+  canEditGroup: boolean;
 
   constructor(
     private readonly routerNavigation: NavController,
@@ -76,6 +77,11 @@ export class ChatPage implements OnInit, OnDestroy {
           this.group = group;
           this.user = user;
           this.isNotMeeting = !!!meeting;
+          const groupSelf = group.users.find(x => x.id === user.id);
+          this.canEditGroup = groupSelf
+            ? groupSelf.role === GroupUserRole.OWNER ||
+              groupSelf.role === GroupUserRole.ADMIN
+            : false;
           this.meetingId = meeting ? meeting.id : null;
         }),
       )
@@ -139,6 +145,15 @@ export class ChatPage implements OnInit, OnDestroy {
       this.routerNavigation.navigateForward([
         '/app/meetings/details',
         this.meetingId,
+      ]);
+    }
+  }
+
+  editGroup() {
+    if (this.canEditGroup) {
+      this.routerNavigation.navigateForward([
+        '/app/groups/edit',
+        { id: this.group.id },
       ]);
     }
   }

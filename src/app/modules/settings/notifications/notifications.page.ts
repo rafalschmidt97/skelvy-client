@@ -7,7 +7,6 @@ import { NavController, Platform } from '@ionic/angular';
 import { storageKeys } from '../../../core/storage/storage';
 import { Store } from '@ngxs/store';
 import { Push } from '@ionic-native/push/ngx';
-import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { BackgroundService } from '../../../core/background/background.service';
 

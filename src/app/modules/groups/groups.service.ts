@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import {
   GroupDto,
+  GroupRequest,
   MessageActionType,
   MessageDto,
   MessageState,
@@ -20,6 +21,8 @@ import {
   RemoveGroup,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveResponseGroupMessage,
+  UpdateGroup,
+  UpdateGroupFromRequest,
 } from '../meetings/store/meetings-actions';
 import { Store } from '@ngxs/store';
 import { Storage } from '@ionic/storage';
@@ -262,6 +265,38 @@ export class GroupsService {
         tap(() => {
           this.store.dispatch(new RemoveGroup(groupId));
           // TODO: remove red messages date
+        }),
+      );
+  }
+
+  updateGroup(groupId: number, request: GroupRequest): Observable<void> {
+    return this.http
+      .put<void>(`${environment.versionApiUrl}groups/${groupId}`, request)
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new UpdateGroupFromRequest(groupId, request));
+        }),
+      );
+  }
+
+  syncGroup(
+    id: number,
+    markedAsLoading: boolean = false,
+  ): Observable<GroupDto> {
+    if (!markedAsLoading) {
+      this.store.dispatch(new ChangeMeetingLoadingStatus(true));
+    }
+
+    return this.http
+      .get<GroupDto>(`${environment.versionApiUrl}groups/${id}`)
+      .pipe(
+        tap(group => {
+          this.store.dispatch(new UpdateGroup(group));
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+        }),
+        catchError(error => {
+          this.store.dispatch(new ChangeMeetingLoadingStatus(false));
+          return throwError(error);
         }),
       );
   }

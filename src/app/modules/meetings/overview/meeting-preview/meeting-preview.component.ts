@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MeetingInvitation } from '../../../user/user';
+import { Component, Input } from '@angular/core';
 import { GroupState, GroupUserDto, MeetingDto } from '../../meetings';
 
 @Component({

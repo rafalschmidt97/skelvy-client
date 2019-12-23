@@ -11,6 +11,7 @@ export interface MeetingDto {
   latitude: number;
   longitude: number;
   size: number;
+  description: string;
   isHidden: boolean;
   city: string;
   groupId: number;
@@ -19,12 +20,14 @@ export interface MeetingDto {
 
 export interface GroupDto {
   id: number;
+  name: string;
   users: GroupUserDto[];
   messages: MessageDto[];
 }
 
 export interface GroupState {
   id: number;
+  name: string;
   users: GroupUserDto[];
   messages: MessageState[];
 }
@@ -48,9 +51,8 @@ export interface MeetingWithUsersDto {
   date: string;
   latitude: number;
   longitude: number;
-  size: number;
-  isPrivate: boolean;
-  isHidden: boolean;
+  description: string;
+  name: string;
   city: string;
   groupId: number;
   activity: ActivityDto;
@@ -100,7 +102,12 @@ export interface MeetingRequest {
   longitude: number;
   activityId: number;
   size: number;
+  description: string;
   isHidden: boolean;
+}
+
+export interface GroupRequest {
+  name: string;
 }
 
 export interface MeetingRequestRequest {

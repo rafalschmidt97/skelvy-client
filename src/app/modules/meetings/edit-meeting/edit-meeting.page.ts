@@ -19,6 +19,7 @@ import { Store } from '@ngxs/store';
 import { MapsService } from '../../../core/maps/maps.service';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { InputComponent } from '../../../shared/form/input/input.component';
 
 @Component({
   selector: 'app-edit-meeting',
@@ -69,6 +70,14 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
       address: [null, Validators.required],
       activityId: [null, Validators.required],
       size: [4, Validators.required],
+      description: [
+        '',
+        [
+          Validators.maxLength(500),
+          InputComponent.maxEndline(5),
+          InputComponent.maxWhiteSpaces(200),
+        ],
+      ],
       isHidden: [true, Validators.required],
     });
   }
@@ -105,6 +114,7 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
         longitude: form.address.longitude,
         activityId: Number(form.activityId),
         size: Number(form.size),
+        description: form.description.trim(),
         isHidden: form.isHidden === 'true',
       };
 
@@ -188,6 +198,7 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
         address: address[0] || null,
         activityId: meeting.activity.id.toString(),
         size: meeting.size,
+        description: meeting.description || '',
         isHidden: meeting.isHidden ? 'true' : 'false',
       });
 

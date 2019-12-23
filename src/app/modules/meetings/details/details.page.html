@@ -47,6 +47,10 @@
           </div>
         </div>
       </div>
+      <div *ngIf="meeting.description" class="border-bottom p-3">
+        <div class="font-weight-bold">{{ 'Description' | translate }}</div>
+        <div class="small">{{ meeting.description }}</div>
+      </div>
     </section>
     <section class="users">
       <app-profile-preview

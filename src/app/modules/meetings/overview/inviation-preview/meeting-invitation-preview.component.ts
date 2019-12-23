@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MeetingInvitation } from '../../../user/user';
-import { GroupUserDto } from '../../meetings';
+import { GroupUserDto, MeetingWithUsersDto } from '../../meetings';
 
 @Component({
   selector: 'app-meeting-invitation-preview',
@@ -11,8 +11,8 @@ export class MeetingInvitationPreviewComponent {
   @Input() invitation: MeetingInvitation;
   @Output() openInvitation = new EventEmitter<MeetingInvitation>();
 
-  getGroupName(users: GroupUserDto[]): string {
-    return users.map(x => x.profile.name).join(', ');
+  getGroupName(meeting: MeetingWithUsersDto): string {
+    return meeting.name || meeting.users.map(x => x.profile.name).join(', ');
   }
 
   getFirstUsers(users: GroupUserDto[]): GroupUserDto[] {
