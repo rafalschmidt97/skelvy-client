@@ -164,6 +164,8 @@ export class AuthService {
 
     this.store.dispatch(new ClearState());
     await this.storage.remove(storageKeys.lastRequestForm);
+    await this.storage.remove(storageKeys.lastMeetingForm);
+    await this.storage.remove(storageKeys.lastExploreLocation);
   }
 
   private getToken(): Promise<TokenDto> {
