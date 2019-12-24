@@ -14,4 +14,5 @@ export const storageKeys = {
   pushTopicPlatform: 'push-topic-platform',
   lastRequestForm: 'last-request-form',
   lastMeetingForm: 'last-meeting-form',
+  lastExploreLocation: 'last-explore-location',
 };

@@ -22,6 +22,38 @@
       class="d-flex flex-column minh-100 suggestions"
     >
       <div
+        *ngIf="location"
+        class="location border-bottom py-2 px-3 d-flex align-items-center"
+      >
+        <div class="min-width description">
+          <div
+            *ngIf="location.type && !isNotCity(location.type) && location.city"
+          >
+            {{ 'City' | translate }}: {{ location.city }}
+          </div>
+          <div
+            *ngIf="location.type && isNotCity(location.type) && location.city"
+          >
+            {{ 'Village' | translate }}: {{ location.city }}
+          </div>
+          <div>{{ 'State' | translate }}: {{ location.state }}</div>
+          <div *ngIf="location.district && location.district !== location.city">
+            {{ 'District' | translate }}: {{ location.district }}
+          </div>
+          <div *ngIf="location.country">
+            {{ 'Country' | translate }}: {{ location.country }}
+          </div>
+        </div>
+        <div (click)="changeLocation()" class="text-primary change ml-auto">
+          <span class="align-middle">{{ 'Change' | translate }}</span>
+          <ion-icon
+            name="pin"
+            class="icon d-inline-block align-middle"
+          ></ion-icon>
+        </div>
+      </div>
+
+      <div
         *ngIf="
           explore.meetings.length > 0 || explore.requests.length > 0;
           else empty
@@ -29,15 +61,6 @@
         class="container py-3"
         [class.disabled]="isLoadingJoin"
       >
-        <div
-          class="guidelines pb-3 mb-3"
-          *ngIf="explore.meetings.length + explore.requests.length < 3"
-          [innerText]="
-            'Share with your friends. Bigger the community better experience for all! Encouraging other people ' +
-              'to create events. Keep in mind that the app is new so your help is a blessing.'
-              | translate
-          "
-        ></div>
         <div
           class="meetings"
           *ngIf="explore.meetings.length > 0"
@@ -120,9 +143,15 @@
             </div>
           </div>
         </div>
-        <div class="information">
-          {{ 'Suggestions are based on your location.' | translate }}
-        </div>
+        <div
+          class="guidelines py-3 mt-3 border-top"
+          *ngIf="explore.meetings.length + explore.requests.length < 3"
+          [innerText]="
+            'Share with your friends. Bigger the community better experience for all! Encouraging other people ' +
+              'to create events. Keep in mind that the app is new so your help is a blessing.'
+              | translate
+          "
+        ></div>
       </div>
       <ng-template #empty>
         <div class="empty m-auto text-center py-3">

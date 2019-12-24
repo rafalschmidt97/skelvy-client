@@ -47,5 +47,25 @@
   font-size: 0.7rem;
   font-weight: 500;
   color: gray('700');
-  border-bottom: 1px solid $border-color;
+}
+
+.location {
+  font-weight: 500;
+  font-size: 0.7rem;
+
+  .change {
+    border: 1px solid $primary;
+    border-radius: 4px;
+    padding: 4px 6px;
+    background: $white;
+
+    .icon {
+      margin-left: 2px;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.min-width {
+  min-width: 0;
 }

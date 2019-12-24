@@ -14,6 +14,12 @@ import { MeetingsService } from '../../meetings/meetings.service';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { ExploreStateModel } from '../store/explore-state';
+import { Storage } from '@ionic/storage';
+import { storageKeys } from '../../../core/storage/storage';
+import { AddressSearchModalComponent } from '../../../shared/form/address/address-search-modal/address-search-modal.component';
+import { MapsResponse, MapsResponseType } from '../../../core/maps/maps';
+import { TranslateService } from '@ngx-translate/core';
+import { MapsService } from '../../../core/maps/maps.service';
 
 @Component({
   selector: 'app-overview',
@@ -27,6 +33,9 @@ export class OverviewPage implements OnInit {
   isLoadingSuggestions = false;
   latitude: number;
   longitude: number;
+  location: MapsResponse;
+  results: MapsResponse[];
+  lastSearch = '';
 
   constructor(
     private readonly meetingService: MeetingsService,
@@ -34,26 +43,65 @@ export class OverviewPage implements OnInit {
     private readonly toastService: ToastService,
     private readonly modalController: ModalController,
     private readonly geolocation: Geolocation,
+    private readonly storage: Storage,
+    private readonly translateService: TranslateService,
+    private readonly mapsService: MapsService,
   ) {}
 
-  ngOnInit() {
-    this.geolocation
-      .getCurrentPosition({
-        timeout: 5000,
-        maximumAge: 10000,
-        enableHighAccuracy: false,
-      })
-      .then(res => {
-        this.latitude = res.coords.latitude;
-        this.longitude = res.coords.longitude;
+  async ngOnInit() {
+    const lastLocation = await this.storage.get(
+      storageKeys.lastExploreLocation,
+    );
 
-        this.findInitialSuggestions(res.coords.latitude, res.coords.longitude);
-      })
-      .catch(() => {
-        this.toastService.createError(
-          _('A problem occurred while asking for location'),
-        );
-      });
+    if (lastLocation) {
+      this.location = lastLocation;
+
+      this.findInitialSuggestions(
+        lastLocation.latitude,
+        lastLocation.longitude,
+      );
+    } else {
+      this.geolocation
+        .getCurrentPosition({
+          timeout: 5000,
+          maximumAge: 10000,
+          enableHighAccuracy: false,
+        })
+        .then(res => {
+          this.mapsService
+            .reverse(
+              res.coords.latitude,
+              res.coords.longitude,
+              this.translateService.currentLang,
+            )
+            .subscribe(
+              async results => {
+                if (results.length > 0) {
+                  this.location = results[0];
+                  await this.storage.set(
+                    storageKeys.lastExploreLocation,
+                    results[0],
+                  );
+
+                  this.findInitialSuggestions(
+                    results[0].latitude,
+                    results[0].longitude,
+                  );
+                }
+              },
+              () => {
+                this.toastService.createError(
+                  _('A problem occurred while resolving the location'),
+                );
+              },
+            );
+        })
+        .catch(() => {
+          this.toastService.createError(
+            _('A problem occurred while asking for location'),
+          );
+        });
+    }
   }
 
   join(meetingId: number) {
@@ -95,6 +143,7 @@ export class OverviewPage implements OnInit {
   }
 
   findInitialSuggestions(latitude: number, longitude: number) {
+    this.isLoadingInitial = true;
     this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
       () => {
         this.isLoadingInitial = false;
@@ -184,5 +233,39 @@ export class OverviewPage implements OnInit {
     if (data && data.requestId) {
       this.connect(data.requestId);
     }
+  }
+
+  async changeLocation() {
+    if (!this.isLoadingSuggestions) {
+      const modal = await this.modalController.create({
+        component: AddressSearchModalComponent,
+        componentProps: {
+          results: this.results,
+          lastSearch: this.lastSearch,
+          placeholder: this.translateService.instant('Type in your city...'),
+        },
+        cssClass: 'ionic-modal ionic-full-modal',
+      });
+
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+
+      if (data) {
+        this.results = data.results;
+        this.lastSearch = data.lastSearch;
+        this.location = data.result;
+
+        await this.storage.set(storageKeys.lastExploreLocation, data.result);
+
+        this.findInitialSuggestions(
+          data.result.latitude,
+          data.result.longitude,
+        );
+      }
+    }
+  }
+
+  isNotCity(type: string): boolean {
+    return type !== MapsResponseType.LOCALITY;
   }
 }
