@@ -9,7 +9,7 @@
     <ion-title>{{ 'Edit group' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button
-        [disabled]="isLoading || form.invalid || loadingForm"
+        [disabled]="isLoading || form.invalid || loadingForm || isInitial"
         (click)="onSubmit()"
       >
         {{ 'Done' | translate }}

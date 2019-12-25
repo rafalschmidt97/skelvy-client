@@ -22,6 +22,7 @@ export class EditGroupPage implements Form, OnSubmit, OnInit {
   isLoading = false;
   loadingForm = true;
   groupId: number;
+  initialValue: string;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -99,7 +100,12 @@ export class EditGroupPage implements Form, OnSubmit, OnInit {
       name: group.name || '',
     });
 
+    this.initialValue = group.name || '';
     this.groupId = groupId;
     this.loadingForm = false;
+  }
+
+  get isInitial(): boolean {
+    return this.initialValue === this.form.value.name.trim().toLowerCase();
   }
 }
