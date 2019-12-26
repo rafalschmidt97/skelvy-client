@@ -125,7 +125,7 @@ export class UserService {
   addBlockedUser(user: UserDto): Observable<void> {
     return this.http
       .post<void>(`${environment.versionApiUrl}relations/self/blocked`, {
-        blockUserId: user.id,
+        blockingUserId: user.id,
       })
       .pipe(
         tap(() => {
