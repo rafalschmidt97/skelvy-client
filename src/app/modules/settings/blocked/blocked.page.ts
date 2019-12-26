@@ -22,7 +22,6 @@ export class BlockedPage implements OnInit {
   loadingBlockedMore = false;
   allBlockedLoaded = false;
   page = 1;
-  relations = RelationType;
 
   constructor(
     private readonly userService: UserService,

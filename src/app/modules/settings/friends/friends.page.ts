@@ -85,7 +85,16 @@ export class FriendsPage implements OnInit {
     if (data && data.invitationId) {
       this.userService
         .respondFriendInvitation(data.invitationId, data.accept)
-        .subscribe();
+        .subscribe(
+          () => {},
+          () => {
+            this.userService.findFriendInvitations().subscribe();
+
+            this.toastService.createError(
+              _('A problem occurred while responding friend invitation'),
+            );
+          },
+        );
     }
   }
 }
