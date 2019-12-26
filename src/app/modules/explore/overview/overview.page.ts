@@ -31,8 +31,6 @@ export class OverviewPage implements OnInit {
   isLoadingInitial = true;
   isLoadingJoin = false;
   isLoadingSuggestions = false;
-  latitude: number;
-  longitude: number;
   location: MapsResponse;
   results: MapsResponse[];
   lastSearch = '';
@@ -56,10 +54,7 @@ export class OverviewPage implements OnInit {
     if (lastLocation) {
       this.location = lastLocation;
 
-      this.findInitialSuggestions(
-        lastLocation.latitude,
-        lastLocation.longitude,
-      );
+      this.findSuggestions(lastLocation.latitude, lastLocation.longitude);
     } else {
       this.geolocation
         .getCurrentPosition({
@@ -83,7 +78,7 @@ export class OverviewPage implements OnInit {
                     results[0],
                   );
 
-                  this.findInitialSuggestions(
+                  this.findSuggestions(
                     results[0].latitude,
                     results[0].longitude,
                   );
@@ -128,7 +123,7 @@ export class OverviewPage implements OnInit {
           this.toastService.createError(
             _('A problem occurred while joining the meeting'),
           );
-          this.findSuggestions(this.latitude, this.longitude);
+          this.findSuggestions(this.location.latitude, this.location.longitude);
         },
       );
     }
@@ -142,7 +137,7 @@ export class OverviewPage implements OnInit {
     }
   }
 
-  findInitialSuggestions(latitude: number, longitude: number) {
+  findSuggestions(latitude: number, longitude: number) {
     this.isLoadingInitial = true;
     this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
       () => {
@@ -157,31 +152,20 @@ export class OverviewPage implements OnInit {
     );
   }
 
-  findSuggestions(latitude: number, longitude: number) {
-    if (!this.isLoadingSuggestions || this.isLoadingInitial) {
-      this.isLoadingSuggestions = true;
-      this.meetingService.findMeetingSuggestions(latitude, longitude).subscribe(
-        () => {
-          this.isLoadingInitial = false;
-        },
-        () => {
-          this.isLoadingInitial = false;
-        },
-      );
-    }
-  }
-
   refreshSuggestions(event) {
-    if (!this.isLoadingSuggestions || this.isLoadingInitial) {
+    if (!this.isLoadingSuggestions) {
       this.isLoadingSuggestions = true;
       this.meetingService
-        .findMeetingSuggestions(this.latitude, this.longitude)
+        .findMeetingSuggestions(this.location.latitude, this.location.longitude)
         .subscribe(
           () => {
             this.isLoadingSuggestions = false;
             event.target.complete();
           },
           () => {
+            this.toastService.createError(
+              _('A problem occurred while finding suggestions'),
+            );
             this.isLoadingSuggestions = false;
             event.target.complete();
           },
@@ -257,10 +241,7 @@ export class OverviewPage implements OnInit {
 
         await this.storage.set(storageKeys.lastExploreLocation, data.result);
 
-        this.findInitialSuggestions(
-          data.result.latitude,
-          data.result.longitude,
-        );
+        this.findSuggestions(data.result.latitude, data.result.longitude);
       }
     }
   }

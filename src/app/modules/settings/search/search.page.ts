@@ -8,7 +8,6 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ProfileModalComponent } from '../../../shared/components/modal/profile/profile-modal.component';
 import { UserService } from '../../user/user.service';
 import { Store } from '@ngxs/store';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-search',
