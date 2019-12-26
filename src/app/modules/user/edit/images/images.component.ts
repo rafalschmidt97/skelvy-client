@@ -75,20 +75,22 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
     });
   }
 
-  async showActions(name: string) {
-    const modal = await this.modalController.create({
-      component: ImageActionsModalComponent,
-      cssClass: 'ionic-modal ionic-action-modal',
-    });
+  async showActions(name: string, isDisabled: boolean) {
+    if (!isDisabled) {
+      const modal = await this.modalController.create({
+        component: ImageActionsModalComponent,
+        cssClass: 'ionic-modal ionic-action-modal',
+      });
 
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
 
-    if (data) {
-      if (data.take) {
-        await this.takeAndCrop(name);
-      } else if (data.choose) {
-        await this.chooseAndCrop(name);
+      if (data) {
+        if (data.take) {
+          await this.takeAndCrop(name);
+        } else if (data.choose) {
+          await this.chooseAndCrop(name);
+        }
       }
     }
   }

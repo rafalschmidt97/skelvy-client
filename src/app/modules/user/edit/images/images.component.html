@@ -14,7 +14,7 @@
       <div class="col-8">
         <div class="image-container" [class.is-disabled]="isLoading">
           <label
-            (click)="showActions(image1Name)"
+            (click)="showActions(image1Name, isLoading)"
             class="image"
             [style.background-image]="
               inputForm.get(image1Name).value !== ''
@@ -46,7 +46,12 @@
           "
         >
           <label
-            (click)="showActions(image2Name)"
+            (click)="
+              showActions(
+                image2Name,
+                isLoading || inputForm.get(image1Name).value === ''
+              )
+            "
             class="image"
             [style.background-image]="
               inputForm.get(image2Name).value !== ''
@@ -77,7 +82,12 @@
           "
         >
           <label
-            (click)="showActions(image3Name)"
+            (click)="
+              showActions(
+                image3Name,
+                isLoading || inputForm.get(image2Name).value === ''
+              )
+            "
             class="image"
             [style.background-image]="
               inputForm.get(image3Name).value !== ''
