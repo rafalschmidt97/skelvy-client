@@ -48,7 +48,10 @@
       <div *ngIf="!loadingFriends" class="mb-3 text-center">
         <div class="border-top border-bottom text-center p-3 bg-white">
           <p>
-            {{ 'Your friends list is empty.' | translate }}
+            {{
+              'Your friends list is empty or all of them are already invited.'
+                | translate
+            }}
           </p>
           <p class="mb-0">
             {{

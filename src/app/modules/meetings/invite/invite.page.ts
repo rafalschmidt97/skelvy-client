@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { UserDto } from '../../user/user';
-import { forkJoin, of } from 'rxjs';
+import { combineLatest, forkJoin, of } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { ModalController, NavController } from '@ionic/angular';
 import { UserService } from '../../user/user.service';
@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { mergeMap, switchMap } from 'rxjs/operators';
 import { MeetingsService } from '../meetings.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MeetingsStateModel } from '../store/meetings-state';
 
 @Component({
   selector: 'app-invite',
@@ -45,20 +46,28 @@ export class InvitePage implements OnInit {
 
     this.created = !!this.route.snapshot.paramMap.get('created');
 
-    this.store
-      .select(state => state.user.friends)
+    combineLatest([
+      this.store.selectOnce(state => state.user.friends),
+      this.store.selectOnce(state => state.meetings),
+    ])
       .pipe(
-        switchMap((friends: UserDto[]) => {
-          this.loadingFriends = true;
+        switchMap(
+          ([friends, meetingsState]: [UserDto[], MeetingsStateModel]) => {
+            this.loadingFriends = true;
+            const meeting = meetingsState.meetings.find(
+              x => x.id === meetingId,
+            );
 
-          return forkJoin([
-            this.meetingService.findMeetingInvitationsDetails(meetingId),
-            friends.length !== 0
-              ? of(friends)
-              : this.userService.findFriends(this.page),
-          ]);
-        }),
-        mergeMap(([invited, friends]) => {
+            return forkJoin([
+              this.meetingService.findMeetingInvitationsDetails(meetingId),
+              friends.length !== 0
+                ? of(friends)
+                : this.userService.findFriends(this.page),
+              of(meetingsState.groups.find(x => x.id === meeting.groupId)),
+            ]);
+          },
+        ),
+        mergeMap(([invited, friends, group]) => {
           this.page = friends.length / 10 + 1;
 
           if (friends.length > 0) {
@@ -70,7 +79,9 @@ export class InvitePage implements OnInit {
           if (invited.length !== 0) {
             return of(
               friends.filter(
-                x => invited.find(y => y.invitedUser.id === x.id) === null,
+                x =>
+                  invited.find(y => y.invitedUser.id === x.id) == null &&
+                  group.users.find(y => y.id === x.id) == null,
               ),
             );
           } else {
