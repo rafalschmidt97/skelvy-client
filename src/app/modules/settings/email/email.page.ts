@@ -57,7 +57,12 @@ export class EmailPage implements Form, OnSubmit, OnInit {
       this.userService.updateEmail(form.email.trim().toLowerCase()).subscribe(
         () => {
           this.isLoading = false;
-          this.routerNavigation.navigateBack(['/app/settings']);
+
+          if (this.created) {
+            this.routerNavigation.navigateForward(['/app/tabs/user']);
+          } else {
+            this.routerNavigation.navigateBack(['/app/settings']);
+          }
         },
         () => {
           this.isLoading = false;
