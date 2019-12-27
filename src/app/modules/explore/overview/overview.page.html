@@ -21,11 +21,8 @@
       *ngIf="!isLoadingInitial; else loading"
       class="d-flex flex-column minh-100 suggestions"
     >
-      <div
-        *ngIf="location"
-        class="location border-bottom py-2 px-3 d-flex align-items-center"
-      >
-        <div class="min-width description">
+      <div class="location border-bottom py-2 px-3 d-flex align-items-center">
+        <div *ngIf="location; else noLocation" class="min-width description">
           <div
             *ngIf="location.type && !isNotCity(location.type) && location.city"
           >
@@ -44,6 +41,13 @@
             {{ 'Country' | translate }}: {{ location.country }}
           </div>
         </div>
+        <ng-template #noLocation>
+          <div class="min-width description">
+            <div>
+              {{ 'Could not resolve the location' | translate }}
+            </div>
+          </div>
+        </ng-template>
         <div (click)="changeLocation()" class="text-primary change ml-auto">
           <span class="align-middle">{{ 'Change' | translate }}</span>
           <ion-icon

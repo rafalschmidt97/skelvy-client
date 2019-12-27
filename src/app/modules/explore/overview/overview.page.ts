@@ -92,9 +92,7 @@ export class OverviewPage implements OnInit {
             );
         })
         .catch(() => {
-          this.toastService.createError(
-            _('A problem occurred while asking for location'),
-          );
+          this.isLoadingInitial = false;
         });
     }
   }
