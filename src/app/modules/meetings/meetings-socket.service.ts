@@ -45,6 +45,9 @@ export class MeetingsSocketService {
     _('MEETING_REQUEST_EXPIRED'),
     _('MEETING_REQUEST'),
     _('MEETING_EXPIRED'),
+    _('NEW_MEETING_INVITATION'),
+    _('MEETING_INVITATION_ACCEPTED'),
+    _('MEETING_INVITATION_DENIED'),
   ];
 
   constructor(
