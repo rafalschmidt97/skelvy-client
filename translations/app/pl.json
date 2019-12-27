@@ -15,6 +15,12 @@
     "USER_SELF_REMOVED_FROM_MEETING": "Zostałeś usunięty ze spotkania",
     "USER_LEFT_GROUP": "Użytkownik opuścił grupę",
     "MEETING_UPDATED": "Spotkanie zostało zaktualizowane",
-    "GROUP_ABORTED": "Twoja grupa została usunięta"
+    "GROUP_ABORTED": "Twoja grupa została usunięta",
+    "FRIENDS": "Znajomi",
+    "NEW_FRIEND_INVITATION": "Nowe zaproszenie do znajomych",
+    "FRIEND_INVITATION_ACCEPTED": "Ktoś zaakceptował twoje zaproszenie do znajomych",
+    "NEW_MEETING_INVITATION": "Nowe zaproszenie na spotkania",
+    "MEETING_INVITATION_ACCEPTED": "Ktoś zaakceptował twoje zaproszenie na spotkania",
+    "MEETING_INVITATION_DENIED": "Ktoś odrzucił twoje zaproszenie na spotkania"
   }
 }

@@ -134,7 +134,7 @@ export class ChatPage implements OnInit, OnDestroy {
         this.loadingAction = false;
         this.loadingService.unlock();
         this.toastService.createError(
-          _('A problem occurred while leaving the gorup'),
+          _('A problem occurred while leaving the group'),
         );
       },
     );
