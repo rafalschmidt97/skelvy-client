@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Connection } from '../../../core/state/global-state';
 import {
   animate,
-  state,
+  state as animationState,
   style,
   transition,
   trigger,
@@ -16,14 +16,14 @@ import { Select } from '@ngxs/store';
   styleUrls: ['./connection.component.scss'],
   animations: [
     trigger('fadeInOut', [
-      state(
+      animationState(
         'true',
         style({
           opacity: 1,
           transform: 'translateY(0)',
         }),
       ),
-      state(
+      animationState(
         'false',
         style({
           opacity: 0,
