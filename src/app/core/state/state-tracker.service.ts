@@ -20,14 +20,22 @@ import { concatMap } from 'rxjs/operators';
 import { UserStateModel } from '../../modules/user/store/user-state';
 import { MeetingsStateModel } from '../../modules/meetings/store/meetings-state';
 import {
+  AddGroup,
   AddGroupMessages,
   AddGroupUser,
+  AddMeeting,
   AddMeetingInvitations,
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
+  RemoveGroup,
   RemoveGroupUser,
+  RemoveMeeting,
   RemoveMeetingInvitation,
   RemoveResponseGroupMessage,
+  UpdateGroup,
+  UpdateGroupFromRequest,
+  UpdateMeeting,
+  UpdateMeetingFromRequest,
   UpdateMeetingInvitations,
   UpdateMeetingsState,
 } from '../../modules/meetings/store/meetings-actions';
@@ -37,6 +45,7 @@ import {
 })
 export class StateTrackerService {
   private userActions: Subscription;
+  private meetingStateActions: Subscription;
   private meetingActions: Subscription;
   private groupActions: Subscription;
   private friendActions: Subscription;
@@ -64,7 +73,7 @@ export class StateTrackerService {
         await this.storage.set(storageKeys.user, user.user);
       });
 
-    this.meetingActions = this.actions
+    this.meetingStateActions = this.actions
       .pipe(
         ofActionSuccessful(UpdateMeetingsState),
         concatMap(() => this.store.selectOnce(state => state.meetings)),
@@ -75,11 +84,29 @@ export class StateTrackerService {
         await this.storage.set(storageKeys.groups, meetings.groups);
       });
 
+    this.meetingActions = this.actions
+      .pipe(
+        ofActionSuccessful(
+          AddMeeting,
+          RemoveMeeting,
+          UpdateMeeting,
+          UpdateMeetingFromRequest,
+        ),
+        concatMap(() => this.store.selectOnce(state => state.meetings)),
+      )
+      .subscribe(async (meetings: MeetingsStateModel) => {
+        await this.storage.set(storageKeys.meetings, meetings.meetings);
+      });
+
     this.groupActions = this.actions
       .pipe(
         ofActionSuccessful(
+          AddGroup,
           AddGroupUser,
           RemoveGroupUser,
+          RemoveGroup,
+          UpdateGroup,
+          UpdateGroupFromRequest,
           AddGroupMessages,
           MarkResponseGroupMessageAsSent,
           MarkResponseGroupMessageAsFailed,
@@ -136,6 +163,10 @@ export class StateTrackerService {
   stop() {
     if (this.userActions) {
       this.userActions.unsubscribe();
+    }
+
+    if (this.meetingStateActions) {
+      this.meetingStateActions.unsubscribe();
     }
 
     if (this.meetingActions) {
