@@ -110,11 +110,7 @@ export class EditPage implements Form, OnSubmit, OnInit {
               { created: true },
             ]);
           } else {
-            if (window.history.length > 1) {
-              this.routerNavigation.back();
-            } else {
-              this.routerNavigation.navigateBack(['/app/tabs/user']);
-            }
+            this.routerNavigation.navigateBack(['/app/tabs/user']);
           }
         },
         () => {
