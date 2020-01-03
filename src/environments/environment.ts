@@ -9,7 +9,7 @@ export const environment = {
   version: npm.version,
   hostname: npm.config.hostname,
   apiUrl: `http://${npm.config.hostname}:5000/`,
-  versionApiUrl: `http://${npm.config.hostname}:5000/v1.0/`,
+  versionApiUrl: `http://${npm.config.hostname}:5000/v2.0/`,
 };
 
 /*
