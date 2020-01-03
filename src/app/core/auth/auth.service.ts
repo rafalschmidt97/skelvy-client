@@ -147,9 +147,13 @@ export class AuthService {
     const method = await this.storage.get(storageKeys.signInMethod);
 
     if (method === 'facebook') {
-      await this.facebook.logout();
+      try {
+        await this.facebook.logout();
+      } catch (e) {}
     } else if (method === 'google') {
-      await this.google.logout();
+      try {
+        await this.google.logout();
+      } catch (e) {}
     }
 
     await this.storage.remove(storageKeys.signInMethod);

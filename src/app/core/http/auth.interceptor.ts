@@ -31,8 +31,13 @@ export class AuthInterceptor implements HttpInterceptor {
       switchMap(bearerRequest => {
         return next.handle(bearerRequest).pipe(
           catchError(error => {
-            if (error instanceof HttpErrorResponse && error.status === 401) {
-              if (bearerRequest.url.includes('auth/refresh')) {
+            if (
+              error instanceof HttpErrorResponse &&
+              error.status === 401 &&
+              !bearerRequest.url.includes('auth/facebook') &&
+              !bearerRequest.url.includes('auth/google')
+            ) {
+              if (bearerRequest.url.includes('auth')) {
                 this.authService.logoutWithoutRequest().then(() => {
                   this.routerNavigation.navigateBack(['/home/sign-in']);
                   this.toastService.createError(_('The session has expired'));

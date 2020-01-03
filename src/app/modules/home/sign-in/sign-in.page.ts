@@ -68,46 +68,74 @@ export class SignInPage implements OnInit {
               },
               async () => {
                 this.toastService.createError(
-                  _('A problem occurred while signing in'),
+                  _(
+                    'A problem occurred while signing in with facebook. Please contact us.',
+                  ),
                 );
                 await loading.dismiss();
               },
             );
         } else {
           this.toastService.createError(
-            _('A problem occurred while signing in'),
+            _(
+              'A problem occurred while signing in with facebook (not connected). Please contact us.',
+            ),
+          );
+        }
+      })
+      .catch(e => {
+        if (e.errorCode !== '4201') {
+          // not cancelled
+          console.log(e);
+          this.toastService.createError(
+            _(
+              'A problem occurred while signing in with facebook (plugin problem). Please contact us.',
+            ),
           );
         }
       });
   }
 
   signInWithGoogle() {
-    this.google.login({}).then(async res => {
-      const token = res.accessToken;
+    this.google
+      .login({})
+      .then(async res => {
+        const token = res.accessToken;
 
-      const loading = await this.loadingService.show();
-      this.authService
-        .signInWithGoogle(token, this.translateService.currentLang)
-        .subscribe(
-          async auth => {
-            if (auth.accountCreated) {
-              this.routerNavigation.navigateForward([
-                '/app/user/edit',
-                { created: true },
-              ]);
-            } else {
-              this.routerNavigation.navigateForward(['/app']);
-            }
+        const loading = await this.loadingService.show();
+        this.authService
+          .signInWithGoogle(token, this.translateService.currentLang)
+          .subscribe(
+            async auth => {
+              if (auth.accountCreated) {
+                this.routerNavigation.navigateForward([
+                  '/app/user/edit',
+                  { created: true },
+                ]);
+              } else {
+                this.routerNavigation.navigateForward(['/app']);
+              }
 
-            await loading.dismiss();
-          },
-          async () => {
-            this.toastService.createError(
-              _('A problem occurred while signing in'),
-            );
-            await loading.dismiss();
-          },
-        );
-    });
+              await loading.dismiss();
+            },
+            async () => {
+              this.toastService.createError(
+                _('A problem occurred while signing in with google'),
+              );
+              await loading.dismiss();
+            },
+          );
+      })
+      .catch(e => {
+        if (e !== 12501) {
+          // not cancelled
+          console.log(e);
+          this.toastService.createError(
+            _(
+              'A problem occurred while signing in with google (plugin problem). Please contact us.',
+            ),
+          );
+        }
+      });
   }
 }
