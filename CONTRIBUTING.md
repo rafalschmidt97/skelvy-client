@@ -207,7 +207,7 @@ $ cd platforms/android/app/build/outputs/apk/release
 # copy release keystore
 $ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore release.keystore app-release-unsigned.apk skelvy 
 $ rm app-release.apk # remove previous apk
-$ ~/Library/Android/sdk/build-tools/28.0.3/zipalign -v 4 app-release-unsigned.apk app-release.apk 
+$ ~/Library/Android/sdk/build-tools/29.0.1/zipalign -v 4 app-release-unsigned.apk app-release.apk 
 ```
 
 ### Hashes and Keystores
