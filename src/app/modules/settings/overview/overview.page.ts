@@ -137,7 +137,7 @@ Version: ${this.device.version}
 
     const descriptionText = await this.translateService
       .get(
-        _(`Join me on Skelvy! It is a mobile app for meetings over your favorite drinks.
+        _(`Join me on Skelvy! It is a mobile app for meetings over your favorite activities.
 
 You can find more information here:
 https://skelvy.com`),
