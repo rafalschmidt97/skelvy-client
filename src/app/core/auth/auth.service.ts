@@ -14,6 +14,7 @@ import { Store } from '@ngxs/store';
 import { ClearState } from '../redux/redux';
 import { UserPushService } from '../../modules/user/user-push.service';
 import { StateTrackerService } from '../state/state-tracker.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
@@ -30,15 +31,16 @@ export class AuthService {
     private readonly store: Store,
     private readonly userPush: UserPushService,
     private readonly stateTracker: StateTrackerService,
+    private readonly translateService: TranslateService,
   ) {
     this.jwt = new JwtHelperService();
   }
 
-  signInWithFacebook(authToken: string, language: string): Observable<AuthDto> {
+  signInWithFacebook(authToken: string): Observable<AuthDto> {
     return this.http
       .post<AuthDto>(environment.versionApiUrl + 'auth/facebook', {
         authToken,
-        language,
+        language: this.translateService.currentLang,
       })
       .pipe(
         switchMap(async res => {
@@ -53,11 +55,11 @@ export class AuthService {
       );
   }
 
-  signInWithGoogle(authToken: string, language: string): Observable<AuthDto> {
+  signInWithGoogle(authToken: string): Observable<AuthDto> {
     return this.http
       .post<AuthDto>(environment.versionApiUrl + 'auth/google', {
         authToken,
-        language,
+        language: this.translateService.currentLang,
       })
       .pipe(
         switchMap(async res => {

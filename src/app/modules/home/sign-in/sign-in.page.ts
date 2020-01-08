@@ -7,7 +7,6 @@ import { ToastService } from '../../../core/toast/toast.service';
 import { _ } from '../../../core/i18n/translate';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { UserPushService } from '../../user/user-push.service';
-import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { LegalLinksModalComponent } from './legal-links-modal/legal-links-modal.component';
 
@@ -25,7 +24,6 @@ export class SignInPage implements OnInit {
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
     private readonly userPush: UserPushService,
-    private readonly translateService: TranslateService,
     private readonly storage: Storage,
     private readonly modalController: ModalController,
   ) {}
@@ -51,35 +49,33 @@ export class SignInPage implements OnInit {
           const token = res.authResponse.accessToken;
 
           const loading = await this.loadingService.show();
-          this.authService
-            .signInWithFacebook(token, this.translateService.currentLang)
-            .subscribe(
-              async auth => {
-                if (auth.accountCreated) {
-                  this.routerNavigation.navigateForward([
-                    '/app/user/edit',
-                    { created: true },
-                  ]);
-                } else {
-                  this.routerNavigation.navigateForward(['/app']);
-                }
+          this.authService.signInWithFacebook(token).subscribe(
+            async auth => {
+              if (auth.accountCreated) {
+                this.routerNavigation.navigateForward([
+                  '/app/user/edit',
+                  { created: true },
+                ]);
+              } else {
+                this.routerNavigation.navigateForward(['/app']);
+              }
 
-                await loading.dismiss();
-              },
-              async () => {
-                this.toastService.createError(
-                  _(
-                    'A problem occurred while signing in with facebook. Please contact us.',
-                  ),
-                );
+              await loading.dismiss();
+            },
+            async () => {
+              this.toastService.createError(
+                _(
+                  'A problem occurred while signing in with facebook. Please contact us.',
+                ),
+              );
 
-                try {
-                  await this.facebook.logout();
-                } catch (e) {}
+              try {
+                await this.facebook.logout();
+              } catch (e) {}
 
-                await loading.dismiss();
-              },
-            );
+              await loading.dismiss();
+            },
+          );
         } else {
           this.toastService.createError(
             _(
@@ -108,33 +104,33 @@ export class SignInPage implements OnInit {
         const token = res.accessToken;
 
         const loading = await this.loadingService.show();
-        this.authService
-          .signInWithGoogle(token, this.translateService.currentLang)
-          .subscribe(
-            async auth => {
-              if (auth.accountCreated) {
-                this.routerNavigation.navigateForward([
-                  '/app/user/edit',
-                  { created: true },
-                ]);
-              } else {
-                this.routerNavigation.navigateForward(['/app']);
-              }
+        this.authService.signInWithGoogle(token).subscribe(
+          async auth => {
+            if (auth.accountCreated) {
+              this.routerNavigation.navigateForward([
+                '/app/user/edit',
+                { created: true },
+              ]);
+            } else {
+              this.routerNavigation.navigateForward(['/app']);
+            }
 
-              await loading.dismiss();
-            },
-            async () => {
-              this.toastService.createError(
-                _('A problem occurred while signing in with google'),
-              );
+            await loading.dismiss();
+          },
+          async () => {
+            this.toastService.createError(
+              _(
+                'A problem occurred while signing in with google. Please contact us.',
+              ),
+            );
 
-              try {
-                await this.google.logout();
-              } catch (e) {}
+            try {
+              await this.google.logout();
+            } catch (e) {}
 
-              await loading.dismiss();
-            },
-          );
+            await loading.dismiss();
+          },
+        );
       })
       .catch(e => {
         if (e !== 12501 && e !== 'The user canceled the sign-in flow.') {

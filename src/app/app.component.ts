@@ -44,9 +44,8 @@ export class AppComponent {
   private async setLanguage() {
     this.translateService.addLangs(LanguageConstants.SUPPORTED_LANGUAGES);
     this.translateService.setDefaultLang(LanguageConstants.DEFAULT_LANGUAGE);
-    this.translateService.use(LanguageConstants.DEFAULT_LANGUAGE);
 
-    const language = await this.storage.get(storageKeys.language);
+    let language = await this.storage.get(storageKeys.language);
 
     if (!language) {
       const browserLanguage = this.translateService.getBrowserLang();
@@ -57,6 +56,7 @@ export class AppComponent {
         : LanguageConstants.DEFAULT_LANGUAGE;
 
       await this.storage.set(storageKeys.language, languageToSet);
+      language = languageToSet;
     }
 
     this.translateService.use(language);
