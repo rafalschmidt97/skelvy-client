@@ -1,7 +1,7 @@
 {
   "name": "skelvy",
   "description": "Mobile app for meetings over your favorite drinks.",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "private": true,
   "author": "Rafał Schmidt",
   "homepage": "https://skelvy.com/",
@@ -193,7 +193,8 @@
       }
     },
     "platforms": [
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
