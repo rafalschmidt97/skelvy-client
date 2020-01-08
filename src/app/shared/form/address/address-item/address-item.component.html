@@ -9,7 +9,9 @@
     <div *ngIf="result.type && isNotCity(result.type) && result.city">
       {{ 'Village' | translate }}: {{ result.city }}
     </div>
-    <div>{{ 'State' | translate }}: {{ result.state }}</div>
+    <div *ngIf="result.state">
+      {{ 'State' | translate }}: {{ result.state }}
+    </div>
     <div *ngIf="result.district && result.district !== result.city">
       {{ 'District' | translate }}: {{ result.district }}
     </div>

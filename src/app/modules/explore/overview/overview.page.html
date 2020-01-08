@@ -33,7 +33,9 @@
           >
             {{ 'Village' | translate }}: {{ location.city }}
           </div>
-          <div>{{ 'State' | translate }}: {{ location.state }}</div>
+          <div *ngIf="location.state">
+            {{ 'State' | translate }}: {{ location.state }}
+          </div>
           <div *ngIf="location.district && location.district !== location.city">
             {{ 'District' | translate }}: {{ location.district }}
           </div>
