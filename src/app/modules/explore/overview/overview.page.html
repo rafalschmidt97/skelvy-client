@@ -12,7 +12,9 @@
 <ion-content>
   <ion-refresher
     (ionRefresh)="refreshSuggestions($event)"
-    [disabled]="isLoadingInitial || isLoadingJoin || isLoadingSuggestions"
+    [disabled]="
+      isLoadingInitial || isLoadingJoin || isLoadingSuggestions || !location
+    "
   >
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
