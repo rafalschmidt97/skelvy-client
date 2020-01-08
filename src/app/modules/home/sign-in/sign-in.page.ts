@@ -72,6 +72,11 @@ export class SignInPage implements OnInit {
                     'A problem occurred while signing in with facebook. Please contact us.',
                   ),
                 );
+
+                try {
+                  await this.facebook.logout();
+                } catch (e) {}
+
                 await loading.dismiss();
               },
             );
@@ -122,6 +127,11 @@ export class SignInPage implements OnInit {
               this.toastService.createError(
                 _('A problem occurred while signing in with google'),
               );
+
+              try {
+                await this.google.logout();
+              } catch (e) {}
+
               await loading.dismiss();
             },
           );
