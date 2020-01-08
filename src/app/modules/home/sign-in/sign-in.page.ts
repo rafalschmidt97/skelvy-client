@@ -84,7 +84,7 @@ export class SignInPage implements OnInit {
         }
       })
       .catch(e => {
-        if (e.errorCode !== '4201') {
+        if (e.errorCode !== '4201' && e !== 'User cancelled.') {
           // not cancelled
           console.log(e);
           this.toastService.createError(
@@ -127,7 +127,7 @@ export class SignInPage implements OnInit {
           );
       })
       .catch(e => {
-        if (e !== 12501) {
+        if (e !== 12501 && e !== 'The user canceled the sign-in flow.') {
           // not cancelled
           console.log(e);
           this.toastService.createError(
