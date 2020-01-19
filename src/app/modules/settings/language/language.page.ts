@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Form, OnSubmit } from '../../../shared/form/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Radio } from '../../../shared/form/radio/radio';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
-import { LanguageConstants } from '../../../core/i18n/language.constants';
+import {
+  LanguageConstants,
+  LanguageRadio,
+} from '../../../core/i18n/language.constants';
 import { UserService } from '../../user/user.service';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
@@ -20,16 +22,7 @@ import { storageKeys } from '../../../core/storage/storage';
 export class LanguagePage implements Form, OnSubmit, OnInit {
   form: FormGroup;
   isLoading = false;
-  languages: Radio[] = [
-    {
-      value: 'pl',
-      label: 'Polski',
-    },
-    {
-      value: 'en',
-      label: 'English',
-    },
-  ];
+  languages = LanguageRadio;
   initializedLanguage: string;
 
   constructor(

@@ -1,0 +1,26 @@
+{
+  "app" : {
+    "USER_JOINED_MEETING": "Jemand wurde zur Gruppe hinzugefügt",
+    "USER_CONNECTED_TO_MEETING": "Ein neues Treffen wurde gefunden",
+    "USER_LEFT_MEETING": "Jemand hat das Treffen verlassen",
+    "USER_SENT_PHOTO": "Der Nutzer hat ein Foto gesendet",
+    "USER_SENT_MESSAGE": "Der Nutzer hat eine Nachricht gesendet",
+    "MEETING_REQUEST_EXPIRED": "Deine Anfrage ist abgelaufen",
+    "MEETING_ABORTED": "Dein Treffen wurde aufgelöst",
+    "MEETING_EXPIRED": "Dein Treffen liegt in der Vergangenheit",
+    "MEETINGS": "Treffen",
+    "GROUPS": "Gruppen",
+    "MEETING_REQUEST": "Anfrage zu einem Treffen",
+    "USER_REMOVED_FROM_MEETING": "Jemand wurde vom Treffen ausgeschlossen",
+    "USER_SELF_REMOVED_FROM_MEETING": "Du wurdest vom Treffen ausgeschlossen",
+    "USER_LEFT_GROUP": "Jemand hat die Gruppe verlassen",
+    "MEETING_UPDATED": "Das Treffen wurde aktualisiert",
+    "GROUP_ABORTED": "Das Treffen wurde abgesagt",
+    "FRIENDS": "Freunde",
+    "NEW_FRIEND_INVITATION": "Jemand hat dir eine Freundschaftsanfrage gesendet",
+    "FRIEND_INVITATION_ACCEPTED": "Jemand hat deine Freundschaftsanfrage angenommen",
+    "NEW_MEETING_INVITATION": "Jemand hat dich zu einem Treffen eingeladen",
+    "MEETING_INVITATION_ACCEPTED": "Jemand hat deine Einladung zu einem Treffen angenommen",
+    "MEETING_INVITATION_DENIED": "Jemand hat deine Einladung zu einem Treffen abgelehnt"
+  }
+}
