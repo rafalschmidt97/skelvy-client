@@ -119,7 +119,9 @@ export class OverviewPage {
             }
 
             this.toastService.createError(
-              _('A problem occurred while responding meeting invitation'),
+              _(
+                'A problem occurred while responding to the meeting invitation',
+              ),
             );
           },
         );

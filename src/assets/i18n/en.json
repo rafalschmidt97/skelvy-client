@@ -14,6 +14,7 @@
   "USER_SELF_REMOVED_FROM_MEETING": "You have been removed from the meeting",
   "USER_LEFT_GROUP": "User has left the group",
   "MEETING_UPDATED": "Meeting has been updated",
+  "MEETING_USER_ROLE_UPDATED": "The role in the meeting has been updated",
   "GROUP_ABORTED": "Your meeting has been aborted",
   "FRIENDS": "Friends",
   "NEW_FRIEND_INVITATION": "Someone sent you new friend invitation",

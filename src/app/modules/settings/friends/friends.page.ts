@@ -91,7 +91,7 @@ export class FriendsPage implements OnInit {
             this.userService.findFriendInvitations().subscribe();
 
             this.toastService.createError(
-              _('A problem occurred while responding friend invitation'),
+              _('A problem occurred while responding to the friend invitation'),
             );
           },
         );
