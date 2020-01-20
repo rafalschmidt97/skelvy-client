@@ -37,7 +37,9 @@ export class ProfileModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getRelation();
+    if (!this.mine) {
+      this.getRelation();
+    }
   }
 
   getRelation() {
