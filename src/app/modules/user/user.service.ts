@@ -221,9 +221,9 @@ export class UserService {
       );
   }
 
-  findUsers(username: string, page: number = 1): Observable<UserWithRoleDto[]> {
+  findUsers(username: string): Observable<UserWithRoleDto[]> {
     return this.http.get<UserWithRoleDto[]>(
-      `${environment.versionApiUrl}users?userName=${username}&page=${page}`,
+      `${environment.versionApiUrl}users?userName=${username}`,
     );
   }
 
