@@ -10,6 +10,7 @@ import { FormControl } from '@angular/forms';
 export class InputComponent extends ComplexFieldComponent {
   @Input() isPassword: boolean;
   @Input() isEmail: boolean;
+  @Input() disabled: boolean;
   @Input() placeholder = '';
   @Input() autocomplete = true;
   @Input() autocorrect = true;

@@ -7,7 +7,7 @@
       [attr.type]="isPassword ? 'password' : isEmail ? 'email' : 'text'"
       class="form-control"
       [class.is-invalid]="isInvalid && isTouched && hasFeedback"
-      [attr.disabled]="isLoading ? '' : null"
+      [attr.disabled]="isLoading || disabled ? '' : null"
       [placeholder]="placeholder"
       [attr.autocomplete]="autocomplete ? 'on' : 'off'"
       [attr.autocorrect]="autocomplete ? 'on' : 'off'"
