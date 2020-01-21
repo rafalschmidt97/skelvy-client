@@ -78,7 +78,7 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
           InputComponent.maxWhiteSpaces(200),
         ],
       ],
-      isHidden: [true, Validators.required],
+      isHidden: ['true', Validators.required],
     });
   }
 
