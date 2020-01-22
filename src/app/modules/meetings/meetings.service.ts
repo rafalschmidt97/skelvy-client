@@ -395,11 +395,12 @@ export class MeetingsService {
       );
   }
 
-  findMeetingInvitationsDetails(
+  findUsersToInviteToMeeting(
     meetingId: number,
-  ): Observable<MeetingInvitationDetails[]> {
-    return this.http.get<MeetingInvitationDetails[]>(
-      `${environment.versionApiUrl}meetings/${meetingId}/invitations`,
+    page: number,
+  ): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(
+      `${environment.versionApiUrl}meetings/${meetingId}/invitations?page=${page}`,
     );
   }
 }

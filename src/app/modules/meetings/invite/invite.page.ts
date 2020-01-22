@@ -18,9 +18,9 @@ import { MeetingsStateModel } from '../store/meetings-state';
   styleUrls: ['./invite.page.scss'],
 })
 export class InvitePage implements OnInit {
-  reducedFriends: UserDto[];
-  loadingFriends = true;
-  allFriendsLoaded = false;
+  usersToInvite: UserDto[];
+  loadingUsersToInvite = true;
+  allUsersToInviteLoaded = false;
   page = 1;
   meetingId: number;
   created: boolean;
@@ -32,7 +32,6 @@ export class InvitePage implements OnInit {
     private readonly toastService: ToastService,
     private readonly routerNavigation: NavController,
     private readonly route: ActivatedRoute,
-    private readonly store: Store,
   ) {}
 
   ngOnInit() {
@@ -46,72 +45,39 @@ export class InvitePage implements OnInit {
 
     this.created = !!this.route.snapshot.paramMap.get('created');
 
-    combineLatest([
-      this.store.selectOnce(state => state.user.friends),
-      this.store.selectOnce(state => state.meetings),
-    ])
-      .pipe(
-        switchMap(
-          ([friends, meetingsState]: [UserDto[], MeetingsStateModel]) => {
-            this.loadingFriends = true;
-            const meeting = meetingsState.meetings.find(
-              x => x.id === meetingId,
-            );
-
-            return forkJoin([
-              this.meetingService.findMeetingInvitationsDetails(meetingId),
-              friends.length !== 0
-                ? of(friends)
-                : this.userService.findFriends(this.page),
-              of(meetingsState.groups.find(x => x.id === meeting.groupId)),
-            ]);
-          },
-        ),
-        mergeMap(([invited, friends, group]) => {
-          this.page = friends.length / 10 + 1;
-
-          if (friends.length > 0) {
-            this.allFriendsLoaded = friends.length % 10 !== 0;
-          } else {
-            this.allFriendsLoaded = true;
-          }
-
-          if (invited.length !== 0) {
-            return of(
-              friends.filter(
-                x =>
-                  invited.find(y => y.invitedUser.id === x.id) == null &&
-                  group.users.find(y => y.id === x.id) == null,
-              ),
-            );
-          } else {
-            return of(friends);
-          }
-        }),
-      )
-      .subscribe(reducedFriends => {
-        this.loadingFriends = false;
-        this.reducedFriends = reducedFriends;
-      });
+    this.loadUsersToInvite();
   }
 
-  loadFriends() {
-    this.loadingFriends = true;
-    this.userService.findFriends(this.page).subscribe(
-      () => {},
-      () => {
-        this.loadingFriends = false;
-        this.toastService.createError(
-          _('A problem occurred while finding friends'),
-        );
-      },
-    );
+  loadUsersToInvite() {
+    this.loadingUsersToInvite = true;
+    this.meetingService
+      .findUsersToInviteToMeeting(this.meetingId, this.page)
+      .subscribe(
+        users => {
+          this.loadingUsersToInvite = false;
+          this.page = this.page + 1;
+
+          if (users.length > 0) {
+            this.allUsersToInviteLoaded = users.length % 10 !== 0;
+          } else {
+            this.allUsersToInviteLoaded = true;
+          }
+
+          this.usersToInvite = users;
+        },
+        () => {
+          this.loadingUsersToInvite = false;
+          this.toastService.createError(
+            _('A problem occurred while finding friends'),
+          );
+        },
+      );
   }
 
   invite(userId: number) {
     this.meetingService.inviteToMeeting(userId, this.meetingId).subscribe(
       () => {
-        const reducedFriends = this.reducedFriends.filter(x => x.id !== userId);
+        const reducedFriends = this.usersToInvite.filter(x => x.id !== userId);
 
         if (reducedFriends.length === 0) {
           this.routerNavigation.navigateBack([
@@ -119,7 +85,7 @@ export class InvitePage implements OnInit {
             this.meetingId,
           ]);
         } else {
-          this.reducedFriends = reducedFriends;
+          this.usersToInvite = reducedFriends;
         }
       },
       (error: HttpErrorResponse) => {

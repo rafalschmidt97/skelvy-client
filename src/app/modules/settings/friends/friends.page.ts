@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
-import { FriendInvitation, RelationType, UserDto } from '../../user/user';
+import { FriendInvitation, UserDto } from '../../user/user';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { ModalController } from '@ionic/angular';
@@ -22,7 +22,6 @@ export class FriendsPage implements OnInit {
   loadingFriends = true;
   allFriendsLoaded = false;
   page = 1;
-  relations = RelationType;
 
   constructor(
     private readonly userService: UserService,

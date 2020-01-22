@@ -24,20 +24,20 @@
       }}
     </div>
     <div
-      *ngIf="reducedFriends && reducedFriends.length > 0; else emptyList"
+      *ngIf="usersToInvite && usersToInvite.length > 0; else emptyList"
       class="bg-white border-top"
     >
       <app-invite-profile-preview
-        *ngFor="let user of reducedFriends"
+        *ngFor="let user of usersToInvite"
         [user]="user"
         (invite)="invite($event)"
       ></app-invite-profile-preview>
       <div class="container">
         <button
-          *ngIf="!allFriendsLoaded"
-          [disabled]="loadingFriends"
+          *ngIf="!allUsersToInviteLoaded"
+          [disabled]="loadingUsersToInvite"
           type="button"
-          (click)="loadFriends()"
+          (click)="loadUsersToInvite()"
           class="btn btn-primary btn-block my-3"
         >
           {{ 'Load more' | translate }}
@@ -45,7 +45,7 @@
       </div>
     </div>
     <ng-template #emptyList>
-      <div *ngIf="!loadingFriends" class="mb-3 text-center">
+      <div *ngIf="!loadingUsersToInvite" class="mb-3 text-center">
         <div class="border-top border-bottom text-center p-3 bg-white">
           <p>
             {{
@@ -61,7 +61,7 @@
         </div>
       </div>
     </ng-template>
-    <ng-container *ngIf="loadingFriends">
+    <ng-container *ngIf="loadingUsersToInvite">
       <div class="text-center py-3">
         <ion-spinner></ion-spinner>
       </div>
