@@ -7,7 +7,6 @@ import {
   RelationDto,
   SelfUserDto,
   UserDto,
-  UserWithRoleDto,
 } from './user';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -221,8 +220,8 @@ export class UserService {
       );
   }
 
-  findUsers(username: string): Observable<UserWithRoleDto[]> {
-    return this.http.get<UserWithRoleDto[]>(
+  findUsers(username: string): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(
       `${environment.versionApiUrl}users?userName=${username}`,
     );
   }

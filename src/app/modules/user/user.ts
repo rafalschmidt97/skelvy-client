@@ -67,13 +67,6 @@ export interface MeetingInvitationDetails {
   createdAt: string;
 }
 
-export interface UserWithRoleDto {
-  id: number;
-  name: string;
-  profile: ProfileDto;
-  relationType: RelationType;
-}
-
 export enum RelationType {
   FRIEND = 'friend',
   BLOCKED = 'blocked',

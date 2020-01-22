@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
-import { RelationType, UserDto } from '../../user/user';
+import { UserDto } from '../../user/user';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';

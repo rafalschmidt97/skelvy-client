@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserWithRoleDto } from '../../../user/user';
+import { UserDto } from '../../../user/user';
 
 @Component({
   selector: 'app-search-profile-preview',
@@ -7,6 +7,6 @@ import { UserWithRoleDto } from '../../../user/user';
   styleUrls: ['./profile-preview.component.scss'],
 })
 export class ProfilePreviewComponent {
-  @Input() user: UserWithRoleDto;
-  @Output() openDetails = new EventEmitter<UserWithRoleDto>();
+  @Input() user: UserDto;
+  @Output() openDetails = new EventEmitter<UserDto>();
 }

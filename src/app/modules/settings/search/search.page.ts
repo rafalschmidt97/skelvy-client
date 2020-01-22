@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
-import { UserWithRoleDto } from '../../user/user';
+import { UserDto } from '../../user/user';
 import { ModalController } from '@ionic/angular';
 import { of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -16,7 +16,7 @@ import { Store } from '@ngxs/store';
 })
 export class SearchPage {
   search$ = new Subject<string>();
-  results: UserWithRoleDto[];
+  results: UserDto[];
   resultSearched = false;
   resultLoading = false;
   search = '';
@@ -59,7 +59,7 @@ export class SearchPage {
     }
   }
 
-  async openDetails(user: UserWithRoleDto) {
+  async openDetails(user: UserDto) {
     const modal = await this.modalController.create({
       component: ProfileModalComponent,
       componentProps: {
