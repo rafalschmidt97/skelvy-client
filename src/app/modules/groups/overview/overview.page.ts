@@ -55,4 +55,17 @@ export class OverviewPage {
   getFirstUsers(group: GroupState): GroupUserDto[] {
     return group.users.slice(0, 4);
   }
+
+  sortByMessages(groups: GroupState[]): GroupState[] {
+    return groups.slice().sort((a, b) => {
+      const aDate = !isEmpty(a.messages)
+        ? a.messages[a.messages.length - 1].date
+        : a.createdAt;
+      const bDate = !isEmpty(b.messages)
+        ? b.messages[b.messages.length - 1].date
+        : b.createdAt;
+
+      return new Date(bDate).getTime() - new Date(aDate).getTime();
+    });
+  }
 }

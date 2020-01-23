@@ -18,7 +18,7 @@
     >
       <div *ngIf="meetings.groups.length > 0; else empty">
         <div
-          *ngFor="let group of meetings.groups"
+          *ngFor="let group of sortByMessages(meetings.groups)"
           [routerLink]="['/app/groups/', group.id, 'chat']"
           class="person"
         >

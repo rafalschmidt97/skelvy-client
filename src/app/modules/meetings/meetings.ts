@@ -23,6 +23,7 @@ export interface GroupDto {
   name: string;
   users: GroupUserDto[];
   messages: MessageDto[];
+  createdAt: string;
 }
 
 export interface GroupState {
@@ -30,6 +31,7 @@ export interface GroupState {
   name: string;
   users: GroupUserDto[];
   messages: MessageState[];
+  createdAt: string;
 }
 
 export interface GroupUserDto {
