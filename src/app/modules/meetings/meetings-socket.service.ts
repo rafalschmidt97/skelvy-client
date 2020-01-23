@@ -438,9 +438,6 @@ export class MeetingsSocketService {
           );
         }
 
-        this.toastService.createInformation(
-          _('Someone has sent you new meeting invitation'),
-        );
         this.meetingService.findMeetingInvitations().subscribe();
       },
     );

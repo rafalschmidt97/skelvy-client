@@ -6,6 +6,7 @@ import {
   SocketNotificationType,
 } from '../background/background';
 import { BackgroundService } from '../background/background.service';
+import { Vibration } from '@ionic-native/vibration/ngx';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,7 @@ export class ToastService {
     private readonly translateService: TranslateService,
     private readonly toastController: ToastController,
     private readonly backgroundService: BackgroundService,
+    private readonly vibration: Vibration,
   ) {}
 
   async create(
@@ -39,6 +41,9 @@ export class ToastService {
       if (translateTitle) {
         title = await this.translateService.get(title).toPromise();
       }
+
+      message =
+        message.length > 70 ? message.substring(0, 70) + '...' : message;
 
       if (clickHandler) {
         toast = await this.toastController.create({
@@ -72,6 +77,7 @@ export class ToastService {
         });
       }
 
+      this.vibration.vibrate(1000);
       await toast.present();
 
       this.isBusy = true;
