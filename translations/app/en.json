@@ -1,6 +1,8 @@
 {
   "app" : {
     "USER_JOINED_MEETING": "New user has been added to the group",
+    "USER_REMOVED": "Your account has been removed. If you have any questions, don't hesitate to contact us by using our website",
+    "USER_DISABLED": "Your account has been disabled. If you have any questions, don't hesitate to contact us by using our website",
     "USER_CONNECTED_TO_MEETING": "New meeting has been found",
     "USER_LEFT_MEETING": "User has left the meeting",
     "USER_SENT_PHOTO": "Sent a photo",

@@ -2,15 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { _ } from '../../../core/i18n/translate';
 import { ToastService } from '../../../core/toast/toast.service';
 import { UserDto } from '../../user/user';
-import { combineLatest, forkJoin, of } from 'rxjs';
-import { Store } from '@ngxs/store';
 import { ModalController, NavController } from '@ionic/angular';
 import { UserService } from '../../user/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { mergeMap, switchMap } from 'rxjs/operators';
 import { MeetingsService } from '../meetings.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MeetingsStateModel } from '../store/meetings-state';
 
 @Component({
   selector: 'app-invite',

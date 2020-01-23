@@ -1,108 +1,150 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastController } from '@ionic/angular';
+import {
+  SocketNotificationMessage,
+  SocketNotificationType,
+} from '../background/background';
+import { BackgroundService } from '../background/background.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  static readonly TOAST_POSITION = 'top';
-  static readonly TOAST_DURATION = 5000;
+  isBusy: boolean;
+  private readonly position = 'top';
+  private readonly duration = 5000;
 
   constructor(
     private readonly translateService: TranslateService,
     private readonly toastController: ToastController,
+    private readonly backgroundService: BackgroundService,
   ) {}
 
   async create(
     message: string,
-    color: string = 'primary',
-    duration: number = ToastService.TOAST_DURATION,
-    showCloseButton: boolean = true,
-    translateMessage: boolean = true,
-    position: any = ToastService.TOAST_POSITION,
+    translateMessage: boolean,
+    title: string,
+    translateTitle: boolean,
+    color: string,
+    clickHandler: () => void,
   ) {
-    let toast;
+    if (!this.isBusy && !this.backgroundService.inBackground) {
+      let toast;
 
-    if (translateMessage) {
-      message = await this.translateService.get(message).toPromise();
+      if (translateMessage) {
+        message = await this.translateService.get(message).toPromise();
+      }
+
+      if (translateTitle) {
+        title = await this.translateService.get(title).toPromise();
+      }
+
+      if (clickHandler) {
+        toast = await this.toastController.create({
+          message: title ? `${title}: ${message}` : message,
+          color: color,
+          duration: this.duration,
+          position: this.position,
+          buttons: [
+            {
+              side: 'end',
+              icon: 'arrow-round-forward',
+              handler: () => {
+                clickHandler();
+              },
+            },
+          ],
+        });
+      } else {
+        toast = await this.toastController.create({
+          message: message,
+          color: color,
+          duration: this.duration,
+          position: this.position,
+          buttons: [
+            {
+              side: 'end',
+              icon: 'close',
+              role: 'cancel',
+            },
+          ],
+        });
+      }
+
+      await toast.present();
+
+      this.isBusy = true;
+      setTimeout(() => {
+        this.isBusy = false;
+      }, this.duration);
     }
-
-    if (showCloseButton) {
-      toast = await this.toastController.create({
-        message: message,
-        color: color,
-        duration: duration,
-        buttons: [
-          {
-            side: 'end',
-            icon: 'close',
-            role: 'cancel',
-          },
-        ],
-        position: position,
-      });
-    } else {
-      toast = await this.toastController.create({
-        message: message,
-        showCloseButton: false,
-        color: color,
-        duration: duration,
-        position: position,
-      });
-    }
-
-    toast.present();
   }
 
   async createError(
     message: string,
-    duration?: number,
-    showCloseButton?: boolean,
-    translateMessage?: boolean,
-    position?: string,
+    translateMessage: boolean = true,
+    title: string = null,
+    translateTitle: boolean = true,
+    clickHandler: () => void = null,
   ) {
     await this.create(
       message,
-      'danger',
-      duration,
-      showCloseButton,
       translateMessage,
-      position,
+      title,
+      translateTitle,
+      'danger',
+      clickHandler,
     );
   }
 
   async createWarning(
     message: string,
-    duration?: number,
-    showCloseButton?: boolean,
-    translateMessage?: boolean,
-    position?: string,
+    translateMessage: boolean = true,
+    title: string = null,
+    translateTitle: boolean = true,
+    clickHandler: () => void = null,
   ) {
     await this.create(
       message,
-      'warning',
-      duration,
-      showCloseButton,
       translateMessage,
-      position,
+      title,
+      translateTitle,
+      'warning',
+      clickHandler,
     );
   }
 
   async createInformation(
     message: string,
-    duration?: number,
-    showCloseButton?: boolean,
-    translateMessage?: boolean,
-    position?: string,
+    translateMessage: boolean = true,
+    title: string = null,
+    translateTitle: boolean = true,
+    clickHandler: () => void = null,
   ) {
     await this.create(
       message,
-      'light',
-      duration,
-      showCloseButton,
       translateMessage,
-      position,
+      title,
+      translateTitle,
+      'light',
+      clickHandler,
     );
+  }
+  async createInformationFromNotification(
+    notification: SocketNotificationMessage,
+    clickHandler: () => void = null,
+  ) {
+    if (notification.type === SocketNotificationType.REGULAR) {
+      await this.create(
+        notification.notification.bodyLocKey || notification.notification.body,
+        !!notification.notification.bodyLocKey,
+        notification.notification.titleLocKey ||
+          notification.notification.title,
+        !!notification.notification.titleLocKey,
+        'light',
+        clickHandler,
+      );
+    }
   }
 }

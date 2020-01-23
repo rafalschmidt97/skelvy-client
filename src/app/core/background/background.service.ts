@@ -4,7 +4,10 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { storageKeys } from '../storage/storage';
-import { SocketNotificationMessage } from './background';
+import {
+  SocketNotificationMessage,
+  SocketNotificationType,
+} from './background';
 
 @Injectable({
   providedIn: 'root',
@@ -67,18 +70,24 @@ export class BackgroundService {
   }
 
   createFromNotification(message: SocketNotificationMessage) {
-    const translateTitle = message.notification.titleLocKey;
-    const translateBody = message.notification.bodyLocKey;
-    this.create(
-      translateTitle
-        ? message.notification.titleLocKey
-        : message.notification.title,
-      translateBody
-        ? message.notification.bodyLocKey
-        : message.notification.body,
-      message.data,
-      !!translateTitle,
-      !!translateBody,
-    );
+    if (
+      this.inBackground &&
+      this.allowPush &&
+      message.type === SocketNotificationType.REGULAR
+    ) {
+      const translateTitle = message.notification.titleLocKey;
+      const translateBody = message.notification.bodyLocKey;
+      this.create(
+        translateTitle
+          ? message.notification.titleLocKey
+          : message.notification.title,
+        translateBody
+          ? message.notification.bodyLocKey
+          : message.notification.body,
+        message.data,
+        !!translateTitle,
+        !!translateBody,
+      );
+    }
   }
 }

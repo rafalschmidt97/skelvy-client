@@ -17,11 +17,7 @@ import {
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import {
-  MeetingInvitation,
-  MeetingInvitationDetails,
-  UserDto,
-} from '../user/user';
+import { MeetingInvitation, UserDto } from '../user/user';
 import { Store } from '@ngxs/store';
 import {
   AddGroupUser,

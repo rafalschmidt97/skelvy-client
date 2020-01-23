@@ -35,7 +35,6 @@ export class CommunityPage {
           _(
             `If you have any further questions, don't hesitate to contact us by using our website`,
           ),
-          10000,
         );
       });
   }

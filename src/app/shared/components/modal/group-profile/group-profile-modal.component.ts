@@ -215,7 +215,6 @@ export class GroupProfileModalComponent implements OnInit {
           _(
             `If you have any further problems, don't hesitate to contact us by using our website`,
           ),
-          10000,
         );
       });
   }

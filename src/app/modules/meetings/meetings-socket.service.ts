@@ -15,10 +15,7 @@ import {
 } from './meetings';
 import { Store } from '@ngxs/store';
 import { BackgroundService } from '../../core/background/background.service';
-import {
-  SocketNotificationMessage,
-  SocketNotificationType,
-} from '../../core/background/background';
+import { SocketNotificationMessage } from '../../core/background/background';
 import { GroupsService } from '../groups/groups.service';
 import { combineLatest } from 'rxjs';
 
@@ -94,7 +91,22 @@ export class MeetingsSocketService {
           messages: MessageDto[];
         }>,
       ) => {
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+        if (
+          this.router.url !==
+          `/app/groups/${notification.data.data.groupId}/chat`
+        ) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([
+                '/app/groups/',
+                notification.data.data.groupId,
+                'chat',
+              ]);
+            },
+          );
+        }
 
         const data = notification.data.data;
         const persistenceMessages = data.messages.filter(x => {
@@ -120,15 +132,19 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'UserJoinedMeeting',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/meetings`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/meetings`]);
+            },
+          );
+        }
 
         const { userId, groupId, role } = notification.data.data;
         this.meetingService.addUser(userId, groupId, role).subscribe(
-          () => {
-            this.toastService.createInformation(
-              _('New user has been added to the group'),
-            );
-          },
+          () => {},
           () => {
             this.toastService.createError(
               _('A problem occurred loading meeting user'),
@@ -143,7 +159,15 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'UserConnectedToMeeting',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/meetings`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/meetings`]);
+            },
+          );
+        }
 
         const { meetingId, requestId, groupId } = notification.data.data;
         this.meetingService.clearMeetingRequest(requestId);
@@ -152,11 +176,7 @@ export class MeetingsSocketService {
           this.meetingService.addFoundMeeting(meetingId),
           this.groupsService.addFoundGroup(groupId, true),
         ]).subscribe(
-          () => {
-            this.toastService.createInformation(
-              _('New meeting has been found'),
-            );
-          },
+          () => {},
           () => {
             this.toastService.createError(
               _('A problem occurred while finding the meeting'),
@@ -171,7 +191,15 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'UserLeftMeeting',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/meetings`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/meetings`]);
+            },
+          );
+        }
 
         const { userId, groupId } = notification.data.data;
         this.meetingService.removeUser(userId, groupId);
@@ -183,7 +211,15 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'UserLeftGroup',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/meetings`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/meetings`]);
+            },
+          );
+        }
 
         const { userId, groupId } = notification.data.data;
         this.meetingService.removeUser(userId, groupId);
@@ -195,8 +231,6 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'UserRemovedFromMeeting',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
-
         const { removedUserId, groupId } = notification.data.data;
         this.meetingService.removeUser(removedUserId, groupId);
       },
@@ -207,7 +241,15 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'MeetingAborted',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/meetings`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/meetings`]);
+            },
+          );
+        }
 
         const { groupId } = notification.data.data;
 
@@ -216,10 +258,6 @@ export class MeetingsSocketService {
           this.meetingService.findRequests(true),
         ]).subscribe(
           () => {
-            this.toastService.createInformation(
-              _('The meeting has been aborted'),
-            );
-
             if (this.router.url === `/app/groups/${groupId}/chat`) {
               this.routerNavigation.navigateBack(['/app/tabs/meetings']);
             }
@@ -238,13 +276,19 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'MeetingUpdated',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/meetings`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/meetings`]);
+            },
+          );
+        }
 
         const { meetingId } = notification.data.data;
         this.meetingService.syncMeeting(meetingId).subscribe(
-          () => {
-            this.toastService.createInformation(_('Meeting has been updated'));
-          },
+          () => {},
           () => {
             this.toastService.createError(
               _('A problem occurred while finding the meeting'),
@@ -259,13 +303,19 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'GroupUpdated',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/groups`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/groups`]);
+            },
+          );
+        }
 
         const { groupId } = notification.data.data;
         this.groupsService.syncGroup(groupId).subscribe(
-          () => {
-            this.toastService.createInformation(_('Group has been updated'));
-          },
+          () => {},
           () => {
             this.toastService.createError(
               _('A problem occurred while finding the group'),
@@ -280,7 +330,6 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'MeetingUserRoleUpdated',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
         const { groupId, updatedUserId, role } = notification.data.data;
         this.meetingService.updatedUserRole(groupId, updatedUserId, role);
       },
@@ -293,9 +342,16 @@ export class MeetingsSocketService {
       (notification: SocketNotificationMessage) => {
         const { requestId } = notification.data.data;
 
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/meetings`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/meetings`]);
+            },
+          );
+        }
 
-        this.toastService.createInformation(_('Meeting request has expired'));
         this.meetingService.clearMeetingRequest(requestId);
       },
     );
@@ -307,9 +363,15 @@ export class MeetingsSocketService {
       (notification: SocketNotificationMessage) => {
         const { groupId } = notification.data.data;
 
-        this.showNotificationIfBackground(notification);
-
-        this.toastService.createInformation(_('The group has been aborted'));
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/groups`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/groups`]);
+            },
+          );
+        }
 
         if (this.router.url === `/app/groups/${groupId}/chat`) {
           this.routerNavigation.navigateBack(['/app/tabs/groups']);
@@ -326,9 +388,15 @@ export class MeetingsSocketService {
       (notification: SocketNotificationMessage) => {
         const { meetingId, groupId } = notification.data.data;
 
-        this.showNotificationIfBackground(notification);
-
-        this.toastService.createInformation(_('The meeting has expired'));
+        this.backgroundService.createFromNotification(notification);
+        if (this.router.url !== `/app/tabs/meetings`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/tabs/meetings`]);
+            },
+          );
+        }
 
         if (this.router.url === `/app/groups/${groupId}/chat`) {
           this.routerNavigation.navigateBack(['/app/tabs/meetings']);
@@ -345,12 +413,6 @@ export class MeetingsSocketService {
       (notification: SocketNotificationMessage) => {
         const { meetingId, groupId } = notification.data.data;
 
-        this.showNotificationIfBackground(notification);
-
-        this.toastService.createInformation(
-          _('You have been removed from the meeting'),
-        );
-
         if (this.router.url === `/app/groups/${groupId}/chat`) {
           this.routerNavigation.navigateBack(['/app/tabs/meetings']);
         }
@@ -364,7 +426,17 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'UserSentMeetingInvitation',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
+        this.backgroundService.createFromNotification(notification);
+
+        if (this.router.url !== `/app/tabs/meetings`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward(['/app/tabs/meetings']);
+            },
+          );
+        }
+
         this.toastService.createInformation(
           _('Someone has sent you new meeting invitation'),
         );
@@ -377,11 +449,19 @@ export class MeetingsSocketService {
     this.userSocket.on(
       'UserRespondedMeetingInvitation',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
-
         const { isAccepted, invitedUserId, groupId } = notification.data.data;
 
         if (isAccepted) {
+          this.backgroundService.createFromNotification(notification);
+          if (this.router.url !== `/app/tabs/meetings`) {
+            this.toastService.createInformationFromNotification(
+              notification,
+              () => {
+                this.routerNavigation.navigateForward([`/app/tabs/meetings`]);
+              },
+            );
+          }
+
           this.meetingService
             .addUser(invitedUserId, groupId, GroupUserRole.MEMBER)
             .subscribe(
@@ -399,17 +479,5 @@ export class MeetingsSocketService {
         }
       },
     );
-  }
-
-  private showNotificationIfBackground(
-    notification: SocketNotificationMessage,
-  ) {
-    if (
-      this.backgroundService.inBackground &&
-      this.backgroundService.allowPush &&
-      notification.type === SocketNotificationType.REGULAR
-    ) {
-      this.backgroundService.createFromNotification(notification);
-    }
   }
 }

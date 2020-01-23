@@ -17,12 +17,10 @@ import { tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { ChangeConnectionStatus } from '../../core/state/global-actions';
 import { SelfService } from './self.service';
-import {
-  SocketNotificationMessage,
-  SocketNotificationType,
-} from '../../core/background/background';
+import { SocketNotificationMessage } from '../../core/background/background';
 import { BackgroundService } from '../../core/background/background.service';
 import { UserService } from './user.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +31,9 @@ export class UserSocketService {
   private disconnected = true;
   private reconnectFailedAttempts = 0;
   private readonly usersNotifications = [
+    _('USER'),
+    _('USER_REMOVED'),
+    _('USER_DISABLED'),
     _('FRIENDS'),
     _('NEW_FRIEND_INVITATION'),
     _('FRIEND_INVITATION_ACCEPTED'),
@@ -48,6 +49,7 @@ export class UserSocketService {
     private readonly store: Store,
     private readonly backgroundService: BackgroundService,
     private readonly userService: UserService,
+    private readonly router: Router,
   ) {
     this.socket = new HubConnectionBuilder()
       .withUrl(environment.apiUrl + 'users', {
@@ -103,29 +105,24 @@ export class UserSocketService {
   }
 
   private onUserRemoved() {
-    this.socket.on('UserRemoved', () => {
+    this.socket.on('UserRemoved', (notification: SocketNotificationMessage) => {
       this.authService.logoutWithoutRequest().then(() => {
         this.routerNavigation.navigateBack(['/home/sign-in']);
-        this.toastService.createError(
-          _(
-            `Your account has been removed. If you have any questions, don't hesitate to contact us by using our website`,
-          ),
-        );
+        this.toastService.createInformationFromNotification(notification);
       });
     });
   }
 
   private onUserDisabled() {
-    this.socket.on('UserDisabled', () => {
-      this.authService.logoutWithoutRequest().then(() => {
-        this.routerNavigation.navigateBack(['/home/sign-in']);
-        this.toastService.createError(
-          _(
-            `Your account has been disabled. If you have any questions, don't hesitate to contact us by using our website`,
-          ),
-        );
-      });
-    });
+    this.socket.on(
+      'UserDisabled',
+      (notification: SocketNotificationMessage) => {
+        this.authService.logoutWithoutRequest().then(() => {
+          this.routerNavigation.navigateBack(['/home/sign-in']);
+          this.toastService.createInformationFromNotification(notification);
+        });
+      },
+    );
   }
 
   private connectToSocket() {
@@ -194,10 +191,17 @@ export class UserSocketService {
     this.socket.on(
       'UserSentFriendInvitation',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
-        this.toastService.createInformation(
-          _('Someone has sent you new friend invitation'),
-        );
+        this.backgroundService.createFromNotification(notification);
+
+        if (this.router.url !== `/app/settings/friends`) {
+          this.toastService.createInformationFromNotification(
+            notification,
+            () => {
+              this.routerNavigation.navigateForward([`/app/settings/friends`]);
+            },
+          );
+        }
+
         this.userService.findFriendInvitations().subscribe();
       },
     );
@@ -207,14 +211,22 @@ export class UserSocketService {
     this.socket.on(
       'UserRespondedFriendInvitation',
       (notification: SocketNotificationMessage) => {
-        this.showNotificationIfBackground(notification);
-
         const { isAccepted } = notification.data.data;
 
         if (isAccepted) {
-          this.toastService.createInformation(
-            _('User has accepted your friend invitation'),
-          );
+          this.backgroundService.createFromNotification(notification);
+
+          if (this.router.url !== `/app/settings/friends`) {
+            this.toastService.createInformationFromNotification(
+              notification,
+              () => {
+                this.routerNavigation.navigateForward([
+                  `/app/settings/friends`,
+                ]);
+              },
+            );
+          }
+
           this.userService.findFriends().subscribe();
         }
       },
@@ -229,17 +241,5 @@ export class UserSocketService {
         this.userService.clearFriend(removingUserId);
       },
     );
-  }
-
-  private showNotificationIfBackground(
-    notification: SocketNotificationMessage,
-  ) {
-    if (
-      this.backgroundService.inBackground &&
-      this.backgroundService.allowPush &&
-      notification.type === SocketNotificationType.REGULAR
-    ) {
-      this.backgroundService.createFromNotification(notification);
-    }
   }
 }
