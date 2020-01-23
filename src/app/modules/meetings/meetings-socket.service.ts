@@ -94,7 +94,8 @@ export class MeetingsSocketService {
         this.backgroundService.createFromNotification(notification);
         if (
           this.router.url !==
-          `/app/groups/${notification.data.data.groupId}/chat`
+            `/app/groups/${notification.data.data.groupId}/chat` &&
+          this.router.url !== `/app/tabs/groups`
         ) {
           this.toastService.createInformationFromNotification(
             notification,

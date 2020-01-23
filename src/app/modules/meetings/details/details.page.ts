@@ -208,11 +208,11 @@ export class DetailsPage implements OnInit, OnDestroy {
   }
 
   showMessages() {
-    this.routerNavigation
-      .navigateForward(['/app/groups/', this.group.id, 'chat'])
-      .then(async () => {
-        await this.groupsService.readMessagesFromState(this.meeting.groupId);
-      });
+    this.routerNavigation.navigateForward([
+      '/app/groups/',
+      this.group.id,
+      'chat',
+    ]);
   }
 
   get isAdmin(): boolean {

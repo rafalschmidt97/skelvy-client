@@ -28,6 +28,7 @@ import { Store } from '@ngxs/store';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { BackgroundService } from '../../core/background/background.service';
+import { isSeenMessage } from '../meetings/store/meetings-state';
 
 @Injectable({
   providedIn: 'root',
@@ -55,7 +56,6 @@ export class GroupsService {
         tap(group => {
           this.store.dispatch(new AddGroup(group));
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
-          // TODO: set not red messages
         }),
         catchError(error => {
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
@@ -108,7 +108,6 @@ export class GroupsService {
               apiMessages,
             ),
           );
-          // TODO: set not red messages
         }),
         catchError(error => {
           this.store.dispatch(
@@ -145,7 +144,6 @@ export class GroupsService {
 
   async addMessage(message: MessageState) {
     this.store.dispatch(new AddGroupMessage(message.groupId, message));
-    // TODO: set not red messages
   }
 
   async addSentMessagesWithReading(
@@ -156,13 +154,14 @@ export class GroupsService {
     this.store.dispatch(new AddGroupMessages(groupId, messages));
 
     if (
-      this.router.url !== `/app/groups/${groupId}/chat` ||
-      this.backgroundService.inBackground
+      this.router.url === `/app/groups/${groupId}/chat` &&
+      !this.backgroundService.inBackground
     ) {
-      // TODO: set not red messages
-    } else {
       const responseMessages = messages.filter(
-        x => x.type === MessageType.RESPONSE,
+        x =>
+          x.type === MessageType.RESPONSE ||
+          (x.type === MessageType.ACTION &&
+            x.action === MessageActionType.SEEN),
       );
 
       if (responseMessages.length > 0) {
@@ -174,28 +173,37 @@ export class GroupsService {
     }
   }
 
-  async readMessages(groupId: number, messages: (MessageState | MessageDto)[]) {
-    // TODO: get not red messages
-    // const lastNonSeenMessageDateState = [...messages]
-    //   .reverse()
-    //   .find((x: MessageState) => !isSeenMessage(x)).date;
-    //
-    // if (
-    //   lastNonSeenMessageDateState &&
-    //   new Date(lastMessageDate).getTime() <
-    //     new Date(lastNonSeenMessageDateState).getTime()
-    // ) {
-    //   this.readMessage(
-    //     this.store.selectSnapshot(state => state.user.user.id),
-    //     groupId,
-    //   ).subscribe();
-    // }
+  async readMessages(
+    groupId: number,
+    responseMessages: (MessageState | MessageDto)[],
+  ) {
+    const lastNonSeenMessageIndex = [...responseMessages]
+      .reverse()
+      .findIndex((x: MessageState) => !isSeenMessage(x));
+
+    if (lastNonSeenMessageIndex) {
+      const userId = this.store.selectSnapshot(state => state.user.user.id);
+      const userSeenMessage = responseMessages
+        .reverse()
+        .slice(0, lastNonSeenMessageIndex)
+        .find(x => x.userId === userId);
+
+      if (!userSeenMessage) {
+        this.readMessage(userId, groupId).subscribe();
+      }
+    }
   }
 
   async readMessagesFromState(groupId: number) {
     const messages = this.store
       .selectSnapshot(state => state.meetings.groups)
-      .find(x => x.id === groupId).messages;
+      .find(x => x.id === groupId)
+      .messages.filter(
+        x =>
+          x.type === MessageType.RESPONSE ||
+          (x.type === MessageType.ACTION &&
+            x.action === MessageActionType.SEEN),
+      );
 
     if (messages.length > 0) {
       await this.readMessages(groupId, messages);
@@ -227,7 +235,6 @@ export class GroupsService {
           this.store.dispatch(
             new AddGroupMessage(seenMessage.groupId, seenMessage),
           );
-          // TODO: set not red messages
         }),
       );
   }
@@ -264,7 +271,6 @@ export class GroupsService {
       .pipe(
         tap(() => {
           this.store.dispatch(new RemoveGroup(groupId));
-          // TODO: remove red messages date
         }),
       );
   }

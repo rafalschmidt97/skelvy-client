@@ -37,7 +37,7 @@ export class ChatPage implements OnInit, OnDestroy {
     private readonly modalController: ModalController,
     private readonly toastService: ToastService,
     private readonly loadingService: LoadingService,
-    private readonly groupService: GroupsService,
+    private readonly groupsService: GroupsService,
     private readonly meetingService: MeetingsService,
     private readonly translateService: TranslateService,
   ) {}
@@ -86,6 +86,8 @@ export class ChatPage implements OnInit, OnDestroy {
         }),
       )
       .subscribe();
+
+    this.groupsService.readMessagesFromState(groupId);
   }
 
   ngOnDestroy() {
@@ -118,7 +120,7 @@ export class ChatPage implements OnInit, OnDestroy {
   confirmLeave() {
     this.loadingAction = true;
     this.loadingService.lock();
-    this.groupService.leaveGroup(this.group.id).subscribe(
+    this.groupsService.leaveGroup(this.group.id).subscribe(
       () => {
         this.routerNavigation.navigateBack(['/app/tabs/groups']);
         this.loadingAction = false;

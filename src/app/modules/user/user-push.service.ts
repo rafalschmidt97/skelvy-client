@@ -76,21 +76,16 @@ export class UserPushService {
       .on('notification')
       .subscribe((notification: PushNotificationMessage) => {
         if (!notification.additionalData.foreground) {
-          const { redirect_to, action, data } = notification.additionalData;
-          const dataJson = JSON.parse(data);
+          const { redirect_to, data } = notification.additionalData;
           if (redirect_to === 'meetings') {
             this.routerNavigation.navigateRoot(['/app/tabs/meetings']);
           } else if (redirect_to === 'groups') {
             if (data.groupId) {
-              this.routerNavigation
-                .navigateForward(['/app/groups', data.groupId, 'chat'])
-                .then(async () => {
-                  if (action === 'UserSentMessage') {
-                    await this.groupsService.readMessagesFromState(
-                      dataJson[0].group_id,
-                    );
-                  }
-                });
+              this.routerNavigation.navigateForward([
+                '/app/groups',
+                data.groupId,
+                'chat',
+              ]);
             } else {
               this.routerNavigation.navigateForward(['/app/tabs/groups']);
             }
@@ -102,20 +97,16 @@ export class UserPushService {
       .on('click')
       .subscribe((notification: SocketNotificationMessage) => {
         if (notification.data) {
-          const { redirectTo, action, data } = notification.data;
+          const { redirectTo, data } = notification.data;
           if (redirectTo === 'meetings') {
             this.routerNavigation.navigateRoot(['/app/tabs/meetings']);
           } else if (redirectTo === 'groups') {
             if (data.groupId) {
-              this.routerNavigation
-                .navigateForward(['/app/groups', data.groupId, 'chat'])
-                .then(async () => {
-                  if (action === 'UserSentMessage') {
-                    await this.groupsService.readMessagesFromState(
-                      data[0].groupId,
-                    );
-                  }
-                });
+              this.routerNavigation.navigateForward([
+                '/app/groups',
+                data.groupId,
+                'chat',
+              ]);
             } else {
               this.routerNavigation.navigateForward(['/app/tabs/groups']);
             }

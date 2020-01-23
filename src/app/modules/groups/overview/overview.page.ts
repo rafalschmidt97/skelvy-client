@@ -1,8 +1,17 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Select } from '@ngxs/store';
-import { MeetingsStateModel } from '../../meetings/store/meetings-state';
-import { GroupState, GroupUserDto, MessageType } from '../../meetings/meetings';
+import { Select, Store } from '@ngxs/store';
+import {
+  isSeenMessage,
+  MeetingsStateModel,
+} from '../../meetings/store/meetings-state';
+import {
+  GroupState,
+  GroupUserDto,
+  MessageActionType,
+  MessageState,
+  MessageType,
+} from '../../meetings/meetings';
 import { isEmpty } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { _ } from '../../../core/i18n/translate';
@@ -16,8 +25,13 @@ export class OverviewPage {
   @Select(state => state.meetings) $meetings: Observable<MeetingsStateModel>;
   sentAttachmentMessage: string;
   startConversationMessage: string;
+  userId: number;
 
-  constructor(private readonly translateService: TranslateService) {
+  constructor(
+    private readonly translateService: TranslateService,
+    private readonly store: Store,
+  ) {
+    this.userId = this.store.selectSnapshot(state => state.user.user.id);
     this.sentAttachmentMessage = this.translateService.instant(
       _('Sent a photo'),
     );
@@ -67,5 +81,33 @@ export class OverviewPage {
 
       return new Date(bDate).getTime() - new Date(aDate).getTime();
     });
+  }
+
+  isMessageToRead(group: GroupState): boolean {
+    const responseMessages = group.messages.filter(
+      x =>
+        x.type === MessageType.RESPONSE ||
+        (x.type === MessageType.ACTION && x.action === MessageActionType.SEEN),
+    );
+
+    if (responseMessages.length > 0) {
+      const lastNonSeenMessageIndex = [...responseMessages]
+        .reverse()
+        .findIndex((x: MessageState) => !isSeenMessage(x));
+
+      if (lastNonSeenMessageIndex) {
+        const userId = this.store.selectSnapshot(state => state.user.user.id);
+        const userSeenMessage = responseMessages
+          .reverse()
+          .slice(0, lastNonSeenMessageIndex)
+          .find(x => x.userId === userId);
+
+        if (!userSeenMessage) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }

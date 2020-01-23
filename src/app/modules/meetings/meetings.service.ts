@@ -69,7 +69,6 @@ export class MeetingsService {
             new UpdateMeetingsFromModel(model.meetings, model.groups),
           );
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
-          // TODO: set not red messages
         }),
         catchError(error => {
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
@@ -94,7 +93,6 @@ export class MeetingsService {
         tap(meeting => {
           this.store.dispatch(new UpdateMeeting(meeting));
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
-          // TODO: set not red messages
         }),
         catchError(error => {
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
@@ -119,7 +117,6 @@ export class MeetingsService {
         tap(meeting => {
           this.store.dispatch(new AddMeeting(meeting));
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
-          // TODO: set not red messages
         }),
         catchError(error => {
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
@@ -161,7 +158,6 @@ export class MeetingsService {
         tap(() => {
           this.store.dispatch(new RemoveMeeting(meetingId));
           this.store.dispatch(new RemoveGroup(groupId));
-          // TODO: remove red messages date
         }),
       );
   }
@@ -173,7 +169,6 @@ export class MeetingsService {
         tap(() => {
           this.store.dispatch(new RemoveMeeting(meetingId));
           this.store.dispatch(new RemoveGroup(groupId));
-          // TODO: remove red messages date
         }),
       );
   }

@@ -140,6 +140,5 @@ export class SelfService {
     );
     this.store.dispatch(new UpdateFriendInvitations(sync.friendInvitations));
     this.store.dispatch(new UpdateMeetingInvitations(sync.meetingInvitations));
-    // TODO: set not red messages
   }
 }

@@ -41,7 +41,11 @@
               <h4 class="group-name mb-0 text-primary">
                 {{ getGroupName(group) }}
               </h4>
-              <p class="last-message small text-muted mb-0">
+              <p
+                *ngIf="userId"
+                class="last-message small text-muted mb-0"
+                [class.new]="isMessageToRead(group)"
+              >
                 {{ getLastMessage(group) }}
               </p>
             </div>
