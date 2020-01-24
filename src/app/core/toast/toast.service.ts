@@ -77,7 +77,7 @@ export class ToastService {
         });
       }
 
-      this.vibration.vibrate(1000);
+      this.vibration.vibrate(300);
       await toast.present();
 
       this.isBusy = true;
