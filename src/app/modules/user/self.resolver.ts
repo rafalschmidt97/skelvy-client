@@ -12,6 +12,7 @@ import { SyncModel } from './sync';
 import { SelfService } from './self.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { StateTrackerService } from '../../core/state/state-tracker.service';
+import { LoadingService } from '../../core/loading/loading.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,27 +26,34 @@ export class SelfResolver implements Resolve<SyncModel> {
     private readonly userSocket: UserSocketService,
     private readonly userPush: UserPushService,
     private readonly stateTracker: StateTrackerService,
+    private readonly loadingService: LoadingService,
   ) {}
 
-  resolve(): Observable<SyncModel> {
-    return this.selfService.self().pipe(
-      tap(() => {
-        this.stateTracker.track();
-        this.userSocket.connect();
-        this.userPush.connect();
-      }),
-      catchError((error: HttpErrorResponse) => {
-        if (error.status !== 401) {
-          this.authService.logoutWithoutRequest().then(() => {
-            this.routerNavigation.navigateBack(['/home']);
-            this.toastService.createError(
-              _('A problem occurred while finding the user'),
-            );
-          });
-        }
+  async resolve(): Promise<SyncModel> {
+    const loading = await this.loadingService.show();
+    return this.selfService
+      .self()
+      .pipe(
+        tap(async () => {
+          this.stateTracker.track();
+          this.userSocket.connect();
+          await this.userPush.connect();
+          await loading.dismiss();
+        }),
+        catchError(async (error: HttpErrorResponse) => {
+          if (error.status !== 401) {
+            this.authService.logoutWithoutRequest().then(() => {
+              this.routerNavigation.navigateBack(['/home']);
+              this.toastService.createError(
+                _('A problem occurred while finding the user'),
+              );
+            });
+          }
 
-        return throwError(error);
-      }),
-    );
+          await loading.dismiss();
+          return throwError(error);
+        }),
+      )
+      .toPromise();
   }
 }
