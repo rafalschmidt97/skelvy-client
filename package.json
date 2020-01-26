@@ -13,7 +13,7 @@
     "url": "https://github.com/rafalschmidt97/skelvy-client"
   },
   "config": {
-    "hostname": "REPLACE_WITH_MACHINE_IP"
+    "hostname": "192.168.1.112"
   },
   "scripts": {
     "start": "ionic lab",

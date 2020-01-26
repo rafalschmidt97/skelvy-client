@@ -65,7 +65,7 @@ export class SignInPage implements OnInit {
             async () => {
               this.toastService.createError(
                 _(
-                  'A problem occurred while signing in with facebook. Please contact us.',
+                  'A problem occurred while signing in with Facebook. Please contact us.',
                 ),
               );
 
@@ -79,7 +79,7 @@ export class SignInPage implements OnInit {
         } else {
           this.toastService.createError(
             _(
-              'A problem occurred while signing in with facebook (not connected). Please contact us.',
+              'A problem occurred while signing in with Facebook (not connected). Please contact us.',
             ),
           );
         }
@@ -90,7 +90,7 @@ export class SignInPage implements OnInit {
           console.log(e);
           this.toastService.createError(
             _(
-              'A problem occurred while signing in with facebook (plugin problem). Please contact us.',
+              'A problem occurred while signing in with Facebook (plugin problem). Please contact us.',
             ),
           );
         }
@@ -120,7 +120,7 @@ export class SignInPage implements OnInit {
           async () => {
             this.toastService.createError(
               _(
-                'A problem occurred while signing in with google. Please contact us.',
+                'A problem occurred while signing in with Google. Please contact us.',
               ),
             );
 
@@ -138,7 +138,7 @@ export class SignInPage implements OnInit {
           console.log(e);
           this.toastService.createError(
             _(
-              'A problem occurred while signing in with google (plugin problem). Please contact us.',
+              'A problem occurred while signing in with Google (plugin problem). Please contact us.',
             ),
           );
         }

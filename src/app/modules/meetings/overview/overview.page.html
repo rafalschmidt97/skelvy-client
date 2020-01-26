@@ -55,7 +55,7 @@
           <div class="requests" *ngIf="meetings.requests.length > 0">
             <div
               class="text-center my-3"
-              [innerText]="'Requests created by you' | translate"
+              [innerText]="'Your requests' | translate"
             ></div>
             <app-request-preview
               *ngFor="let request of meetings.requests"

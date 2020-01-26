@@ -45,7 +45,7 @@ export class DataPage {
         component: AlertModalComponent,
         componentProps: {
           title: this.translateService.instant(
-            'Are you sure you want to force to reload user data?',
+            'Are you sure you want to force reload user data?',
           ),
         },
         cssClass: 'ionic-modal ionic-action-modal',
@@ -84,7 +84,7 @@ export class DataPage {
         component: AlertModalComponent,
         componentProps: {
           title: this.translateService.instant(
-            'Are you sure you want to force to reload meeting data?',
+            'Are you sure you want to force reload meeting data?',
           ),
         },
         cssClass: 'ionic-modal ionic-action-modal',
@@ -126,7 +126,7 @@ export class DataPage {
         component: AlertModalComponent,
         componentProps: {
           title: this.translateService.instant(
-            'Are you sure you want to force to reload blocked users data?',
+            'Are you sure you want to force reload blocked users data?',
           ),
         },
         cssClass: 'ionic-modal ionic-action-modal',
@@ -165,7 +165,7 @@ export class DataPage {
         component: AlertModalComponent,
         componentProps: {
           title: this.translateService.instant(
-            'Are you sure you want to force to reload friends?',
+            'Are you sure you want to force reload friends?',
           ),
         },
         cssClass: 'ionic-modal ionic-action-modal',
