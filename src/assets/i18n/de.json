@@ -205,7 +205,6 @@
 	"Remove privileges": "Vorrechte löschen",
 	"Report a bug": "Programmfehler melden",
 	"Report user": "Nutzer melden",
-	"Your requests": " Von dir erstellte Anfragen",
 	"Safety tips": "Sicherheitsempfehlungen",
 	"Say Hello!": "Sag Hallo!",
 	"Search": "Suchen",
@@ -284,6 +283,7 @@
 	"Your friends": "Deine Freunde",
 	"Your friends list is empty or all of them are already invited.": "Entweder deine Freundesliste ist leer oder alle sind bereits eingeladen.",
 	"Your friends list is empty.": "Deine Freundesliste ist leer.",
+	"Your requests": " Von dir erstellte Anfragen",
 	"blocked": "blockiert",
 	"friend": "Freund",
 	"pending": "ausstehend"
