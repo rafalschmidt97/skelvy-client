@@ -1,0 +1,29 @@
+{
+  "app" : {
+    "USER_JOINED_MEETING": "Un nuovo utente è stato unito al gruppo",
+    "USER_REMOVED": "Il tuo account è stato cancellato.",
+    "USER_DISABLED": "Il tuo account è stato disattivato.",
+    "USER_CONNECTED_TO_MEETING": "Un nuovo incontro è stato trovato",
+    "USER_LEFT_MEETING": "L’utente ha lasciato l’incontro",
+    "USER_SENT_PHOTO": "Invia una foto",
+    "USER_SENT_MESSAGE": "Invia un messaggio",
+    "MEETING_REQUEST_EXPIRED": "La tua richiesta è scaduta",
+    "MEETING_ABORTED": "IL tuo incontro è stato interrotto",
+    "MEETING_EXPIRED": "Il tuo incontro è scaduto",
+    "MEETINGS": "Incontri",
+    "GROUPS": "Gruppi",
+    "MEETING_REQUEST": "Richiesta di invito",
+    "USER_REMOVED_FROM_MEETING": "L’utente è stato rimosso dall’incontro",
+    "USER_SELF_REMOVED_FROM_MEETING": "Sei stato rimosso dall’incontro",
+    "USER_LEFT_GROUP": "L’utente ha lasciato il gruppo",
+    "MEETING_UPDATED": "L’incontro è stato caricato",
+    "GROUP_ABORTED": "Il tuo incontro è stato cancellato",
+    "GROUP_UPDATED": "Il tua incontro è stata aggiornata",
+    "FRIENDS": "Amici",
+    "NEW_FRIEND_INVITATION": "Qualcuno ti ha inviato una richiesta di amicizia",
+    "FRIEND_INVITATION_ACCEPTED": "Qualcuno ha accettato la tua richiesta di amicizia",
+    "NEW_MEETING_INVITATION": "Qualcuno ti ha inviato una richiesta di messaggio",
+    "MEETING_INVITATION_ACCEPTED": "Qualcuno ha accettato la tua richiesta di invito",
+    "MEETING_INVITATION_DENIED": "Qualcuno ha rifiutato  la tua richiesta di invito"
+  }
+}

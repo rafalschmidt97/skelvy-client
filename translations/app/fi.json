@@ -1,0 +1,29 @@
+{
+  "app" : {
+    "USER_JOINED_MEETING": "Uusi käyttäjä on lisätty ryhmään",
+    "USER_REMOVED": "Tilisi on poistettu",
+    "USER_DISABLED": "Tilisi on poistettu käytöstä",
+    "USER_CONNECTED_TO_MEETING": "Uusi kokous on löydetty",
+    "USER_LEFT_MEETING": "Käyttäjä on poistunut kokouksesta",
+    "USER_SENT_PHOTO": "Lähettänyt kuvan",
+    "USER_SENT_MESSAGE": "Lähettänyt viestin",
+    "MEETING_REQUEST_EXPIRED": "Pyyntösi on vanhentunut",
+    "MEETING_ABORTED": "Kokouksesi on keskeytetty",
+    "MEETING_EXPIRED": "Kokouksesi on vanhentunut",
+    "MEETINGS": "Kokoukset",
+    "GROUPS": "Ryhmät",
+    "MEETING_REQUEST": "Tapaamis pyyntö",
+    "USER_REMOVED_FROM_MEETING": "Käyttäjä on poistettu kokouksesta",
+    "USER_SELF_REMOVED_FROM_MEETING": "Sinut on poistettu kokouksesta",
+    "USER_LEFT_GROUP": "Käyttäjä on poistunut ryhmästä",
+    "MEETING_UPDATED": "Kokous on päivitetty",
+    "GROUP_ABORTED": "Tapaamisesi on keskeytetty",
+    "GROUP_UPDATED": "Tapaamuksesi on päivitetty",
+    "FRIENDS": "Ystävät",
+    "NEW_FRIEND_INVITATION": "Joku lähetti sinulle uuden ystäväkutsun",
+    "FRIEND_INVITATION_ACCEPTED": "Joku hyväksyi ystäväsi kutsun",
+    "NEW_MEETING_INVITATION": "Joku lähetti sinulle uuden kokouskutsun",
+    "MEETING_INVITATION_ACCEPTED": "Joku hyväksyi kokouskutsusi",
+    "MEETING_INVITATION_DENIED": "Joku kielsi kokouskutsun"
+  }
+}

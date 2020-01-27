@@ -1,0 +1,29 @@
+{
+  "app" : {
+    "USER_JOINED_MEETING": "Новый пользователь был добавлен в группу",
+    "USER_REMOVED": "Ваша учетная запись удалена",
+    "USER_DISABLED": "Ваша учетная запись заблокирована",
+    "USER_CONNECTED_TO_MEETING": "Найдена новая встреча",
+    "USER_LEFT_MEETING": "Пользователь покинул встречу",
+    "USER_SENT_PHOTO": "Отправлено фото",
+    "USER_SENT_MESSAGE": "Отправлено сообщение",
+    "MEETING_REQUEST_EXPIRED": "Срок годности вашего запроса истек",
+    "MEETING_ABORTED": "Ваша встреча отменена",
+    "MEETING_EXPIRED": "Срок годности вашей встречи истек",
+    "MEETINGS": "Встречи",
+    "GROUPS": "Группы",
+    "MEETING_REQUEST": "Запрос на приглашение",
+    "USER_REMOVED_FROM_MEETING": "Пользователя удалили из встречи",
+    "USER_SELF_REMOVED_FROM_MEETING": "Вас удалили из встречи",
+    "USER_LEFT_GROUP": "Пользователь покинул группу",
+    "MEETING_UPDATED": "Встреча обновлена",
+    "GROUP_ABORTED": "Ваша встреча была отменена",
+    "GROUP_UPDATED": "Ваша встреча была обновлена",
+    "FRIENDS": "Друзья",
+    "NEW_FRIEND_INVITATION": "Кто-то отправил вам запрос на дружбу",
+    "FRIEND_INVITATION_ACCEPTED": "Кто-то принял ваше предложение дружбы",
+    "NEW_MEETING_INVITATION": "Кто-то отправил вам новое приглашение на встречу",
+    "MEETING_INVITATION_ACCEPTED": "Кто-то принял ваше приглашение",
+    "MEETING_INVITATION_DENIED": "Кто-то отклонил ваше приглашение"
+  }
+}
