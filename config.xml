@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="17" id="com.skelvy" ios-CFBundleVersion="17" version="2.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="18" id="com.skelvy" ios-CFBundleVersion="18" version="2.3.1" xmlns="http://www.w3.org/ns/widgets" xmlns:android="schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Skelvy</name>
     <description>Mobile app for meetings over your favorite activities.</description>
     <author email="rafalschmidt97@gmail.com" href="https://rafalschmidt.com/">Rafał Schmidt</author>
@@ -60,19 +60,19 @@
         <allow-intent href="itms-apps:*" />
         <resource-file src="resources/ios/GoogleService-Info.plist" target="GoogleService-Info.plist" />
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-            <string>To suggest addresses based on the location.</string>
+            <string>This allows us to use your location to provide certain features like suggesting addresses or resolving location details.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
-            <string>To suggest addresses based on the location.</string>
+            <string>This allows us to use your location to provide certain features like suggesting addresses or resolving location details.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
-            <string>To take pictures.</string>
+            <string>This allows us to use your camera to take and upload photos to provide certain features like filling your profile pictures or sharing moments withing the chat.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
-            <string>To get pictures.</string>
+            <string>This allows us to use your camera roll to upload photos to provide certain features like filling your profile pictures or sharing moments within the chat.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
-            <string>To get and add pictures.</string>
+            <string>This allows us to use your camera roll to upload photos to provide certain features like filling your profile pictures or sharing moments within the chat.</string>
         </edit-config>
         <config-file parent="UIUserInterfaceStyle" target="*-Info.plist">
             <string>Light</string>
