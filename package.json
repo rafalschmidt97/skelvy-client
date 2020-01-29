@@ -1,7 +1,7 @@
 {
   "name": "skelvy",
   "description": "Mobile app for meetings over your favorite activities.",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": true,
   "author": "Rafał Schmidt",
   "homepage": "https://skelvy.com/",
@@ -13,7 +13,7 @@
     "url": "https://github.com/rafalschmidt97/skelvy-client"
   },
   "config": {
-    "hostname": "192.168.1.112"
+    "hostname": "REPLACE_WITH_MACHINE_IP"
   },
   "scripts": {
     "start": "ionic lab",
