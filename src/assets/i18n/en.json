@@ -24,5 +24,6 @@
 	"USER_REMOVED": "Your account has been removed. If you have any questions, don't hesitate to contact us by using our website",
 	"USER_REMOVED_FROM_MEETING": "User has been removed from the meeting",
 	"USER_SELF_REMOVED_FROM_MEETING": "You have been removed from the meeting",
-	"USER_SENT_MESSAGE": "Sent a message"
+	"USER_SENT_MESSAGE": "Sent a message",
+  "USER_SENT_PHOTO": "Sent a photo"
 }
