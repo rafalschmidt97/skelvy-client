@@ -146,44 +146,25 @@ export class GroupsService {
     this.store.dispatch(new AddGroupMessage(message.groupId, message));
   }
 
-  async addSentMessagesWithReading(
-    groupId: number,
-    messages: MessageState[],
-    userId: number,
-  ) {
+  async addMessagesWithReading(groupId: number, messages: MessageState[]) {
     this.store.dispatch(new AddGroupMessages(groupId, messages));
 
     if (
       this.router.url === `/app/groups/${groupId}/chat` &&
       !this.backgroundService.inBackground
     ) {
-      const responseMessages = messages.filter(
-        x =>
-          x.type === MessageType.RESPONSE ||
-          (x.type === MessageType.ACTION &&
-            x.action === MessageActionType.SEEN),
-      );
-
-      if (responseMessages.length > 0) {
-        await this.readMessage(
-          userId,
-          responseMessages[responseMessages.length - 1].groupId,
-        ).toPromise();
-      }
+      this.readMessagesFromState(groupId);
     }
   }
 
-  async readMessages(
-    groupId: number,
-    responseMessages: (MessageState | MessageDto)[],
-  ) {
-    const lastNonSeenMessageIndex = [...responseMessages]
+  async readMessages(groupId: number, messages: (MessageState | MessageDto)[]) {
+    const lastNonSeenMessageIndex = [...messages]
       .reverse()
       .findIndex((x: MessageState) => !isSeenMessage(x));
 
     if (lastNonSeenMessageIndex) {
       const userId = this.store.selectSnapshot(state => state.user.user.id);
-      const userSeenMessage = responseMessages
+      const userSeenMessage = [...messages]
         .reverse()
         .slice(0, lastNonSeenMessageIndex)
         .find(x => x.userId === userId);
@@ -197,13 +178,7 @@ export class GroupsService {
   async readMessagesFromState(groupId: number) {
     const messages = this.store
       .selectSnapshot(state => state.meetings.groups)
-      .find(x => x.id === groupId)
-      .messages.filter(
-        x =>
-          x.type === MessageType.RESPONSE ||
-          (x.type === MessageType.ACTION &&
-            x.action === MessageActionType.SEEN),
-      );
+      .find(x => x.id === groupId).messages;
 
     if (messages.length > 0) {
       await this.readMessages(groupId, messages);

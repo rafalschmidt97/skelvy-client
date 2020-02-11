@@ -120,10 +120,9 @@ export class MeetingsSocketService {
         });
 
         if (persistenceMessages.length > 0) {
-          await this.groupsService.addSentMessagesWithReading(
+          await this.groupsService.addMessagesWithReading(
             data.groupId,
             persistenceMessages,
-            this.store.selectSnapshot(state => state.user.user.id),
           );
         }
       },

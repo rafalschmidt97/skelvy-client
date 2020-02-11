@@ -84,23 +84,16 @@ export class OverviewPage {
   }
 
   isMessageToRead(group: GroupState): boolean {
-    const responseMessages = group.messages.filter(
-      x =>
-        x.type === MessageType.RESPONSE ||
-        (x.type === MessageType.ACTION && x.action === MessageActionType.SEEN),
-    );
-
-    if (responseMessages.length > 0) {
-      const lastNonSeenMessageIndex = [...responseMessages]
+    if (group.messages.length > 0) {
+      const lastNonSeenMessageIndex = [...group.messages]
         .reverse()
         .findIndex((x: MessageState) => !isSeenMessage(x));
 
       if (lastNonSeenMessageIndex) {
-        const userId = this.store.selectSnapshot(state => state.user.user.id);
-        const userSeenMessage = responseMessages
+        const userSeenMessage = [...group.messages]
           .reverse()
           .slice(0, lastNonSeenMessageIndex)
-          .find(x => x.userId === userId);
+          .find(x => x.userId === this.userId);
 
         if (!userSeenMessage) {
           return true;
