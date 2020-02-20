@@ -12,7 +12,7 @@
     "MEETINGS": "Evénements",
     "GROUPS": "Groupes",
     "MEETING_REQUEST": "Demande d’événement",
-    "USER_REMOVED_FROM_MEETING": "L’utilisateur a été retiré de l’événement",
+    "USER_REMOVED_FROM_GROUP": "L’utilisateur a été retiré de l’événement",
     "USER_SELF_REMOVED_FROM_GROUP": "Vous avez été retiré de l’événement",
     "USER_LEFT_GROUP": "L’utilisateur a quitté le groupe",
     "MEETING_UPDATED": "L’événement a été mis à jour",

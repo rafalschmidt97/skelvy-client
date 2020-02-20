@@ -10,7 +10,7 @@
     "MEETINGS": "reuniones",
     "GROUPS": "Grupos",
     "MEETING_REQUEST": "Solicitud de reunión",
-    "USER_REMOVED_FROM_MEETING": "El usuario fue eliminado de la reunión",
+    "USER_REMOVED_FROM_GROUP": "El usuario fue eliminado de la reunión",
     "USER_SELF_REMOVED_FROM_GROUP": "Estuviste eliminado de la reunión",
     "USER_LEFT_GROUP": "El usuario salió del grupo",
     "MEETING_UPDATED": "La reunión fue actualizado",

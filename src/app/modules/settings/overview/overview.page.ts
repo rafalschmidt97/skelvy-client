@@ -13,6 +13,8 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { TranslateService } from '@ngx-translate/core';
 import { LoadingService } from '../../../core/loading/loading.service';
 import { AlertModalComponent } from '../../../shared/components/alert/alert-modal/alert-modal.component';
+import { Storage } from '@ionic/storage';
+import { storageKeys } from '../../../core/storage/storage';
 
 @Component({
   selector: 'app-overview',
@@ -22,6 +24,7 @@ import { AlertModalComponent } from '../../../shared/components/alert/alert-moda
 export class OverviewPage {
   version: string;
   loadingLogout = false;
+  godModeCounter = 1;
 
   constructor(
     private readonly routerNavigation: NavController,
@@ -36,6 +39,7 @@ export class OverviewPage {
     private readonly translateService: TranslateService,
     private readonly loadingService: LoadingService,
     private readonly modalController: ModalController,
+    private readonly storage: Storage,
   ) {
     this.version = environment.version;
   }
@@ -148,5 +152,14 @@ https://skelvy.com`),
 
   openLink(url: string) {
     this.browser.create(url, '_system');
+  }
+
+  async upgradeMode() {
+    if (this.godModeCounter === 10) {
+      await this.storage.set(storageKeys.restricted, true);
+      await this.toastService.createError('GOD MODE', false);
+    } else {
+      this.godModeCounter++;
+    }
   }
 }

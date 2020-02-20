@@ -10,7 +10,7 @@
     "MEETINGS": "Treffen",
     "GROUPS": "Gruppen",
     "MEETING_REQUEST": "Anfrage zu einem Treffen",
-    "USER_REMOVED_FROM_MEETING": "Jemand wurde vom Treffen ausgeschlossen",
+    "USER_REMOVED_FROM_GROUP": "Jemand wurde vom Treffen ausgeschlossen",
     "USER_SELF_REMOVED_FROM_GROUP": "Du wurdest vom Treffen ausgeschlossen",
     "USER_LEFT_GROUP": "Jemand hat die Gruppe verlassen",
     "MEETING_UPDATED": "Das Treffen wurde aktualisiert",

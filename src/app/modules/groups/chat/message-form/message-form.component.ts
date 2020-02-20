@@ -52,6 +52,9 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     _('Volleyball'),
     _('Tennis'),
     _('Squash'),
+    _('Jazz'),
+    _('Gambszmit'),
+    _('Other activity'),
   ];
 
   constructor(

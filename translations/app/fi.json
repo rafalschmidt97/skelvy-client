@@ -12,7 +12,7 @@
     "MEETINGS": "Kokoukset",
     "GROUPS": "Ryhmät",
     "MEETING_REQUEST": "Tapaamis pyyntö",
-    "USER_REMOVED_FROM_MEETING": "Käyttäjä on poistettu kokouksesta",
+    "USER_REMOVED_FROM_GROUP": "Käyttäjä on poistettu kokouksesta",
     "USER_SELF_REMOVED_FROM_GROUP": "Sinut on poistettu kokouksesta",
     "USER_LEFT_GROUP": "Käyttäjä on poistunut ryhmästä",
     "MEETING_UPDATED": "Kokous on päivitetty",

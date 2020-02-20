@@ -82,8 +82,9 @@ export class EditMeetingPage implements Form, OnSubmit, OnInit {
     });
   }
 
-  ngOnInit() {
-    this.meetingService.findActivities().subscribe(
+  async ngOnInit() {
+    const allowRestricted = await this.storage.get(storageKeys.restricted);
+    this.meetingService.findActivities(!!allowRestricted).subscribe(
       (activities: ActivityDto[]) => {
         this.activitiesResponse = activities;
         this.activities = activities.map(type => {

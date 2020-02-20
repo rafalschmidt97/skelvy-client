@@ -172,6 +172,7 @@ export class AuthService {
     await this.storage.remove(storageKeys.lastRequestForm);
     await this.storage.remove(storageKeys.lastMeetingForm);
     await this.storage.remove(storageKeys.lastExploreLocation);
+    await this.storage.remove(storageKeys.restricted);
   }
 
   private getToken(): Promise<TokenDto> {

@@ -12,7 +12,7 @@
     "MEETINGS": "Встречи",
     "GROUPS": "Группы",
     "MEETING_REQUEST": "Запрос на приглашение",
-    "USER_REMOVED_FROM_MEETING": "Пользователя удалили из встречи",
+    "USER_REMOVED_FROM_GROUP": "Пользователя удалили из встречи",
     "USER_SELF_REMOVED_FROM_GROUP": "Вас удалили из встречи",
     "USER_LEFT_GROUP": "Пользователь покинул группу",
     "MEETING_UPDATED": "Встреча обновлена",

@@ -49,7 +49,6 @@ import {
 export class MeetingsService {
   constructor(
     private readonly http: HttpClient,
-    private readonly storage: Storage,
     private readonly translateService: TranslateService,
     private readonly router: Router,
     private readonly store: Store,
@@ -215,9 +214,9 @@ export class MeetingsService {
       );
   }
 
-  findActivities(): Observable<ActivityDto[]> {
+  findActivities(restricted: boolean = false): Observable<ActivityDto[]> {
     return this.http.get<ActivityDto[]>(
-      environment.versionApiUrl + 'activities',
+      `${environment.versionApiUrl}activities?restricted=${restricted}`,
     );
   }
 

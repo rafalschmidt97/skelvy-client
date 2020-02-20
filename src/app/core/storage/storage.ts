@@ -15,4 +15,5 @@ export const storageKeys = {
   lastRequestForm: 'last-request-form',
   lastMeetingForm: 'last-meeting-form',
   lastExploreLocation: 'last-explore-location',
+  restricted: 'restricted',
 };
