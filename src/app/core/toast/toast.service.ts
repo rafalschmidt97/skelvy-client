@@ -34,11 +34,11 @@ export class ToastService {
     if (!this.isBusy && !this.backgroundService.inBackground) {
       let toast;
 
-      if (translateMessage) {
+      if (message && translateMessage) {
         message = await this.translateService.get(message).toPromise();
       }
 
-      if (translateTitle) {
+      if (title && translateTitle) {
         title = await this.translateService.get(title).toPromise();
       }
 
