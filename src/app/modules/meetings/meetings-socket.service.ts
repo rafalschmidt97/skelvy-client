@@ -32,14 +32,13 @@ export class MeetingsSocketService {
     _('GROUP_ABORTED'),
     _('USER_JOINED_MEETING'),
     _('USER_CONNECTED_TO_MEETING'),
-    _('USER_LEFT_MEETING'),
-    _('USER_REMOVED_FROM_MEETING'),
-    _('USER_SELF_REMOVED_FROM_MEETING'),
+    _('USER_REMOVED_FROM_GROUP'),
+    _('USER_SELF_REMOVED_FROM_GROUP'),
     _('USER_LEFT_GROUP'),
     _('MEETINGS'),
     _('MEETING_ABORTED'),
     _('MEETING_UPDATED'),
-    _('MEETING_USER_ROLE_UPDATED'),
+    _('GROUP_USER_ROLE_UPDATED'),
     _('MEETING_REQUEST_EXPIRED'),
     _('MEETING_REQUEST'),
     _('MEETING_EXPIRED'),
@@ -69,13 +68,13 @@ export class MeetingsSocketService {
     this.onUserJoinedMeeting();
     this.onUserConnectedToMeeting();
     this.onUserLeftMeeting();
-    this.onUserRemovedFromMeeting();
-    this.onUserSelfRemovedFromMeeting();
+    this.onUserRemovedFromGroup();
+    this.onUserSelfRemovedFromGroup();
     this.onUserLeftGroup();
     this.onMeetingAborted();
     this.onMeetingUpdated();
     this.onGroupUpdated();
-    this.onMeetingUserRoleUpdated();
+    this.onGroupUserRoleUpdated();
     this.onMeetingRequestExpired();
     this.onGroupAborted();
     this.onMeetingExpired();
@@ -228,9 +227,9 @@ export class MeetingsSocketService {
     );
   }
 
-  private onUserRemovedFromMeeting() {
+  private onUserRemovedFromGroup() {
     this.userSocket.on(
-      'UserRemovedFromMeeting',
+      'UserRemovedFromGroup',
       (notification: SocketNotificationMessage) => {
         const { removedUserId, groupId } = notification.data.data;
         this.meetingService.removeUser(removedUserId, groupId);
@@ -311,9 +310,9 @@ export class MeetingsSocketService {
     );
   }
 
-  private onMeetingUserRoleUpdated() {
+  private onGroupUserRoleUpdated() {
     this.userSocket.on(
-      'MeetingUserRoleUpdated',
+      'GroupUserRoleUpdated',
       (notification: SocketNotificationMessage) => {
         const { groupId, updatedUserId, role } = notification.data.data;
         this.meetingService.updatedUserRole(groupId, updatedUserId, role);
@@ -392,17 +391,17 @@ export class MeetingsSocketService {
     );
   }
 
-  private onUserSelfRemovedFromMeeting() {
+  private onUserSelfRemovedFromGroup() {
     this.userSocket.on(
-      'UserSelfRemovedFromMeeting',
+      'UserSelfRemovedFromGroup',
       (notification: SocketNotificationMessage) => {
-        const { meetingId, groupId } = notification.data.data;
+        const { groupId } = notification.data.data;
 
         if (this.router.url === `/app/groups/${groupId}/chat`) {
-          this.routerNavigation.navigateBack(['/app/tabs/meetings']);
+          this.routerNavigation.navigateBack(['/app/tabs/groups']);
         }
 
-        this.meetingService.clearMeeting(meetingId, groupId);
+        this.meetingService.clearMeetingFromGroup(groupId);
       },
     );
   }

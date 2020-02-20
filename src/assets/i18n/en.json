@@ -12,7 +12,7 @@
 	"MEETING_REQUEST": "Meeting request",
 	"MEETING_REQUEST_EXPIRED": "Your request has expired",
 	"MEETING_UPDATED": "Meeting has been updated",
-	"MEETING_USER_ROLE_UPDATED": "The role in the meeting has been updated",
+	"GROUP_USER_ROLE_UPDATED": "The role in the meeting has been updated",
 	"NEW_FRIEND_INVITATION": "Someone sent you new friend invitation",
 	"NEW_MEETING_INVITATION": "Someone sent you new meeting invitation",
 	"USER": "User",
@@ -20,10 +20,9 @@
 	"USER_DISABLED": "Your account has been disabled. If you have any questions, don't hesitate to contact us by using our website",
 	"USER_JOINED_MEETING": "New user has been added to the group",
 	"USER_LEFT_GROUP": "User has left the group",
-	"USER_LEFT_MEETING": "User has left the meeting",
 	"USER_REMOVED": "Your account has been removed. If you have any questions, don't hesitate to contact us by using our website",
 	"USER_REMOVED_FROM_MEETING": "User has been removed from the meeting",
-	"USER_SELF_REMOVED_FROM_MEETING": "You have been removed from the meeting",
+	"USER_SELF_REMOVED_FROM_GROUP": "You have been removed from the meeting",
 	"USER_SENT_MESSAGE": "Sent a message",
   "USER_SENT_PHOTO": "Sent a photo"
 }

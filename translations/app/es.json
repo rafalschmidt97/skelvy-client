@@ -2,7 +2,6 @@
   "app" : {
     "USER_JOINED_MEETING": "Alguien fue añadido al grupo",
     "USER_CONNECTED_TO_MEETING": "Se encontró una reunión nueva",
-    "USER_LEFT_MEETING": "El usuario salió de la reunión",
     "USER_SENT_PHOTO": "El usuario mandó una foto",
     "USER_SENT_MESSAGE": "El usuario envió un mensaje",
     "MEETING_REQUEST_EXPIRED": "Tu solicitud fue expirado",
@@ -12,7 +11,7 @@
     "GROUPS": "Grupos",
     "MEETING_REQUEST": "Solicitud de reunión",
     "USER_REMOVED_FROM_MEETING": "El usuario fue eliminado de la reunión",
-    "USER_SELF_REMOVED_FROM_MEETING": "Estuviste eliminado de la reunión",
+    "USER_SELF_REMOVED_FROM_GROUP": "Estuviste eliminado de la reunión",
     "USER_LEFT_GROUP": "El usuario salió del grupo",
     "MEETING_UPDATED": "La reunión fue actualizado",
     "GROUP_ABORTED": "Tu reunión fue cancelada",

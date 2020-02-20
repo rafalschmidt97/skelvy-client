@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { Resolve } from '@angular/router';
 import { catchError, tap } from 'rxjs/operators';
 import { NavController } from '@ionic/angular';

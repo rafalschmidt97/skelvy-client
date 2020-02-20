@@ -7,7 +7,7 @@ import {
   MessageState,
   MessageType,
 } from '../../../meetings/meetings';
-import { SelfUserDto } from '../../../user/user';
+import { SelfUserDto, UserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
 import { GroupsService } from '../../groups.service';
 import { Storage } from '@ionic/storage';
@@ -17,6 +17,8 @@ import { Router } from '@angular/router';
 import { MeetingsService } from '../../../meetings/meetings.service';
 import { ImageViewerComponent } from '../image-viewer/image-viewer.component';
 import { MessageActionModalComponent } from './message-action-modal/message-action-modal.component';
+import { Store } from '@ngxs/store';
+import { GroupProfileModalComponent } from '../../../../shared/components/modal/group-profile/group-profile-modal.component';
 
 @Component({
   selector: 'app-messages',
@@ -41,6 +43,7 @@ export class MessagesComponent implements OnInit {
     private readonly meetingService: MeetingsService,
     private readonly groupsService: GroupsService,
     private readonly modalController: ModalController,
+    private readonly store: Store,
   ) {}
 
   get messagesWithoutSelfSeen(): MessageState[] {
@@ -115,6 +118,20 @@ export class MessagesComponent implements OnInit {
       componentProps: {
         src,
       },
+    });
+
+    await modal.present();
+  }
+
+  async openDetails(user: UserDto) {
+    const modal = await this.modalController.create({
+      component: GroupProfileModalComponent,
+      componentProps: {
+        user,
+        group: this.group,
+        openingUser: this.store.selectSnapshot(state => state.user.user),
+      },
+      cssClass: 'ionic-modal ionic-full-modal',
     });
 
     await modal.present();

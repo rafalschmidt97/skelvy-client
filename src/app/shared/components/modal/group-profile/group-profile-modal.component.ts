@@ -9,11 +9,10 @@ import {
   GroupState,
   GroupUserDto,
   GroupUserRole,
-  MeetingDto,
 } from '../../../../modules/meetings/meetings';
-import { MeetingsService } from '../../../../modules/meetings/meetings.service';
 import { UserService } from '../../../../modules/user/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { GroupsService } from '../../../../modules/groups/groups.service';
 
 @Component({
   selector: 'app-group-profile-details-modal',
@@ -23,7 +22,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class GroupProfileModalComponent implements OnInit {
   @Input() openingUser: GroupUserDto;
   @Input() user: GroupUserDto;
-  @Input() meeting: MeetingDto;
   @Input() group: GroupState;
   relation: RelationDto = null;
   loadingRelation = true;
@@ -41,7 +39,7 @@ export class GroupProfileModalComponent implements OnInit {
     private readonly userService: UserService,
     private readonly translateService: TranslateService,
     private readonly modalController: ModalController,
-    private readonly meetingsService: MeetingsService,
+    private readonly groupsService: GroupsService,
   ) {}
 
   ngOnInit() {
@@ -71,13 +69,8 @@ export class GroupProfileModalComponent implements OnInit {
 
   makeAdmin() {
     this.loadingRole = true;
-    this.meetingsService
-      .updateMeetingUserRole(
-        this.meeting.id,
-        this.group.id,
-        this.user.id,
-        GroupUserRole.ADMIN,
-      )
+    this.groupsService
+      .updateGroupUserRole(this.group.id, this.user.id, GroupUserRole.ADMIN)
       .subscribe(
         () => {
           this.loadingRole = false;
@@ -91,9 +84,8 @@ export class GroupProfileModalComponent implements OnInit {
 
   makePrivileged() {
     this.loadingRole = true;
-    this.meetingsService
-      .updateMeetingUserRole(
-        this.meeting.id,
+    this.groupsService
+      .updateGroupUserRole(
         this.group.id,
         this.user.id,
         GroupUserRole.PRIVILEGED,
@@ -111,13 +103,8 @@ export class GroupProfileModalComponent implements OnInit {
 
   removePrivileges() {
     this.loadingRole = true;
-    this.meetingsService
-      .updateMeetingUserRole(
-        this.meeting.id,
-        this.group.id,
-        this.user.id,
-        GroupUserRole.MEMBER,
-      )
+    this.groupsService
+      .updateGroupUserRole(this.group.id, this.user.id, GroupUserRole.MEMBER)
       .subscribe(
         () => {
           this.loadingRole = false;
@@ -187,17 +174,15 @@ export class GroupProfileModalComponent implements OnInit {
 
   removeFromGroup() {
     this.loadingRemoved = true;
-    this.meetingsService
-      .removeFromGroup(this.user.id, this.meeting.id, this.group.id)
-      .subscribe(
-        () => {
-          this.modalController.dismiss();
-        },
-        () => {
-          this.getRelation();
-          this.loadingRemoved = false;
-        },
-      );
+    this.groupsService.removeFromGroup(this.user.id, this.group.id).subscribe(
+      () => {
+        this.modalController.dismiss();
+      },
+      () => {
+        this.getRelation();
+        this.loadingRemoved = false;
+      },
+    );
   }
 
   async sendReport() {

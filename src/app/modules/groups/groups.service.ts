@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import {
   GroupDto,
   GroupRequest,
+  GroupUserRole,
   MessageActionType,
   MessageDto,
   MessageState,
@@ -19,10 +20,12 @@ import {
   MarkResponseGroupMessageAsFailed,
   MarkResponseGroupMessageAsSent,
   RemoveGroup,
+  RemoveGroupUser,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveResponseGroupMessage,
   UpdateGroup,
   UpdateGroupFromRequest,
+  UpdateMeetingUserRole,
 } from '../meetings/store/meetings-actions';
 import { Store } from '@ngxs/store';
 import { Storage } from '@ionic/storage';
@@ -278,6 +281,37 @@ export class GroupsService {
         catchError(error => {
           this.store.dispatch(new ChangeMeetingLoadingStatus(false));
           return throwError(error);
+        }),
+      );
+  }
+
+  updateGroupUserRole(
+    groupId: number,
+    updatedUserId: number,
+    role: GroupUserRole,
+  ): Observable<void> {
+    return this.http
+      .patch<void>(
+        `${environment.versionApiUrl}groups/${groupId}/users/${updatedUserId}/role`,
+        { role },
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(
+            new UpdateMeetingUserRole(groupId, updatedUserId, role),
+          );
+        }),
+      );
+  }
+
+  removeFromGroup(userId: number, groupId: number) {
+    return this.http
+      .delete<void>(
+        `${environment.versionApiUrl}groups/${groupId}/users/${userId}`,
+      )
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new RemoveGroupUser(groupId, userId));
         }),
       );
   }

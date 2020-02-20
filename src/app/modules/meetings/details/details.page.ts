@@ -101,7 +101,6 @@ export class DetailsPage implements OnInit, OnDestroy {
       component: GroupProfileModalComponent,
       componentProps: {
         user,
-        meeting: this.meeting,
         group: this.group,
         openingUser: this.store.selectSnapshot(state => state.user.user),
       },

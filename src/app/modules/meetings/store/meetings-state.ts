@@ -21,6 +21,7 @@ import {
   RemoveGroup,
   RemoveGroupUser,
   RemoveMeeting,
+  RemoveMeetingFromGroup,
   RemoveMeetingInvitation,
   RemoveOldAndAddNewResponseGroupMessage,
   RemoveRequest,
@@ -460,6 +461,18 @@ export class MeetingsState {
     setState({
       ...state,
       meetings: state.meetings.filter(x => x.id !== meetingId),
+    });
+  }
+
+  @Action(RemoveMeetingFromGroup)
+  removeMeetingFromGroup(
+    { getState, setState }: StateContext<MeetingsStateModel>,
+    { groupId }: RemoveMeetingFromGroup,
+  ) {
+    const state = getState();
+    setState({
+      ...state,
+      meetings: state.meetings.filter(x => x.groupId !== groupId),
     });
   }
 

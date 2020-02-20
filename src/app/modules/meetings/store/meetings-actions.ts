@@ -137,6 +137,11 @@ export class RemoveMeeting {
   constructor(public meetingId: number) {}
 }
 
+export class RemoveMeetingFromGroup {
+  static readonly type = '[Meetings] Remove meeting from group';
+  constructor(public groupId: number) {}
+}
+
 export class RemoveRequest {
   static readonly type = '[Requests] Remove request';
   constructor(public requestId: number) {}

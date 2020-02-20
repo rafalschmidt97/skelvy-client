@@ -4,6 +4,7 @@
     class="image rounded-circle flex-shrink-0"
     [class.image-first-last]="isLast && isFirst"
     [style.background-image]="'url(' + user.profile.photos[0]?.url + ')'"
+    (click)="openDetails.emit(user)"
   ></div>
   <div class="flex-fill" [class.message-continuation]="!isLast">
     <div *ngIf="isFirst" class="name">

@@ -26,6 +26,7 @@ import {
   RemoveGroup,
   RemoveGroupUser,
   RemoveMeeting,
+  RemoveMeetingFromGroup,
   RemoveMeetingInvitation,
   RemoveRequest,
   UpdateMeeting,
@@ -214,26 +215,6 @@ export class MeetingsService {
       );
   }
 
-  updateMeetingUserRole(
-    meetingId: number,
-    groupId: number,
-    updatedUserId: number,
-    role: GroupUserRole,
-  ): Observable<void> {
-    return this.http
-      .patch<void>(
-        `${environment.versionApiUrl}meetings/${meetingId}/users/${updatedUserId}/role`,
-        { role },
-      )
-      .pipe(
-        tap(() => {
-          this.store.dispatch(
-            new UpdateMeetingUserRole(groupId, updatedUserId, role),
-          );
-        }),
-      );
-  }
-
   findActivities(): Observable<ActivityDto[]> {
     return this.http.get<ActivityDto[]>(
       environment.versionApiUrl + 'activities',
@@ -324,6 +305,11 @@ export class MeetingsService {
     this.store.dispatch(new RemoveGroup(groupId));
   }
 
+  clearMeetingFromGroup(groupId: number) {
+    this.store.dispatch(new RemoveMeetingFromGroup(groupId));
+    this.store.dispatch(new RemoveGroup(groupId));
+  }
+
   clearMeetingRequest(requestId: number) {
     this.store.dispatch(new RemoveRequest(requestId));
   }
@@ -370,18 +356,6 @@ export class MeetingsService {
       .pipe(
         tap(() => {
           this.store.dispatch(new RemoveMeetingInvitation(invitationId));
-        }),
-      );
-  }
-
-  removeFromGroup(userId: number, meetingId: number, groupId: number) {
-    return this.http
-      .delete<void>(
-        `${environment.versionApiUrl}meetings/${meetingId}/users/${userId}`,
-      )
-      .pipe(
-        tap(() => {
-          this.store.dispatch(new RemoveGroupUser(groupId, userId));
         }),
       );
   }

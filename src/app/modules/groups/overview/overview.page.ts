@@ -8,7 +8,6 @@ import {
 import {
   GroupState,
   GroupUserDto,
-  MessageActionType,
   MessageState,
   MessageType,
 } from '../../meetings/meetings';
