@@ -11,6 +11,8 @@
 
 <ion-content>
   <ion-refresher
+    slot="fixed"
+    pullMin="0"
     (ionRefresh)="refreshSuggestions($event)"
     [disabled]="
       isLoadingInitial || isLoadingJoin || isLoadingSuggestions || !location
