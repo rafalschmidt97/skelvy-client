@@ -26,7 +26,7 @@ import { GroupProfileModalComponent } from '../../../../shared/components/modal/
   styleUrls: ['./messages.component.scss'],
 })
 export class MessagesComponent implements OnInit {
-  @ViewChild('content') content: ElementRef;
+  @ViewChild('content', { static: true }) content: ElementRef;
   @Input() group: GroupState;
   @Input() user: SelfUserDto;
   dateToShow: string;

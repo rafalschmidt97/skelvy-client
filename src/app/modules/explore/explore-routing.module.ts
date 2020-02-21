@@ -5,11 +5,12 @@ const routes: Routes = [
   { path: '', redirectTo: '/app/tabs/explore', pathMatch: 'full' },
   {
     path: 'add',
-    loadChildren: './add/add.module#AddPageModule',
+    loadChildren: () => import('./add/add.module').then(m => m.AddPageModule),
   },
   {
     path: 'connect/:id',
-    loadChildren: './connect/connect.module#ConnectPageModule',
+    loadChildren: () =>
+      import('./connect/connect.module').then(m => m.ConnectPageModule),
   },
 ];
 

@@ -5,20 +5,27 @@ const routes: Routes = [
   { path: '', redirectTo: '/app/tabs/meetings', pathMatch: 'full' },
   {
     path: 'details/:id',
-    loadChildren: './details/details.module#DetailsPageModule',
+    loadChildren: () =>
+      import('./details/details.module').then(m => m.DetailsPageModule),
   },
   {
     path: 'edit-preferences',
-    loadChildren:
-      './edit-preferences/edit-preferences.module#EditPreferencesPageModule',
+    loadChildren: () =>
+      import('./edit-preferences/edit-preferences.module').then(
+        m => m.EditPreferencesPageModule,
+      ),
   },
   {
     path: 'edit-meeting',
-    loadChildren: './edit-meeting/edit-meeting.module#EditMeetingPageModule',
+    loadChildren: () =>
+      import('./edit-meeting/edit-meeting.module').then(
+        m => m.EditMeetingPageModule,
+      ),
   },
   {
     path: 'invite',
-    loadChildren: './invite/invite.module#InvitePageModule',
+    loadChildren: () =>
+      import('./invite/invite.module').then(m => m.InvitePageModule),
   },
 ];
 

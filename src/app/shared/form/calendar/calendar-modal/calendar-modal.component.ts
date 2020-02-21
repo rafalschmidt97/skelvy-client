@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { LocaleSettings } from 'primeng/primeng';
+import { LocaleSettings } from 'primeng/calendar';
 import * as moment from 'moment';
 
 @Component({
