@@ -107,6 +107,7 @@ export class MessagesComponent implements OnInit {
         message,
       },
       cssClass: 'ionic-modal ionic-action-modal',
+      swipeToClose: true,
     });
 
     await modal.present();

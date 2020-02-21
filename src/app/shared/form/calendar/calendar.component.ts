@@ -53,6 +53,7 @@ export class CalendarComponent extends ComplexFieldComponent {
           range: this.range,
         },
         cssClass: 'ionic-modal ionic-action-modal',
+        swipeToClose: true,
       });
 
       await modal.present();

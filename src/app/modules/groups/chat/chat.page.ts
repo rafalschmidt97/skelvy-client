@@ -106,6 +106,7 @@ export class ChatPage implements OnInit, OnDestroy {
           ),
         },
         cssClass: 'ionic-modal ionic-action-modal',
+        swipeToClose: true,
       });
 
       await modal.present();

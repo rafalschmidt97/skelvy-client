@@ -54,6 +54,7 @@ export class OverviewPage {
           ),
         },
         cssClass: 'ionic-modal ionic-action-modal',
+        swipeToClose: true,
       });
 
       await modal.present();
