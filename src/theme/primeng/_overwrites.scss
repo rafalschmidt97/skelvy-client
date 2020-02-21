@@ -35,8 +35,13 @@ body .ui-calendar {
         font-weight: $font-weight-normal;
       }
 
-      &.ui-datepicker-calendar .ui-datepicker-today a.ui-state-highlight {
+      &.ui-datepicker-calendar .ui-datepicker-today .ui-state-highlight {
         background-color: gray('400');
+        color: $white;
+      }
+
+      &.ui-datepicker-calendar .ui-datepicker-today .ui-state-active {
+        background-color: theme-color('primary');
         color: $white;
       }
 
