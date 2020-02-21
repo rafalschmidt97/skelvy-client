@@ -10,7 +10,7 @@
     [disabled]="isLoading"
     class="btn-action camera"
   >
-    <ion-icon name="camera" mode="md" class="text-primary d-block"></ion-icon>
+    <ion-icon name="camera-outline" class="text-primary d-block"></ion-icon>
   </button>
 
   <button
@@ -18,7 +18,7 @@
     [disabled]="isLoading"
     class="btn-action image"
   >
-    <ion-icon name="image" mode="md" class="text-primary d-block"></ion-icon>
+    <ion-icon name="image-outline" class="text-primary d-block"></ion-icon>
   </button>
 
   <ng-container [formGroup]="form">
@@ -37,7 +37,6 @@
   <button (click)="onSubmit()" [disabled]="isLoading" class="btn-action send">
     <ion-icon
       name="send"
-      mode="md"
       class="text-primary d-block"
       [class.text-muted]="hasErrorRequired"
       [class.text-danger]="hasErrorMaxLength"

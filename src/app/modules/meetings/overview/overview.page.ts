@@ -46,6 +46,7 @@ export class OverviewPage {
         title: this.translateService.instant('Are you sure?'),
       },
       cssClass: 'ionic-modal ionic-action-modal',
+      swipeToClose: true,
     });
 
     await modal.present();

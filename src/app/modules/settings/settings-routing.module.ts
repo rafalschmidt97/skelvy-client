@@ -5,45 +5,60 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    loadChildren: './overview/overview.module#OverviewPageModule',
+    loadChildren: () =>
+      import('./overview/overview.module').then(m => m.OverviewPageModule),
   },
-  { path: 'legal', loadChildren: './legal/legal.module#LegalPageModule' },
+  {
+    path: 'legal',
+    loadChildren: () =>
+      import('./legal/legal.module').then(m => m.LegalPageModule),
+  },
   {
     path: 'blocked',
-    loadChildren: './blocked/blocked.module#BlockedPageModule',
+    loadChildren: () =>
+      import('./blocked/blocked.module').then(m => m.BlockedPageModule),
   },
   {
     path: 'friends',
-    loadChildren: './friends/friends.module#FriendsPageModule',
+    loadChildren: () =>
+      import('./friends/friends.module').then(m => m.FriendsPageModule),
   },
   {
     path: 'search',
-    loadChildren: './search/search.module#SearchPageModule',
+    loadChildren: () =>
+      import('./search/search.module').then(m => m.SearchPageModule),
   },
   {
     path: 'community',
-    loadChildren: './community/community.module#CommunityPageModule',
+    loadChildren: () =>
+      import('./community/community.module').then(m => m.CommunityPageModule),
   },
   {
     path: 'language',
-    loadChildren: './language/language.module#LanguagePageModule',
+    loadChildren: () =>
+      import('./language/language.module').then(m => m.LanguagePageModule),
   },
   {
     path: 'email',
-    loadChildren: './email/email.module#EmailPageModule',
+    loadChildren: () =>
+      import('./email/email.module').then(m => m.EmailPageModule),
   },
   {
     path: 'username',
-    loadChildren: './username/username.module#UsernamePageModule',
+    loadChildren: () =>
+      import('./username/username.module').then(m => m.UsernamePageModule),
   },
   {
     path: 'notifications',
-    loadChildren:
-      './notifications/notifications.module#NotificationsPageModule',
+    loadChildren: () =>
+      import('./notifications/notifications.module').then(
+        m => m.NotificationsPageModule,
+      ),
   },
   {
     path: 'data',
-    loadChildren: './data/data.module#DataPageModule',
+    loadChildren: () =>
+      import('./data/data.module').then(m => m.DataPageModule),
   },
 ];
 

@@ -34,7 +34,7 @@ import { SelfUserDto } from '../../../user/user';
   styleUrls: ['./message-form.component.scss'],
 })
 export class MessageFormComponent implements Form, OnSubmit, OnInit {
-  @ViewChild('messageInput') messageInput: ElementRef;
+  @ViewChild('messageInput', { static: true }) messageInput: ElementRef;
   @Input() group: GroupState;
   @Input() user: SelfUserDto;
   form: FormGroup;

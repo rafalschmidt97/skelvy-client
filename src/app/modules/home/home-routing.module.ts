@@ -7,7 +7,8 @@ const routes: Routes = [
   {
     path: 'sign-in',
     canActivate: [NotAuthGuard],
-    loadChildren: './sign-in/sign-in.module#SignInPageModule',
+    loadChildren: () =>
+      import('./sign-in/sign-in.module').then(m => m.SignInPageModule),
   },
 ];
 

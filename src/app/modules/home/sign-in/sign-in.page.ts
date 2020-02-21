@@ -36,6 +36,7 @@ export class SignInPage implements OnInit {
     const modal = await this.modalController.create({
       component: LegalLinksModalComponent,
       cssClass: 'ionic-modal ionic-action-modal',
+      swipeToClose: true,
     });
 
     await modal.present();

@@ -80,6 +80,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
       const modal = await this.modalController.create({
         component: ImageActionsModalComponent,
         cssClass: 'ionic-modal ionic-action-modal',
+        swipeToClose: true,
       });
 
       await modal.present();
@@ -132,6 +133,7 @@ export class ImagesComponent extends ComplexFieldComponent implements OnInit {
         title: this.translateService.instant('Are you sure?'),
       },
       cssClass: 'ionic-modal ionic-action-modal',
+      swipeToClose: true,
     });
 
     await modal.present();

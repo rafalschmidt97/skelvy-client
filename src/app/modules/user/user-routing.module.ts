@@ -5,7 +5,8 @@ const routes: Routes = [
   { path: '', redirectTo: '/app/tabs/user', pathMatch: 'full' },
   {
     path: 'edit',
-    loadChildren: './edit/edit-profile.module#EditProfilePageModule',
+    loadChildren: () =>
+      import('./edit/edit-profile.module').then(m => m.EditProfilePageModule),
   },
 ];
 

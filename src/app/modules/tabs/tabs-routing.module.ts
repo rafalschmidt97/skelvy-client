@@ -9,19 +9,31 @@ const routes: Routes = [
     children: [
       {
         path: 'user',
-        loadChildren: '../user/overview/overview.module#OverviewPageModule',
+        loadChildren: () =>
+          import('../user/overview/overview.module').then(
+            m => m.OverviewPageModule,
+          ),
       },
       {
         path: 'meetings',
-        loadChildren: '../meetings/overview/overview.module#OverviewPageModule',
+        loadChildren: () =>
+          import('../meetings/overview/overview.module').then(
+            m => m.OverviewPageModule,
+          ),
       },
       {
         path: 'explore',
-        loadChildren: '../explore/overview/overview.module#OverviewPageModule',
+        loadChildren: () =>
+          import('../explore/overview/overview.module').then(
+            m => m.OverviewPageModule,
+          ),
       },
       {
         path: 'groups',
-        loadChildren: '../groups/overview/overview.module#OverviewPageModule',
+        loadChildren: () =>
+          import('../groups/overview/overview.module').then(
+            m => m.OverviewPageModule,
+          ),
       },
     ],
   },

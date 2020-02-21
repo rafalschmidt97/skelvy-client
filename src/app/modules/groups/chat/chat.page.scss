@@ -3,3 +3,7 @@
 .small-spinner {
   transform: scale(0.7);
 }
+
+ion-content {
+  --overflow: hidden;
+}

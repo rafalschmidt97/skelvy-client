@@ -7,69 +7,76 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [scrollY]="false">
-  <ng-container *ngIf="$meetings | async as meetings">
-    <div class="d-flex flex-column h-100 bg-ultra-light">
-      <div
-        [class.disabled]="!isAllowedToFillPreferences(meetings.requests)"
-        (click)="fillPreferences(isAllowedToFillPreferences(meetings.requests))"
-        class="choice h-50 d-flex p-4 align-items-center"
-      >
-        <div class="d-flex align-items-center">
-          <div class="pr-4">
-            <div class="header text-primary">
-              {{ 'Fill in preferences' | translate }}
-            </div>
-            <div class="description mt-2">
+<ion-content>
+  <div
+    *ngIf="$meetings | async as meetings"
+    class="d-flex flex-column h-100 bg-ultra-light"
+  >
+    <div
+      [class.disabled]="!isAllowedToFillPreferences(meetings.requests)"
+      (click)="fillPreferences(isAllowedToFillPreferences(meetings.requests))"
+      class="choice h-50 d-flex p-4 align-items-center"
+    >
+      <div class="d-flex align-items-center">
+        <div class="pr-4">
+          <div class="header text-primary">
+            {{ 'Fill in preferences' | translate }}
+          </div>
+          <div class="description mt-2">
+            {{
+              'You don’t have plans for an evening yet? Would you like to meet new people? If you are open for various activities and kinds of people, there is a bigger possibility for a match.'
+                | translate
+            }}
+            <div class="disabled-text mt-2 font-weight-bold">
               {{
-                'You don’t have plans for an evening yet? Would you like to meet new people? If you are open for various activities and kinds of people, there is a bigger possibility for a match.'
+                'You already have too many preferences in your schedule. It is allowed to have up to 3 at the same time.'
                   | translate
               }}
-              <div class="disabled-text mt-2 font-weight-bold">
-                {{
-                  'You already have too many preferences in your schedule. It is allowed to have up to 3 at the same time.'
-                    | translate
-                }}
-              </div>
             </div>
-          </div>
-          <div class="text-primary">
-            <ion-icon name="arrow-forward" class="arrow d-block"></ion-icon>
           </div>
         </div>
-      </div>
-      <div
-        [class.disabled]="
-          !isAllowedToAddMeeting(meetings.meetings, meetings.groups)
-        "
-        (click)="
-          addMeeting(isAllowedToAddMeeting(meetings.meetings, meetings.groups))
-        "
-        class="choice h-50 d-flex p-4 align-items-center"
-      >
-        <div class="d-flex align-items-center">
-          <div class="pr-4">
-            <div class="header text-primary">
-              {{ 'Create meeting' | translate }}
-            </div>
-            <div class="description mt-2">
-              {{
-                'Do you want more influence or invite your friends? You can create your own event and even make it not public.'
-                  | translate
-              }}
-              <div class="disabled-text mt-2 font-weight-bold">
-                {{
-                  'You own too many meetings in your schedule. It is allowed to have up to 3 in the same time.'
-                    | translate
-                }}
-              </div>
-            </div>
-          </div>
-          <div class="text-primary">
-            <ion-icon name="arrow-forward" class="arrow d-block"></ion-icon>
-          </div>
+        <div class="text-primary">
+          <ion-icon
+            name="arrow-forward-outline"
+            class="arrow d-block"
+          ></ion-icon>
         </div>
       </div>
     </div>
-  </ng-container>
+    <div
+      [class.disabled]="
+        !isAllowedToAddMeeting(meetings.meetings, meetings.groups)
+      "
+      (click)="
+        addMeeting(isAllowedToAddMeeting(meetings.meetings, meetings.groups))
+      "
+      class="choice h-50 d-flex p-4 align-items-center"
+    >
+      <div class="d-flex align-items-center">
+        <div class="pr-4">
+          <div class="header text-primary">
+            {{ 'Create meeting' | translate }}
+          </div>
+          <div class="description mt-2">
+            {{
+              'Do you want more influence or invite your friends? You can create your own event and even make it not public.'
+                | translate
+            }}
+            <div class="disabled-text mt-2 font-weight-bold">
+              {{
+                'You own too many meetings in your schedule. It is allowed to have up to 3 in the same time.'
+                  | translate
+              }}
+            </div>
+          </div>
+        </div>
+        <div class="text-primary">
+          <ion-icon
+            name="arrow-forward-outline"
+            class="arrow d-block"
+          ></ion-icon>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>

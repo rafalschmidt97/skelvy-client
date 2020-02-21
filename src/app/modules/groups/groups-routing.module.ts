@@ -5,11 +5,13 @@ const routes: Routes = [
   { path: '', redirectTo: '/app/tabs/groups', pathMatch: 'full' },
   {
     path: ':id/chat',
-    loadChildren: './chat/chat.module#ChatPageModule',
+    loadChildren: () =>
+      import('./chat/chat.module').then(m => m.ChatPageModule),
   },
   {
     path: 'edit',
-    loadChildren: './edit/edit-group.module#EditGroupPageModule',
+    loadChildren: () =>
+      import('./edit/edit-group.module').then(m => m.EditGroupPageModule),
   },
 ];
 

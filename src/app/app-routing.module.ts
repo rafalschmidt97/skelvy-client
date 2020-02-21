@@ -7,7 +7,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'app', pathMatch: 'full' },
   {
     path: 'home',
-    loadChildren: './modules/home/home.module#HomeModule',
+    loadChildren: () =>
+      import('./modules/home/home.module').then(m => m.HomeModule),
   },
   {
     path: 'app',
@@ -18,27 +19,37 @@ const routes: Routes = [
     children: [
       {
         path: 'tabs',
-        loadChildren: './modules/tabs/tabs.module#TabsModule',
+        loadChildren: () =>
+          import('./modules/tabs/tabs.module').then(m => m.TabsModule),
       },
       {
         path: 'user',
-        loadChildren: './modules/user/user.module#UserModule',
+        loadChildren: () =>
+          import('./modules/user/user.module').then(m => m.UserModule),
       },
       {
         path: 'meetings',
-        loadChildren: './modules/meetings/meetings.module#MeetingsModule',
+        loadChildren: () =>
+          import('./modules/meetings/meetings.module').then(
+            m => m.MeetingsModule,
+          ),
       },
       {
         path: 'explore',
-        loadChildren: './modules/explore/explore.module#ExploreModule',
+        loadChildren: () =>
+          import('./modules/explore/explore.module').then(m => m.ExploreModule),
       },
       {
         path: 'groups',
-        loadChildren: './modules/groups/groups.module#GroupsModule',
+        loadChildren: () =>
+          import('./modules/groups/groups.module').then(m => m.GroupsModule),
       },
       {
         path: 'settings',
-        loadChildren: './modules/settings/settings.module#SettingsModule',
+        loadChildren: () =>
+          import('./modules/settings/settings.module').then(
+            m => m.SettingsModule,
+          ),
       },
       { path: '', redirectTo: 'tabs/meetings', pathMatch: 'full' },
     ],

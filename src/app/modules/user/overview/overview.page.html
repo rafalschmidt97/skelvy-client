@@ -2,13 +2,13 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button routerLink="/app/settings/friends">
-        <ion-icon name="contacts" slot="icon-only"></ion-icon>
+        <ion-icon name="people-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>{{ 'Profile' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button routerLink="/app/settings">
-        <ion-icon name="settings" slot="icon-only"></ion-icon>
+        <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -46,6 +46,10 @@
           class="btn btn-outline-primary px-4"
         >
           {{ 'Edit details' | translate }}
+          <ion-icon
+            class="ml-1 icon-edit align-middle d-inline-block"
+            name="hammer-outline"
+          ></ion-icon>
         </button>
       </div>
     </section>
