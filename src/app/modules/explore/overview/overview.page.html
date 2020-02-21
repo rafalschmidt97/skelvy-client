@@ -3,7 +3,7 @@
     <ion-title>{{ 'Explore' | translate }}</ion-title>
     <ion-buttons slot="end">
       <ion-button routerLink="/app/explore/add">
-        <ion-icon name="add" slot="icon-only"></ion-icon>
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -55,7 +55,7 @@
         <div (click)="changeLocation()" class="text-primary change ml-auto">
           <span class="align-middle">{{ 'Change' | translate }}</span>
           <ion-icon
-            name="pin"
+            name="pin-outline"
             class="icon d-inline-block align-middle"
           ></ion-icon>
         </div>
@@ -103,7 +103,7 @@
             <div
               class="text-primary ml-auto align-self-stretch px-3 d-flex align-items-center"
             >
-              <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+              <ion-icon name="arrow-forward-outline" class="d-block"></ion-icon>
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@
             <div
               class="text-primary ml-auto align-self-stretch px-3 d-flex align-items-center"
             >
-              <ion-icon name="arrow-forward" class="d-block"></ion-icon>
+              <ion-icon name="arrow-forward-outline" class="d-block"></ion-icon>
             </div>
           </div>
         </div>
@@ -163,7 +163,10 @@
       <ng-template #empty>
         <div class="empty m-auto text-center py-3">
           <div class="content container">
-            <ion-icon name="walk" class="big-icon text-primary"></ion-icon>
+            <ion-icon
+              name="walk-outline"
+              class="big-icon text-primary"
+            ></ion-icon>
             <div class="header">
               {{ "Couldn't find any meetings around you." | translate }}
             </div>

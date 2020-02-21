@@ -11,17 +11,17 @@
         <ion-spinner color="dark" class="small-spinner"></ion-spinner>
       </ion-button>
       <ion-button *ngIf="canEditGroup" color="dark" (click)="editGroup()">
-        <ion-icon name="create"></ion-icon>
+        <ion-icon name="hammer-outline"></ion-icon>
       </ion-button>
       <ion-button
         *ngIf="isNotMeeting"
         (click)="openLeave()"
         [disabled]="loadingAction"
       >
-        <ion-icon name="exit"></ion-icon>
+        <ion-icon name="exit-outline"></ion-icon>
       </ion-button>
       <ion-button *ngIf="!isNotMeeting" (click)="seeMeeting()">
-        <ion-icon name="calendar"></ion-icon>
+        <ion-icon name="today-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

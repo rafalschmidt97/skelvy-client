@@ -6,10 +6,10 @@
     <ion-title>{{ 'Meeting' | translate }} </ion-title>
     <ion-buttons slot="end">
       <ion-button color="dark" *ngIf="isNotMember" (click)="addUsers()">
-        <ion-icon name="person-add"></ion-icon>
+        <ion-icon name="person-add-outline"></ion-icon>
       </ion-button>
       <ion-button (click)="showMessages()">
-        <ion-icon name="chatbubbles"></ion-icon>
+        <ion-icon name="chatbubbles-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -46,7 +46,10 @@
           <div class="font-weight-bold">{{ 'Status' | translate }}</div>
           <div>
             {{ 'Public' | translate }}
-            <ion-icon name="unlock" class="icon-hidden align-middle"></ion-icon>
+            <ion-icon
+              name="unlock-outline"
+              class="icon-hidden align-middle"
+            ></ion-icon>
           </div>
         </div>
       </div>
