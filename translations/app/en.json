@@ -15,6 +15,7 @@
     "USER_REMOVED_FROM_GROUP": "User has been removed from the meeting",
     "USER_SELF_REMOVED_FROM_GROUP": "You have been removed from the meeting",
     "USER_LEFT_GROUP": "User has left the group",
+    "USER_LEFT_MEETING": "User has left the meeting",
     "MEETING_UPDATED": "Meeting has been updated",
     "GROUP_ABORTED": "Your meeting has been aborted",
     "GROUP_UPDATED": "Your meeting has been updated",

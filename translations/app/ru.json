@@ -15,6 +15,7 @@
     "USER_REMOVED_FROM_GROUP": "Пользователя удалили из встречи",
     "USER_SELF_REMOVED_FROM_GROUP": "Вас удалили из встречи",
     "USER_LEFT_GROUP": "Пользователь покинул группу",
+    "USER_LEFT_MEETING": "Пользователь покинул встречу",
     "MEETING_UPDATED": "Встреча обновлена",
     "GROUP_ABORTED": "Ваша встреча была отменена",
     "GROUP_UPDATED": "Ваша встреча была обновлена",

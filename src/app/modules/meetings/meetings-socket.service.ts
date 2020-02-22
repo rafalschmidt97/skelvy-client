@@ -35,6 +35,7 @@ export class MeetingsSocketService {
     _('USER_REMOVED_FROM_GROUP'),
     _('USER_SELF_REMOVED_FROM_GROUP'),
     _('USER_LEFT_GROUP'),
+    _('USER_LEFT_MEETING'),
     _('MEETINGS'),
     _('MEETING_ABORTED'),
     _('MEETING_UPDATED'),

@@ -31,7 +31,7 @@
     "android:emulator": "ionic cordova run android -l --emulator --no-native-run --address=0.0.0.0",
     "android:prepare": "ionic cordova prepare android",
     "android:build": "ionic cordova build android --prod --release",
-    "translate": "ngx-translate-extract --input ./src --output ./src/assets/i18n/*.json --clean --sort --format json --marker _  --format-indentation ' '",
+    "translate": "ngx-translate-extract --input ./src --output ./src/assets/i18n/*.json --clean --sort --format json --marker _  --format-indentation '  '",
     "redux": "npx remotedev --hostname=$hostname --port=8000"
   },
   "dependencies": {

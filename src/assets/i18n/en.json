@@ -21,6 +21,7 @@
   "USER_DISABLED": "Your account has been disabled. If you have any questions, don't hesitate to contact us by using our website",
   "USER_JOINED_MEETING": "New user has been added to the group",
   "USER_LEFT_GROUP": "User has left the group",
+  "USER_LEFT_MEETING": "User has left the meeting",
   "USER_REMOVED": "Your account has been removed. If you have any questions, don't hesitate to contact us by using our website",
   "USER_SELF_REMOVED_FROM_GROUP": "You have been removed from the meeting",
   "USER_SENT_MESSAGE": "Sent a message",

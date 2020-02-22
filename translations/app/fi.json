@@ -15,6 +15,7 @@
     "USER_REMOVED_FROM_GROUP": "Käyttäjä on poistettu kokouksesta",
     "USER_SELF_REMOVED_FROM_GROUP": "Sinut on poistettu kokouksesta",
     "USER_LEFT_GROUP": "Käyttäjä on poistunut ryhmästä",
+    "USER_LEFT_MEETING": "Käyttäjä on poistunut kokouksesta",
     "MEETING_UPDATED": "Kokous on päivitetty",
     "GROUP_ABORTED": "Tapaamisesi on keskeytetty",
     "GROUP_UPDATED": "Tapaamuksesi on päivitetty",
