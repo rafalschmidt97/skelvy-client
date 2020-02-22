@@ -54,7 +54,7 @@ export class ToastService {
           buttons: [
             {
               side: 'end',
-              icon: 'arrow-round-forward',
+              icon: 'arrow-forward-outline',
               handler: () => {
                 clickHandler();
               },
@@ -70,7 +70,7 @@ export class ToastService {
           buttons: [
             {
               side: 'end',
-              icon: 'close',
+              icon: 'close-outline',
               role: 'cancel',
             },
           ],
