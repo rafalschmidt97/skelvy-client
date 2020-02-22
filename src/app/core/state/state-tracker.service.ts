@@ -21,6 +21,7 @@ import { UserStateModel } from '../../modules/user/store/user-state';
 import { MeetingsStateModel } from '../../modules/meetings/store/meetings-state';
 import {
   AddGroup,
+  AddGroupMessage,
   AddGroupMessages,
   AddGroupUser,
   AddMeeting,
@@ -107,6 +108,7 @@ export class StateTrackerService {
           RemoveGroup,
           UpdateGroup,
           UpdateGroupFromRequest,
+          AddGroupMessage,
           AddGroupMessages,
           MarkResponseGroupMessageAsSent,
           MarkResponseGroupMessageAsFailed,

@@ -27,6 +27,7 @@ import { PhotoDto } from '../../../../core/upload/upload';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { RemoveResponseGroupMessage } from '../../../meetings/store/meetings-actions';
 import { SelfUserDto } from '../../../user/user';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-message-form',
@@ -70,6 +71,7 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
     private readonly file: File,
     private readonly uploadService: UploadService,
     private readonly webview: WebView,
+    private readonly sanitizer: DomSanitizer,
   ) {
     this.form = this.formBuilder.group({
       message: [
@@ -233,10 +235,13 @@ export class MessageFormComponent implements Form, OnSubmit, OnInit {
   }
 
   private sendAttachmentMessage(message: MessageState) {
+    console.log(message.attachmentUrl);
     return from(
       this.groupsService.addMessage({
         ...message,
-        attachmentUrl: this.webview.convertFileSrc(message.attachmentUrl),
+        attachmentUrl: this.sanitizer.bypassSecurityTrustUrl(
+          this.webview.convertFileSrc(message.attachmentUrl),
+        ) as string,
       }),
     )
       .pipe(
