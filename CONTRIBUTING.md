@@ -204,8 +204,8 @@ More: [Android Setup](https://ionicframework.com/docs/installation/android)
 # increment version in config.xml and package.json
 $ npm run android:build
 $ cd platforms/android/app/build/outputs/apk/release
-# copy release keystore
-$ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore release.keystore app-release-unsigned.apk skelvy 
+# copy release keystore 
+$ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore.jks app-release-unsigned.apk upload 
 $ rm app-release.apk # remove previous apk
 $ ~/Library/Android/sdk/build-tools/29.0.1/zipalign -v 4 app-release-unsigned.apk app-release.apk 
 ```
@@ -220,8 +220,9 @@ $ keytool -genkey -v -keystore debug.keystore -storepass android -alias androidd
 $ keytool -list -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android
 
 # Release
-$ keytool -genkey -v -keystore release.keystore -alias skelvy -keyalg RSA -keysize 2048 -validity 10000
-$ keytool -list -v -keystore release.keystore -alias skelvy -storepass XXX -keypass XXX
+$ keytool -genkeypair -alias upload -keyalg RSA -keysize 2048 -validity 9125 -keystore keystore.jks
+$ keytool -export -rfc -alias upload -file upload_certificate.pem -keystore keystore.jks
+$ keytool -list -v -keystore keystore.jks -alias upload -storepass XXX -keypass XXX
 
 # Facebook hash:
 
@@ -229,7 +230,7 @@ $ keytool -list -v -keystore release.keystore -alias skelvy -storepass XXX -keyp
 $ keytool -exportcert -alias androiddebugkey -keystore debug.keystore | openssl sha1 -binary | openssl base64
 
 # Production
-$ keytool -exportcert -alias skelvy -keystore release.keystore | openssl sha1 -binary | openssl base64
+$ keytool -exportcert -alias upload -keystore keystore.jks | openssl sha1 -binary | openssl base64
 
 # Extra
 $ keytool -list -v -keystore debug.keystore
