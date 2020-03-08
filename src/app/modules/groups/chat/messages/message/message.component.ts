@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GroupUserDto, MessageState } from '../../../../meetings/meetings';
 import isOnlyEmojis from 'is-only-emojis';
-import { UserDto } from '../../../../user/user';
 
 @Component({
   selector: 'app-message',
@@ -16,7 +15,7 @@ export class MessageComponent {
   @Input() dateToShow: string;
   @Output() showDate = new EventEmitter<string>();
   @Output() showPreview = new EventEmitter<string>();
-  @Output() openDetails = new EventEmitter<UserDto>();
+  @Output() openDetails = new EventEmitter<GroupUserDto>();
 
   get isDateShown(): boolean {
     return this.message.date === this.dateToShow;

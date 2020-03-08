@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserDto } from '../../../user/user';
 import { GroupUserDto } from '../../meetings';
 
 @Component({
@@ -9,5 +8,5 @@ import { GroupUserDto } from '../../meetings';
 })
 export class ProfilePreviewComponent {
   @Input() user: GroupUserDto;
-  @Output() openDetails = new EventEmitter<UserDto>();
+  @Output() openDetails = new EventEmitter<GroupUserDto>();
 }

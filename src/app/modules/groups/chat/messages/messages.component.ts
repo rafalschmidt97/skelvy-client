@@ -7,7 +7,7 @@ import {
   MessageState,
   MessageType,
 } from '../../../meetings/meetings';
-import { SelfUserDto, UserDto } from '../../../user/user';
+import { SelfUserDto } from '../../../user/user';
 import { _ } from '../../../../core/i18n/translate';
 import { GroupsService } from '../../groups.service';
 import { Storage } from '@ionic/storage';
@@ -29,6 +29,7 @@ export class MessagesComponent implements OnInit {
   @ViewChild('content', { static: true }) content: ElementRef;
   @Input() group: GroupState;
   @Input() user: SelfUserDto;
+  groupUser: GroupUserDto;
   dateToShow: string;
   isLoading = false;
   hasMoreMessages = false;
@@ -43,7 +44,6 @@ export class MessagesComponent implements OnInit {
     private readonly meetingService: MeetingsService,
     private readonly groupsService: GroupsService,
     private readonly modalController: ModalController,
-    private readonly store: Store,
   ) {}
 
   get messagesWithoutSelfSeen(): MessageState[] {
@@ -64,6 +64,8 @@ export class MessagesComponent implements OnInit {
     }
 
     this.scrollToLastMessage();
+
+    this.groupUser = this.group.users.find(x => x.id === this.user.id);
   }
 
   findUser(userId: number): GroupUserDto {
@@ -124,13 +126,13 @@ export class MessagesComponent implements OnInit {
     await modal.present();
   }
 
-  async openDetails(user: UserDto) {
+  async openDetails(user: GroupUserDto) {
     const modal = await this.modalController.create({
       component: GroupProfileModalComponent,
       componentProps: {
         user,
         group: this.group,
-        openingUser: this.store.selectSnapshot(state => state.user.user),
+        openingUser: this.groupUser,
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });

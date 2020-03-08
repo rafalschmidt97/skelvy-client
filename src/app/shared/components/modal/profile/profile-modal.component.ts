@@ -10,7 +10,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { _ } from '../../../../core/i18n/translate';
 import { ModalController } from '@ionic/angular';
 import { UserService } from '../../../../modules/user/user.service';
-import { GroupUserDto } from '../../../../modules/meetings/meetings';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -19,7 +18,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./profile-modal.component.scss'],
 })
 export class ProfileModalComponent implements OnInit {
-  @Input() openingUser: GroupUserDto;
+  @Input() openingUser: UserDto;
   @Input() user: UserDto;
   @Input() mine: boolean;
   loadingRelation = true;

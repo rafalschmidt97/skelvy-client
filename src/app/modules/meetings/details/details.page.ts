@@ -14,7 +14,7 @@ import {
 import { AlertModalComponent } from '../../../shared/components/alert/alert-modal/alert-modal.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { _ } from '../../../core/i18n/translate';
-import { SelfUserDto, UserDto } from '../../user/user';
+import { SelfUserDto } from '../../user/user';
 import { ActivatedRoute } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { GroupsService } from '../../groups/groups.service';
@@ -31,6 +31,7 @@ export class DetailsPage implements OnInit, OnDestroy {
   meeting: MeetingDto;
   group: GroupState;
   user: SelfUserDto;
+  groupUser: GroupUserDto;
   loadingAction = false;
   meeting$: Subscription;
 
@@ -75,12 +76,19 @@ export class DetailsPage implements OnInit, OnDestroy {
             this.routerNavigation.navigateBack(['/app/tabs/meetings']);
           }
 
-          return { meeting, group, user };
+          const groupUser = group.users.find(x => x.id === user.id);
+
+          if (!groupUser) {
+            this.routerNavigation.navigateBack(['/app/tabs/meetings']);
+          }
+
+          return { meeting, group, user, groupUser };
         }),
-        tap(({ meeting, group, user }) => {
+        tap(({ meeting, group, user, groupUser }) => {
           this.meeting = meeting;
           this.group = group;
           this.user = user;
+          this.groupUser = groupUser;
         }),
       )
       .subscribe();
@@ -96,13 +104,13 @@ export class DetailsPage implements OnInit, OnDestroy {
     return this.group.users.filter(user => user.id !== this.user.id);
   }
 
-  async openDetails(user: UserDto) {
+  async openDetails(user: GroupUserDto) {
     const modal = await this.modalController.create({
       component: GroupProfileModalComponent,
       componentProps: {
         user,
         group: this.group,
-        openingUser: this.store.selectSnapshot(state => state.user.user),
+        openingUser: this.groupUser,
       },
       cssClass: 'ionic-modal ionic-full-modal',
     });

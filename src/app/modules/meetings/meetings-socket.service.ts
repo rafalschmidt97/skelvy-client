@@ -143,8 +143,8 @@ export class MeetingsSocketService {
           );
         }
 
-        const { userId, groupId, role } = notification.data.data;
-        this.meetingService.addUser(userId, groupId, role).subscribe(
+        const { userId, groupId, userRole } = notification.data.data;
+        this.meetingService.addUser(userId, groupId, userRole).subscribe(
           () => {},
           () => {
             this.toastService.createError(
