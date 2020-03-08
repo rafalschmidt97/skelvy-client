@@ -44,7 +44,7 @@ export class SignInPage implements OnInit {
 
   async signInWithFacebook() {
     this.facebook
-      .login(['public_profile', 'email', 'user_birthday', 'user_gender'])
+      .login(['public_profile', 'email'])
       .then(async (res: FacebookLoginResponse) => {
         if (res.status === 'connected') {
           const token = res.authResponse.accessToken;
